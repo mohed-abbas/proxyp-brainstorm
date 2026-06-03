@@ -1096,38 +1096,40 @@
             scrollTrigger: {
               trigger: ".stage",
               start: "top top",
-              // Pin length is tuned so the whole timeline scrolls at ~80% viewport
-              // per timeline-second (the original transformation pacing). With the
-              // copy reveal now folded in, the timeline is ~3.5s, so the pin is
-              // ~280% — otherwise the logo-to-navbar flight would be compressed into
-              // too little scroll and fly in too fast.
+              // Pin length governs the reverse scrub distance and the auto-drive
+              // range. Forward is auto-played on a clock (below), so this no longer
+              // sets the logo pacing — it's the room the user has to scrub the whole
+              // thing back out on the way up.
               end: "+=280%",
               pin: true,
-              scrub: 1, // smoothing catch-up — glides between scroll positions
-              // instead of snapping to raw wheel deltas (kills the "skipped frames"
-              // jitter); also de-janks the card scale via GPU layers (will-change)
+              // Tight scrub so the auto-driven play tracks the driven scroll almost
+              // 1:1 (no laggy tail past the lock). Lenis's 1.8s glide already
+              // carries the smoothing for manual reverse scrubbing.
+              scrub: 0.4,
               invalidateOnRefresh: true,
-              // Auto-advance, one clock. The instant the scroll crosses the seam
-              // (logo landed) we drive the scroll itself through the reveal range
-              // with a locked Lenis tween: the copy scrubs in automatically AND the
-              // user can't scroll past it mid-play. Because the copy is part of this
-              // one scrubbed timeline, scrolling back up simply scrubs it out in
-              // perfect step with the logo — no second clock, no torn frames.
+              // ONE scroll triggers the whole cinematic (the Revolut/Naked City
+              // beat). The instant the user scrolls off the hero rest, we hard-drive
+              // the scroll through the ENTIRE timeline — logo → navbar, card
+              // full-bleed AND the copy reveal — with a locked Lenis tween, so the
+              // brand assembles itself in one ~2.5s sequence the user can't fight.
+              // Because it's a single scrubbed timeline, scrolling back up afterwards
+              // just scrubs it in reverse: one clock, no desync, no race.
               onUpdate: (self) => {
                 const lenis = window.__lenis;
-                if (!lenis) return; // no smooth-scroll → copy just scrubs manually
-                if (autoArmed && self.progress >= triggerAt && self.progress < revealAt) {
-                  autoArmed = false; // fire once per entry
+                if (!lenis) return; // no smooth-scroll → manual scrub fallback
+                if (autoArmed && self.progress > 0.004) {
+                  autoArmed = false; // fire once, from the top
                   const target = self.start + (self.end - self.start) * revealAt;
                   lenis.scrollTo(target, {
-                    duration: 1.5,
-                    lock: true, // ignore user scroll while the reveal plays
-                    easing: (t) => 1 - Math.pow(1 - t, 3), // power3.out
+                    duration: 2.5, // designed cinematic pace
+                    lock: true, // ignore ALL user scroll while it plays
+                    easing: (t) =>
+                      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, // power2.inOut
                   });
                 }
-                // Re-arm once the user has scrolled back before the seam, so the
-                // auto-advance can play again the next time they enter.
-                if (self.progress < triggerAt - 0.02) autoArmed = true;
+                // Re-arm only once fully back at the hero rest, so the cinematic
+                // re-triggers from the top and never mid-sequence.
+                if (self.progress < 0.002) autoArmed = true;
               },
             },
           });
