@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Proxy Papers — Problem section (layout)</title>
 
-    <!-- Vector assets exported from Figma (node 17:2) -->
-    <link rel="preload" as="image" href="assets/problem-volume-graphic.svg" />
+    <!-- Vector assets exported from Figma (node 17:2). The VOLUME zigzag is
+         inlined in the markup below so its path can be stroke-animated on hover;
+         assets/problem-volume-graphic.svg is kept as the source export. -->
     <link rel="preload" as="image" href="assets/problem-accent-underline.svg" />
 
     <style>
@@ -183,10 +184,11 @@
         position: absolute;
         inset: -7.65% -4.03% -8.16% -5.44%;
       }
-      .volume-graphic__inner img {
+      .volume-graphic__inner svg {
         display: block;
         width: 100%;
         height: 100%;
+        overflow: visible; /* let the 59px stroke spill as in the export */
       }
 
       /* FRICTION — top-right card */
@@ -236,8 +238,14 @@
       }
       .js .eyebrow,
       .js .headline,
-      .js .body {
-        visibility: hidden; /* revealed by JS once the masks are built */
+      .js .body,
+      .js .card {
+        visibility: hidden; /* revealed by JS once the timeline is built */
+      }
+
+      /* The VOLUME card invites the hover that retraces the zigzag. */
+      .card--volume {
+        cursor: pointer;
       }
     </style>
   </head>
@@ -270,7 +278,20 @@
           </p>
           <div class="volume-graphic" aria-hidden="true">
             <div class="volume-graphic__inner">
-              <img src="assets/problem-volume-graphic.svg" alt="" />
+              <svg
+                class="zigzag"
+                viewBox="0 0 373.321 394.919"
+                preserveAspectRatio="none"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  class="zigzag__path"
+                  d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158"
+                  stroke="#5A90F4"
+                  stroke-width="59"
+                />
+              </svg>
             </div>
           </div>
         </article>
@@ -340,6 +361,7 @@
           const headlineWords = splitWords(document.querySelector(".headline"));
           const bodyWords = splitWords(document.querySelector(".body"));
           const rule = document.querySelector(".eyebrow__rule");
+          const cards = gsap.utils.toArray(".card");
           const allWords = [...eyebrowWords, ...headlineWords, ...bodyWords];
 
           // Initial hidden state, then unhide the (still-clipped) containers.
@@ -350,14 +372,15 @@
             rotation: 0.33, // preserve the design's slight tilt
             transformOrigin: "left center",
           });
+          gsap.set(cards, { autoAlpha: 0, y: 28 });
           gsap.set([".eyebrow", ".headline", ".body"], {
             visibility: "visible",
           });
 
-          // Plays once, automatically, on load. Each word rises independently,
-          // staggered in reading order — eyebrow first (underline draws with
-          // it), then the headline, then the body. A short delay lets the first
-          // painted frame settle before the motion begins.
+          // Plays once, automatically, on load. The editorial words rise in
+          // reading order (eyebrow + underline, headline, body); the three data
+          // cards then settle up in sequence as the body finishes — one layered
+          // assembly. A short delay lets the first painted frame settle first.
           gsap
             .timeline({
               defaults: { ease: "power3.out", force3D: true },
@@ -366,7 +389,29 @@
             .to(eyebrowWords, { yPercent: 0, duration: 0.6 }, 0.0)
             .to(rule, { autoAlpha: 1, scaleX: 1, duration: 0.7 }, 0.1)
             .to(headlineWords, { yPercent: 0, duration: 0.7, stagger: 0.06 }, 0.25)
-            .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.7);
+            .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.7)
+            .to(cards, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.14 }, 0.95);
+
+          // The zigzag rests fully drawn (as designed); hovering the VOLUME card
+          // retraces it — the blue stroke draws itself along the path. A single
+          // dash spanning the whole path, offset from full length back to 0.
+          const path = document.querySelector(".zigzag__path");
+          const len = path.getTotalLength();
+          gsap.set(path, { strokeDasharray: len, strokeDashoffset: 0 });
+          document
+            .querySelector(".card--volume")
+            .addEventListener("mouseenter", () => {
+              gsap.fromTo(
+                path,
+                { strokeDashoffset: len },
+                {
+                  strokeDashoffset: 0,
+                  duration: 0.9,
+                  ease: "power2.inOut",
+                  overwrite: true, // restart cleanly on rapid re-hovers
+                },
+              );
+            });
         }
 
         // Wait for fonts so line-wrapping is measured against the real metrics.
