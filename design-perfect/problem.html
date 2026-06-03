@@ -147,6 +147,7 @@
         letter-spacing: 0.0794vw; /* 1.2px */
         color: #fff;
         white-space: nowrap;
+        z-index: 1; /* keep copy above the zigzag graphic behind it */
       }
       .card__copy {
         position: absolute;
@@ -157,6 +158,7 @@
         line-height: 1.5;
         letter-spacing: 0.0106vw; /* 0.16px */
         color: #fff;
+        z-index: 1; /* keep copy above the zigzag graphic behind it */
       }
 
       /* VOLUME — the tall left card carrying the blue zigzag graphic */
@@ -197,12 +199,14 @@
          just scaled down and parked in the lower-right of the shorter cards. */
       .card-graphic {
         position: absolute;
-        top: 3.0423vw; /* 46px — the zigzag starts near the top-right corner */
+        top: 2.6455vw; /* 40px — the zigzag starts near the top-right corner */
         right: -3.4392vw; /* -52px — right tips bleed off the edge so the start
                              and end points clip into the border rather than
                              floating, making the motif feel part of the box */
-        width: 9.2593vw; /* 140px */
-        height: 9.2593vw;
+        width: 11.5079vw; /* 174px — a touch larger; it sits behind the copy
+                             (z-index) so it can grow without crowding the text */
+        height: 11.5079vw;
+        z-index: 0;
       }
 
       /* FRICTION — top-right card */
