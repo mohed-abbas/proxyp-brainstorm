@@ -252,56 +252,9 @@
         stroke-dasharray: 100;
         stroke-dashoffset: 100; /* hidden by default — drawn only on hover */
       }
-      /* Reduced-motion / no-JS fallback: show the zigzag as originally designed
-         (the small-card frames are a pure hover delight and simply stay absent). */
+      /* Reduced-motion / no-JS fallback: show the zigzag as originally designed. */
       html:not(.js) .zigzag__path {
         stroke-dashoffset: 0;
-      }
-
-      /* Proxy-Blue frame that traces around the small cards on hover, built as
-         four edge segments that scale in clockwise sequence. Reliable and
-         size-agnostic (each edge is a % of its card) — no SVG dash maths. Each
-         edge rests at scale 0 (invisible) until hovered. */
-      .card-frame {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-      }
-      .card-frame__edge {
-        position: absolute;
-        background: var(--proxy-blue);
-      }
-      .card-frame__edge--t {
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        transform: scaleX(0);
-        transform-origin: left center;
-      }
-      .card-frame__edge--r {
-        top: 0;
-        right: 0;
-        width: 1px;
-        height: 100%;
-        transform: scaleY(0);
-        transform-origin: center top;
-      }
-      .card-frame__edge--b {
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height: 1px;
-        transform: scaleX(0);
-        transform-origin: right center;
-      }
-      .card-frame__edge--l {
-        bottom: 0;
-        left: 0;
-        width: 1px;
-        height: 100%;
-        transform: scaleY(0);
-        transform-origin: center bottom;
       }
     </style>
   </head>
@@ -360,12 +313,6 @@
             Up to 30% of the time spent with your advisors goes into retrieving
             or forwarding information
           </p>
-          <div class="card-frame" aria-hidden="true">
-            <i class="card-frame__edge card-frame__edge--t"></i>
-            <i class="card-frame__edge card-frame__edge--r"></i>
-            <i class="card-frame__edge card-frame__edge--b"></i>
-            <i class="card-frame__edge card-frame__edge--l"></i>
-          </div>
         </article>
 
         <!-- RISK -->
@@ -374,12 +321,6 @@
           <p class="card__copy">
             One person in four has already lost an important document.
           </p>
-          <div class="card-frame" aria-hidden="true">
-            <i class="card-frame__edge card-frame__edge--t"></i>
-            <i class="card-frame__edge card-frame__edge--r"></i>
-            <i class="card-frame__edge card-frame__edge--b"></i>
-            <i class="card-frame__edge card-frame__edge--l"></i>
-          </div>
         </article>
       </div>
     </main>
@@ -477,27 +418,6 @@
             card.addEventListener("mouseenter", drawTo(0));
             card.addEventListener("mouseleave", drawTo(100));
           })();
-
-          // Small cards: a blue frame traces around the box on hover — four edge
-          // segments scaling in clockwise sequence (top, right, bottom, left),
-          // reversing on leave. The segments are a % of each card, so the trace
-          // adapts to its size. Pure transforms — no SVG dash quirks.
-          function frameDraw(card) {
-            const edges = card.querySelectorAll(".card-frame__edge");
-            const tl = gsap.timeline({
-              paused: true,
-              defaults: { ease: "power2.inOut", duration: 0.18 },
-            });
-            tl.to(edges[0], { scaleX: 1 }) // top  → L-to-R
-              .to(edges[1], { scaleY: 1 }) // right → T-to-B
-              .to(edges[2], { scaleX: 1 }) // bottom → R-to-L
-              .to(edges[3], { scaleY: 1 }); // left → B-to-T
-            card.addEventListener("mouseenter", () => tl.play());
-            card.addEventListener("mouseleave", () => tl.reverse());
-          }
-          document
-            .querySelectorAll(".card--friction, .card--risk")
-            .forEach(frameDraw);
         }
 
         // Wait for fonts so line-wrapping is measured against the real metrics.
