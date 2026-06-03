@@ -243,9 +243,65 @@
         visibility: hidden; /* revealed by JS once the timeline is built */
       }
 
-      /* The VOLUME card invites the hover that retraces the zigzag. */
-      .card--volume {
-        cursor: pointer;
+      /* ── Hover "draw" interactions ──────────────────────────────────────
+         Each card's accent rests invisible and traces itself in on hover,
+         erasing on leave (JS-driven, eased). pathLength="100" normalises both
+         the zigzag and the frame rects, so the same offset maths drives every
+         card — and the frame draw adapts to each box's size for free. */
+      .zigzag__path {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100; /* hidden by default — drawn only on hover */
+      }
+      /* Reduced-motion / no-JS fallback: show the zigzag as originally designed
+         (the small-card frames are a pure hover delight and simply stay absent). */
+      html:not(.js) .zigzag__path {
+        stroke-dashoffset: 0;
+      }
+
+      /* Proxy-Blue frame that traces around the small cards on hover, built as
+         four edge segments that scale in clockwise sequence. Reliable and
+         size-agnostic (each edge is a % of its card) — no SVG dash maths. Each
+         edge rests at scale 0 (invisible) until hovered. */
+      .card-frame {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .card-frame__edge {
+        position: absolute;
+        background: var(--proxy-blue);
+      }
+      .card-frame__edge--t {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        transform: scaleX(0);
+        transform-origin: left center;
+      }
+      .card-frame__edge--r {
+        top: 0;
+        right: 0;
+        width: 1px;
+        height: 100%;
+        transform: scaleY(0);
+        transform-origin: center top;
+      }
+      .card-frame__edge--b {
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 1px;
+        transform: scaleX(0);
+        transform-origin: right center;
+      }
+      .card-frame__edge--l {
+        bottom: 0;
+        left: 0;
+        width: 1px;
+        height: 100%;
+        transform: scaleY(0);
+        transform-origin: center bottom;
       }
     </style>
   </head>
@@ -290,6 +346,7 @@
                   d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158"
                   stroke="#5A90F4"
                   stroke-width="59"
+                  pathLength="100"
                 />
               </svg>
             </div>
@@ -303,6 +360,12 @@
             Up to 30% of the time spent with your advisors goes into retrieving
             or forwarding information
           </p>
+          <div class="card-frame" aria-hidden="true">
+            <i class="card-frame__edge card-frame__edge--t"></i>
+            <i class="card-frame__edge card-frame__edge--r"></i>
+            <i class="card-frame__edge card-frame__edge--b"></i>
+            <i class="card-frame__edge card-frame__edge--l"></i>
+          </div>
         </article>
 
         <!-- RISK -->
@@ -311,6 +374,12 @@
           <p class="card__copy">
             One person in four has already lost an important document.
           </p>
+          <div class="card-frame" aria-hidden="true">
+            <i class="card-frame__edge card-frame__edge--t"></i>
+            <i class="card-frame__edge card-frame__edge--r"></i>
+            <i class="card-frame__edge card-frame__edge--b"></i>
+            <i class="card-frame__edge card-frame__edge--l"></i>
+          </div>
         </article>
       </div>
     </main>
@@ -392,26 +461,43 @@
             .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.7)
             .to(cards, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.14 }, 0.95);
 
-          // The zigzag rests fully drawn (as designed); hovering the VOLUME card
-          // retraces it — the blue stroke draws itself along the path. A single
-          // dash spanning the whole path, offset from full length back to 0.
-          const path = document.querySelector(".zigzag__path");
-          const len = path.getTotalLength();
-          gsap.set(path, { strokeDasharray: len, strokeDashoffset: 0 });
-          document
-            .querySelector(".card--volume")
-            .addEventListener("mouseenter", () => {
-              gsap.fromTo(
-                path,
-                { strokeDashoffset: len },
-                {
-                  strokeDashoffset: 0,
-                  duration: 0.9,
-                  ease: "power2.inOut",
-                  overwrite: true, // restart cleanly on rapid re-hovers
-                },
-              );
+          // VOLUME: the zigzag stroke draws itself along its path on hover
+          // (dash offset full -> 0), erasing on leave. It rests invisible.
+          (function zigzagHover() {
+            const path = document.querySelector(".zigzag__path");
+            gsap.set(path, { strokeDasharray: 100, strokeDashoffset: 100 });
+            const drawTo = (offset) => () =>
+              gsap.to(path, {
+                strokeDashoffset: offset,
+                duration: 0.9,
+                ease: "power2.inOut",
+                overwrite: true, // restart cleanly on rapid enter/leave
+              });
+            const card = document.querySelector(".card--volume");
+            card.addEventListener("mouseenter", drawTo(0));
+            card.addEventListener("mouseleave", drawTo(100));
+          })();
+
+          // Small cards: a blue frame traces around the box on hover — four edge
+          // segments scaling in clockwise sequence (top, right, bottom, left),
+          // reversing on leave. The segments are a % of each card, so the trace
+          // adapts to its size. Pure transforms — no SVG dash quirks.
+          function frameDraw(card) {
+            const edges = card.querySelectorAll(".card-frame__edge");
+            const tl = gsap.timeline({
+              paused: true,
+              defaults: { ease: "power2.inOut", duration: 0.18 },
             });
+            tl.to(edges[0], { scaleX: 1 }) // top  → L-to-R
+              .to(edges[1], { scaleY: 1 }) // right → T-to-B
+              .to(edges[2], { scaleX: 1 }) // bottom → R-to-L
+              .to(edges[3], { scaleY: 1 }); // left → B-to-T
+            card.addEventListener("mouseenter", () => tl.play());
+            card.addEventListener("mouseleave", () => tl.reverse());
+          }
+          document
+            .querySelectorAll(".card--friction, .card--risk")
+            .forEach(frameDraw);
         }
 
         // Wait for fonts so line-wrapping is measured against the real metrics.
