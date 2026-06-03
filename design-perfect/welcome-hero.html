@@ -5,15 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Proxy Papers — Welcome → Hero</title>
 
+    <!-- Preload the heavy first-paint assets so the network fetch starts before the
+         parser reaches them — the JS asset-gate then resolves sooner on a cold load. -->
+    <link
+      rel="preload"
+      as="image"
+      href="assets/hero-bg.webp"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff"
+      href="assets/fonts/ppneuemontreal-book.woff"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff"
+      href="assets/fonts/ppneuemontreal-bold.woff"
+      crossorigin
+    />
+
     <!-- Mark JS-capable before first paint so we can arm the welcome state without
          ever flashing the resolved hero. If JS is off, the page renders the hero. -->
     <script>
       document.documentElement.classList.add("js");
     </script>
 
-    <!-- GSAP (CDN) -->
+    <!-- GSAP + ScrollTrigger (CDN) -->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      defer
+    ></script>
+    <!-- Lenis smooth scroll — normalises scroll into rAF-interpolated deltas so
+         Firefox's chunky native scroll matches Chrome's smoothness. -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"
       defer
     ></script>
 
@@ -58,25 +91,57 @@
         box-sizing: border-box;
       }
 
+      /* Lenis smooth-scroll base styles (from the library's recommended CSS) */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
       html,
       body {
-        height: 100%;
+        min-height: 100%;
       }
 
       body {
         background: var(--bone-white);
-        overflow: hidden;
         font-family:
           "PP Neue Montreal", "Neue Haas Grotesk", "Inter", system-ui,
           sans-serif;
       }
+      /* Once the intro resolves, the page ground goes ink so everything past the
+         hero (and the expanded card) is the dark canvas. Applied via a body class
+         at intro completion so the no-JS / reduced-motion fallback stays bone white. */
+      body.is-dark {
+        background: var(--ink);
+      }
 
-      /* Full-viewport stage (Figma artboard 1512 × 982) */
+      /* Hero stage — one viewport tall, the ScrollTrigger PIN target. Relative (not
+         fixed) so it can be pinned; children stay position:absolute against it, so the
+         welcome intro renders identically. */
       .stage {
-        position: fixed;
-        inset: 0;
+        position: relative;
+        width: 100%;
+        height: 100vh;
         overflow: hidden;
         background: var(--bone-white);
+      }
+
+      /* Empty dark placeholder below the hero — the expanded card flows seamlessly
+         into it; the fixed navbar persists on top. */
+      .section-2 {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        background: var(--ink);
       }
 
       /* (1) Background photo — hidden during the welcome, fades in with the hero. */
@@ -118,6 +183,8 @@
         aspect-ratio: 1034.69 / 672;
         background: var(--ink);
         overflow: hidden;
+        will-change: transform; /* promote to a GPU layer so scaling the card (and
+          its glow/ghost) composites instead of re-rasterising each frame */
       }
 
       /* (2a) Blue glow swoosh — sits behind the logo, bleeds past both card edges. */
@@ -204,6 +271,53 @@
         .ticker__track { animation: none; }
       }
 
+      /* ---- Scroll mechanic furniture (built at runtime, body-level FIXED so it
+              persists into section 2 once the hero scrolls past) ---- */
+      /* Persistent navbar — each link is individually fixed-positioned by JS: it
+         starts overlaying the in-card nav, then spreads to the screen edges. */
+      .navbar {
+        position: fixed;
+        inset: 0 auto auto 0;
+        width: 100%;
+        z-index: 5;
+        pointer-events: none;
+      }
+      .navbar a {
+        position: fixed;
+        color: var(--bone-white);
+        text-decoration: none;
+        font-size: calc(var(--card-w) * 0.01933); /* matches the in-card nav at rest */
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        pointer-events: auto;
+        will-change: transform; /* pre-promote so the first scroll doesn't stall */
+      }
+      .navbar a span {
+        display: inline-block;
+      }
+      /* Faint hairline surface under the navbar — fades in at the end of the scrub. */
+      .navbar__hairline {
+        position: fixed;
+        left: 0;
+        top: 56px;
+        width: 100%;
+        height: 1px;
+        background: var(--hairline-track);
+        opacity: 0;
+        z-index: 5;
+      }
+      /* The flying P-mark — a standalone clone that travels to the navbar centre
+         (the in-lockup mark is hidden once this exists). */
+      .nav-mark {
+        position: fixed;
+        z-index: 6;
+        overflow: visible;
+        pointer-events: none;
+        will-change: transform; /* smooth GPU-composited flight to the navbar */
+      }
+
       /* (3) Persistent lockup overlay (welcome ⇄ hero pivot). Anchored so the lockup
          CENTRE lands at 60.5% of viewport height — identical to the hero's logo spot.
          Sits above the card; never moves or scales. */
@@ -251,6 +365,7 @@
         left: 0;
         width: 100%;
         height: auto;
+        will-change: transform; /* promote the wiping wordmark layer up front */
       }
 
       /* (3a) Hairline loader (welcome only) — faint track + ink fill. Hidden in the
@@ -284,6 +399,12 @@
          Hero furniture hidden, photo hidden, card collapsed, lockup in WELCOME
          colors (ink on bone white) with mark/glyphs hidden for the wipe, hairline
          shown as the loader. JS plays intro → transition; fallback drops .js → hero. */
+      /* Lock scrolling while the intro plays; released (→ .scroll-ready) on intro
+         complete, when the ScrollTrigger scroll mechanic is wired up. */
+      html.js:not(.scroll-ready),
+      html.js:not(.scroll-ready) body {
+        overflow: hidden;
+      }
       .js .hero-bg {
         opacity: 0;
       }
@@ -319,7 +440,7 @@
   <body>
     <main class="stage">
       <!-- (1) Background photo -->
-      <img class="hero-bg" src="assets/hero-bg.png" alt="" aria-hidden="true" />
+      <img class="hero-bg" src="assets/hero-bg.webp" alt="" aria-hidden="true" />
 
       <!-- (1b) Welcome ghost P-mark, bleeding off the top-right -->
       <img
@@ -431,6 +552,9 @@
       </div>
     </main>
 
+    <!-- Empty dark placeholder section (revealed after the hero transforms to full-bleed) -->
+    <section class="section-2" aria-hidden="true"></section>
+
     <script>
       window.addEventListener("DOMContentLoaded", () => {
         const root = document.documentElement;
@@ -446,6 +570,8 @@
           root.classList.remove("js");
           return;
         }
+
+        if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
         // ---- Stacked Bone-White copy of the logo --------------------------
         // Clone the ink lockup (before the wipe wraps its paths) into a Bone-White copy
@@ -467,17 +593,26 @@
         // Each glyph / mark-half is wrapped in a <g clip-path> whose rect bottom
         // sits on the element's own base; the element starts below that base
         // (hidden) and slides up — unveiled from its own axis base. Crisp, no fade.
-        let defs = svg.querySelector("defs");
-        if (!defs) {
-          defs = document.createElementNS(SVGNS, "defs");
-          svg.insertBefore(defs, svg.firstChild);
-        }
         const PAD_X = 2;
         const PAD_TOP = 6;
-        const riseOf = new Map();
+        const riseOf = new Map(); // ink copy (welcome reveal)
+        const riseOfLight = new Map(); // light copy (scroll exit wipe)
         let clipN = 0;
 
-        const wrap = (path) => {
+        // Per-copy <defs> factory.
+        const defsFor = (rootSvg) => {
+          let d = rootSvg.querySelector("defs");
+          if (!d) {
+            d = document.createElementNS(SVGNS, "defs");
+            rootSvg.insertBefore(d, rootSvg.firstChild);
+          }
+          return d;
+        };
+        const defs = defsFor(svg);
+
+        // Wrap one path in a clip-<g> whose rect bottom sits on the path's base, and
+        // record its rise distance. Reused for BOTH copies (clipN keeps IDs unique).
+        const wrap = (path, defsEl, riseMap) => {
           const bb = path.getBBox();
           const id = "ppclip-" + clipN++;
           const cp = document.createElementNS(SVGNS, "clipPath");
@@ -489,14 +624,14 @@
           rect.setAttribute("width", bb.width + PAD_X * 2);
           rect.setAttribute("height", bb.height + PAD_TOP);
           cp.appendChild(rect);
-          defs.appendChild(cp);
+          defsEl.appendChild(cp);
 
           const g = document.createElementNS(SVGNS, "g");
           g.setAttribute("clip-path", "url(#" + id + ")");
           path.parentNode.insertBefore(g, path);
           g.appendChild(path);
 
-          riseOf.set(path, bb.height + PAD_TOP);
+          riseMap.set(path, bb.height + PAD_TOP);
         };
 
         // Scope every intro query to the INK copy so the Bone-White clone is left
@@ -510,7 +645,17 @@
           svg.querySelectorAll('[data-word="papers"] .lk-glyph'),
         );
         const glyphs = [...proxy, ...papers];
-        [stem, blade, ...glyphs].forEach(wrap);
+        [stem, blade, ...glyphs].forEach((p) => wrap(p, defs, riseOf));
+
+        // Wrap the VISIBLE (light) copy's wordmark glyphs too, so the scroll mechanic
+        // can wipe them out with the same clip — reversed (slide DOWN past their base).
+        // The light glyphs rest assembled at y:0; only the wordmark needs this (the
+        // light mark is handled by the flying nav-mark clone, not a wipe).
+        const defsLight = defsFor(lightSvg);
+        const lightGlyphs = gsap.utils.toArray(
+          lightSvg.querySelectorAll('[data-word] .lk-glyph'),
+        );
+        lightGlyphs.forEach((p) => wrap(p, defsLight, riseOfLight));
 
         // Clips now hide everything; opacity stays on (the wipe reveals).
         gsap.set(svg.querySelector(".lk-mark"), { opacity: 1 });
@@ -538,9 +683,13 @@
         // outside it, so full coverage (insets 0) stays fully bone. Driven each frame
         // from the card's growth, so the recolor tracks the dark edge.
         const FEATHER = 3; // feather band width, % of the logo box
+        // The logo box is static through the transition, so measure it once and
+        // cache it — avoids a second forced layout (getBoundingClientRect) every
+        // frame while the card blooms.
+        let lRect = null;
         const syncLightClip = () => {
           const c = cardEl.getBoundingClientRect();
-          const l = lightSvg.getBoundingClientRect();
+          const l = lRect || (lRect = lightSvg.getBoundingClientRect());
           if (!l.width || !l.height) return;
           const top = Math.max(0, ((c.top - l.top) / l.height) * 100);
           const right = Math.max(0, ((l.right - c.right) / l.width) * 100);
@@ -562,7 +711,9 @@
         // ---- Master timeline: intro + loader (t0) → transition (t=5) ----
         const STAG = 0.06;
         const T = 1.8; // transition fires the moment the logo reveal + loader complete
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        // Paused until assets are ready (see the gate at the end) — otherwise the
+        // first-load font reflow + PNG decode land mid-reveal and stutter.
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
 
         // Welcome ghost wipes up from its base — a giant, slower echo of the mark's
         // own reveal, establishing the ground the wordmark then assembles onto.
@@ -620,6 +771,231 @@
           );
 
         window.__experienceTL = tl; // exposed for testing / scrubbing
+
+        // ============================================================
+        //  SCROLL MECHANIC — hero dissolves into the dark site canvas.
+        //  Built once the intro resolves, so the timed intro and the
+        //  scrubbed scroll never fight, and the page can't scroll early.
+        // ============================================================
+        const cardEl2 = document.querySelector(".card");
+        const tickerEl = document.querySelector(".ticker");
+        const inCardNav = document.querySelector(".nav");
+        const lightMark = lightSvg.querySelector(".lk-mark");
+        const inkMark = svg.querySelector(".lk-mark");
+        const NAV_Y = 32; // navbar vertical centre, px from viewport top
+
+        const setupScroll = () => {
+          if (!window.ScrollTrigger) return;
+
+          // Smooth scroll (Lenis). Driven off GSAP's ticker (single rAF loop) and
+          // wired to ScrollTrigger.update so the pinned scrub stays perfectly in
+          // sync. This is what closes the Chrome↔Firefox smoothness gap.
+          if (window.Lenis) {
+            const lenis = new Lenis({ lerp: 0.1 });
+            lenis.on("scroll", ScrollTrigger.update);
+            gsap.ticker.add((time) => lenis.raf(time * 1000));
+            gsap.ticker.lagSmoothing(0);
+            window.__lenis = lenis;
+          }
+
+          // --- (a) Standalone nav-mark clone (bone stem + blue blade) ---------
+          const navMark = document.createElementNS(SVGNS, "svg");
+          navMark.setAttribute("viewBox", "0 0 184.958 276.692");
+          navMark.setAttribute("class", "nav-mark");
+          navMark.setAttribute("aria-hidden", "true");
+          lightMark.querySelectorAll("path").forEach((p) =>
+            navMark.appendChild(p.cloneNode(true)),
+          );
+          document.body.appendChild(navMark);
+
+          // --- (b) Persistent fixed navbar links (cloned from in-card nav) -----
+          const navbar = document.createElement("nav");
+          navbar.className = "navbar";
+          navbar.setAttribute("aria-label", "Proxy Papers");
+          const srcLinks = [...inCardNav.querySelectorAll("a")];
+          const links = srcLinks.map((a) => {
+            const el = document.createElement("a");
+            el.href = "#";
+            el.innerHTML = "<span>" + a.textContent.trim() + "</span>";
+            navbar.appendChild(el);
+            return el;
+          });
+          const hairline = document.createElement("div");
+          hairline.className = "navbar__hairline";
+          document.body.appendChild(navbar);
+          document.body.appendChild(hairline);
+
+          // Capture rest geometry ONCE, before the pin is created. Pinning
+          // momentarily reflows the in-card nav, so re-measuring it later (on
+          // refresh) yields values shifted by the pin offset — which is exactly
+          // what desynced the links from the mark. Constants keep them in lockstep.
+          const restMark = lightMark.getBoundingClientRect();
+          const restLinks = srcLinks.map((s) => s.getBoundingClientRect());
+
+          // In-card nav steps aside (kept in layout); the fixed links overlay it
+          // exactly at rest, so the swap is invisible.
+          gsap.set(inCardNav, { autoAlpha: 0 });
+          // Hide the ENTIRE ink copy. Once the bone wordmark wipes away, the ink
+          // copy's ink-coloured glyphs would otherwise show as a dark "shadow"
+          // against the blue glow behind the logo. From here we only need the light
+          // copy (its wordmark wipes; its mark is replaced by the flying nav-mark).
+          gsap.set(svg, { opacity: 0 });
+          gsap.set(lightMark, { opacity: 0 });
+          // The feathered recolor mask has done its job (welcome→hero). Beyond rest
+          // the logo always sits on the dark card, so the mask is now a static
+          // full-coverage no-op — but it still forces the browser to re-rasterise the
+          // masked layer on the FIRST animated frame, which is the "first scroll hides
+          // the text instantly" stall. Drop it; the light copy is plain bone from here.
+          lightSvg.style.webkitMaskImage = "none";
+          lightSvg.style.maskImage = "none";
+
+          // ---- Rest placement (re-applied on refresh; CSS left/top aren't ST-managed) ----
+          const placeAtRest = () => {
+            gsap.set(navMark, {
+              left: restMark.left,
+              top: restMark.top,
+              width: restMark.width,
+              height: restMark.height,
+              x: 0,
+              y: 0,
+              scale: 1,
+              transformOrigin: "center center",
+            });
+            restLinks.forEach((r, i) => {
+              gsap.set(links[i], { left: r.left, top: r.top, x: 0, y: 0 });
+            });
+          };
+
+          // ---- Target geometry (from the captured rest constants) ----
+          const markTarget = () => ({
+            scale: 30 / restMark.height, // ~30px tall in the navbar
+            x: window.innerWidth / 2 - (restMark.left + restMark.width / 2),
+            y: NAV_Y - (restMark.top + restMark.height / 2),
+          });
+          const linkTargets = () => {
+            const vw = window.innerWidth;
+            const pad = vw * 0.0517; // matches the card nav inset
+            const GAP = Math.max(24, vw * 0.018);
+            const w = restLinks.map((r) => r.width);
+            const L = [];
+            L[0] = pad; // Approach — hard left
+            L[1] = pad + w[0] + GAP; // Services — beside it
+            L[3] = vw - pad - w[3]; // Contact — hard right
+            L[2] = L[3] - GAP - w[2]; // Referrers — beside it
+            return restLinks.map((r, i) => ({
+              x: L[i] - r.left,
+              y: NAV_Y - r.height / 2 - r.top,
+            }));
+          };
+
+          placeAtRest();
+          ScrollTrigger.addEventListener("refreshInit", placeAtRest);
+
+          // ---- The scrubbed transformation timeline ----
+          const stl = gsap.timeline({
+            // force3D emits matrix3d transforms → every animated element gets its
+            // own GPU compositor layer. On Firefox this moves the layer allocation
+            // off the first scroll frame (the "first-time-only" jank).
+            defaults: { ease: "power3.inOut", force3D: true },
+            scrollTrigger: {
+              trigger: ".stage",
+              start: "top top",
+              end: "+=150%", // 1.5 viewports — longer, more deliberate
+              pin: true,
+              scrub: 1, // smoothing catch-up — glides between scroll positions
+              // instead of snapping to raw wheel deltas (kills the "skipped frames"
+              // jitter); also de-janks the card scale via GPU layers (will-change)
+              invalidateOnRefresh: true,
+            },
+          });
+
+          // 1. Wordmark wipes out — light glyphs slide DOWN past their base (reverse
+          //    of the welcome reveal), clipping away.
+          stl.to(
+            lightGlyphs,
+            {
+              y: (i, t) => riseOfLight.get(t),
+              ease: "power2.in",
+              duration: 0.4,
+              stagger: 0.012,
+            },
+            0,
+          );
+
+          // 2. Ticker fades; the card's expansion carries it off the bottom edge.
+          stl.to(tickerEl, { opacity: 0, duration: 0.25, ease: "power1.out" }, 0);
+
+          // 3. Dark card expands to full-bleed (non-uniform; offset* is the
+          //    transform-independent layout size). glow + ghost ride along.
+          stl.to(
+            cardEl2,
+            {
+              scaleX: () => window.innerWidth / cardEl2.offsetWidth,
+              scaleY: () => window.innerHeight / cardEl2.offsetHeight,
+              duration: 0.9,
+            },
+            0.1,
+          );
+
+          // 4. The P-mark shrinks and flies to the navbar centre.
+          stl.to(
+            navMark,
+            {
+              x: () => markTarget().x,
+              y: () => markTarget().y,
+              scale: () => markTarget().scale,
+              duration: 0.7,
+            },
+            0.3,
+          );
+
+          // 5. Nav links spread to the screen edges (clearing the centre).
+          links.forEach((el, i) => {
+            stl.to(
+              el,
+              {
+                x: () => linkTargets()[i].x,
+                y: () => linkTargets()[i].y,
+                duration: 0.7,
+              },
+              0.3,
+            );
+          });
+
+          // 6. Faint navbar hairline settles in at the end.
+          stl.to(hairline, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0.78);
+
+          window.__scrollTL = stl; // exposed for testing
+          ScrollTrigger.refresh();
+
+          // Warm-up: render the end state once (suppressing callbacks) then reset, so
+          // the GPU layers, SVG clips and the full-bleed card scale are all primed
+          // before the first real scroll — no first-frame stall.
+          stl.progress(1, true);
+          stl.progress(0, true);
+          void document.body.offsetHeight; // force the style/layout flush
+        };
+
+        // Release the scroll lock and wire the mechanic once the intro resolves.
+        tl.eventCallback("onComplete", () => {
+          document.body.classList.add("is-dark");
+          root.classList.add("scroll-ready");
+          setupScroll();
+        });
+
+        // ---- Asset gate: only start the reveal once fonts are ready and every
+        // image is DECODED (not just downloaded). This keeps the first-load font
+        // reflow and the 1280×714 hero-bg PNG decode off the animation frames —
+        // the root cause of the "everything stutters on first load" jank. A 1.2s
+        // cap guarantees the reveal never hangs on a slow/missing asset. ----
+        const assetsReady = Promise.all([
+          document.fonts ? document.fonts.ready : Promise.resolve(),
+          ...[...document.images].map((img) =>
+            img.decode ? img.decode().catch(() => {}) : Promise.resolve(),
+          ),
+        ]);
+        const cap = new Promise((r) => setTimeout(r, 1200));
+        Promise.race([assetsReady, cap]).then(() => tl.play());
       });
     </script>
   </body>
