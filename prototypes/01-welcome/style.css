@@ -1,0 +1,188 @@
+:root {
+  --chinese-black: #161718;
+  --bone-white: #F7F4F0;
+  --proxy-blue: #5A90F4;
+  --navy-deep: #0c1530;        /* gradient anchor — dark, never pure black */
+  --ink-soft: rgba(247, 244, 240, 0.62);
+  --font: "General Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--chinese-black);
+  color: var(--bone-white);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;            /* welcome owns the viewport until it dissolves */
+}
+
+/* ============================================================
+   WELCOME / ONBOARDING SCREEN
+   ============================================================ */
+.welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--chinese-black);
+  overflow: hidden;
+  will-change: opacity, filter, transform;
+}
+
+/* The "alive" gradient — deep navy glow over Chinese Black, breathing slowly. */
+.bg-gradient {
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(60% 55% at 50% 42%, rgba(90, 144, 244, 0.16) 0%, rgba(12, 21, 48, 0.55) 38%, rgba(22, 23, 24, 0) 72%),
+    radial-gradient(90% 80% at 50% 120%, var(--navy-deep) 0%, rgba(22, 23, 24, 0) 60%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Fine matte grain — premium paper texture, very subtle. */
+.bg-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* A single thin Proxy-Blue light, traced diagonally across, once. */
+.light-trace {
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 60%;
+  height: 200%;
+  transform: rotate(28deg) translateX(-60vw);
+  background: linear-gradient(90deg, transparent, rgba(90, 144, 244, 0.55), transparent);
+  filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.brand {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.4rem;
+  will-change: transform, filter, opacity;
+}
+
+.brand__mark { line-height: 0; }
+
+/* "materialize from depth": each piece tweens --blur 18 → 0 alongside opacity/scale */
+.materialize {
+  filter: blur(var(--blur, 18px));
+  opacity: 0;
+  will-change: filter, opacity, transform;
+}
+
+.brand__word {
+  font-size: clamp(2rem, 5.2vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.tagline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: clamp(0.92rem, 1.7vw, 1.12rem);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+}
+
+/* Quiet enter cue — appears after the brand has settled. */
+.enter-cue {
+  position: absolute;
+  bottom: clamp(2.2rem, 6vh, 4rem);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.6rem 0.4rem;
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  transition: color 0.4s ease;
+}
+.enter-cue:hover { color: var(--bone-white); }
+.enter-cue svg { transition: transform 0.4s ease; }
+.enter-cue:hover svg { transform: translateY(3px); }
+
+/* ============================================================
+   HERO PLACEHOLDER (revealed beneath)
+   ============================================================ */
+.hero {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(80% 70% at 50% 30%, #1d2540 0%, var(--chinese-black) 60%);
+}
+.hero__bar { padding: clamp(1.4rem, 3vw, 2.2rem); }
+.hero__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 500;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+.hero__placeholder {
+  margin: auto;
+  color: rgba(247, 244, 240, 0.35);
+  font-weight: 300;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   Prototype-only replay control
+   ============================================================ */
+.replay {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 50;
+  padding: 0.5rem 0.85rem;
+  background: rgba(247, 244, 240, 0.06);
+  border: 1px solid rgba(247, 244, 240, 0.14);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.replay:hover { color: var(--bone-white); border-color: rgba(247, 244, 240, 0.3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-gradient { opacity: 1 !important; }
+  .materialize { filter: none !important; opacity: 1 !important; }
+  .enter-cue { opacity: 1 !important; }
+}

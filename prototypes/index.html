@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:," />
+  <title>Proxy Papers — Prototypes</title>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#f7f4f0; --ink:#1c1d1e; --soft:rgba(28,29,30,.56); --line:rgba(28,29,30,.13); --blue:#5a90f4; --card:rgba(28,29,30,.025); }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--ink); font-family:"General Sans","Helvetica Neue",Arial,sans-serif; -webkit-font-smoothing:antialiased; padding:clamp(2rem,6vw,5rem); max-width:1040px; margin:0 auto; }
+    .mark { height:2.4rem; width:auto; display:block; margin-bottom:1.4rem; overflow:visible; }
+    .mark .s { fill:var(--ink); } .mark .b { fill:var(--blue); }
+    h1 { font-size:clamp(1.8rem,4vw,2.6rem); font-weight:500; letter-spacing:-.02em; }
+    .lead { color:var(--soft); font-weight:300; margin-top:.6rem; max-width:52ch; line-height:1.55; }
+    h2 { font-size:.76rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin:3rem 0 1.1rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1rem; }
+    a.card { display:block; padding:1.2rem 1.3rem; border:1px solid var(--line); border-radius:14px; background:var(--card); color:inherit; text-decoration:none; transition:border-color .25s ease, transform .25s ease; }
+    a.card:hover { border-color:var(--blue); transform:translateY(-2px); }
+    a.card .n { font-size:.72rem; font-weight:600; letter-spacing:.14em; color:var(--soft); }
+    a.card .t { font-size:1.05rem; font-weight:500; margin:.35rem 0 .3rem; }
+    a.card .d { font-size:.84rem; font-weight:300; color:var(--soft); line-height:1.45; }
+    footer { margin-top:3.4rem; font-size:.8rem; color:var(--soft); border-top:1px solid var(--line); padding-top:1.2rem; }
+  </style>
+</head>
+<body>
+  <svg class="mark" viewBox="0 0 110 120" aria-hidden="true"><rect class="s" x="26" y="16" width="22" height="90" rx="11"/><path class="b" d="M46 20 L92 20 Q100 20 96 29 L64 64 Q57 71 50 67 L46 63 Z"/></svg>
+  <h1>Proxy Papers — prototypes</h1>
+  <p class="lead">Maquettes HTML / CSS / GSAP. Bascule clair / sombre dans chaque page (clair par défaut). Chaque écran rejoue son animation via « Rejouer ».</p>
+
+  <h2>Écrans d'accueil — révélation</h2>
+  <div class="grid">
+    <a class="card" href="01-welcome/index.html"><div class="n">01 · référence</div><div class="t">Gradient Awakening</div><div class="d">Dégradé vivant, traçé de lumière. Conservé pour référence.</div></a>
+    <a class="card" href="02-mark-reveal/index.html"><div class="n">02</div><div class="t">The Mark Reveal</div><div class="d">Le logo s'assemble, le nom se révèle lettre à lettre.</div></a>
+    <a class="card" href="03-chaos-to-order/index.html"><div class="n">03</div><div class="t">Chaos to Order</div><div class="d">Des documents épars se rangent et deviennent le logo.</div></a>
+    <a class="card" href="04-editorial-statement/index.html"><div class="n">04</div><div class="t">Editorial Statement</div><div class="d">Une phrase se révèle mot à mot, puis le logo.</div></a>
+  </div>
+
+  <h2>Hero — inspiré de Revolut</h2>
+  <div class="grid">
+    <a class="card" href="05-hero-product/index.html"><div class="n">05</div><div class="t">Produit (scindé)</div><div class="d">Titre XXL + carte Papers Box en 3D, puces flottantes, parallaxe.</div></a>
+    <a class="card" href="06-hero-overlap/index.html"><div class="n">06</div><div class="t">Overlap</div><div class="d">Titre géant que la carte produit recouvre — effet de profondeur.</div></a>
+    <a class="card" href="07-hero-immersive/index.html"><div class="n">07</div><div class="t">Immersive</div><div class="d">Carte centrale, puces en orbite, flottement continu, atmosphère.</div></a>
+  </div>
+
+  <h2>Écrans d'accueil — dispositions</h2>
+  <div class="grid">
+    <a class="card" href="08-welcome-layouts/index.html"><div class="n">08</div><div class="t">Layouts</div><div class="d">Quatre dispositions (Centré · Éditorial · Scindé · Ancré) qui se transforment.</div></a>
+  </div>
+
+  <footer>Police : General Sans (substitut libre de PP Neue Montreal). Logo : SVG provisoire à remplacer.</footer>
+</body>
+</html>

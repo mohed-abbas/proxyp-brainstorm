@@ -1,0 +1,304 @@
+﻿DEVTROX        CONFIDENTIAL - CLIENT DISCOVERY
+
+
+
+
+PREPARED FOR
+Proxy Papers
+Brand & Website
+Discovery Questionnaire
+A short set of questions designed to help us create a brand and website that reflects Proxy Papers with precision, restraint, and the right level of premium.
+
+
+
+
+Prepared by Devtrox        April 2026
+A NOTE BEFORE YOU BEGIN
+Why this matters
+
+
+Thank you for trusting us with the rebuild of Proxy Papers. Before we begin designing, we want to understand how you see the brand, what you respond to visually, and where the line is between "premium" and "overbuilt" for your audience.
+This document replaces the first half of a kickoff call. It lets you think carefully about each answer in your own time, and gives us the raw material to produce work that is right the first time rather than the third.
+
+
+PLEASE TAKE THIS SERIOUSLY
+The sections on visual references (questions 5 through 8) are the most important part of this document. The quality of our design directly depends on how specific and honest you are in those answers. Generic answers produce generic design.
+	
+
+What to expect
+The questionnaire takes approximately 25 to 30 minutes to complete thoughtfully. It is organised into seven short sections:
+One.  Brand feeling - the emotional brief.
+Two.  Visual references - what you admire and avoid.
+Three.  Colour and tone - the mood of the brand.
+Four.  Language and voice - how Proxy Papers should speak.
+Five.  The audience - who we are really designing for.
+Six.   Practical constraints - approvals, timing, ownership.
+Seven. Success - what a win looks like six months from launch.
+How to answer
+Write directly in the boxes beneath each question. There is no word count - be as brief or as detailed as feels right. When you share links or references, please paste the exact URL to the page you mean, rather than just a homepage.
+When you are finished, save the document and send it back to our team. We will review everything before our next call so the conversation can focus on direction rather than briefing.
+
+
+
+
+
+
+SECTION ONE
+Brand feeling
+Before we design anything, we want to understand what Proxy Papers should feel like - not just look like.
+
+
+01.   If Proxy Papers were a person walking into a room full of potential clients, how would you want them to be described in one sentence after that person left?
+Someone who made you feel calmer within five minutes of meeting them. Not flashy, not corporate, not salesy — the kind of person whose competence is obvious without being announced. You would leave thinking: "I want them looking after my affairs."
+	
+
+02.   What three adjectives should someone feel when they land on your website for the first time?
+For example: discreet, established, reassuring - or confident, modern, quietly authoritative.
+Sovereign. Discreet. Meticulous.
+A fourth if allowed: contemporary — we are a private service, but a modern one. Not old money, not old bank.
+	
+
+03.   What three adjectives would be a complete failure - words that, if a client used them to describe Proxy Papers, would mean we got it wrong?
+This is often more useful than the positive list. It helps us avoid blind alleys.
+Corporate. Stuffy. Generic.
+Also avoid at all costs: anything that reads as a law firm, a private bank, or a fintech SaaS landing page. If it looks like Oddo BHF, Cheval Blanc Patrimoine, or a Stripe clone, we missed.
+	
+
+04.   When a notary or wealth manager refers a client to Proxy Papers, what do you want them to say about you in that referral conversation?
+"They take care of the entire administrative and data side of my client’s private life — securely, on sovereign tools, with one dedicated advisor. It saves me and my client real time, and nothing leaks."
+The referral sentence we are trying to earn is essentially: a trusted third party, not a competitor to the advisor.
+	
+
+
+
+SECTION TWO
+Visual references
+This section is the single most important part of the questionnaire. Please answer with specific examples rather than adjectives where you can.
+
+
+A REQUEST
+For questions 5 and 6, please paste the exact URL of the page you admire - not just the homepage. The specific page matters more than the brand.
+	
+
+05.   Please share three to five websites you genuinely admire - from any industry, not just yours. What specifically do you like about each?
+Think beyond your sector. Editorial sites, hotel groups, watchmakers, publications, private banks, architectural firms - anything you find quietly beautiful.
+https://www.osmose.co/nous-rejoindre-hotel — This is the closest reference to what I want. Editorial warmth, serif typography used with restraint, beautiful spacing, and a tone that feels human without losing premium. The way text breathes on the page is exactly what I want to feel on Proxy Papers.
+https://finary.com/fr — For the dark, gradient-based aesthetic. Deep backgrounds, subtle colour accents, and a clear sense of product even on marketing pages. I want that same depth — premium without going pure black.
+https://www.revolut.com/fr-FR/ — Specifically for the animations and 3D motion. I do not want Revolut’s brand (too fintech, too consumer), but I want that level of motion craft on our hero and on scroll. Sparingly.
+Private service firms and editorial publications in general — anything that feels closer to a magazine or a hotel than to a bank.
+	
+
+06.   Please share two to three websites from direct or adjacent competitors (private banking, notary services, family offices, wealth management, legal firms). What do they do well, and what feels outdated or wrong?
+https://www.chevalblanc-patrimoine.fr/ — Exactly what I do not want. Flat, institutional, frozen in time. Feels like a brochure from 2012. No life, no motion, no sense that a human works there.
+https://www.oddo-bhf.com/fr/ — Same issue. Corporate banking aesthetic, dense, blue, slow. It reassures no one who is under sixty.
+What these sites do well: they signal seriousness and they don’t make mistakes. That’s the bar we need to clear on trust. But on everything else — feel, modernity, tone — we should be the opposite of them.
+	
+
+07.   Are there any brands outside of the digital world whose identity you admire? Physical stationery, private banks, watch brands, hotels, publications - anything. Names or images are welcome.
+Example: the way Pictet prints its annual report, the restraint of Patek Philippe brochures, the stationery of Smythson of Bond Street.
+Stationery and publications over banks: the restraint of editorial brochures, thick matte paper, minimal use of colour, generous white space.
+In the digital world, the Osmose reference above is the single strongest visual north star — it translates that editorial-print sensibility into a modern, animated web experience.
+Not Pictet, not Rothschild, not private bank references — those pull us back towards the Cheval Blanc / Oddo world we want to avoid.
+	
+
+08.   Are there any websites, brands, or visual styles you actively dislike or want us to avoid? Specific examples are far more useful than adjectives.
+Avoid at all costs:
+— https://www.chevalblanc-patrimoine.fr/ and https://www.oddo-bhf.com/fr/ — for all the reasons above.
+— Gold. No gold. The previous brand (My Papers & Co) used a cream + gold palette and we are deliberately moving away from it. Gold signals old-money private banking, which is the exact perception we are trying to shed.
+— Generic SaaS illustrations (the Stripe / Linear / Notion pastel blob style).
+— Stock photography of suited men shaking hands or looking at tablets.
+— Anything that screams "bank," "law firm," or "family office brochure."
+	
+
+
+
+
+
+SECTION THREE
+Colour and tone
+The palette and overall mood of the brand - the dials we will turn in the first design round.
+
+
+09.   Are there any colours you feel strongly about - either in favour of or against?
+Some clients reject blue because every bank uses it. Others require it. Both are valid positions, but we need to know before we begin.
+Strong preference: deep, premium dark palette with a gradient — not flat black. Think dark navy / near-black / deep charcoal with subtle gradient transitions, in the spirit of Finary’s backgrounds.
+Accent: one restrained accent colour to be proposed by you (open to warm stone, muted bronze done tastefully, a deep green, or a signature off-white). Not gold. Not royal blue.
+Reject: pure jet black (too aggressive / too tech-bro), pastel colours, and the generic corporate-blue used by every bank and notary in France.
+	
+
+10.   On a scale from "warm and human" to "cool and institutional", where should Proxy Papers sit?
+A number between 1 and 10, where 1 is warm and human and 10 is cool and institutional, is perfectly fine.
+4 out of 10.
+Leaning warm, but only just. The service is deeply human — one dedicated advisor, real conversations — and the brand should reflect that. But the client is someone who values restraint, so we cannot go fully warm (which would read as unserious to a business owner with €10M+ in assets). The word I come back to is "quietly confident."
+	
+
+11.   On a scale from "traditional and heritage-driven" to "modern and forward-looking", where should Proxy Papers sit?
+Same format: a number between 1 and 10, where 1 is heritage and 10 is modern.
+8 out of 10.
+Clearly modern. Proxy Papers is a contemporary service using sovereign technology for a present-day problem (data accumulation, digital complexity, upcoming e-invoicing, AI-era document volume). Traditional design would be a lie — and would put us in the same visual bucket as the players we are trying to differentiate from.
+	
+
+12.   Should the brand feel more like an old private bank or more like a discreet modern service firm?
+Both are valid, but they lead to very different design decisions. A short answer explaining why is helpful.
+Unambiguously the second: a discreet modern service firm.
+The reason matters. My clients are business owners, entrepreneurs who sold, and heirs. They already have a private bank, a notary, a wealth manager. They do not need another institution in their lives — they need a modern, agile, human relay that plugs into those institutions. The design has to say: "we are not like your private bank, that’s the point."
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SECTION FOUR
+Language and voice
+How Proxy Papers should speak, in English and - where relevant - in French.
+
+
+13.   Will the client-facing website launch in English only, or will a French version follow?
+This affects typography choices. French typesetting has different requirements around spacing, accents, and line length.
+French is the primary language. The client base and the advisor network are French.
+English is a secondary deliverable — useful for international prospects, non-French-speaking spouses, and partners (we have already produced an English company overview for exactly that audience). The site should be architected with an English version in mind from day one, but French is the priority launch.
+	
+
+14.   How should we address the visitor - formally (the equivalent of vous), or warmer and more direct?
+Vouvoiement, always. The audience — dirigeants, rentiers, héritiers de patrimoine conséquent — would find tutoiement immediately off-putting.
+Within vous, the register should be warm and direct — not stiff. Short sentences. Real verbs. No corporate jargon. Closer to a well-written letter than to a banking brochure.
+	
+
+15.   Are there any specific words, phrases, or industry terms you love, or that you want us to avoid?
+Some clients hate the word "solutions." Others insist on it. Tell us yours.
+Approved vocabulary: gestion privée des données, conseiller dédié, technologie souveraine, pionnier, sur-mesure, tiers de confiance, discrétion, structurer, sécuriser.
+Banned vocabulary:
+— "administratif" (too restrictive, positions us as a secretarial service — we are not)
+— "patrimoine" used alone (creates confusion with wealth management / CGP, which is not our job)
+— "solution" (SaaS cliché)
+— "numéro 1" / "le seul" / "leader" (we say pionnier instead — the category is ours to define, not to claim)
+— "disruptif," "révolutionnaire," "game-changer," and anything in that register
+— "coffre-fort numérique" as the lead term (we are more than that — it is one component of the Papers Box, not the brand)
+	
+
+16.   The tagline we currently have is: "A dedicated advisor. Sovereign technology." (In French: "Un conseiller dédié. Une technologie souveraine.") Should this appear prominently on the website, or is it more of an internal positioning statement?
+The tagline "Un conseiller dédié. Une technologie souveraine." should appear prominently — it is the signature of the brand and does two jobs in seven words (the human promise + the sovereign promise).
+My preference: on the homepage hero, just under or beside the brand name. Not hidden in the footer. Not repeated on every page. On internal pages it can disappear and let the page content do the work.
+	
+
+
+
+SECTION FIVE
+The audience reality check
+We design better when we design for a specific person rather than a segment.
+
+
+17.   Of your existing clients, which one best represents the ideal future client? Can you describe them - age range, profession, situation - without naming them?
+The archetype: a founder-owner of a family business, 50–65, who has either sold their company in the last 3 years or is preparing to transmit it. €5–30M in net assets. Several holdings, a couple of SCI, life-insurance contracts, a primary residence plus one or two investment properties, sometimes a minority stake in another business. Tax bracket 45% + IFI.
+Already well advised — has a good expert-comptable, a notary they like, and a private banker. What they do not have is anyone who sits above all of those and organises their personal side. Their spouse handles the everyday, their assistant handles the company, but nobody owns the bridge between the two.
+Pain point: every time something happens (a sale, a donation, a succession question, an audit, a real-estate purchase), they spend hours hunting down documents across emails, drawers, and advisor portals. They resent it. They are willing to pay to never do it again.
+	
+
+18.   When a prospect lands on the website, are they more likely to have heard about Proxy Papers from a trusted advisor, to have been searching for a service like yours, or to have found you by chance?
+This shapes how much explanation the homepage needs to do.
+Overwhelmingly referral. The service is built on trust, and trust travels through prescripteurs — notaries, experts-comptables, CGPs, family offices, private bankers.
+A prospect arriving on the site has almost always been told to look at us by someone they trust. That means the homepage does not need to sell from zero — it needs to confirm a positive expectation. Reassure, not pitch.
+Direct search is secondary. SEO is not a primary acquisition channel for this audience.
+	
+
+
+
+
+
+
+
+
+
+19.   What is the single biggest objection or hesitation prospects raise before they book a meeting, and how do you currently handle it?
+If we know the objection, we can address it through design and copy before the prospect has to ask.
+"I already have a notary, a CGP, and an expert-comptable — what are you actually doing that they don’t?"
+How we handle it: we explain that we are not another advisor. We do not give tax advice, legal advice, or investment advice. We are the layer underneath — the one that collects, organises, updates, and shares the data their existing advisors need. We make their existing advisors more effective, not redundant.
+Design / copy implication: the homepage must, within the first screen, make clear what we are not (not a CGP, not a lawyer, not a bank) as well as what we are. Positioning by negation works well for this audience.
+	
+
+
+
+SECTION SIX
+Practical constraints
+The things that shape the project without being visible in the final design.
+
+
+20.   Are there any existing brand assets we must keep - a colour, a specific font, a tagline, anything historical we are not allowed to change?
+Keep: the name Proxy Papers. The tagline "Un conseiller dédié. Une technologie souveraine." The category descriptor "gestion privée des données." The five-step method (Lancement → Organisation → Suivi → Support → Gestion). The product name Papers Box. The three bespoke profiles (Essentiel, Signature, Exception).
+Drop: everything from My Papers & Co. The cream + gold palette is out. The current Proxy Papers logo is open to refresh — propose something, but keep the P motif recognisable if possible.
+Certifications that must appear somewhere credible on the site: RGPD compliance, NF203 coffre-fort, AI Act, tiers de confiance fiscal.
+	
+
+21.   Who on your side has final approval on design decisions? Is it one person, or will multiple stakeholders need to sign off?
+If more than one person, please tell us who has the final say when there is disagreement. This single answer often determines whether a project launches on time.
+Single final approver on my side. I run the agency engagement and I have the client’s mandate on brand and web decisions. Jivko signs off.
+The client (Proxy Papers leadership) is kept in the loop at milestone stages — initial direction, pre-launch review — but does not sit in the design approval cycle. This keeps things fast.
+	
+
+22.   Is there a launch date we are working backwards from - an event, a partnership announcement, a PR moment?
+Target: Q3 2026. No hard external event, but we want the new site live well before the Experts-Comptables congress in Paris (autumn 2026), which is a major prescripteur moment for the brand.
+Soft deadline: a usable staging site by end of summer 2026 so we can start warming up the prescripteur network before the congress.
+	
+
+23.   After launch, who will maintain the website - your team, Devtrox, or someone else?
+This affects how we structure the Framer build and what we document during handoff.
+Devtrox builds and hands off. My agency maintains content updates (copy, case studies, new certifications, partner logos). Structural changes and any evolution of components come back to you on a retainer or per-project basis.
+Preference: Framer build (given your stack), so that ongoing content edits can be done by my team without touching code.
+	
+
+
+
+
+
+SECTION SEVEN
+Success
+One last pair of questions. Please answer them last, after everything else.
+
+
+24.   Six months after launch, what does success look like? Is it number of Calendly bookings, quality of bookings, referrals from advisors, or something else entirely?
+In order of importance:
+1. Quality of bookings over quantity. Ten qualified discovery calls per quarter with the right profile (the archetype described in Q17) is worth more than a hundred mismatched leads.
+2. Prescripteur adoption. The real KPI is how many notaries, CGPs, and experts-comptables forward the site or the brochure to a client in the first six months. Measurable via UTM-tagged referral links and direct feedback.
+3. The site replaces the sales pitch. Right now every prospect meeting starts with "let me explain what we do." Six months in, the site should have done that work before the call — so the first meeting is about the client’s situation, not about us.
+What I am not chasing: traffic, SEO rankings, or newsletter signups.
+	
+
+25.   Is there anything we haven't asked that you think is important for us to know before we start designing?
+Often the most useful answers live here. Trust the instinct.
+Three things worth knowing before you start designing.
+One — the category is new. "Gestion privée des données" does not yet exist as a named service in France. We are defining the category, not entering one. This gives us design freedom (no sector conventions to respect) but also a burden (the site has to teach in its first screen what the category is, without feeling pedagogical).
+Two — the client is not a novice buyer. These are people who meet private bankers for a living. They will notice the difference between a site that is trying hard and a site that is simply well-made. The single most important design brief I can give you is: do less, do it better, and give it room. Restraint will read as confidence. Over-designing will read as compensation.
+Three — animations and motion matter, but they are the seasoning, not the dish. Osmose-level editorial restraint as the base, with Finary / Revolut-style motion accents used sparingly (hero reveal, scroll transitions, a product-feel moment on the Papers Box section). Never motion for its own sake.
+That’s it. Ask anything that’s unclear before the next call — I would rather answer ten questions by email than discover a misunderstanding in round two.
+	
+
+WHAT HAPPENS NEXT
+Thank you
+
+
+Once you have completed this questionnaire, please save the document and send it back to us. We will review your answers carefully before our next call so that conversation can focus on direction - not on briefing.
+Within approximately one week of receiving your answers, we will return with three distinct brand directions for your review: palette, typography, and an applied visual example for each.
+
+
+A final note
+There are no wrong answers in this document. The more honest and specific you can be - particularly in the sections on visual references and on dislikes - the better our work will be from the first round.
+We are looking forward to building this with you.
+
+
+- The Devtrox team

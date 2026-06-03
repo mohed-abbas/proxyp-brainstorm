@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:," />
+  <title>Proxy Papers — Écran d'accueil (prototype)</title>
+
+  <!-- General Sans = free stand-in for PP Neue Montreal (commercial). Swap when font files arrive. -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ============ HERO PLACEHOLDER (revealed after the welcome dissolves) ============ -->
+  <section class="hero" aria-hidden="true">
+    <div class="hero__bar">
+      <span class="hero__logo">
+        <svg viewBox="0 0 110 120" width="26" height="28" aria-hidden="true"><use href="#pp-mark" /></svg>
+        Proxy&nbsp;Papers
+      </span>
+    </div>
+    <p class="hero__placeholder">La page d'accueil (hero) viendra ici&nbsp;— prochaine étape.</p>
+  </section>
+
+  <!-- ============ WELCOME / ONBOARDING SCREEN ============ -->
+  <div class="welcome" id="welcome">
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <div class="bg-grain" aria-hidden="true"></div>
+    <span class="light-trace" aria-hidden="true"></span>
+
+    <div class="brand">
+      <div class="brand__mark materialize" aria-hidden="true">
+        <svg viewBox="0 0 110 120" width="84" height="92"><use href="#pp-mark" /></svg>
+      </div>
+      <h1 class="brand__word materialize">Proxy&nbsp;Papers</h1>
+      <p class="tagline">
+        <span class="materialize">Un conseiller dédié.</span>
+        <span class="materialize">Une technologie souveraine.</span>
+      </p>
+    </div>
+
+    <button class="enter-cue" id="enterCue" type="button">
+      <span>Entrer</span>
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 4v15m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <!-- prototype-only control -->
+  <button class="replay" id="replay" type="button" title="Rejouer l'animation">↻ Rejouer</button>
+
+  <!-- ===== Shared P-mark (PLACEHOLDER — approximate reconstruction, swap for real SVG) ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="pp-mark" viewBox="0 0 110 120">
+        <!-- bone-white stem (kept tall so the lower leg reads as a P) -->
+        <rect x="26" y="16" width="22" height="90" rx="11" fill="#F7F4F0" />
+        <!-- proxy-blue folded blade — the 45° "opening", sitting on the upper stem -->
+        <path d="M46 20 L92 20 Q100 20 96 29 L64 64 Q57 71 50 67 L46 63 Z" fill="#5A90F4" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="welcome.js"></script>
+</body>
+</html>

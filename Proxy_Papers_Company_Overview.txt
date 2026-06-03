@@ -1,0 +1,191 @@
+﻿PROXY  PAPERS
+Company Overview
+Private data management for high-net-worth individuals and their advisors.
+
+
+Confidential — April 2026
+________________
+
+
+Who we are
+
+
+Proxy Papers is a French premium service founded in 2016, dedicated to the private management of personal data and documents for high-net-worth individuals. We operate at the intersection of human expertise and sovereign technology — a space that, until now, had no dedicated player.
+Our clients have built structured wealth. They are well-advised — tax attorneys, notaries, CPAs, wealth managers, private bankers. Yet one critical layer is consistently missing: a trusted professional whose sole responsibility is to organise, secure, and maintain the full documentary and data ecosystem of their private life. That is what Proxy Papers provides.
+Your wealth is structured. Your data rarely is. That gap is where everything becomes complicated.
+Our founding story
+The company was founded after a direct personal experience: the founder's grandfather suffered from Alzheimer's disease, and when he passed, the absence of organised personal documentation turned an already difficult succession into an extended ordeal. Proxy Papers was born from the conviction that this kind of chaos — preventable, costly, emotionally taxing — should never be inevitable.
+The founder's background in the accounting sector and a subsequent venture in GDPR compliance consulting (Optimex Data, 2017–2023) gave the company a rare combination of expertise: intimacy with the advisory ecosystem, a deep understanding of data sovereignty issues, and a practical grasp of what high-net-worth individuals actually need — and currently lack.
+Where we stand today
+In 2026, Proxy Papers operates from its headquarters in Grenoble and a second branch in Toulon. The company is relaunching with a reinforced positioning, a dedicated technology platform (Papers Box), and a clear focus on the premium segment. A network of brand licensees operated between 2016 and 2021; the current strategy is direct delivery with the highest service standards.
+
+
+2016
+Founded
+	10+
+Years of expertise
+	2
+Operating branches
+	100%
+Sovereign data hosting
+	________________
+
+
+The problem we solve
+
+
+High-net-worth individuals face a structural blind spot. Their financial, legal, and tax affairs are handled by qualified professionals. But the documentary layer that underpins all of it — the contracts, notarial deeds, insurance policies, SCI leases, beneficiary clauses, tax filings, succession documents — lives nowhere coherently. It is scattered across emails, filing cabinets, cloud drives, and the memories of trusted assistants who may leave.
+This creates recurring, measurable costs that are rarely quantified but universally experienced.
+
+
+1 in 4
+Adults have lost a critical document
+	50h
+Lost per year searching for documents
+	€5,000
+Annual cost of information retrieval
+	30%
+Of advisor time spent chasing paperwork
+	Sources: Association Information et Management; internal estimates.
+The downstream consequences are more severe than the daily friction: a succession delayed by months for lack of organised documents, an insurance beneficiary clause that was never updated, a notarial deed that cannot be located when a property transaction requires it. These are not edge cases — they are the norm.
+Our answer
+Proxy Papers fills this gap with a structured, ongoing service that combines a dedicated human advisor with a certified sovereign technology platform. We are not a storage tool. We are not a financial advisor. We are the connective tissue between a client's private life and the professionals who serve it.
+OUR PROMISE
+A dedicated advisor. Sovereign technology. — Un conseiller dédié. Une technologie souveraine.
+	Concretely: a Proxy Papers advisor comes to the client, collects and organises all private documents and data, structures them in the Papers Box (our proprietary platform, hosted in France), sets up secure sharing with the client's advisors, and provides ongoing maintenance — month after month, year after year. Every deadline is tracked. Every document is current. Every advisor gets what they need, when they need it.
+What we do not do
+We do not provide tax, legal, or financial advice. We do not manage assets. We do not replace the client's notary, CPA, attorney, or wealth manager. We make those professionals more effective by ensuring their client arrives prepared.
+________________
+
+
+Our offer
+
+
+Every engagement begins with a free discovery meeting, followed by a paid onboarding audit. This produces a written diagnosis and a tailored proposal. All pricing is established on a bespoke basis — no public rate card. The service is delivered in two sequential phases.
+Phase 1 — Initial organisation
+A one-time engagement lasting two to six months depending on complexity. The advisor collects, sorts, classifies, and secures the full documentary estate of the client. At the end of Phase 1, the client has a structured, searchable, secure repository on the Papers Box, and a trained point of contact who knows their situation in full.
+Phase 2 — Annual subscription
+An ongoing annual engagement, renewable, with three service levels depending on the client's profile.
+
+
+ESSENTIAL
+—  Structured personal estate (primary residence, 1–2 rental properties, classic savings)
+—  Dedicated advisor, quarterly on-site visits
+—  Continuous document updates
+—  Deadline alerts via Papers Box
+—  Secure sharing with advisors
+	
+
+	SIGNATURE — flagship
+—  Composite estate: holding company, SCI, diversified investments, ongoing donations
+—  Monthly on-site visits
+—  Active coordination with all advisors
+—  Preparation of notary / CPA / WM meetings
+—  Personalised bi-annual report
+	
+
+EXCEPTION — for complex estates
+Multiple corporate structures, foreign assets, ongoing business sale or succession. Priority advisor availability, weekly intervention capability, coordination with family office or private bank, quarterly strategic report. Bespoke proposal only.
+	Additional mandates
+Outside the subscription, Proxy Papers handles exceptional situations as standalone mandates: succession support, business sale preparation, documentary history reconstruction, annual standalone audit. These are scoped and priced separately.
+Who we serve
+
+
+DIRECT CLIENTS
+—  Business owners — active or recently sold
+—  Patrimonial families — especially ahead of transmission
+—  Inheritors — receiving a complex estate without prior organisation
+—  High-income individuals — top marginal tax bracket, IFI (wealth tax) liable
+—  High-performance athletes — with complex and fluctuating income structures
+	
+
+	REFERRAL PARTNERS
+—  Notaries — succession, deed management
+—  CPAs and accounting firms — personal data often missing
+—  Wealth managers and CGP — client organisation directly affects advisory quality
+—  Attorneys — tax, corporate and family law
+—  Private banks and family offices — for their most demanding clients
+	________________
+
+
+Technology and credentials
+
+
+Proxy Papers is not a digital vault with a consultant attached. The Papers Box is a purpose-built platform, developed and operated under French sovereignty, that serves as the operational backbone of every client relationship.
+Papers Box — key features
+—  Real-time document repository, organised by theme (real estate, financial assets, succession, insurance, tax).
+—  Encrypted sharing with the client's advisors — selective, revocable access per document or folder.
+—  Automated deadline alerts for renewals, filings, contractual events.
+—  Periodic personalised reporting for the client and, optionally, their advisors.
+—  Hosted exclusively in France by Infomaniak. No data transfer outside the European Union.
+—  Accessible from any device; intuitive interface requiring no technical training.
+Certifications and accreditations
+The following accreditations are active and verifiable. They are not marketing claims — they are regulatory and technical obligations that Proxy Papers meets and maintains.
+
+
+GDPR
+	Full compliance with EU General Data Protection Regulation. Data processing, retention, access and deletion are governed by explicit legal basis.
+	
+
+NF203CCFN
+	AFNOR-certified digital safe. French national standard for secure long-term archiving with legal evidential value.
+	
+
+EU AI Act
+	Compliance with the European regulation on artificial intelligence. No uncontrolled AI processing of client data.
+	
+
+Tiers de confiance
+	Recognised by French tax authorities as a trusted third party for the conservation of legally probative documents.
+	
+
+Sovereign hosting
+	Infrastructure operated by Infomaniak, a Swiss-French provider. No US cloud, no third-country data exposure.
+	
+
+Why these credentials matter
+For a client who is entrusting Proxy Papers with documents relating to their succession, their assets, their family, and their finances, accreditations are not a secondary concern. They are the contractual and regulatory foundation of trust. No other service in this market combines all five of these certifications in a single integrated offering. This is a durable competitive advantage.
+________________
+
+
+Value and partnership
+
+
+The measurable value we deliver
+The following estimates are derived from sector data and internal observations. They are conservative and apply to a client with a Signature-level estate profile.
+
+
+70%
+Time saved during key life events
+	€2,000
+Estimated annual value recovered (time + cost)
+	0
+Missed deadlines for active clients
+	100%
+Document accessibility, anytime
+	
+
+Beyond time and cost, Proxy Papers delivers three outcomes that are difficult to price but acutely felt: peace of mind ahead of a succession, confidence during a business sale, and the ability to meet any advisor request within minutes rather than days. For clients who have experienced the alternative, this has immediate and lasting value.
+The referral partner model
+Proxy Papers operates two distinct partnership models, reflecting the professional realities of our two referral segments.
+Regulated professions — referral between peers
+For notaries, CPAs, and attorneys, we operate a reciprocal referral model with no financial commission. These professions are subject to deontological rules that prohibit or severely restrict commission-based referrals. Our relationship with them is based on mutual benefit: a better-organised client saves the professional significant time, improves the quality of their advisory work, and strengthens the client relationship. We list their firm; they recommend Proxy Papers where appropriate.
+Advisors and introducers — business referral
+For wealth managers (CGP), brokers, insurers, and family offices, we offer a formal business introduction agreement. A referral fee is paid on the first year of subscription — the precise rate is agreed contractually on a case-by-case basis. The arrangement is fully transparent to the end client and governed by a written convention.
+White-label and licensing
+Proxy Papers is open to exploring white-label arrangements for partners who wish to integrate the Papers Box platform and associated advisory service into their own client offering, under their brand. This model is subject to minimum volume commitments, a formal agreement, and quality standards alignment. Interested parties should contact the founding team directly.
+Our competitive position
+No single player currently offers the combination that Proxy Papers provides: a dedicated human advisor, a purpose-built sovereign platform, and a full stack of regulatory accreditations, applied specifically to the private documentary estate of high-net-worth individuals. Digital vaults exist — they are tools, not services. Private concierge services exist — they lack technology and accreditations. Proxy Papers is the only actor that combines all three.
+Founded in 2016, Proxy Papers has ten years of operational experience in this space — a period during which the company built expertise, tested models, and developed the platform now in active deployment. This longevity in a market that did not yet have a name is a material advantage that no new entrant can replicate by simply launching a product.
+Contact
+—  Headquarters: Grenoble, France
+—  Second branch: Toulon, France
+—  Website: www.proxy-papers.fr
+—  For partnership inquiries, please contact the founding team directly.
+
+
+
+
+Proxy Papers — Private data management.
+Un conseiller dédié. Une technologie souveraine.
+Proxy PapersCompany OverviewConfidential
