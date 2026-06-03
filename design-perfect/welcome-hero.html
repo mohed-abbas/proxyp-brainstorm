@@ -297,17 +297,6 @@
       .navbar a span {
         display: inline-block;
       }
-      /* Faint hairline surface under the navbar — fades in at the end of the scrub. */
-      .navbar__hairline {
-        position: fixed;
-        left: 0;
-        top: 56px;
-        width: 100%;
-        height: 1px;
-        background: var(--hairline-track);
-        opacity: 0;
-        z-index: 5;
-      }
       /* The flying P-mark — a standalone clone that travels to the navbar centre
          (the in-lockup mark is hidden once this exists). */
       .nav-mark {
@@ -820,10 +809,7 @@
             navbar.appendChild(el);
             return el;
           });
-          const hairline = document.createElement("div");
-          hairline.className = "navbar__hairline";
           document.body.appendChild(navbar);
-          document.body.appendChild(hairline);
 
           // Capture rest geometry ONCE, before the pin is created. Pinning
           // momentarily reflows the in-card nav, so re-measuring it later (on
@@ -961,9 +947,6 @@
               0.3,
             );
           });
-
-          // 6. Faint navbar hairline settles in at the end.
-          stl.to(hairline, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0.78);
 
           window.__scrollTL = stl; // exposed for testing
           ScrollTrigger.refresh();
