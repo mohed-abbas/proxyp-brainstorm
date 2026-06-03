@@ -1387,12 +1387,19 @@
           // takes the same LOGO_S in both directions.
           const LOGO_S = 2.1; // logo→navbar flight (each direction) — lands ~2.2s
           const COPY_S = 1.6; // section-2 copy reveal / un-reveal
-          const driveEase = (t) =>
-            t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // power2.inOut
-          // No ease-IN — starts at full speed, decelerates to a settle. Used for the
-          // SECOND beat of each direction so it begins the instant the first beat
-          // ends (no slow ramp-in dwell at the seam between logo and copy).
-          const driveEaseOut = (t) => 1 - (1 - t) * (1 - t); // power2.out
+          // Each direction is ONE velocity-continuous motion split at the seam: the
+          // first beat eases IN (gentle start from rest → full speed AT the seam) and
+          // the second beat eases OUT (full speed at the seam → gentle settle). Because
+          // the velocity matches at the seam, there's no decel crawl there — the second
+          // beat (copy reveal / logo return) starts the instant the first beat finishes,
+          // right as the logo visually lands.
+          // First beat: ease in for the first half (a gentle wind-up from rest),
+          // then hold a CONSTANT velocity through the mark's flight and into the
+          // seam — so the logo glides evenly (no idle-then-rush) and still carries
+          // full speed across the seam (no decel crawl before the copy beat).
+          const driveEaseIn = (t) =>
+            t < 0.5 ? (4 / 3) * t * t : 1 / 3 + (4 / 3) * (t - 0.5);
+          const driveEaseOut = (t) => 1 - (1 - t) * (1 - t); // power2.out — settles
 
           const stl = gsap.timeline({
             // force3D emits matrix3d transforms → every animated element gets its
@@ -1435,7 +1442,7 @@
                   lenis.scrollTo(seamPos, {
                     duration: LOGO_S,
                     lock: true, // ignore ALL user scroll while it plays
-                    easing: driveEase,
+                    easing: driveEaseIn,
                     onComplete: () => {
                       lenis.scrollTo(revealPos, {
                         duration: COPY_S,
@@ -1456,7 +1463,7 @@
                   lenis.scrollTo(seamPos, {
                     duration: COPY_S,
                     lock: true,
-                    easing: driveEase,
+                    easing: driveEaseIn,
                     onComplete: () => {
                       lenis.scrollTo(self.start, {
                         duration: LOGO_S,
