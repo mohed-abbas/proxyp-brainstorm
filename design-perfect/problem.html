@@ -191,6 +191,18 @@
         overflow: visible; /* let the 59px stroke spill as in the export */
       }
 
+      /* The smaller, adapted zigzag echoed in the FRICTION and RISK cards so
+         all three boxes share the same draw-on-hover motif. Same path + stroke
+         ratio as VOLUME's (pathLength + percentage insets keep it proportional),
+         just scaled down and parked in the lower-right of the shorter cards. */
+      .card-graphic {
+        position: absolute;
+        right: -0.0331vw; /* slight bleed, mirroring VOLUME's -0.5px */
+        bottom: -0.0331vw;
+        width: 9.2593vw; /* 140px */
+        height: 9.2593vw;
+      }
+
       /* FRICTION — top-right card */
       .card--friction {
         left: 68.196vw; /* 1031px */
@@ -313,6 +325,25 @@
             Up to 30% of the time spent with your advisors goes into retrieving
             or forwarding information
           </p>
+          <div class="card-graphic" aria-hidden="true">
+            <div class="volume-graphic__inner">
+              <svg
+                class="zigzag"
+                viewBox="0 0 373.321 394.919"
+                preserveAspectRatio="none"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  class="zigzag__path"
+                  d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158"
+                  stroke="#5A90F4"
+                  stroke-width="59"
+                  pathLength="100"
+                />
+              </svg>
+            </div>
+          </div>
         </article>
 
         <!-- RISK -->
@@ -321,6 +352,25 @@
           <p class="card__copy">
             One person in four has already lost an important document.
           </p>
+          <div class="card-graphic" aria-hidden="true">
+            <div class="volume-graphic__inner">
+              <svg
+                class="zigzag"
+                viewBox="0 0 373.321 394.919"
+                preserveAspectRatio="none"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  class="zigzag__path"
+                  d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158"
+                  stroke="#5A90F4"
+                  stroke-width="59"
+                  pathLength="100"
+                />
+              </svg>
+            </div>
+          </div>
         </article>
       </div>
     </main>
@@ -402,21 +452,26 @@
             .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.7)
             .to(cards, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.14 }, 0.95);
 
-          // VOLUME: the zigzag stroke draws itself along its path on hover
+          // Each card's zigzag stroke draws itself along its path on hover
           // (dash offset full -> 0), erasing on leave. It rests invisible.
+          // VOLUME carries the full graphic; FRICTION and RISK carry the same
+          // motif scaled down — pathLength="100" normalises the draw so one
+          // routine drives all three regardless of size.
           (function zigzagHover() {
-            const path = document.querySelector(".zigzag__path");
-            gsap.set(path, { strokeDasharray: 100, strokeDashoffset: 100 });
-            const drawTo = (offset) => () =>
-              gsap.to(path, {
-                strokeDashoffset: offset,
-                duration: 0.9,
-                ease: "power2.inOut",
-                overwrite: true, // restart cleanly on rapid enter/leave
-              });
-            const card = document.querySelector(".card--volume");
-            card.addEventListener("mouseenter", drawTo(0));
-            card.addEventListener("mouseleave", drawTo(100));
+            cards.forEach((card) => {
+              const path = card.querySelector(".zigzag__path");
+              if (!path) return;
+              gsap.set(path, { strokeDasharray: 100, strokeDashoffset: 100 });
+              const drawTo = (offset) => () =>
+                gsap.to(path, {
+                  strokeDashoffset: offset,
+                  duration: 0.9,
+                  ease: "power2.inOut",
+                  overwrite: true, // restart cleanly on rapid enter/leave
+                });
+              card.addEventListener("mouseenter", drawTo(0));
+              card.addEventListener("mouseleave", drawTo(100));
+            });
           })();
         }
 
