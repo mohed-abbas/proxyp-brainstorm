@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Proxy Papers — Problem section (layout)</title>
+
+    <!-- Vector assets exported from Figma (node 17:2) -->
+    <link rel="preload" as="image" href="assets/problem-volume-graphic.svg" />
+    <link rel="preload" as="image" href="assets/problem-accent-underline.svg" />
+
+    <style>
+      /* PP Neue Montreal — brand typeface. Only Book (400) and Bold (700) are
+         present locally; Figma's "Medium" (500) falls back to Book via CSS
+         font-matching, which is acceptable for the prototype. */
+      @font-face {
+        font-family: "PP Neue Montreal";
+        src: url("assets/fonts/ppneuemontreal-book.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "PP Neue Montreal";
+        src: url("assets/fonts/ppneuemontreal-bold.woff") format("woff");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        --bone-white: #f7f4f0; /* warm off-white — headline + body copy */
+        --ink: #161718;        /* Chinese Black — structural ground */
+        --proxy-blue: #5a90f4; /* accent — the VOLUME graphic, the underline */
+        --hairline: #313131;   /* card borders (0.5px) */
+
+        /* The Figma reference artboard is 1512px wide; the PROBLEM content block
+           is the 1356px frame inset 80px (left) / 76px (right). Every length
+           below is a fraction of 1512 (1px = 100/1512vw ≈ 0.066138vw), so the
+           internal proportions hold at any width and are pixel-exact at 1512px.
+           Children are positioned against `.content` (its origin == Figma x=0). */
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        background: var(--ink);
+      }
+
+      body {
+        font-family:
+          "PP Neue Montreal", "Neue Haas Grotesk", "Inter", system-ui,
+          -apple-system, sans-serif;
+        color: var(--bone-white);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      /* ── The section ───────────────────────────────────────────────────────
+         Full-bleed dark ground; the 498px content block is centred vertically
+         with the 80/76px page margins, so it sits in generous breathing room. */
+      .section {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding-inline: 5.291vw 5.0265vw; /* 80px left / 76px right */
+        background: var(--ink);
+      }
+
+      .content {
+        position: relative;
+        width: 100%;          /* == 1356px at the 1512 reference width */
+        height: 32.937vw;     /* 498px — the Figma frame height */
+      }
+
+      /* ── Left editorial column ─────────────────────────────────────────── */
+      .eyebrow {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 44.048vw; /* 666px */
+        font-weight: 500; /* Medium → falls back to Book */
+        font-size: 0.9259vw; /* 14px */
+        line-height: normal;
+        letter-spacing: 0.0926vw; /* 1.4px */
+        color: #fff;
+      }
+      /* Hand-drawn blue underline tucked just beneath the PROBLEM label. */
+      .eyebrow__rule {
+        position: absolute;
+        left: 0.0033vw; /* 0.05px */
+        top: 1.1243vw; /* 17px */
+        width: 4.9636vw; /* 75.05px */
+        height: 0.6237vw; /* 9.43px */
+        transform: rotate(0.33deg);
+      }
+      .eyebrow__rule img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .headline {
+        position: absolute;
+        left: 0;
+        top: 2.6455vw; /* 40px */
+        width: 44.048vw; /* 666px */
+        font-weight: 500; /* Medium → falls back to Book */
+        font-size: 2.5794vw; /* 39px */
+        line-height: normal;
+        letter-spacing: -0.0258vw; /* -0.39px */
+        color: var(--bone-white);
+      }
+
+      .body {
+        position: absolute;
+        left: 0;
+        top: 10.384vw; /* 157px */
+        width: 36.442vw; /* 551px */
+        font-weight: 400; /* Book */
+        font-size: 1.0582vw; /* 16px */
+        line-height: 1.5;
+        letter-spacing: 0.0106vw; /* 0.16px */
+        color: var(--bone-white);
+      }
+
+      /* ── Data cards (hairline-bordered boxes on the dark ground) ────────── */
+      .card {
+        position: absolute;
+        border: 0.5px solid var(--hairline);
+        overflow: hidden;
+      }
+      .card__label {
+        position: absolute;
+        top: 1.1574vw; /* 17.5px */
+        font-weight: 400; /* Book */
+        font-size: 0.7937vw; /* 12px */
+        line-height: 1.5;
+        letter-spacing: 0.0794vw; /* 1.2px */
+        color: #fff;
+        white-space: nowrap;
+      }
+      .card__copy {
+        position: absolute;
+        top: 3.5384vw; /* 53.5px */
+        width: 15.873vw; /* 240px */
+        font-weight: 500; /* Medium → falls back to Book */
+        font-size: 1.0582vw; /* 16px */
+        line-height: 1.5;
+        letter-spacing: 0.0106vw; /* 0.16px */
+        color: #fff;
+      }
+
+      /* VOLUME — the tall left card carrying the blue zigzag graphic */
+      .card--volume {
+        left: 45.370vw; /* 686px */
+        top: 0.0661vw; /* 1px */
+        width: 21.495vw; /* 325px */
+        height: 32.870vw; /* 497px */
+      }
+      .card--volume .card__label,
+      .card--volume .card__copy {
+        left: 1.2235vw; /* 18.5px */
+      }
+      /* The graphic bleeds slightly past the card and is clipped by it.
+         Wrapper == Figma's 341×341 box; the inner negative insets give the
+         59px-wide stroke its overflow room (matches the Figma export). */
+      .volume-graphic {
+        position: absolute;
+        left: -0.0331vw; /* -0.5px */
+        top: 6.0516vw; /* 91.5px */
+        width: 22.553vw; /* 341px */
+        height: 22.553vw; /* 341px */
+      }
+      .volume-graphic__inner {
+        position: absolute;
+        inset: -7.65% -4.03% -8.16% -5.44%;
+      }
+      .volume-graphic__inner img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* FRICTION — top-right card */
+      .card--friction {
+        left: 68.196vw; /* 1031px */
+        top: 0.0661vw; /* 1px */
+        width: 21.495vw; /* 325px */
+        height: 16.005vw; /* 242px */
+      }
+      /* RISK — bottom-right card */
+      .card--risk {
+        left: 68.196vw; /* 1031px */
+        top: 17.791vw; /* 269px */
+        width: 21.495vw; /* 325px */
+        height: 15.146vw; /* 229px */
+      }
+      .card--friction .card__label,
+      .card--friction .card__copy,
+      .card--risk .card__label,
+      .card--risk .card__copy {
+        left: 1.0251vw; /* 15.5px */
+      }
+      /* RISK's label + copy sit 2px lower than FRICTION's, per the design. */
+      .card--risk .card__label {
+        top: 1.2897vw; /* 19.5px */
+      }
+      .card--risk .card__copy {
+        top: 3.6707vw; /* 55.5px */
+      }
+    </style>
+  </head>
+  <body>
+    <main class="section" aria-label="The problem Proxy Papers solves">
+      <div class="content">
+        <!-- Left editorial column -->
+        <p class="eyebrow">
+          PROBLEM
+          <span class="eyebrow__rule" aria-hidden="true">
+            <img src="assets/problem-accent-underline.svg" alt="" />
+          </span>
+        </p>
+
+        <h2 class="headline">Your estate is structured. Your documents often aren't.</h2>
+
+        <p class="body">
+          Your advisors take care of your taxes, your investments, your
+          companies. No one really takes care of the rest: the deeds, the
+          contracts, the deadlines, the documents that move between your advisors
+          and that have to be retrieved at every meeting, every decision, every
+          transmission. That is where things get complicated.
+        </p>
+
+        <!-- VOLUME -->
+        <article class="card card--volume">
+          <p class="card__label">VOLUME</p>
+          <p class="card__copy">
+            200 to 400 essential documents to manage for a structured estate.
+          </p>
+          <div class="volume-graphic" aria-hidden="true">
+            <div class="volume-graphic__inner">
+              <img src="assets/problem-volume-graphic.svg" alt="" />
+            </div>
+          </div>
+        </article>
+
+        <!-- FRICTION -->
+        <article class="card card--friction">
+          <p class="card__label">FRICTION</p>
+          <p class="card__copy">
+            Up to 30% of the time spent with your advisors goes into retrieving
+            or forwarding information
+          </p>
+        </article>
+
+        <!-- RISK -->
+        <article class="card card--risk">
+          <p class="card__label">RISK</p>
+          <p class="card__copy">
+            One person in four has already lost an important document.
+          </p>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>
