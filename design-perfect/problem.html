@@ -197,8 +197,10 @@
          just scaled down and parked in the lower-right of the shorter cards. */
       .card-graphic {
         position: absolute;
-        right: -0.0331vw; /* slight bleed, mirroring VOLUME's -0.5px */
-        bottom: -0.0331vw;
+        top: 3.0423vw; /* 46px — the zigzag starts near the top-right corner */
+        right: -3.4392vw; /* -52px — right tips bleed off the edge so the start
+                             and end points clip into the border rather than
+                             floating, making the motif feel part of the box */
         width: 9.2593vw; /* 140px */
         height: 9.2593vw;
       }
