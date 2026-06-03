@@ -1174,7 +1174,6 @@
           const bodyWords = splitWords(sec2.querySelector(".lead__body"));
           const stmtWords = splitWords(sec2.querySelector(".statement"));
           const cta2 = sec2.querySelector(".cta");
-          const auroras = gsap.utils.toArray(".section-2 .glow-2");
           const allWords2 = [...titleWords, ...bodyWords, ...stmtWords];
 
           gsap.set(allWords2, { yPercent: 120 });
@@ -1189,20 +1188,9 @@
             { visibility: "visible" },
           );
 
-          // 6. Hero glow + ghost give way to the section-2 aurora, just as the
-          //    card finishes filling the screen (≈ when the logo lands).
-          stl.to(
-            [".glow", ".ghost"],
-            { opacity: 0, duration: 0.3, ease: "power1.out" },
-            0.85,
-          );
-          stl.to(
-            auroras,
-            { opacity: 1, duration: 0.5, ease: "power2.out", stagger: 0.12 },
-            0.95,
-          );
-
-          // 7. Editorial copy rises in, word by word, on the dark canvas.
+          // 6. The hero glow stays — it IS the canvas for section 2 (no glow
+          //    swap). The editorial copy simply rises in over it, word by word,
+          //    once the card is full-bleed and the logo has landed in the navbar.
           stl
             .to(
               titleWords,
