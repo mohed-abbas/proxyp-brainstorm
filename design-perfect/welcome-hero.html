@@ -159,6 +159,11 @@
         font-weight: 400;
         letter-spacing: 0.01em;
         white-space: nowrap;
+        overflow: hidden; /* clip box: the inner span rises up from this baseline */
+      }
+      .nav a span {
+        display: inline-block;
+        will-change: transform;
       }
 
       /* (2d) "scroll" marquee strip — bottom Bone White rail with repeated `scroll |`. */
@@ -182,9 +187,21 @@
         font-size: calc(var(--card-w) * 0.01353); /* 14px @ 1034.69 */
         font-weight: 500;
         white-space: nowrap;
+        /* Infinite marquee: two identical tracks sit side by side and both slide
+           left by exactly one track-width. When track 1 clears the viewport, track 2
+           has taken its place, and the loop restart at 0% is seamless. */
+        animation: ticker-scroll 52s linear infinite;
+        will-change: transform;
       }
       .ticker__track span {
         flex-shrink: 0;
+      }
+      @keyframes ticker-scroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-100%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ticker__track { animation: none; }
       }
 
       /* (3) Persistent lockup overlay (welcome ⇄ hero pivot). Anchored so the lockup
@@ -275,9 +292,13 @@
       }
       .js .glow,
       .js .ghost,
-      .js .nav,
       .js .ticker {
         opacity: 0;
+      }
+      /* nav stays present; each link's text is parked below its own baseline and
+         rises up — the same clip-mask reveal the welcome wordmark uses. */
+      .js .nav a span {
+        transform: translateY(110%);
       }
       .js .welcome-ghost {
         opacity: 1;
@@ -313,17 +334,17 @@
         <img class="glow" src="assets/hero-glow.svg" alt="" aria-hidden="true" />
         <img class="ghost" src="assets/hero-ghost.svg" alt="" aria-hidden="true" />
         <nav class="nav">
-          <a href="#">Approach</a>
-          <a href="#">Services</a>
-          <a href="#">Referrers</a>
-          <a href="#">Contact</a>
+          <a href="#"><span>Approach</span></a>
+          <a href="#"><span>Services</span></a>
+          <a href="#"><span>Referrers</span></a>
+          <a href="#"><span>Contact</span></a>
         </nav>
         <div class="ticker" aria-hidden="true">
           <div class="ticker__track">
-            <span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span>
+            <span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span>
           </div>
           <div class="ticker__track">
-            <span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span>
+            <span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span><span>scroll</span><span>|</span>
           </div>
         </div>
       </section>
@@ -585,8 +606,16 @@
           .to(".welcome-ghost", { opacity: 0, duration: 0.6, ease: "power1.out" }, T)
           // hero furniture settles in around the logo
           .to(
-            [".nav", ".glow", ".ghost", ".ticker"],
+            [".glow", ".ghost", ".ticker"],
             { opacity: 1, duration: 0.7, stagger: 0.08, ease: "power2.out" },
+            T + 0.6,
+          )
+          // nav links rise from their baseline — the welcome wordmark's reveal,
+          // applied per link (same ease/duration/stagger feel). GSAP reads the
+          // armed CSS translateY(110%) as the start; we animate it back to 0.
+          .to(
+            ".nav a span",
+            { y: 0, yPercent: 0, duration: 0.7, stagger: STAG, ease: "power3.out" },
             T + 0.6,
           );
 
