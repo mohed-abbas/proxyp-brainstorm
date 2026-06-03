@@ -184,22 +184,38 @@
         z-index: 2;
       }
 
-      /* Inlined lockup (783 × 310). Default (no-JS / resolved hero) colors are the
-         DARK theme: stem + wordmark Bone White, blade Proxy Blue. */
+      /* Inlined lockup (783 × 310). TWO stacked copies sit in .brand: an ink copy
+         (welcome look) and a Bone-White copy (hero look), the latter cloned at runtime.
+         The Bone-White copy overlays the ink one exactly and is revealed CLIPPED to the
+         dark card's growing rectangle — so every pixel of the logo flips ink→Bone the
+         instant the dark passes behind it, and the logo never drops below full contrast.
+         Default fill is Bone White so the no-JS / reduced-motion fallback renders the
+         resolved (hero) logo. */
       .lockup {
         display: block;
         width: 100%;
         height: auto;
         overflow: visible;
       }
-      .lk-mark__stem {
+      .lk-mark__stem,
+      .lk-word {
         fill: var(--bone-white);
       }
       .lk-mark__blade {
         fill: var(--proxy-blue);
       }
-      .lk-word {
-        fill: var(--bone-white);
+      /* With JS, the ink copy carries the welcome colors (dark logo on bone white). */
+      .js .lockup--ink .lk-mark__stem,
+      .js .lockup--ink .lk-word {
+        fill: var(--ink);
+      }
+      /* The Bone-White copy sits exactly over the ink copy (clipped to the card). */
+      .lockup--light {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
       }
 
       /* (3a) Hairline loader (welcome only) — faint track + ink fill. Hidden in the
@@ -237,7 +253,7 @@
         opacity: 0;
       }
       .js .card {
-        transform: translate(-50%, -50%) scale(0);
+        transform: scale(0); /* collapsed; GSAP owns the centred transform */
       }
       .js .glow,
       .js .ghost,
@@ -255,13 +271,9 @@
       .js .hairline__segment {
         width: 0;
       }
-      .js .lk-mark,
-      .js .lk-glyph {
-        opacity: 0;
-      }
-      .js .lk-mark__stem,
-      .js .lk-word {
-        fill: var(--ink); /* welcome: dark logo on bone white */
+      .js .lockup--ink .lk-mark,
+      .js .lockup--ink .lk-glyph {
+        opacity: 0; /* hidden until the wipe reveals them (ink copy only) */
       }
     </style>
   </head>
@@ -301,7 +313,7 @@
       <!-- (3) Persistent lockup overlay + welcome hairline loader -->
       <div class="brand" role="img" aria-label="Proxy Papers">
         <svg
-          class="lockup"
+          class="lockup lockup--ink"
           viewBox="0 0 783 310"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -384,7 +396,7 @@
       window.addEventListener("DOMContentLoaded", () => {
         const root = document.documentElement;
         const SVGNS = "http://www.w3.org/2000/svg";
-        const svg = document.querySelector(".lockup");
+        const svg = document.querySelector(".lockup--ink");
         const prefersReduced = matchMedia(
           "(prefers-reduced-motion: reduce)",
         ).matches;
@@ -395,6 +407,19 @@
           root.classList.remove("js");
           return;
         }
+
+        // ---- Stacked Bone-White copy of the logo --------------------------
+        // Clone the ink lockup (before the wipe wraps its paths) into a Bone-White copy
+        // laid exactly over it. We reveal this copy clipped to the dark card's growing
+        // rect, so the logo flips ink→Bone in lockstep with the dark arriving behind it
+        // and is never lower-contrast — it stays fully visible throughout the transition.
+        const lightSvg = svg.cloneNode(true);
+        lightSvg.classList.remove("lockup--ink");
+        lightSvg.classList.add("lockup--light");
+        lightSvg.setAttribute("aria-hidden", "true");
+        lightSvg.removeAttribute("aria-label");
+        svg.parentNode.insertBefore(lightSvg, svg.nextSibling);
+        gsap.set(lightSvg, { clipPath: "inset(50% 50% 50% 50%)" }); // start hidden
 
         // ---- Per-element mask wipe (welcome intro) ----------------------
         // Each glyph / mark-half is wrapped in a <g clip-path> whose rect bottom
@@ -432,27 +457,50 @@
           riseOf.set(path, bb.height + PAD_TOP);
         };
 
+        // Scope every intro query to the INK copy so the Bone-White clone is left
+        // fully assembled (it only needs to be revealed by the clip later).
         const stem = svg.querySelector(".lk-mark__stem");
         const blade = svg.querySelector(".lk-mark__blade");
-        const proxy = gsap.utils.toArray('[data-word="proxy"] .lk-glyph');
-        const papers = gsap.utils.toArray('[data-word="papers"] .lk-glyph');
+        const proxy = gsap.utils.toArray(
+          svg.querySelectorAll('[data-word="proxy"] .lk-glyph'),
+        );
+        const papers = gsap.utils.toArray(
+          svg.querySelectorAll('[data-word="papers"] .lk-glyph'),
+        );
         const glyphs = [...proxy, ...papers];
         [stem, blade, ...glyphs].forEach(wrap);
 
         // Clips now hide everything; opacity stays on (the wipe reveals).
-        gsap.set(".lk-mark", { opacity: 1 });
+        gsap.set(svg.querySelector(".lk-mark"), { opacity: 1 });
         gsap.set([stem, blade, ...glyphs], {
           opacity: 1,
           y: (i, t) => riseOf.get(t),
         });
 
         // Card: centre via GSAP-native percent translate, start collapsed.
-        gsap.set(".card", {
+        const cardEl = document.querySelector(".card");
+        gsap.set(cardEl, {
+          x: 0,
+          y: 0,
           xPercent: -50,
           yPercent: -50,
           scale: 0,
           transformOrigin: "center center",
         });
+
+        // Reveal the Bone-White copy clipped to the dark card's current on-screen rect:
+        // bone shows wherever the card is behind the logo, ink everywhere else. Driven
+        // each frame from the card's growth, so the recolor tracks the dark edge exactly.
+        const syncLightClip = () => {
+          const c = cardEl.getBoundingClientRect();
+          const l = lightSvg.getBoundingClientRect();
+          if (!l.width || !l.height) return;
+          const top = Math.max(0, ((c.top - l.top) / l.height) * 100);
+          const right = Math.max(0, ((l.right - c.right) / l.width) * 100);
+          const bottom = Math.max(0, ((l.bottom - c.bottom) / l.height) * 100);
+          const left = Math.max(0, ((c.left - l.left) / l.width) * 100);
+          lightSvg.style.clipPath = `inset(${top}% ${right}% ${bottom}% ${left}%)`;
+        };
 
         // ---- Master timeline: intro + loader (t0) → transition (t=5) ----
         const STAG = 0.06;
@@ -483,17 +531,22 @@
 
         // ---- Transition: the environment blooms around the fixed logo -----
         tl.to(".hero-bg", { opacity: 1, duration: 0.9, ease: "power2.out" }, T)
-          // dark card grows from centre, behind the logo
-          .to(".card", { scale: 1, duration: 1.2, ease: "power3.out" }, T)
+          // dark card grows from centre, behind the logo; each frame the Bone-White
+          // copy is re-clipped to the card so the recolor tracks the dark edge exactly
+          .to(
+            cardEl,
+            {
+              scale: 1,
+              duration: 1.2,
+              ease: "power3.out",
+              onUpdate: syncLightClip,
+              onComplete: syncLightClip,
+            },
+            T,
+          )
           // the welcome furniture (loader + ghost) gives way
           .to(".hairline", { opacity: 0, duration: 0.4, ease: "power1.out" }, T)
           .to(".welcome-ghost", { opacity: 0, duration: 0.6, ease: "power1.out" }, T)
-          // logo recolors ink → Bone White once the dark ground has swallowed it
-          .to(
-            [stem, ...glyphs],
-            { fill: "#F7F4F0", duration: 0.55, ease: "power1.inOut" },
-            T + 0.5,
-          )
           // hero furniture settles in around the logo
           .to(
             [".nav", ".glow", ".ghost", ".ticker"],
