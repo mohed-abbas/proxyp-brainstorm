@@ -75,6 +75,7 @@
         --ink: #161718; /* Chinese Black */
         --proxy-blue: #5a90f4; /* accent — the P-mark blade */
         --hairline-track: #b9b9b9;
+        --hairline: #313131; /* PROBLEM card borders (0.5px) */
 
         /* Two scaling units that stay locked to each other:
            - the lockup (welcome): 51.75vw, clamps at 783px
@@ -290,6 +291,184 @@
       .after {
         height: 60vh;
         background: var(--ink);
+      }
+
+      /* ── PROBLEM section ──────────────────────────────────────────────────
+         The prototype's below-hero section, dropped in as a normal-flow dark
+         section after the pinned hero so the dark canvas continues seamlessly
+         (the fixed navbar floats above it; body is already ink by here). All
+         selectors are scoped under `.problem`, and the data cards are `.p-card`
+         (NOT `.card`) so they never collide with the hero card or its armed
+         `transform: scale(0)`. Reuses the global `.r-word` reveal masks. Every
+         length is a fraction of the 1512px design width (1px ≈ 0.066138vw). */
+      .problem {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding-inline: 5.291vw 5.0265vw; /* 80px / 76px */
+        background: var(--ink);
+      }
+      .problem .content {
+        position: relative;
+        width: 100%;
+        height: 32.937vw; /* 498px */
+      }
+      .problem .eyebrow {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 44.048vw; /* 666px */
+        font-weight: 500;
+        font-size: 0.9259vw; /* 14px */
+        line-height: normal;
+        letter-spacing: 0.0926vw; /* 1.4px */
+        color: #fff;
+      }
+      .problem .eyebrow__rule {
+        position: absolute;
+        left: 0.0033vw;
+        top: 1.1243vw; /* 17px */
+        width: 4.9636vw; /* 75.05px */
+        height: 0.6237vw; /* 9.43px */
+        transform: rotate(0.33deg);
+      }
+      .problem .eyebrow__rule img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .problem .headline {
+        position: absolute;
+        left: 0;
+        top: 2.6455vw; /* 40px */
+        width: 44.048vw; /* 666px */
+        font-weight: 500;
+        font-size: 2.5794vw; /* 39px */
+        line-height: normal;
+        letter-spacing: -0.0258vw;
+        color: var(--bone-white);
+      }
+      .problem .body {
+        position: absolute;
+        left: 0;
+        top: 10.384vw; /* 157px */
+        width: 36.442vw; /* 551px */
+        font-weight: 400;
+        font-size: 1.0582vw; /* 16px */
+        line-height: 1.5;
+        letter-spacing: 0.0106vw;
+        color: var(--bone-white);
+      }
+      .problem .p-card {
+        position: absolute;
+        border: 0.5px solid var(--hairline);
+        overflow: hidden;
+      }
+      .problem .p-card__label {
+        position: absolute;
+        top: 1.1574vw; /* 17.5px */
+        font-weight: 400;
+        font-size: 0.7937vw; /* 12px */
+        line-height: 1.5;
+        letter-spacing: 0.0794vw;
+        color: #fff;
+        white-space: nowrap;
+        z-index: 1; /* keep copy above the zigzag graphic behind it */
+      }
+      .problem .p-card__copy {
+        position: absolute;
+        top: 3.5384vw; /* 53.5px */
+        width: 15.873vw; /* 240px */
+        font-weight: 500;
+        font-size: 1.0582vw; /* 16px */
+        line-height: 1.5;
+        letter-spacing: 0.0106vw;
+        color: #fff;
+        z-index: 1;
+      }
+      /* VOLUME — tall left card with the full blue zigzag graphic */
+      .problem .p-card--volume {
+        left: 45.37vw; /* 686px */
+        top: 0.0661vw;
+        width: 21.495vw; /* 325px */
+        height: 32.87vw; /* 497px */
+      }
+      .problem .p-card--volume .p-card__label,
+      .problem .p-card--volume .p-card__copy {
+        left: 1.2235vw;
+      }
+      .problem .volume-graphic {
+        position: absolute;
+        left: -0.0331vw;
+        top: 6.0516vw; /* 91.5px */
+        width: 22.553vw; /* 341px */
+        height: 22.553vw;
+      }
+      .problem .volume-graphic__inner {
+        position: absolute;
+        inset: -7.65% -4.03% -8.16% -5.44%;
+      }
+      .problem .volume-graphic__inner svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      /* The smaller, adapted zigzag echoed in the FRICTION and RISK cards so all
+         three boxes share the same draw-on-hover motif. Sits behind the copy
+         (z-index) and bleeds off the right edge so it feels part of the box. */
+      .problem .card-graphic {
+        position: absolute;
+        top: 2.6455vw; /* 40px — starts near the top-right corner */
+        right: -3.4392vw; /* -52px — right tips bleed off the edge */
+        width: 11.5079vw; /* 174px */
+        height: 11.5079vw;
+        z-index: 0;
+      }
+      /* FRICTION — top-right card */
+      .problem .p-card--friction {
+        left: 68.196vw; /* 1031px */
+        top: 0.0661vw;
+        width: 21.495vw;
+        height: 16.005vw; /* 242px */
+      }
+      /* RISK — bottom-right card */
+      .problem .p-card--risk {
+        left: 68.196vw;
+        top: 17.791vw; /* 269px */
+        width: 21.495vw;
+        height: 15.146vw; /* 229px */
+      }
+      .problem .p-card--friction .p-card__label,
+      .problem .p-card--friction .p-card__copy,
+      .problem .p-card--risk .p-card__label,
+      .problem .p-card--risk .p-card__copy {
+        left: 1.0251vw;
+      }
+      .problem .p-card--risk .p-card__label {
+        top: 1.2897vw;
+      }
+      .problem .p-card--risk .p-card__copy {
+        top: 3.6707vw;
+      }
+      /* Zigzag stroke rests hidden; drawn on hover (JS). pathLength="100" lets
+         one routine drive every card regardless of size. */
+      .problem .zigzag__path {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+      }
+      /* Armed (JS) state: hide the reveal targets up-front until the section's
+         ScrollTrigger fires. Dropped with `.js` on the no-JS / reduced path. */
+      .js .problem .eyebrow,
+      .js .problem .headline,
+      .js .problem .body,
+      .js .problem .p-card {
+        visibility: hidden;
+      }
+      html:not(.js) .problem .zigzag__path {
+        stroke-dashoffset: 0;
       }
 
       /* (1) Background photo — hidden during the welcome, fades in with the hero. */
@@ -727,6 +906,116 @@
       </p>
       </div>
     </main>
+
+    <!-- ============================================================
+         PROBLEM section — the prototype's below-hero section, flowing
+         straight out of the now-dark hero canvas. Same per-word reveal
+         language as section 2, fired by its own ScrollTrigger as it
+         enters view; the three cards share a draw-on-hover zigzag.
+         ============================================================ -->
+    <section class="problem" aria-label="The problem Proxy Papers solves">
+      <div class="content">
+        <!-- Left editorial column -->
+        <p class="eyebrow">
+          <span class="eyebrow__label">PROBLEM</span>
+          <span class="eyebrow__rule" aria-hidden="true">
+            <img src="assets/problem-accent-underline.svg" alt="" />
+          </span>
+        </p>
+
+        <h2 class="headline">Your estate is structured. Your documents often aren't.</h2>
+
+        <p class="body">
+          Your advisors take care of your taxes, your investments, your
+          companies. No one really takes care of the rest: the deeds, the
+          contracts, the deadlines, the documents that move between your advisors
+          and that have to be retrieved at every meeting, every decision, every
+          transmission. That is where things get complicated.
+        </p>
+
+        <!-- VOLUME -->
+        <article class="p-card p-card--volume">
+          <p class="p-card__label">VOLUME</p>
+          <p class="p-card__copy">
+            200 to 400 essential documents to manage for a structured estate.
+          </p>
+          <div class="volume-graphic" aria-hidden="true">
+            <div class="volume-graphic__inner">
+              <svg
+                class="zigzag"
+                viewBox="0 0 373.321 394.919"
+                preserveAspectRatio="none"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  class="zigzag__path"
+                  d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158"
+                  stroke="#5A90F4"
+                  stroke-width="59"
+                  pathLength="100"
+                />
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <!-- FRICTION -->
+        <article class="p-card p-card--friction">
+          <p class="p-card__label">FRICTION</p>
+          <p class="p-card__copy">
+            Up to 30% of the time spent with your advisors goes into retrieving
+            or forwarding information
+          </p>
+          <div class="card-graphic" aria-hidden="true">
+            <div class="volume-graphic__inner">
+              <svg
+                class="zigzag"
+                viewBox="0 0 373.321 394.919"
+                preserveAspectRatio="none"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  class="zigzag__path"
+                  d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158"
+                  stroke="#5A90F4"
+                  stroke-width="59"
+                  pathLength="100"
+                />
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <!-- RISK -->
+        <article class="p-card p-card--risk">
+          <p class="p-card__label">RISK</p>
+          <p class="p-card__copy">
+            One person in four has already lost an important document.
+          </p>
+          <div class="card-graphic" aria-hidden="true">
+            <div class="volume-graphic__inner">
+              <svg
+                class="zigzag"
+                viewBox="0 0 373.321 394.919"
+                preserveAspectRatio="none"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  class="zigzag__path"
+                  d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158"
+                  stroke="#5A90F4"
+                  stroke-width="59"
+                  pathLength="100"
+                />
+              </svg>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
 
     <!-- Dark continuation below the hero pin -->
     <section class="after" aria-hidden="true"></section>
@@ -1275,6 +1564,74 @@
 
           window.__scrollTL = stl; // exposed for testing
           window.__seam = () => ({ triggerAt, revealAt }); // exposed for testing
+
+          // ============================================================
+          //  PROBLEM SECTION — a normal-flow dark section after the hero.
+          //  Independent of the pin: its own ScrollTrigger plays the reveal
+          //  once as the section scrolls into view, in the same per-word
+          //  language as section 2 (eyebrow + underline, headline, body, then
+          //  the three cards settle up). The zigzags draw on hover.
+          // ============================================================
+          const problem = document.querySelector(".problem");
+          if (problem) {
+            const pEyebrow = splitWords(problem.querySelector(".eyebrow__label"));
+            const pHeadline = splitWords(problem.querySelector(".headline"));
+            const pBody = splitWords(problem.querySelector(".body"));
+            const pRule = problem.querySelector(".eyebrow__rule");
+            const pCards = gsap.utils.toArray(problem.querySelectorAll(".p-card"));
+            const pWords = [...pEyebrow, ...pHeadline, ...pBody];
+
+            gsap.set(pWords, { yPercent: 120 });
+            gsap.set(pRule, {
+              autoAlpha: 0,
+              scaleX: 0,
+              rotation: 0.33, // preserve the design's slight tilt
+              transformOrigin: "left center",
+            });
+            gsap.set(pCards, { autoAlpha: 0, y: 28 });
+            gsap.set(
+              [
+                problem.querySelector(".eyebrow"),
+                problem.querySelector(".headline"),
+                problem.querySelector(".body"),
+              ],
+              { visibility: "visible" },
+            );
+
+            const ptl = gsap.timeline({
+              defaults: { ease: "power3.out", force3D: true },
+              paused: true,
+            });
+            ptl
+              .to(pEyebrow, { yPercent: 0, duration: 0.6 }, 0.0)
+              .to(pRule, { autoAlpha: 1, scaleX: 1, duration: 0.7 }, 0.1)
+              .to(pHeadline, { yPercent: 0, duration: 0.7, stagger: 0.06 }, 0.25)
+              .to(pBody, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.7)
+              .to(pCards, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.14 }, 0.95);
+
+            ScrollTrigger.create({
+              trigger: problem,
+              start: "top 72%",
+              once: true,
+              onEnter: () => ptl.play(),
+            });
+
+            // Each card's zigzag draws itself on hover, erasing on leave.
+            pCards.forEach((card) => {
+              const path = card.querySelector(".zigzag__path");
+              if (!path) return;
+              gsap.set(path, { strokeDasharray: 100, strokeDashoffset: 100 });
+              const drawTo = (offset) => () =>
+                gsap.to(path, {
+                  strokeDashoffset: offset,
+                  duration: 0.9,
+                  ease: "power2.inOut",
+                  overwrite: true,
+                });
+              card.addEventListener("mouseenter", drawTo(0));
+              card.addEventListener("mouseleave", drawTo(100));
+            });
+          }
 
           ScrollTrigger.refresh();
 
