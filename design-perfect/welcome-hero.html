@@ -135,12 +135,155 @@
         background: var(--bone-white);
       }
 
-      /* Empty dark placeholder below the hero — the expanded card flows seamlessly
-         into it; the fixed navbar persists on top. */
+      /* Second section below the hero — the expanded card flows seamlessly into
+         it; the fixed navbar persists on top. Holds the blue-aurora gradient and
+         the editorial copy, which reveals word-by-word on a pinned scroll.
+         Every length is a fraction of the Figma 1512px design width (1px ≈
+         0.06614vw), so its internal proportions are exact at any width. */
       .section-2 {
         position: relative;
         width: 100%;
-        height: 100vh;
+        min-height: 100vh;
+        overflow: hidden;
+        background: var(--ink);
+      }
+
+      /* Atmospheric blue aurora — two layered, gaussian-blurred vector sweeps.
+         Each wrapper is sized to the SVG's full bleed box (aspect == viewBox),
+         so the image fills it without distorting the shapes or their blur. */
+      .glow-2 {
+        position: absolute;
+        pointer-events: none;
+      }
+      .glow-2 img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .glow-2--upper {
+        left: -47.88vw;
+        top: -16.115vw;
+        width: 199.69vw;
+        height: 97.408vw;
+        z-index: 1;
+      }
+      .glow-2--lower {
+        left: -14.175vw;
+        top: 2.35vw;
+        width: 132vw;
+        height: 54.823vw;
+        z-index: 2;
+      }
+
+      /* Left content block */
+      .lead {
+        position: absolute;
+        left: 5.291vw; /* 80px */
+        top: 28.003vw; /* nudged up 5vw toward the vertical middle */
+        width: 46.958vw; /* 710px */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2.5794vw; /* 39px */
+        z-index: 3;
+      }
+      .lead__title {
+        font-weight: 500; /* Medium → falls back to Book */
+        font-size: 3.2407vw; /* 49px */
+        line-height: normal;
+        color: var(--bone-white);
+        white-space: nowrap;
+      }
+      .lead__title .dot {
+        color: var(--proxy-blue);
+      }
+      .lead__body {
+        font-weight: 400;
+        font-size: 1.0582vw; /* 16px */
+        line-height: normal;
+        letter-spacing: 0.0212vw; /* 0.32px */
+        color: rgba(247, 244, 240, 0.7);
+        width: 39.021vw; /* 590px */
+      }
+
+      .cta {
+        display: flex;
+        align-items: center;
+        gap: 2.6455vw; /* 40px */
+      }
+      .cta__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--proxy-blue);
+        color: var(--bone-white);
+        font-weight: 500;
+        font-size: 1.0582vw; /* 16px */
+        line-height: normal;
+        white-space: nowrap;
+        padding: 0.6614vw 1.3228vw; /* 10px 20px */
+        border-radius: 2.9762vw; /* 45px — pill */
+        border: 0;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .cta__link {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3968vw; /* 6px */
+        width: 12.632vw; /* 191px */
+      }
+      .cta__link span {
+        font-weight: 500;
+        font-size: 1.0582vw; /* 16px */
+        line-height: normal;
+        color: rgba(247, 244, 240, 0.5);
+        white-space: nowrap;
+      }
+      .cta__rule {
+        width: 11.772vw; /* 178px */
+        height: 1px;
+        background: rgba(247, 244, 240, 0.5);
+      }
+
+      /* Lower-right statement */
+      .statement {
+        position: absolute;
+        left: 58.929vw; /* 891px */
+        top: 46.455vw; /* nudged up 5vw toward the vertical middle */
+        width: 37.5vw; /* 567px */
+        font-weight: 500;
+        font-size: 1.6534vw; /* 25px */
+        line-height: normal;
+        color: #fff;
+        z-index: 3;
+      }
+
+      /* Per-word reveal masks — each word rises + clips in independently. */
+      .r-word {
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: top;
+        padding: 0.06em 0 0.14em;
+        margin: -0.06em 0 -0.14em;
+      }
+      .r-word__in {
+        display: inline-block;
+        will-change: transform;
+      }
+      /* Hidden up-front (JS-only); the reveal setup unhides once masks are built.
+         If JS is absent (.js dropped), they show in place. */
+      .js .section-2 .lead__title,
+      .js .section-2 .lead__body,
+      .js .section-2 .cta,
+      .js .section-2 .statement {
+        visibility: hidden;
+      }
+
+      /* Dark continuation so the section-2 pin releases onto ground, not page end. */
+      .after {
+        height: 60vh;
         background: var(--ink);
       }
 
@@ -541,8 +684,48 @@
       </div>
     </main>
 
-    <!-- Empty dark placeholder section (revealed after the hero transforms to full-bleed) -->
-    <section class="section-2" aria-hidden="true"></section>
+    <!-- Second section — blue aurora + editorial copy (reveals word-by-word on
+         a pinned scroll). Sits below the hero; the persistent navbar holds on top. -->
+    <section class="section-2">
+      <div class="glow-2 glow-2--upper" aria-hidden="true">
+        <img src="assets/section2-glow-upper.svg" alt="" />
+      </div>
+      <div class="glow-2 glow-2--lower" aria-hidden="true">
+        <img src="assets/section2-glow-lower.svg" alt="" />
+      </div>
+
+      <div class="lead">
+        <h2 class="lead__title">
+          <span class="r-word"><span class="r-word__in">Private</span></span>
+          <span class="r-word"><span class="r-word__in">management</span></span>
+          <span class="r-word"><span class="r-word__in">of</span></span>
+          <span class="r-word"><span class="r-word__in">your</span></span>
+          <span class="r-word"
+            ><span class="r-word__in">data<span class="dot">.</span></span></span
+          >
+        </h2>
+        <p class="lead__body">
+          A bespoke framework to structure, secure and maintain the documents
+          that make up your personal estate. A dedicated advisor. Sovereign
+          technology.
+        </p>
+        <div class="cta">
+          <a class="cta__btn" href="#">Request a discovery meeting</a>
+          <div class="cta__link">
+            <span>Are you a referring advisor?</span>
+            <i class="cta__rule" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+
+      <p class="statement">
+        We are not your bank, your notary, or your advisor. We are the framework
+        that connects them.
+      </p>
+    </section>
+
+    <!-- Dark continuation below the pinned second section -->
+    <section class="after" aria-hidden="true"></section>
 
     <script>
       window.addEventListener("DOMContentLoaded", () => {
@@ -771,7 +954,11 @@
         const inCardNav = document.querySelector(".nav");
         const lightMark = lightSvg.querySelector(".lk-mark");
         const inkMark = svg.querySelector(".lk-mark");
-        const NAV_Y = 32; // navbar vertical centre, px from viewport top
+        // Navbar geometry — matches the Figma second-section navbar, expressed as
+        // fractions of the 1512px design width so it scales with the viewport like
+        // the rest of the composition (centre 75px, logo 36.4px, pads 80/76, gap 60).
+        const navY = () => window.innerWidth * (75 / 1512);
+        const navMarkH = () => window.innerWidth * (36.43 / 1512);
 
         const setupScroll = () => {
           if (!window.ScrollTrigger) return;
@@ -854,23 +1041,24 @@
 
           // ---- Target geometry (from the captured rest constants) ----
           const markTarget = () => ({
-            scale: 30 / restMark.height, // ~30px tall in the navbar
+            scale: navMarkH() / restMark.height, // ~36.4px tall (Figma navbar)
             x: window.innerWidth / 2 - (restMark.left + restMark.width / 2),
-            y: NAV_Y - (restMark.top + restMark.height / 2),
+            y: navY() - (restMark.top + restMark.height / 2),
           });
           const linkTargets = () => {
             const vw = window.innerWidth;
-            const pad = vw * 0.0517; // matches the card nav inset
-            const GAP = Math.max(24, vw * 0.018);
+            const padL = vw * (80 / 1512); // Figma left inset
+            const padR = vw * (76 / 1512); // Figma right inset
+            const GAP = vw * (60 / 1512); // Figma intra-cluster gap
             const w = restLinks.map((r) => r.width);
             const L = [];
-            L[0] = pad; // Approach — hard left
-            L[1] = pad + w[0] + GAP; // Services — beside it
-            L[3] = vw - pad - w[3]; // Contact — hard right
+            L[0] = padL; // Approach — hard left
+            L[1] = padL + w[0] + GAP; // Services — beside it
+            L[3] = vw - padR - w[3]; // Contact — hard right
             L[2] = L[3] - GAP - w[2]; // Referrers — beside it
             return restLinks.map((r, i) => ({
               x: L[i] - r.left,
-              y: NAV_Y - r.height / 2 - r.top,
+              y: navY() - r.height / 2 - r.top,
             }));
           };
 
@@ -949,13 +1137,77 @@
           });
 
           window.__scrollTL = stl; // exposed for testing
+
+          // ============================================================
+          //  SECTION 2 — editorial copy reveals word-by-word on a pinned
+          //  scroll (the welcome wordmark's per-element stagger, per word).
+          // ============================================================
+          // Wrap each word of a text node in its own overflow-masked track.
+          const splitWords = (el) => {
+            const text = el.textContent.replace(/\s+/g, " ").trim();
+            el.textContent = "";
+            return text.split(" ").map((w) => {
+              const word = document.createElement("span");
+              word.className = "r-word";
+              const inner = document.createElement("span");
+              inner.className = "r-word__in";
+              inner.textContent = w;
+              word.appendChild(inner);
+              el.appendChild(word);
+              el.appendChild(document.createTextNode(" "));
+              return inner;
+            });
+          };
+
+          const sec2 = document.querySelector(".section-2");
+          const titleWords = gsap.utils.toArray(
+            ".section-2 .lead__title .r-word__in",
+          );
+          const bodyWords = splitWords(sec2.querySelector(".lead__body"));
+          const stmtWords = splitWords(sec2.querySelector(".statement"));
+          const cta2 = sec2.querySelector(".cta");
+          const allWords2 = [...titleWords, ...bodyWords, ...stmtWords];
+
+          gsap.set(allWords2, { yPercent: 120 });
+          gsap.set(cta2, { autoAlpha: 0, y: 24 });
+          gsap.set(
+            [
+              ".section-2 .lead__title",
+              ".section-2 .lead__body",
+              ".section-2 .cta",
+              ".section-2 .statement",
+            ],
+            { visibility: "visible" },
+          );
+
+          const stl2 = gsap.timeline({
+            defaults: { ease: "power3.out", force3D: true },
+            scrollTrigger: {
+              trigger: ".section-2",
+              start: "top top",
+              end: "+=130%",
+              pin: true,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+          stl2
+            .to(titleWords, { yPercent: 0, duration: 0.6, stagger: 0.06 }, 0.0)
+            .to(bodyWords, { yPercent: 0, duration: 0.6, stagger: 0.03 }, 0.3)
+            .to(cta2, { autoAlpha: 1, y: 0, duration: 0.45 }, 0.95)
+            .to(stmtWords, { yPercent: 0, duration: 0.6, stagger: 0.045 }, 1.15);
+
+          window.__scrollTL2 = stl2; // exposed for testing
+
           ScrollTrigger.refresh();
 
-          // Warm-up: render the end state once (suppressing callbacks) then reset, so
+          // Warm-up: render each end state once (suppressing callbacks) then reset, so
           // the GPU layers, SVG clips and the full-bleed card scale are all primed
           // before the first real scroll — no first-frame stall.
           stl.progress(1, true);
           stl.progress(0, true);
+          stl2.progress(1, true);
+          stl2.progress(0, true);
           void document.body.offsetHeight; // force the style/layout flush
         };
 
