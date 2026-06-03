@@ -1400,7 +1400,7 @@
               // beat). The instant the user scrolls off the hero rest, we hard-drive
               // the scroll through the ENTIRE timeline — logo → navbar, card
               // full-bleed AND the copy reveal — with a locked Lenis tween, so the
-              // brand assembles itself in one ~2.5s sequence the user can't fight.
+              // brand assembles itself in one ~3.5s sequence the user can't fight.
               // Because it's a single scrubbed timeline, scrolling back up afterwards
               // just scrubs it in reverse: one clock, no desync, no race.
               onUpdate: (self) => {
@@ -1410,7 +1410,8 @@
                   autoArmed = false; // fire once, from the top
                   const target = self.start + (self.end - self.start) * revealAt;
                   lenis.scrollTo(target, {
-                    duration: 2.5, // designed cinematic pace
+                    duration: 3.5, // designed cinematic pace — unhurried so the
+                    // logo→navbar flight and the section-2 reveal feel smooth
                     lock: true, // ignore ALL user scroll while it plays
                     easing: (t) =>
                       t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, // power2.inOut
