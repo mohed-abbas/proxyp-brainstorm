@@ -135,17 +135,22 @@
         background: var(--bone-white);
       }
 
-      /* Second section below the hero — the expanded card flows seamlessly into
-         it; the fixed navbar persists on top. Holds the blue-aurora gradient and
-         the editorial copy, which reveals word-by-word on a pinned scroll.
-         Every length is a fraction of the Figma 1512px design width (1px ≈
-         0.06614vw), so its internal proportions are exact at any width. */
+      /* Second-section content — an OVERLAY on the hero's own canvas, not a
+         separate scrolling section. It's revealed in the back half of the hero
+         pin: the instant the logo lands in the navbar and the dark card is
+         full-bleed, the aurora fades in and the copy reveals word-by-word, right
+         where it sits. So the full-bleed dark card flows straight into section 2
+         with no seam. Transparent container; its children carry the visuals.
+         Every length is a fraction of the Figma 1512px design width. */
       .section-2 {
-        position: relative;
-        width: 100%;
-        min-height: 100vh;
-        overflow: hidden;
-        background: var(--ink);
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+      }
+      /* Armed (JS) state: aurora hidden until the card is full-bleed. */
+      .js .section-2 .glow-2 {
+        opacity: 0;
       }
 
       /* Atmospheric blue aurora — two layered, gaussian-blurred vector sweeps.
@@ -682,11 +687,9 @@
           <span class="hairline__segment"></span>
         </div>
       </div>
-    </main>
-
-    <!-- Second section — blue aurora + editorial copy (reveals word-by-word on
-         a pinned scroll). Sits below the hero; the persistent navbar holds on top. -->
-    <section class="section-2">
+      <!-- Second-section overlay — aurora + editorial copy, revealed on the hero
+           canvas in the back half of the pin (see the scroll timeline). -->
+      <div class="section-2">
       <div class="glow-2 glow-2--upper" aria-hidden="true">
         <img src="assets/section2-glow-upper.svg" alt="" />
       </div>
@@ -722,9 +725,10 @@
         We are not your bank, your notary, or your advisor. We are the framework
         that connects them.
       </p>
-    </section>
+      </div>
+    </main>
 
-    <!-- Dark continuation below the pinned second section -->
+    <!-- Dark continuation below the hero pin -->
     <section class="after" aria-hidden="true"></section>
 
     <script>
@@ -1074,7 +1078,10 @@
             scrollTrigger: {
               trigger: ".stage",
               start: "top top",
-              end: "+=150%", // 1.5 viewports — longer, more deliberate
+              // One continuous pin: the hero transformation fills roughly the
+              // first third, then the section-2 aurora + copy reveal on the same
+              // canvas through the remainder.
+              end: "+=400%",
               pin: true,
               scrub: 1, // smoothing catch-up — glides between scroll positions
               // instead of snapping to raw wheel deltas (kills the "skipped frames"
@@ -1136,11 +1143,12 @@
             );
           });
 
-          window.__scrollTL = stl; // exposed for testing
-
           // ============================================================
-          //  SECTION 2 — editorial copy reveals word-by-word on a pinned
-          //  scroll (the welcome wordmark's per-element stagger, per word).
+          //  SECTION 2 — revealed on the hero canvas in the BACK HALF of this
+          //  same pin. The instant the card is full-bleed and the logo has
+          //  landed in the navbar, the hero glow gives way to the aurora and the
+          //  editorial copy rises in word-by-word (the welcome wordmark's
+          //  per-element stagger, applied per word).
           // ============================================================
           // Wrap each word of a text node in its own overflow-masked track.
           const splitWords = (el) => {
@@ -1166,6 +1174,7 @@
           const bodyWords = splitWords(sec2.querySelector(".lead__body"));
           const stmtWords = splitWords(sec2.querySelector(".statement"));
           const cta2 = sec2.querySelector(".cta");
+          const auroras = gsap.utils.toArray(".section-2 .glow-2");
           const allWords2 = [...titleWords, ...bodyWords, ...stmtWords];
 
           gsap.set(allWords2, { yPercent: 120 });
@@ -1180,34 +1189,51 @@
             { visibility: "visible" },
           );
 
-          const stl2 = gsap.timeline({
-            defaults: { ease: "power3.out", force3D: true },
-            scrollTrigger: {
-              trigger: ".section-2",
-              start: "top top",
-              end: "+=130%",
-              pin: true,
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-          stl2
-            .to(titleWords, { yPercent: 0, duration: 0.6, stagger: 0.06 }, 0.0)
-            .to(bodyWords, { yPercent: 0, duration: 0.6, stagger: 0.03 }, 0.3)
-            .to(cta2, { autoAlpha: 1, y: 0, duration: 0.45 }, 0.95)
-            .to(stmtWords, { yPercent: 0, duration: 0.6, stagger: 0.045 }, 1.15);
+          // 6. Hero glow + ghost give way to the section-2 aurora, just as the
+          //    card finishes filling the screen (≈ when the logo lands).
+          stl.to(
+            [".glow", ".ghost"],
+            { opacity: 0, duration: 0.3, ease: "power1.out" },
+            0.85,
+          );
+          stl.to(
+            auroras,
+            { opacity: 1, duration: 0.5, ease: "power2.out", stagger: 0.12 },
+            0.95,
+          );
 
-          window.__scrollTL2 = stl2; // exposed for testing
+          // 7. Editorial copy rises in, word by word, on the dark canvas.
+          stl
+            .to(
+              titleWords,
+              { yPercent: 0, duration: 0.5, stagger: 0.05, ease: "power3.out" },
+              1.1,
+            )
+            .to(
+              bodyWords,
+              { yPercent: 0, duration: 0.5, stagger: 0.02, ease: "power3.out" },
+              1.35,
+            )
+            .to(
+              cta2,
+              { autoAlpha: 1, y: 0, duration: 0.4, ease: "power3.out" },
+              1.95,
+            )
+            .to(
+              stmtWords,
+              { yPercent: 0, duration: 0.5, stagger: 0.025, ease: "power3.out" },
+              2.05,
+            );
+
+          window.__scrollTL = stl; // exposed for testing
 
           ScrollTrigger.refresh();
 
-          // Warm-up: render each end state once (suppressing callbacks) then reset, so
+          // Warm-up: render the end state once (suppressing callbacks) then reset, so
           // the GPU layers, SVG clips and the full-bleed card scale are all primed
           // before the first real scroll — no first-frame stall.
           stl.progress(1, true);
           stl.progress(0, true);
-          stl2.progress(1, true);
-          stl2.progress(0, true);
           void document.body.offsetHeight; // force the style/layout flush
         };
 
