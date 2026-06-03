@@ -1077,7 +1077,8 @@
           // them on real scroll, long after setup finishes.
           let contentTL;
           let triggerAt = 0.4; // recomputed once the held tail is known
-          let revealOn = false; // debounce: only fire on a forward/back crossing
+          let above = false; // is the scrub currently past the reveal seam?
+          let seamProg = 0; // copy progress captured the instant we cross back up
 
           const stl = gsap.timeline({
             // force3D emits matrix3d transforms → every animated element gets its
@@ -1097,15 +1098,35 @@
               // instead of snapping to raw wheel deltas (kills the "skipped frames"
               // jitter); also de-janks the card scale via GPU layers (will-change)
               invalidateOnRefresh: true,
-              // Decouple the copy from scroll: once the scrub passes the moment the
-              // logo has landed in the navbar, the content timeline auto-plays; on
-              // scroll-back past that point it reverses out. A single boolean keeps
-              // it from re-firing every frame.
+              // Asymmetric coupling — this is the crux of the feel:
+              //  • Going DOWN past the seam (logo landed): the copy plays itself in
+              //    on its OWN clock, decoupled from scroll (the auto-reveal).
+              //  • Going UP past the seam: hand the copy back to the SCROLL so it
+              //    unwinds in lockstep with the logo flying back — it is fully gone
+              //    before the hero is restored, instead of lingering on its own
+              //    1.7s clock while the scrubbed hero snaps back underneath it.
+              // We snapshot how far the copy has come at the seam so the handover is
+              // seamless whether it had finished or was still mid-reveal.
               onUpdate: (self) => {
-                const want = self.progress >= triggerAt;
-                if (want === revealOn || !contentTL) return;
-                revealOn = want;
-                want ? contentTL.play() : contentTL.reverse();
+                if (!contentTL) return;
+                const p = self.progress;
+                const nowAbove = p >= triggerAt;
+                if (nowAbove && !above) {
+                  above = true;
+                  contentTL.play(); // auto-reveal in, on its own clock
+                } else if (!nowAbove && above) {
+                  above = false;
+                  seamProg = contentTL.progress(); // freeze the reveal amount
+                  contentTL.pause(); // ...and hand it to the scrub below
+                }
+                if (!nowAbove) {
+                  // Map the transformation zone [0 → triggerAt] onto the copy so it
+                  // is fully gone a touch before the hero fully settles (exitAt),
+                  // never overlapping the resting hero.
+                  const exitAt = triggerAt * 0.35;
+                  const k = (p - exitAt) / (triggerAt - exitAt);
+                  contentTL.progress(seamProg * Math.max(0, Math.min(1, k)));
+                }
               },
             },
           });
