@@ -1389,6 +1389,10 @@
           const COPY_S = 1.6; // section-2 copy reveal / un-reveal
           const driveEase = (t) =>
             t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // power2.inOut
+          // No ease-IN — starts at full speed, decelerates to a settle. Used for the
+          // SECOND beat of each direction so it begins the instant the first beat
+          // ends (no slow ramp-in dwell at the seam between logo and copy).
+          const driveEaseOut = (t) => 1 - (1 - t) * (1 - t); // power2.out
 
           const stl = gsap.timeline({
             // force3D emits matrix3d transforms → every animated element gets its
@@ -1436,7 +1440,7 @@
                       lenis.scrollTo(revealPos, {
                         duration: COPY_S,
                         lock: true,
-                        easing: driveEase,
+                        easing: driveEaseOut, // starts instantly as the logo lands
                         onComplete: () => {
                           phase = "parked";
                         },
@@ -1457,7 +1461,7 @@
                       lenis.scrollTo(self.start, {
                         duration: LOGO_S,
                         lock: true,
-                        easing: driveEase,
+                        easing: driveEaseOut, // logo flies back instantly as copy clears
                         onComplete: () => {
                           phase = "rest";
                         },
