@@ -266,41 +266,11 @@
         position: absolute;
         inset: 0;
         pointer-events: none;
-        z-index: 2; /* the travelling frame sits above text + squares */
       }
       .card-frame__edge {
         position: absolute;
         background: var(--proxy-blue);
       }
-
-      /* Faint diagonal of small blue squares — the small cards' rest accent.
-         On hover they slide toward the bottom-right (see JS) while the frame
-         above travels around the edges. They sit behind the copy (z-index 0). */
-      .card__label,
-      .card__copy {
-        z-index: 1;
-      }
-      .card-diagonal {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-      }
-      .card-diagonal i {
-        position: absolute;
-        width: 0.45vw; /* ~7px */
-        height: 0.45vw;
-        background: var(--proxy-blue);
-        opacity: 0.28;
-        will-change: transform, opacity;
-      }
-      /* Evenly spaced down the card's true corner-to-corner diagonal (left% ==
-         top%), clustered in the top-left half so they have room to travel. */
-      .card-diagonal i:nth-child(1) { left: 7%;  top: 7%; }
-      .card-diagonal i:nth-child(2) { left: 19%; top: 19%; }
-      .card-diagonal i:nth-child(3) { left: 31%; top: 31%; }
-      .card-diagonal i:nth-child(4) { left: 43%; top: 43%; }
-      .card-diagonal i:nth-child(5) { left: 55%; top: 55%; }
       .card-frame__edge--t {
         top: 0;
         left: 0;
@@ -390,9 +360,6 @@
             Up to 30% of the time spent with your advisors goes into retrieving
             or forwarding information
           </p>
-          <div class="card-diagonal" aria-hidden="true">
-            <i></i><i></i><i></i><i></i><i></i>
-          </div>
           <div class="card-frame" aria-hidden="true">
             <i class="card-frame__edge card-frame__edge--t"></i>
             <i class="card-frame__edge card-frame__edge--r"></i>
@@ -407,9 +374,6 @@
           <p class="card__copy">
             One person in four has already lost an important document.
           </p>
-          <div class="card-diagonal" aria-hidden="true">
-            <i></i><i></i><i></i><i></i><i></i>
-          </div>
           <div class="card-frame" aria-hidden="true">
             <i class="card-frame__edge card-frame__edge--t"></i>
             <i class="card-frame__edge card-frame__edge--r"></i>
@@ -514,41 +478,26 @@
             card.addEventListener("mouseleave", drawTo(100));
           })();
 
-          // Small cards: on hover the faint diagonal of blue squares slides
-          // toward the bottom-right (along the card's corner-to-corner
-          // diagonal, brightening) while a blue frame travels the complete edge
-          // — four segments scaling in clockwise sequence (top, right, bottom,
-          // left). Both reverse on leave. Pure transforms; the squares travel a
-          // fraction of each card's own size, so it adapts to the box.
-          function cardHover(card) {
+          // Small cards: a blue frame traces around the box on hover — four edge
+          // segments scaling in clockwise sequence (top, right, bottom, left),
+          // reversing on leave. The segments are a % of each card, so the trace
+          // adapts to its size. Pure transforms — no SVG dash quirks.
+          function frameDraw(card) {
             const edges = card.querySelectorAll(".card-frame__edge");
-            const squares = card.querySelectorAll(".card-diagonal i");
-            const rect = card.getBoundingClientRect();
-            const dx = rect.width * 0.34; // travel toward BR, on the diagonal
-            const dy = rect.height * 0.34; // (proportional → stays on diagonal)
-            const tl = gsap.timeline({ paused: true });
-            tl.to(edges[0], { scaleX: 1, duration: 0.18, ease: "power2.inOut" }, 0)
-              .to(edges[1], { scaleY: 1, duration: 0.18, ease: "power2.inOut" }, 0.18)
-              .to(edges[2], { scaleX: 1, duration: 0.18, ease: "power2.inOut" }, 0.36)
-              .to(edges[3], { scaleY: 1, duration: 0.18, ease: "power2.inOut" }, 0.54)
-              .to(
-                squares,
-                {
-                  x: dx,
-                  y: dy,
-                  opacity: 0.95,
-                  duration: 0.6,
-                  ease: "power2.inOut",
-                  stagger: 0.05, // ripples top-left → bottom-right
-                },
-                0,
-              );
+            const tl = gsap.timeline({
+              paused: true,
+              defaults: { ease: "power2.inOut", duration: 0.18 },
+            });
+            tl.to(edges[0], { scaleX: 1 }) // top  → L-to-R
+              .to(edges[1], { scaleY: 1 }) // right → T-to-B
+              .to(edges[2], { scaleX: 1 }) // bottom → R-to-L
+              .to(edges[3], { scaleY: 1 }); // left → B-to-T
             card.addEventListener("mouseenter", () => tl.play());
             card.addEventListener("mouseleave", () => tl.reverse());
           }
           document
             .querySelectorAll(".card--friction, .card--risk")
-            .forEach(cardHover);
+            .forEach(frameDraw);
         }
 
         // Wait for fonts so line-wrapping is measured against the real metrics.
