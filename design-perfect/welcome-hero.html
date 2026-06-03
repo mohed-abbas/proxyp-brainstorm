@@ -1379,7 +1379,14 @@
           // plays the whole cinematic forward; one gesture up plays it back — each
           // over the SAME 3.5s with the same ease, never a fast manual scrub.
           let phase = "rest"; // rest → fwd → parked → rev → rest
-          const DRIVE_S = 3.5; // shared forward/reverse cinematic duration
+          // The locked cinematic plays in two chained beats so the logo→navbar
+          // flight gets its OWN duration, independent of the copy reveal (with a
+          // single eased drive the logo would be stuck at ~40% of the total).
+          // Forward: logo flies up over LOGO_S, then the copy reveals over COPY_S.
+          // Reverse mirrors it (copy out, then logo back), so the logo→navbar move
+          // takes the same LOGO_S in both directions.
+          const LOGO_S = 2.1; // logo→navbar flight (each direction) — lands ~2.2s
+          const COPY_S = 1.6; // section-2 copy reveal / un-reveal
           const driveEase = (t) =>
             t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // power2.inOut
 
@@ -1412,34 +1419,49 @@
               onUpdate: (self) => {
                 const lenis = window.__lenis;
                 if (!lenis) return; // no smooth-scroll → manual scrub fallback
-                const revealTarget =
-                  self.start + (self.end - self.start) * revealAt;
+                const span = self.end - self.start;
+                const seamPos = self.start + span * triggerAt; // logo just landed
+                const revealPos = self.start + span * revealAt; // copy fully in
 
-                // FORWARD — from the hero rest, one downward scroll hard-drives the
-                // whole cinematic (logo→navbar, card full-bleed, copy reveal) to the
-                // parked state over DRIVE_S, locked so the user can't outrun it.
+                // FORWARD — one downward scroll plays the whole cinematic, locked,
+                // in two beats: (1) the logo flies to the navbar over LOGO_S, then
+                // (2) the section-2 copy reveals over COPY_S.
                 if (phase === "rest" && self.progress > 0.004) {
                   phase = "fwd";
-                  lenis.scrollTo(revealTarget, {
-                    duration: DRIVE_S, // designed cinematic pace — unhurried + smooth
+                  lenis.scrollTo(seamPos, {
+                    duration: LOGO_S,
                     lock: true, // ignore ALL user scroll while it plays
                     easing: driveEase,
                     onComplete: () => {
-                      phase = "parked";
+                      lenis.scrollTo(revealPos, {
+                        duration: COPY_S,
+                        lock: true,
+                        easing: driveEase,
+                        onComplete: () => {
+                          phase = "parked";
+                        },
+                      });
                     },
                   });
                 }
-                // REVERSE — once parked, one upward scroll hard-drives the SAME
-                // cinematic back to the hero rest over the SAME DRIVE_S/ease, so
-                // scrolling up feels identical to scrolling down (no fast scrub).
+                // REVERSE — once parked, one upward scroll mirrors it: (1) the copy
+                // un-reveals over COPY_S, then (2) the logo flies back to centre over
+                // LOGO_S — so the logo move takes the same LOGO_S as the forward.
                 else if (phase === "parked" && self.progress < revealAt - 0.02) {
                   phase = "rev";
-                  lenis.scrollTo(self.start, {
-                    duration: DRIVE_S,
+                  lenis.scrollTo(seamPos, {
+                    duration: COPY_S,
                     lock: true,
                     easing: driveEase,
                     onComplete: () => {
-                      phase = "rest";
+                      lenis.scrollTo(self.start, {
+                        duration: LOGO_S,
+                        lock: true,
+                        easing: driveEase,
+                        onComplete: () => {
+                          phase = "rest";
+                        },
+                      });
                     },
                   });
                 }
