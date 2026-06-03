@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en" class="js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Proxy Papers — Second section (layout)</title>
+
+    <!-- Vector assets exported from Figma (node 17:3) -->
+    <link rel="preload" as="image" href="assets/section2-glow-upper.svg" />
+    <link rel="preload" as="image" href="assets/section2-glow-lower.svg" />
+
+    <style>
+      /* PP Neue Montreal — brand typeface. Only Book (400) and Bold (700) are
+         present locally; Figma's "Medium" (500) falls back to Book via CSS
+         font-matching, which is acceptable for the prototype. */
+      @font-face {
+        font-family: "PP Neue Montreal";
+        src: url("assets/fonts/ppneuemontreal-book.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "PP Neue Montreal";
+        src: url("assets/fonts/ppneuemontreal-bold.woff") format("woff");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        --bone-white: #f7f4f0; /* warm off-white — typography */
+        --ink: #161718;        /* Chinese Black — structural ground */
+        --proxy-blue: #5a90f4; /* accent — P-mark blade, the CTA */
+
+        /* Design reference is the Figma frame at 1512px wide. Every length below
+           is expressed as a fraction of that width (1px = 100/1512 vw ≈ 0.06614vw)
+           so the section's internal proportions are preserved at any width and are
+           pixel-exact at 1512px. */
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        background: var(--ink);
+      }
+
+      body {
+        font-family:
+          "PP Neue Montreal", "Neue Haas Grotesk", "Inter", system-ui,
+          -apple-system, sans-serif;
+        color: var(--bone-white);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      /* ── The section ───────────────────────────────────────────────────── */
+      .section {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        /* The Figma frame is 1512 × 999 → height 66.071vw. Guarantee nothing
+           clips on shorter windows. */
+        min-height: max(100vh, 66.071vw);
+        overflow: hidden;
+        background: var(--ink);
+      }
+
+      /* ── Atmospheric glow (two layered, gaussian-blurred vector sweeps) ──── */
+      .glow {
+        position: absolute;
+        pointer-events: none;
+      }
+      /* Each wrapper is sized to the SVG's *full bleed* box — the Figma frame
+         grown by the blur-overflow insets. That box's aspect ratio is identical
+         to the SVG viewBox, so the image fills it (preserveAspectRatio:none)
+         without distorting the shapes or their gaussian blur. */
+      .glow img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      /* Frame 1000004731 — the broad upper band (viewBox 3019×1473). */
+      .glow--upper {
+        left: -47.88vw;
+        top: -16.115vw;
+        width: 199.69vw;
+        height: 97.408vw;
+        z-index: 1;
+      }
+      /* Frame 1000004732 — the brighter lower sweep (viewBox 1996×829). */
+      .glow--lower {
+        left: -14.175vw;
+        top: 2.35vw;
+        width: 132vw;
+        height: 54.823vw;
+        z-index: 2;
+      }
+
+      /* ── Persistent navbar (matches Figma node 17:3) ───────────────────── */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 9.921vw; /* 150px — content vertically centred at 75px */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5.026vw 0 5.291vw; /* 80px left / 76px right */
+        z-index: 10;
+        pointer-events: none;
+      }
+      .navbar__group {
+        display: flex;
+        align-items: center;
+        gap: 3.968vw; /* 60px */
+      }
+      .navbar a {
+        color: var(--bone-white);
+        text-decoration: none;
+        font-size: 1.3228vw; /* 20px */
+        font-weight: 400;
+        line-height: normal;
+        white-space: nowrap;
+        pointer-events: auto;
+      }
+      .navbar__mark {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        height: 2.4093vw; /* 36.43px */
+        width: 1.6743vw; /* keep the 25.31:36.43 viewBox ratio (SVG is aspect-none) */
+        pointer-events: auto;
+      }
+
+      /* ── Left content block (node 11:104) ──────────────────────────────── */
+      .lead {
+        position: absolute;
+        left: 5.291vw; /* 80px */
+        top: 33.003vw; /* 499px */
+        width: 46.958vw; /* 710px */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2.5794vw; /* 39px */
+        z-index: 3;
+      }
+      .lead__title {
+        font-weight: 500; /* Medium → falls back to Book */
+        font-size: 3.2407vw; /* 49px */
+        line-height: normal;
+        color: var(--bone-white);
+        white-space: nowrap;
+      }
+      .lead__title .dot {
+        color: var(--proxy-blue);
+      }
+      .lead__body {
+        font-weight: 400;
+        font-size: 1.0582vw; /* 16px */
+        line-height: normal;
+        letter-spacing: 0.0212vw; /* 0.32px */
+        color: rgba(247, 244, 240, 0.7);
+        width: 39.021vw; /* 590px */
+      }
+
+      .cta {
+        display: flex;
+        align-items: center;
+        gap: 2.6455vw; /* 40px */
+      }
+      .cta__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--proxy-blue);
+        color: var(--bone-white);
+        font-weight: 500;
+        font-size: 1.0582vw; /* 16px */
+        line-height: normal;
+        white-space: nowrap;
+        padding: 0.6614vw 1.3228vw; /* 10px 20px */
+        border-radius: 2.9762vw; /* 45px — pill */
+        border: 0;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .cta__link {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3968vw; /* 6px */
+        width: 12.632vw; /* 191px */
+      }
+      .cta__link span {
+        font-weight: 500;
+        font-size: 1.0582vw; /* 16px */
+        line-height: normal;
+        color: rgba(247, 244, 240, 0.5);
+        white-space: nowrap;
+      }
+      .cta__rule {
+        content: "";
+        width: 11.772vw; /* 178px */
+        height: 1px;
+        background: rgba(247, 244, 240, 0.5);
+      }
+
+      /* ── Lower-right statement (node 11:113) ───────────────────────────── */
+      .statement {
+        position: absolute;
+        left: 58.929vw; /* 891px */
+        top: 51.455vw; /* 778px */
+        width: 37.5vw; /* 567px */
+        font-weight: 500;
+        font-size: 1.6534vw; /* 25px */
+        line-height: normal;
+        color: #fff;
+        z-index: 3;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="section">
+      <!-- Atmospheric blue aurora — two layered blurred vector sweeps -->
+      <div class="glow glow--upper" aria-hidden="true">
+        <img src="assets/section2-glow-upper.svg" alt="" />
+      </div>
+      <div class="glow glow--lower" aria-hidden="true">
+        <img src="assets/section2-glow-lower.svg" alt="" />
+      </div>
+
+      <!-- Left content block -->
+      <div class="lead">
+        <h2 class="lead__title">
+          Private management of your data<span class="dot">.</span>
+        </h2>
+        <p class="lead__body">
+          A bespoke framework to structure, secure and maintain the documents
+          that make up your personal estate. A dedicated advisor. Sovereign
+          technology.
+        </p>
+        <div class="cta">
+          <a class="cta__btn" href="#">Request a discovery meeting</a>
+          <div class="cta__link">
+            <span>Are you a referring advisor?</span>
+            <i class="cta__rule" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lower-right statement -->
+      <p class="statement">
+        We are not your bank, your notary, or your advisor. We are the framework
+        that connects them.
+      </p>
+    </main>
+
+    <!-- Persistent navbar — matches Figma node 17:3 -->
+    <nav class="navbar" aria-label="Proxy Papers">
+      <div class="navbar__group">
+        <a href="#">Approach</a>
+        <a href="#">Services</a>
+      </div>
+      <img class="navbar__mark" src="assets/pp-mark.svg" alt="Proxy Papers" />
+      <div class="navbar__group">
+        <a href="#">Referrers</a>
+        <a href="#">Contact</a>
+      </div>
+    </nav>
+  </body>
+</html>
