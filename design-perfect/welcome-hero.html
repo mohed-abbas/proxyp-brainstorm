@@ -970,8 +970,14 @@
           // Smooth scroll (Lenis). Driven off GSAP's ticker (single rAF loop) and
           // wired to ScrollTrigger.update so the pinned scrub stays perfectly in
           // sync. This is what closes the Chrome↔Firefox smoothness gap.
+          // Time-based glide (duration, not lerp — they're mutually exclusive): each
+          // wheel/trackpad impulse eases out over 1.8s with Lenis's standard expo
+          // curve, so the whole page shares one consistent, unhurried scroll feel.
           if (window.Lenis) {
-            const lenis = new Lenis({ lerp: 0.1 });
+            const lenis = new Lenis({
+              duration: 1.8,
+              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            });
             lenis.on("scroll", ScrollTrigger.update);
             gsap.ticker.add((time) => lenis.raf(time * 1000));
             gsap.ticker.lagSmoothing(0);
@@ -1090,11 +1096,12 @@
             scrollTrigger: {
               trigger: ".stage",
               start: "top top",
-              // The pin now spans ONLY the scrubbed transformation plus a held
-              // tail. The transformation (logo → navbar, card full-bleed) is
-              // scroll-driven across the front; the moment it completes the
-              // section-2 copy plays itself in, independent of further scroll.
-              end: "+=200%",
+              // Pin length is tuned so the whole timeline scrolls at ~80% viewport
+              // per timeline-second (the original transformation pacing). With the
+              // copy reveal now folded in, the timeline is ~3.5s, so the pin is
+              // ~280% — otherwise the logo-to-navbar flight would be compressed into
+              // too little scroll and fly in too fast.
+              end: "+=280%",
               pin: true,
               scrub: 1, // smoothing catch-up — glides between scroll positions
               // instead of snapping to raw wheel deltas (kills the "skipped frames"
