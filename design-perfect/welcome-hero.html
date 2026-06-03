@@ -621,8 +621,23 @@
         pointer-events: auto;
         will-change: transform; /* pre-promote so the first scroll doesn't stall */
       }
-      .navbar a span {
+      /* Hover roll — the same upward clip-wipe the nav text plays on load. Each
+         link clips to one line (overflow above); inside, the label and an exact
+         duplicate are stacked, the duplicate parked one line below. On hover the
+         roll lifts by one line: the label wipes up and out while its duplicate
+         rises into its place — a looping version of the on-load reveal. */
+      .navbar a .nav-roll {
         display: inline-block;
+        position: relative;
+        will-change: transform;
+      }
+      .navbar a .nav-roll__in {
+        display: block;
+      }
+      .navbar a .nav-roll__in--dup {
+        position: absolute;
+        top: 100%;
+        left: 0;
       }
       /* The flying P-mark — a standalone clone that travels to the navbar centre
          (the in-lockup mark is hidden once this exists). */
@@ -1289,10 +1304,31 @@
           navbar.setAttribute("aria-label", "Proxy Papers");
           const srcLinks = [...inCardNav.querySelectorAll("a")];
           const links = srcLinks.map((a) => {
+            const label = a.textContent.trim();
             const el = document.createElement("a");
             el.href = "#";
-            el.innerHTML = "<span>" + a.textContent.trim() + "</span>";
+            // label + an exact duplicate parked one line below (see .nav-roll CSS)
+            el.innerHTML =
+              '<span class="nav-roll">' +
+              '<span class="nav-roll__in">' +
+              label +
+              "</span>" +
+              '<span class="nav-roll__in nav-roll__in--dup" aria-hidden="true">' +
+              label +
+              "</span></span>";
             navbar.appendChild(el);
+            // Hover replays the on-load wipe: roll up one line (label out, dup in),
+            // roll back on leave. Same power3.out feel as the load reveal.
+            const roll = el.querySelector(".nav-roll");
+            const rollTo = (yp) => () =>
+              gsap.to(roll, {
+                yPercent: yp,
+                duration: 0.55,
+                ease: "power3.out",
+                overwrite: true,
+              });
+            el.addEventListener("mouseenter", rollTo(-100));
+            el.addEventListener("mouseleave", rollTo(0));
             return el;
           });
           document.body.appendChild(navbar);
