@@ -239,24 +239,6 @@
       .js .body {
         visibility: hidden; /* revealed by JS once the masks are built */
       }
-
-      /* Lenis smooth-scroll */
-      html.lenis,
-      html.lenis body {
-        height: auto;
-      }
-      .lenis.lenis-smooth {
-        scroll-behavior: auto !important;
-      }
-      .lenis.lenis-stopped {
-        overflow: hidden;
-      }
-
-      /* Dark continuation so the pin releases onto more ground, not the page end */
-      .after {
-        height: 60vh;
-        background: var(--ink);
-      }
     </style>
   </head>
   <body>
@@ -312,32 +294,25 @@
       </div>
     </main>
 
-    <!-- Dark continuation below the pinned section, so the pin releases onto
-         more ground rather than the abrupt end of the page. -->
-    <section class="after" aria-hidden="true"></section>
-
-    <!-- Motion: GSAP + ScrollTrigger + Lenis (same stack as section-2.html) -->
+    <!-- Motion: GSAP. The editorial column reveals on load (same per-word
+         language as section-2.html), not driven by scroll. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
     <script>
-      // The editorial column reveals on scroll with the exact per-word rise +
-      // clip used in section-2.html: the section pins, and each word lifts into
-      // its own overflow-masked track, staggered in reading order. The blue
-      // underline draws in from the left alongside the PROBLEM label. The three
-      // data cards stay put for now — their motion comes next.
+      // On load, each word of the eyebrow, headline and body lifts into its own
+      // overflow-masked track (yPercent 120 -> 0), staggered in reading order —
+      // the section-2 reveal language, played once on page load rather than on
+      // scroll. The blue underline draws in from the left with the PROBLEM
+      // label. The three data cards stay put for now — their motion comes next.
       (function () {
         const reduce = window.matchMedia(
           "(prefers-reduced-motion: reduce)",
         ).matches;
 
-        if (!window.gsap || !window.ScrollTrigger || reduce) {
+        if (!window.gsap || reduce) {
           // No-JS / reduced-motion fallback: show everything in place.
           document.documentElement.classList.remove("js");
           return;
         }
-
-        gsap.registerPlugin(ScrollTrigger);
 
         // Wrap each WORD of a text element in its own overflow-masked track and
         // return the inner spans (so they can rise + clip independently). Words
@@ -359,12 +334,6 @@
         }
 
         function setup() {
-          // Smooth scroll, wired into GSAP's ticker + ScrollTrigger.
-          const lenis = new Lenis({ lerp: 0.1 });
-          lenis.on("scroll", ScrollTrigger.update);
-          gsap.ticker.add((t) => lenis.raf(t * 1000));
-          gsap.ticker.lagSmoothing(0);
-
           const eyebrowWords = splitWords(
             document.querySelector(".eyebrow__label"),
           );
@@ -385,30 +354,19 @@
             visibility: "visible",
           });
 
-          const stl = gsap.timeline({
-            defaults: { ease: "power3.out", force3D: true },
-            scrollTrigger: {
-              trigger: ".section",
-              start: "top top",
-              end: "+=130%",
-              pin: true,
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-
-          // Each word rises independently, staggered in reading order — the
-          // section-2 reveal language: eyebrow first (underline draws with it),
-          // then the headline, then the body.
-          stl
-            .to(eyebrowWords, { yPercent: 0, duration: 0.5 }, 0.0)
-            .to(rule, { autoAlpha: 1, scaleX: 1, duration: 0.6 }, 0.1)
-            .to(headlineWords, { yPercent: 0, duration: 0.6, stagger: 0.06 }, 0.25)
-            .to(bodyWords, { yPercent: 0, duration: 0.6, stagger: 0.025 }, 0.7);
-
-          // Prime GPU layers / clips by rendering the end state once, then reset.
-          stl.progress(1, true).progress(0, true);
-          ScrollTrigger.refresh();
+          // Plays once, automatically, on load. Each word rises independently,
+          // staggered in reading order — eyebrow first (underline draws with
+          // it), then the headline, then the body. A short delay lets the first
+          // painted frame settle before the motion begins.
+          gsap
+            .timeline({
+              defaults: { ease: "power3.out", force3D: true },
+              delay: 0.25,
+            })
+            .to(eyebrowWords, { yPercent: 0, duration: 0.6 }, 0.0)
+            .to(rule, { autoAlpha: 1, scaleX: 1, duration: 0.7 }, 0.1)
+            .to(headlineWords, { yPercent: 0, duration: 0.7, stagger: 0.06 }, 0.25)
+            .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.7);
         }
 
         // Wait for fonts so line-wrapping is measured against the real metrics.
