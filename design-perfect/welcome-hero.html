@@ -1070,15 +1070,17 @@
           ScrollTrigger.addEventListener("refreshInit", placeAtRest);
 
           // ---- The scrubbed transformation timeline ----
-          // The section-2 copy reveal is a SEPARATE, self-playing timeline (built
-          // below) — it is NOT scrubbed. `triggerAt` (the scrub progress at which
-          // the transformation completes / the logo lands in the navbar) and
-          // `contentTL` are assigned further down; the onUpdate closure only reads
-          // them on real scroll, long after setup finishes.
-          let contentTL;
-          let triggerAt = 0.4; // recomputed once the held tail is known
-          let above = false; // is the scrub currently past the reveal seam?
-          let seamProg = 0; // copy progress captured the instant we cross back up
+          // ONE clock governs the whole pin (the scroll). The section-2 copy reveal
+          // lives on the SAME scrubbed timeline as the transformation, appended
+          // strictly after it — so the copy can only exist while the logo is parked
+          // in the navbar, and reverse is always consistent (no torn frames). The
+          // "auto-play" feel comes from auto-advancing the scroll through the reveal
+          // once the logo lands; `triggerAt`/`revealAt` (the seam and the reveal-end
+          // as scrub-progress fractions) are computed further down and only read by
+          // onUpdate on real scroll, long after setup finishes.
+          let triggerAt = 0.4; // scrub progress where the logo lands (recomputed)
+          let revealAt = 0.9; // scrub progress where the copy is fully revealed
+          let autoArmed = true; // one-shot guard for the locked auto-advance
 
           const stl = gsap.timeline({
             // force3D emits matrix3d transforms → every animated element gets its
@@ -1098,35 +1100,27 @@
               // instead of snapping to raw wheel deltas (kills the "skipped frames"
               // jitter); also de-janks the card scale via GPU layers (will-change)
               invalidateOnRefresh: true,
-              // Asymmetric coupling — this is the crux of the feel:
-              //  • Going DOWN past the seam (logo landed): the copy plays itself in
-              //    on its OWN clock, decoupled from scroll (the auto-reveal).
-              //  • Going UP past the seam: hand the copy back to the SCROLL so it
-              //    unwinds in lockstep with the logo flying back — it is fully gone
-              //    before the hero is restored, instead of lingering on its own
-              //    1.7s clock while the scrubbed hero snaps back underneath it.
-              // We snapshot how far the copy has come at the seam so the handover is
-              // seamless whether it had finished or was still mid-reveal.
+              // Auto-advance, one clock. The instant the scroll crosses the seam
+              // (logo landed) we drive the scroll itself through the reveal range
+              // with a locked Lenis tween: the copy scrubs in automatically AND the
+              // user can't scroll past it mid-play. Because the copy is part of this
+              // one scrubbed timeline, scrolling back up simply scrubs it out in
+              // perfect step with the logo — no second clock, no torn frames.
               onUpdate: (self) => {
-                if (!contentTL) return;
-                const p = self.progress;
-                const nowAbove = p >= triggerAt;
-                if (nowAbove && !above) {
-                  above = true;
-                  contentTL.play(); // auto-reveal in, on its own clock
-                } else if (!nowAbove && above) {
-                  above = false;
-                  seamProg = contentTL.progress(); // freeze the reveal amount
-                  contentTL.pause(); // ...and hand it to the scrub below
+                const lenis = window.__lenis;
+                if (!lenis) return; // no smooth-scroll → copy just scrubs manually
+                if (autoArmed && self.progress >= triggerAt && self.progress < revealAt) {
+                  autoArmed = false; // fire once per entry
+                  const target = self.start + (self.end - self.start) * revealAt;
+                  lenis.scrollTo(target, {
+                    duration: 1.5,
+                    lock: true, // ignore user scroll while the reveal plays
+                    easing: (t) => 1 - Math.pow(1 - t, 3), // power3.out
+                  });
                 }
-                if (!nowAbove) {
-                  // Map the transformation zone [0 → triggerAt] onto the copy so it
-                  // is fully gone a touch before the hero fully settles (exitAt),
-                  // never overlapping the resting hero.
-                  const exitAt = triggerAt * 0.35;
-                  const k = (p - exitAt) / (triggerAt - exitAt);
-                  contentTL.progress(seamProg * Math.max(0, Math.min(1, k)));
-                }
+                // Re-arm once the user has scrolled back before the seam, so the
+                // auto-advance can play again the next time they enter.
+                if (self.progress < triggerAt - 0.02) autoArmed = true;
               },
             },
           });
@@ -1184,21 +1178,19 @@
             );
           });
 
-          // The scrubbed transformation is now complete (logo has landed in the
-          // navbar, card is full-bleed). Add an empty "held tail" so the pin keeps
-          // the canvas perfectly still while the copy plays itself in — the extra
-          // scroll here drives nothing visible; it just holds the frame. triggerAt
-          // is the scrub progress at the seam between the two (where the copy fires).
+          // The scrubbed transformation ends here (logo landed in the navbar, card
+          // full-bleed). This timeline position is the SEAM — everything after it is
+          // the copy reveal, so the copy is structurally inseparable from the parked
+          // logo.
           const transformEnd = stl.duration(); // ≈ 1.0
-          stl.to({}, { duration: transformEnd * 1.5 }); // held tail (appended)
-          triggerAt = transformEnd / stl.duration();
 
           // ============================================================
-          //  SECTION 2 — revealed on the hero canvas, but on its OWN clock. The
-          //  instant the scrubbed transformation completes (logo landed in the
-          //  navbar, card full-bleed), the editorial copy plays itself in
-          //  word-by-word over the steady hero glow — automatic, not scrubbed.
-          //  (the welcome wordmark's per-element stagger, applied per word.)
+          //  SECTION 2 — appended to the SAME scrubbed timeline, strictly after the
+          //  seam, so it can only be visible while the logo is in the navbar. It
+          //  reveals word-by-word over the steady hero glow (the welcome wordmark's
+          //  per-element stagger, applied per word). It still feels automatic: the
+          //  onUpdate above auto-advances the scroll through this range the instant
+          //  the logo lands — but it is now perfectly reversible by scrubbing.
           // ============================================================
           // Wrap each word of a text node in its own overflow-masked track.
           const splitWords = (el) => {
@@ -1238,48 +1230,50 @@
             { visibility: "visible" },
           );
 
-          // 6. The hero glow stays — it IS the canvas for section 2 (no glow
-          //    swap). The editorial copy rises in over it, word by word — but on
-          //    its OWN clock, not the scroll's. This timeline is paused; the
-          //    scrub's onUpdate plays it the instant the logo lands in the navbar
-          //    (and reverses it on scroll-back), so the reveal feels automatic.
-          contentTL = gsap.timeline({ paused: true });
-          contentTL
+          // 6. The hero glow stays — it IS the canvas for section 2. The editorial
+          //    copy rises in over it, word by word, scrubbed on the shared timeline
+          //    starting at the seam (transformEnd) so it never overlaps the flying
+          //    logo. Offsets are absolute timeline positions (transformEnd + beat).
+          stl
             .to(
               titleWords,
               { yPercent: 0, duration: 0.6, stagger: 0.06, ease: "power3.out" },
-              0,
+              transformEnd,
             )
             .to(
               bodyWords,
               { yPercent: 0, duration: 0.6, stagger: 0.025, ease: "power3.out" },
-              0.3,
+              transformEnd + 0.3,
             )
             .to(
               cta2,
               { autoAlpha: 1, y: 0, duration: 0.5, ease: "power3.out" },
-              1.0,
+              transformEnd + 1.0,
             )
             .to(
               stmtWords,
               { yPercent: 0, duration: 0.6, stagger: 0.03, ease: "power3.out" },
-              1.1,
+              transformEnd + 1.1,
             );
+          const revealEnd = stl.duration(); // copy fully in
+
+          // Tiny buffer so the user isn't parked exactly on the unpin edge.
+          stl.to({}, { duration: revealEnd * 0.1 });
+
+          // Seam + reveal-end as scrub-progress fractions (used by onUpdate).
+          triggerAt = transformEnd / stl.duration();
+          revealAt = revealEnd / stl.duration();
 
           window.__scrollTL = stl; // exposed for testing
-          window.__contentTL = contentTL; // exposed for testing
+          window.__seam = () => ({ triggerAt, revealAt }); // exposed for testing
 
           ScrollTrigger.refresh();
 
-          // Warm-up: render each timeline's end state once (suppressing callbacks)
-          // then reset, so the GPU layers, SVG clips, the full-bleed card scale and
-          // the per-word masks are all primed before the first real scroll — no
-          // first-frame stall.
+          // Warm-up: render the end state once (suppressing callbacks) then reset, so
+          // the GPU layers, SVG clips, the full-bleed card scale and the per-word
+          // masks are all primed before the first real scroll — no first-frame stall.
           stl.progress(1, true);
           stl.progress(0, true);
-          contentTL.progress(1, true);
-          contentTL.progress(0, true);
-          contentTL.pause(0);
           void document.body.offsetHeight; // force the style/layout flush
         };
 
