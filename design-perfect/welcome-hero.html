@@ -1375,7 +1375,13 @@
           // onUpdate on real scroll, long after setup finishes.
           let triggerAt = 0.4; // scrub progress where the logo lands (recomputed)
           let revealAt = 0.9; // scrub progress where the copy is fully revealed
-          let autoArmed = true; // one-shot guard for the locked auto-advance
+          // Phase machine for the symmetric locked auto-drive: one gesture down
+          // plays the whole cinematic forward; one gesture up plays it back — each
+          // over the SAME 3.5s with the same ease, never a fast manual scrub.
+          let phase = "rest"; // rest → fwd → parked → rev → rest
+          const DRIVE_S = 3.5; // shared forward/reverse cinematic duration
+          const driveEase = (t) =>
+            t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // power2.inOut
 
           const stl = gsap.timeline({
             // force3D emits matrix3d transforms → every animated element gets its
@@ -1406,20 +1412,37 @@
               onUpdate: (self) => {
                 const lenis = window.__lenis;
                 if (!lenis) return; // no smooth-scroll → manual scrub fallback
-                if (autoArmed && self.progress > 0.004) {
-                  autoArmed = false; // fire once, from the top
-                  const target = self.start + (self.end - self.start) * revealAt;
-                  lenis.scrollTo(target, {
-                    duration: 3.5, // designed cinematic pace — unhurried so the
-                    // logo→navbar flight and the section-2 reveal feel smooth
+                const revealTarget =
+                  self.start + (self.end - self.start) * revealAt;
+
+                // FORWARD — from the hero rest, one downward scroll hard-drives the
+                // whole cinematic (logo→navbar, card full-bleed, copy reveal) to the
+                // parked state over DRIVE_S, locked so the user can't outrun it.
+                if (phase === "rest" && self.progress > 0.004) {
+                  phase = "fwd";
+                  lenis.scrollTo(revealTarget, {
+                    duration: DRIVE_S, // designed cinematic pace — unhurried + smooth
                     lock: true, // ignore ALL user scroll while it plays
-                    easing: (t) =>
-                      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, // power2.inOut
+                    easing: driveEase,
+                    onComplete: () => {
+                      phase = "parked";
+                    },
                   });
                 }
-                // Re-arm only once fully back at the hero rest, so the cinematic
-                // re-triggers from the top and never mid-sequence.
-                if (self.progress < 0.002) autoArmed = true;
+                // REVERSE — once parked, one upward scroll hard-drives the SAME
+                // cinematic back to the hero rest over the SAME DRIVE_S/ease, so
+                // scrolling up feels identical to scrolling down (no fast scrub).
+                else if (phase === "parked" && self.progress < revealAt - 0.02) {
+                  phase = "rev";
+                  lenis.scrollTo(self.start, {
+                    duration: DRIVE_S,
+                    lock: true,
+                    easing: driveEase,
+                    onComplete: () => {
+                      phase = "rest";
+                    },
+                  });
+                }
               },
             },
           });
