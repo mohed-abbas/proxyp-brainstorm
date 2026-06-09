@@ -42,6 +42,11 @@
   --pp-lockup-ink: var(--pp-bone); /* stem + wordmark */
   --pp-lockup-blade: var(--pp-blue); /* mark blade */
 
+  /* Navbar foreground — links + hairline. Flip per theme so the fixed bar stays
+     legible over any section it floats above (bone on dark/blue, ink on light). */
+  --pp-nav-fg: var(--pp-bone);
+  --pp-nav-hairline: rgba(247, 244, 240, 0.5);
+
   /* Motion */
   --pp-ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out, the house curve */
 }
@@ -63,6 +68,8 @@
   --pp-ground: var(--pp-bone);
   --pp-lockup-ink: var(--pp-ink);
   --pp-lockup-blade: var(--pp-blue);
+  --pp-nav-fg: var(--pp-ink); /* links go ink so they read on the bone surface */
+  --pp-nav-hairline: rgba(22, 23, 24, 0.18);
 }
 
 /* ── Reset ──────────────────────────────────────────────────────────────────*/

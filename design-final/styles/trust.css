@@ -1,0 +1,80 @@
+/* ============================================================================
+   Trust — "Sovereign infrastructure. Protected data."
+   (Figma node 58:219). The reassurance band: a short Bone White panel (20px
+   radius) with an inset hairline frame (1px Chinese Black, certificate-like)
+   around centred copy — the title over the certifications statement (France
+   hosting, GDPR, AI Act, NF 203 CCFN vaults, trusted third party for tax).
+
+   The brand's first LIGHT surface, so the fixed navbar flips to its light theme
+   over it (ink links + mark, see theme.css / navbar.css + data-nav-theme).
+
+   Reads tokens from theme.css. Lengths are fractions of the 1512px Figma frame
+   (1px ≈ 0.066138vw) — same convention as the other design-final sections.
+
+   Port note (React/Next): a self-contained band; the reveal is a useGSAP mount
+   effect (see setupTrust in hero.js).
+   ========================================================================== */
+
+.trust {
+  position: relative;
+  width: 100%;
+  min-height: 34.5899vw; /* 523px — a short band, not a full screen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 5.0265vw; /* 76px */
+  background: var(--pp-bone);
+  border-radius: 1.3228vw; /* 20px */
+  overflow: hidden;
+}
+
+/* Inset hairline frame — the bordered rectangle around the copy. Decorative, so
+   it never intercepts pointer events. */
+.trust__frame {
+  position: absolute;
+  inset: 0.9921vw 1.1243vw; /* 15px vertical, 17px horizontal */
+  border: 1px solid var(--pp-ink);
+  border-radius: 1.3228vw; /* 20px */
+  pointer-events: none;
+}
+
+/* Centred copy block — above the frame. */
+.trust__content {
+  position: relative;
+  z-index: 1;
+  width: 45.4365vw; /* 687px */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2566vw; /* 19px */
+  text-align: center;
+}
+.trust__title {
+  font-weight: 500; /* Medium → falls back to Book (see theme.css) */
+  font-size: 3.2407vw; /* 49px */
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--pp-ink);
+}
+.trust__title-line {
+  display: block;
+  white-space: nowrap;
+}
+.trust__body {
+  font-weight: 400; /* Book */
+  font-size: 1.0582vw; /* 16px */
+  line-height: 1.45;
+  letter-spacing: 0.02em; /* 0.32px */
+  color: rgba(22, 23, 24, 0.7); /* ink 70% */
+}
+
+/* ── Reveal masks (per-word, house style) ───────────────────────────────────*/
+.trust .r-word {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+/* Armed state — JS reveals once the timeline is built. No JS / reduced motion →
+   the settled state renders as-is. */
+.js .trust__content {
+  visibility: hidden;
+}

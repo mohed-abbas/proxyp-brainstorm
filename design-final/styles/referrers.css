@@ -1,0 +1,188 @@
+/* ============================================================================
+   Referrers — "You advise high-net-worth clients?"
+   (Figma node 68:813). The prescripteur block: traffic is overwhelmingly
+   referral, so this speaks to the advisor. A dark centred column — title, an
+   orbital "radar" diagram (the P-mark in a glassy chip at centre, three
+   concentric rings that fade out toward the bottom via a gradient mask, with
+   five advisor avatars on the inner/middle orbits), body copy, and a blue pill
+   CTA into the referrers area.
+
+   The orbit is built on ONE 494×494 coordinate field (positioned absolutely,
+   clipped to the top 298px) so the rings, centre mark and avatars all share a
+   single percentage coordinate system — port-clean and resolution-independent.
+
+   Reads tokens from theme.css. Outer lengths are fractions of the 1512px Figma
+   frame (1px ≈ 0.066138vw) — same convention as the other design-final sections.
+
+   Port note (React/Next): the five avatars are a .map() over an ADVISORS array;
+   the reveal is a useGSAP mount effect (see setupReferrers in hero.js).
+   ========================================================================== */
+
+.referrers {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 5.0265vw; /* 76px */
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+.referrers__content {
+  position: relative;
+  width: 69.4444vw; /* 1050px */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.7857vw; /* 27px */
+  text-align: center;
+}
+
+.referrers__title {
+  font-weight: 500; /* Medium → Book fallback */
+  font-size: 3.2407vw; /* 49px */
+  line-height: 1.1;
+  letter-spacing: -0.02em; /* -0.98px */
+  color: var(--pp-bone);
+}
+
+/* ── Orbital diagram ────────────────────────────────────────────────────────
+   494px-wide window clipped to the top 298px. The field below is the full
+   494×494 circle box; everything inside is positioned as a % of it. */
+.referrers__orbit {
+  position: relative;
+  width: 32.6720vw; /* 494px */
+  height: 19.7090vw; /* 298px */
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.referrers__field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1; /* 494 × 494 — overflows the 298 window, clipped above */
+}
+
+/* Concentric rings — fade out toward the bottom (matches the Figma alpha mask),
+   so they read as upper arcs dissolving around the mark. Outer ring dashed. */
+.referrers__rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 60%);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent 60%);
+}
+.referrers__rings circle {
+  fill: none;
+  stroke: rgba(247, 244, 240, 0.28);
+  stroke-width: 1;
+}
+.referrers__rings .referrers__ring--outer {
+  stroke: rgba(247, 244, 240, 0.32);
+  stroke-dasharray: 3 7;
+  stroke-linecap: round;
+}
+
+/* Centre chip — glassy circle holding the inlined P-mark (themed via tokens). */
+.referrers__mark {
+  position: absolute;
+  left: 39.879%; /* 197/494 */
+  top: 39.676%; /* 196/494 */
+  width: 20.243%; /* 100/494 */
+  aspect-ratio: 100 / 101.724;
+  border-radius: 50%;
+  background: linear-gradient(
+    to bottom,
+    rgba(247, 244, 240, 0.06),
+    rgba(247, 244, 240, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.referrers__mark svg {
+  height: 46%;
+  width: auto;
+}
+.referrers__mark .lk-mark__stem {
+  fill: var(--pp-lockup-ink);
+}
+.referrers__mark .lk-mark__blade {
+  fill: var(--pp-lockup-blade);
+}
+
+/* Advisor avatars — 37px circles on the orbits (positions are % of the field). */
+.referrers__avatar {
+  position: absolute;
+  width: 7.490%; /* 37/494 */
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.referrers__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.referrers__avatar--1 { left: 29.149%; top: 30.162%; } /* inner, upper-left */
+.referrers__avatar--2 { left: 63.765%; top: 30.162%; } /* inner, upper-right */
+.referrers__avatar--3 { left: 46.154%; top: 8.704%; }  /* middle, top */
+.referrers__avatar--4 { left: 8.704%; top: 44.939%; }  /* middle, left */
+.referrers__avatar--5 { left: 83.603%; top: 44.939%; } /* middle, right */
+
+/* ── Body + CTA ──────────────────────────────────────────────────────────────*/
+.referrers__foot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.7857vw; /* 27px */
+}
+.referrers__body {
+  width: 100%;
+  font-weight: 400; /* Book */
+  font-size: 1.0582vw; /* 16px */
+  line-height: 1.45;
+  letter-spacing: 0.02em; /* 0.32px */
+  color: rgba(247, 244, 240, 0.7);
+}
+.referrers__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6614vw 1.3228vw; /* 10px 20px */
+  border-radius: 2.9762vw; /* 45px */
+  background: var(--pp-blue);
+  color: var(--pp-bone);
+  font-weight: 500;
+  font-size: 1.0582vw; /* 16px */
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform 0.4s var(--pp-ease-out),
+    filter 0.4s var(--pp-ease-out);
+}
+.referrers__cta:hover {
+  transform: translateY(-0.1323vw); /* -2px */
+  filter: brightness(1.07);
+}
+
+/* ── Reveal masks (per-word, house style) ───────────────────────────────────*/
+.referrers .r-word {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+/* Armed state — JS reveals once the timeline is built. No JS / reduced motion →
+   the settled state renders as-is. */
+.js .referrers__title,
+.js .referrers__orbit,
+.js .referrers__foot {
+  visibility: hidden;
+}

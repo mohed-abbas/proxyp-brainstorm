@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
 
-  border: 0.5px solid rgba(247, 244, 240, 0.5);
+  border: 0.5px solid var(--pp-nav-hairline);
   border-radius: 1.3228vw; /* 20 / 1512 */
   background-image: linear-gradient(
     97.99deg,
@@ -34,6 +34,7 @@
   );
   -webkit-backdrop-filter: blur(3.7px);
   backdrop-filter: blur(3.7px);
+  transition: border-color 0.5s var(--pp-ease-out); /* crossfade on theme flip */
 }
 
 /* Inner padded row: link group ↔ space ↔ link group, mark pinned dead-centre. */
@@ -64,9 +65,10 @@
   font-weight: 400;
   font-size: 1.0582vw; /* 16 / 1512 */
   line-height: 1.2566vw;
-  color: var(--pp-bone);
+  color: var(--pp-nav-fg);
   text-decoration: none;
   white-space: nowrap;
+  transition: color 0.5s var(--pp-ease-out); /* crossfade on theme flip */
 }
 
 .pp-nav__roll {
@@ -105,6 +107,13 @@
 }
 .pp-nav__logo .lk-mark__blade {
   fill: var(--pp-lockup-blade);
+}
+/* The mark recolors when the navbar's theme context flips (set per-section by
+   setupNavTheme in hero.js), so the blade crossfades — e.g. blue→bone as the
+   all-blue method panel scrolls under the bar. */
+.pp-nav__logo .lk-mark__stem,
+.pp-nav__logo .lk-mark__blade {
+  transition: fill 0.5s var(--pp-ease-out);
 }
 
 /* Reduced motion: hover roll stays put. */

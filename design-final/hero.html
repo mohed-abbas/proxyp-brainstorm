@@ -14,16 +14,20 @@
 
     <link rel="preload" as="image" href="assets/problem-accent-underline.svg" />
 
-    <link rel="stylesheet" href="styles/theme.css?v=3" />
-    <link rel="stylesheet" href="styles/navbar.css?v=1" />
+    <link rel="stylesheet" href="styles/theme.css?v=4" />
+    <link rel="stylesheet" href="styles/navbar.css?v=3" />
     <link rel="stylesheet" href="styles/hero.css?v=5" />
     <link rel="stylesheet" href="styles/problem.css?v=1" />
+    <link rel="stylesheet" href="styles/profiles.css?v=1" />
+    <link rel="stylesheet" href="styles/method.css?v=2" />
+    <link rel="stylesheet" href="styles/trust.css?v=1" />
+    <link rel="stylesheet" href="styles/referrers.css?v=1" />
 
     <!-- GSAP + ScrollTrigger + Lenis (CDN, no build step) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=4" defer></script>
+    <script src="scripts/hero.js?v=9" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -70,7 +74,7 @@
       </div>
     </nav>
 
-    <main class="hero">
+    <main class="hero" data-nav-theme="dark">
       <div class="hero__frame">
         <!-- Horizon lens: blue bowtie + masked clouds + arc hairlines -->
         <div class="hero-lens" aria-hidden="true">
@@ -132,7 +136,7 @@
 
     <!-- Problem section (Figma 17:2) — revealed as it scrolls into view.
          Shares the fixed navbar above; no navbar of its own. -->
-    <section class="problem" aria-label="The problem Proxy Papers solves">
+    <section class="problem" aria-label="The problem Proxy Papers solves" data-nav-theme="dark">
       <div class="problem__content">
         <!-- Left editorial column -->
         <p class="problem__eyebrow">
@@ -197,6 +201,175 @@
             </div>
           </div>
         </article>
+      </div>
+    </section>
+
+    <!-- Profiles section (Figma 58:149) — revealed as it scrolls into view.
+         Shares the fixed navbar + the single Lenis/ScrollTrigger above. Each
+         card is a GSAP-owned wrapper around a CSS-owned face (see profiles.css);
+         the three cards port to a .map() over a PROFILES array. -->
+    <section class="profiles" aria-label="The three support profiles" data-nav-theme="dark">
+      <div class="profiles__content">
+        <!-- Editorial header -->
+        <h2 class="profiles__title">
+          <span class="profiles__title-line">Three support profiles.</span>
+          <span class="profiles__title-line profiles__title-line--muted">One shared framework.</span>
+        </h2>
+        <p class="profiles__body">
+          Essentiel, Signature, Exception — each profile adapts to the complexity
+          of your estate and your pace of life. The method remains the same.
+        </p>
+
+        <!-- Fanned deck: 01 / 03 in Proxy Blue, 02 in Bone White on top -->
+        <div class="profiles__deck" aria-hidden="true">
+          <article class="profiles__card profiles__card--01" style="--rot: -10deg">
+            <div class="profiles__card-face">
+              <span class="profiles__card-num">01</span>
+              <span class="profiles__card-mark"></span>
+            </div>
+          </article>
+          <article class="profiles__card profiles__card--03" style="--rot: 10deg">
+            <div class="profiles__card-face">
+              <span class="profiles__card-num">03</span>
+              <span class="profiles__card-mark"></span>
+            </div>
+          </article>
+          <article class="profiles__card profiles__card--02" style="--rot: 0deg">
+            <div class="profiles__card-face">
+              <span class="profiles__card-num">02</span>
+              <span class="profiles__card-mark"></span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Method section (Figma 58:170) — the brand's full-presence moment:
+         a full Proxy Blue panel. Revealed as it scrolls into view; shares the
+         fixed navbar + the single Lenis/ScrollTrigger above. The five rows port
+         to a .map() over a STEPS array (see method.css). -->
+    <section class="method" aria-label="The five-step method" data-nav-theme="blue">
+      <div class="method__content">
+        <!-- Editorial header -->
+        <header class="method__head">
+          <h2 class="method__title">
+            <span class="method__title-seg">Five steps,</span>
+            <span class="method__title-seg method__title-seg--muted">one single contact.</span>
+          </h2>
+          <p class="method__lede">
+            The same dedicated advisor stays with you from the first meeting to
+            the annual review. No rotating teams, no subcontracting.
+          </p>
+        </header>
+
+        <!-- The five locked method steps -->
+        <ol class="method__steps">
+          <li class="method__step">
+            <span class="method__step-num">01</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Onboarding</h3>
+              <p class="method__step-desc">Collection, sorting, classification, backup on the Papers Box.</p>
+            </div>
+          </li>
+          <li class="method__step">
+            <span class="method__step-num">02</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Organization</h3>
+              <p class="method__step-desc">Folder setup, deadline alerts, secure sharing with your advisors.</p>
+            </div>
+          </li>
+          <li class="method__step">
+            <span class="method__step-num">03</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Follow-up</h3>
+              <p class="method__step-desc">Regular updates, periodic on-site interventions.</p>
+            </div>
+          </li>
+          <li class="method__step">
+            <span class="method__step-num">04</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Support</h3>
+              <p class="method__step-desc">Secure transmission of the items needed for your projects and procedures.</p>
+            </div>
+          </li>
+          <li class="method__step">
+            <span class="method__step-num">05</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Management</h3>
+              <p class="method__step-desc">Real-time visibility, periodic report, decision support.</p>
+            </div>
+          </li>
+        </ol>
+
+        <!-- Footer link -->
+        <a class="method__link" href="#">
+          See our full approach
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Trust section (Figma 58:219) — the reassurance band. First LIGHT surface:
+         the fixed navbar flips to its light theme over it (data-nav-theme). -->
+    <section class="trust" aria-label="Sovereign infrastructure and data protection" data-nav-theme="light">
+      <span class="trust__frame" aria-hidden="true"></span>
+      <div class="trust__content">
+        <h2 class="trust__title">
+          <span class="trust__title-line">Sovereign infrastructure.</span>
+          <span class="trust__title-line">Protected data.</span>
+        </h2>
+        <p class="trust__body">
+          Your documents are hosted in France, on an independent infrastructure.
+          Our tools comply with the GDPR and the AI Act, and are certified NF 203
+          CCFN digital vaults. Proxy Papers is recognised as a trusted third party
+          for tax purposes.
+        </p>
+      </div>
+    </section>
+
+    <!-- Referrers section (Figma 68:813) — the prescripteur block. Dark ground;
+         an orbital diagram of advisor avatars around the P-mark. The orbit is
+         decorative (aria-hidden); the five avatars port to a .map() over an
+         ADVISORS array (see referrers.css / setupReferrers in hero.js). -->
+    <section class="referrers" aria-label="For advisors who refer high-net-worth clients" data-nav-theme="dark">
+      <div class="referrers__content">
+        <h2 class="referrers__title">You advise high-net-worth clients?</h2>
+
+        <div class="referrers__orbit" aria-hidden="true">
+          <div class="referrers__field">
+            <svg class="referrers__rings" viewBox="0 0 494 494" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle class="referrers__ring--inner" cx="247" cy="247" r="116" />
+              <circle class="referrers__ring--middle" cx="247" cy="247" r="185" />
+              <circle class="referrers__ring--outer" cx="247" cy="247" r="246" />
+            </svg>
+
+            <span class="referrers__avatar referrers__avatar--1"><img src="assets/referrers/advisor-1.png" alt="" /></span>
+            <span class="referrers__avatar referrers__avatar--2"><img src="assets/referrers/advisor-2.png" alt="" /></span>
+            <span class="referrers__avatar referrers__avatar--3"><img src="assets/referrers/advisor-3.png" alt="" /></span>
+            <span class="referrers__avatar referrers__avatar--4"><img src="assets/referrers/advisor-4.png" alt="" /></span>
+            <span class="referrers__avatar referrers__avatar--5"><img src="assets/referrers/advisor-5.png" alt="" /></span>
+
+            <span class="referrers__mark">
+              <svg viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+                <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="referrers__foot">
+          <p class="referrers__body">
+            Notaries, accountants, attorneys, wealth managers, family offices:
+            Proxy Papers handles the private information layer of your clients so
+            you can focus on advisory work that actually matters. Peer referral or
+            formal business introduction: we adapt to your professional framework.
+          </p>
+          <a class="referrers__cta" href="#">Enter the referrers area</a>
+        </div>
       </div>
     </section>
   </body>

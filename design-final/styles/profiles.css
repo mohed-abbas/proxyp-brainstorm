@@ -1,0 +1,180 @@
+/* ============================================================================
+   Profiles section — "Three support profiles. One shared framework."
+   (Figma node 58:149). A full-bleed dark ground carrying a left/right editorial
+   header (title left, supporting copy right) and a fanned deck of three cards —
+   01 Essentiel and 03 Exception in Proxy Blue, 02 Signature in Bone White on top
+   — each a giant tinted number above a giant tinted P-mark watermark.
+
+   Reads tokens from theme.css. Lengths are fractions of the 1512px Figma frame
+   (1px ≈ 0.066138vw), so the section is pixel-faithful at 1512 and scales
+   proportionally — identical convention to hero.css / problem.css. Children are
+   positioned against `.profiles__content`, whose origin == the Figma frame x=0.
+
+   Motion contract (learned the hard way): a card is a GSAP-owned WRAPPER
+   (`.profiles__card` — reveal transform only, no CSS transform) around a
+   CSS-owned FACE (`.profiles__card-face` — the fan rotation + hover lift). The
+   two never share a `transform`, so the reveal and the hover never fight. No
+   `preserve-3d` on the deck, so `z-index` brings a hovered card cleanly forward.
+
+   Port note (React/Next): the three cards are a .map() over a PROFILES array;
+   the reveal is a useGSAP/useEffect mount effect (see setupProfiles in hero.js);
+   the hover lift is pure CSS.
+   ========================================================================== */
+
+.profiles {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-inline: 5.0265vw; /* 76px — matches the Figma frame's x=76 margins */
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+/* The 1360px content block (== full width inside the page margins). Holds the
+   Figma frame's own height so the header and deck keep their vertical rhythm. */
+.profiles__content {
+  position: relative;
+  width: 100%;
+  height: 52.381vw; /* 792px — the Figma frame height */
+}
+
+/* ── Editorial header ──────────────────────────────────────────────────────*/
+.profiles__title {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 500; /* Medium → falls back to Book (see theme.css) */
+  font-size: 3.2407vw; /* 49px */
+  line-height: 1.04;
+  letter-spacing: -0.0212vw; /* -0.32px */
+  color: var(--pp-bone);
+}
+.profiles__title-line {
+  display: block;
+}
+.profiles__title-line--muted {
+  color: rgba(247, 244, 240, 0.6);
+}
+
+.profiles__body {
+  position: absolute;
+  top: 2.6455vw; /* 40px */
+  right: 0;
+  width: 39.0212vw; /* 590px */
+  font-weight: 400; /* Book */
+  font-size: 1.0582vw; /* 16px */
+  line-height: 1.45;
+  letter-spacing: 0.0212vw; /* 0.32px */
+  text-align: right;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* ── Card deck ─────────────────────────────────────────────────────────────
+   Three 325×534 cards fanned like a held hand: 02 straight and highest; 01/03
+   mirrored ±10° and dipped ~24px lower. In Figma each side card is vertically
+   centred inside its own rotated bounding box (582px tall), so its centre sits
+   below 02's — the deck splays down-and-out from a pivot above, not flat. 02 also
+   rides ~34px left of the geometric centre (per Figma 68:813).
+
+   Stacking cascades left→right — 01 behind, 02 over it, 03 on top — for a riffled
+   "stack" read (matches Figma's paint order), so 03 overlaps 02 on the right. */
+.profiles__deck {
+  position: absolute;
+  inset: 0;
+}
+
+.profiles__card {
+  /* WRAPPER — position + GSAP reveal only. No CSS transform lives here, so the
+     reveal (translateY/opacity) never clobbers the face's rotation. */
+  position: absolute;
+  width: 21.4947vw; /* 325px */
+  height: 35.3175vw; /* 534px */
+}
+/* top: 13.8889vw = 210px (02's baseline); 15.4868vw = 234px (side-card dip). */
+.profiles__card--01 { left: 18.1956vw; top: 15.4868vw; z-index: 1; } /* centre x ≈ 438 — dipped, behind */
+.profiles__card--02 { left: 32.0107vw; top: 13.8889vw; z-index: 2; } /* centre x ≈ 646 — straight, highest */
+.profiles__card--03 { left: 50.2570vw; top: 15.4868vw; z-index: 3; } /* centre x ≈ 922 — dipped, on top */
+
+.profiles__card-face {
+  /* FACE — the visible card. CSS owns its transform exclusively: the resting fan
+     rotation, and the hover lift (which keeps the rotation so it lifts straight
+     up in screen space). */
+  position: absolute;
+  inset: 0;
+  border-radius: 1.3228vw; /* 20px */
+  overflow: hidden;
+  transform: rotate(var(--rot, 0deg));
+  transform-origin: 50% 50%;
+  box-shadow: 0 2.6vw 4.6vw -1.9vw rgba(0, 0, 0, 0.55);
+  transition:
+    transform 0.5s var(--pp-ease-out),
+    box-shadow 0.5s var(--pp-ease-out),
+    filter 0.4s var(--pp-ease-out);
+}
+.profiles__card--01 .profiles__card-face,
+.profiles__card--03 .profiles__card-face { background: var(--pp-blue); }
+.profiles__card--02 .profiles__card-face { background: var(--pp-bone); }
+
+/* Giant number, bleeding off the top edge (clipped by the card). */
+.profiles__card-num {
+  position: absolute;
+  top: -1.7857vw; /* -27px */
+  left: 36%; /* Figma: number rides left-of-centre (~118/325), not centred */
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-weight: 500; /* Medium → Book */
+  font-size: 12.6323vw; /* 191px */
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--card-tint);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Giant P-mark watermark, bottom-left, bleeding slightly below the card. Reuses
+   the shared pp-watermark.svg as a mask so it recolors to the card's tint —
+   "same assets first". Ratios are the Figma group inside the 325×534 card. */
+.profiles__card-mark {
+  position: absolute;
+  left: 5.3%;
+  top: 65.5%;
+  width: 44.5%;
+  aspect-ratio: 144.674 / 216.424;
+  background: var(--card-tint);
+  -webkit-mask: url(../assets/pp-watermark.svg) no-repeat center / contain;
+  mask: url(../assets/pp-watermark.svg) no-repeat center / contain;
+  pointer-events: none;
+}
+
+/* Per-card tint (number + watermark): a lighter shade of the card's own colour. */
+.profiles__card--01,
+.profiles__card--03 { --card-tint: #6ea1ff; } /* lighter Proxy Blue */
+.profiles__card--02 { --card-tint: #dfddda; } /* warm grey on Bone */
+
+/* ── Hover: lift the card straight up and bring it to the front ─────────────*/
+.profiles__deck:hover .profiles__card-face {
+  filter: brightness(0.97);
+}
+.profiles__card:hover { z-index: 9; }
+.profiles__card:hover .profiles__card-face {
+  filter: none;
+  transform: translateY(-1.6vw) scale(1.015) rotate(var(--rot, 0deg));
+  box-shadow: 0 3.4vw 6vw -1.9vw rgba(0, 0, 0, 0.62);
+}
+
+/* ── Reveal masks (per-word, house style) ──────────────────────────────────
+   Extends theme.css's .r-word with padding/negative-margin so the clip never
+   crops an ascender/descender (scoped to .profiles, matching .problem). */
+.profiles .r-word {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+/* Armed state — JS reveals these once the timeline is built. No JS / reduced
+   motion → the settled state renders as-is. */
+.js .profiles__title,
+.js .profiles__body,
+.js .profiles__card {
+  visibility: hidden;
+}

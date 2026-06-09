@@ -1,0 +1,162 @@
+/* ============================================================================
+   The Method — "Five steps, one single contact."
+   (Figma node 58:170). The brand's full-presence moment: a full-bleed Proxy Blue
+   panel (20px radius) carrying a left/right editorial header (title left, lede
+   right) above a numbered list of the five locked method steps — Onboarding,
+   Organization, Follow-up, Support, Management — each a small index number, a
+   giant name with a right-aligned description, closed by a hairline rule. A
+   "See our full approach" link sits bottom-right.
+
+   Reads tokens from theme.css. Lengths are fractions of the 1512px Figma frame
+   (1px ≈ 0.066138vw), so the section is pixel-faithful at 1512 and scales
+   proportionally — identical convention to hero.css / problem.css / profiles.css.
+
+   Unlike the fanned profiles deck, this is a clean vertical flow, so it's built
+   with flexbox (mirrors the Figma auto-layout). All copy colours are Bone White
+   at varied opacity on the blue ground.
+
+   Port note (React/Next): the five rows are a .map() over a STEPS array; the
+   scroll-in reveal is a useGSAP/useEffect mount effect (see setupMethod in
+   hero.js); the link hover is pure CSS.
+   ========================================================================== */
+
+.method {
+  position: relative;
+  width: 100%;
+  min-height: 82.1429vw; /* 1242px — the Figma panel height; taller than the
+                            viewport so the centred content keeps generous room
+                            top/bottom and clears the fixed navbar */
+  display: flex;
+  align-items: center;
+  padding-inline: 5.0265vw; /* 76px — matches the Figma frame's x=76 margins */
+  background: var(--pp-blue); /* brand at full presence */
+  border-radius: 1.3228vw; /* 20px — rounds against the page ground at the seams */
+  overflow: hidden;
+}
+
+/* The 1360px content column. items-end so the footer link parks right while the
+   header and step list stay full-width. Vertical rhythm = the Figma 120px gaps. */
+.method__content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7.9365vw; /* 120px */
+}
+
+/* ── Editorial header ──────────────────────────────────────────────────────*/
+.method__head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* 637 + 133 gap + 590 = 1360 */
+  align-items: center;
+  color: var(--pp-bone);
+}
+.method__title {
+  width: 42.1296vw; /* 637px */
+  font-weight: 500; /* Medium → falls back to Book (see theme.css) */
+  font-size: 3.2407vw; /* 49px */
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.method__title-seg {
+  display: inline; /* both clauses flow on one line */
+}
+.method__title-seg--muted {
+  color: rgba(247, 244, 240, 0.6);
+}
+.method__lede {
+  width: 39.0212vw; /* 590px */
+  font-weight: 400; /* Book */
+  font-size: 1.0582vw; /* 16px */
+  line-height: 1.45;
+  letter-spacing: 0.02em; /* 0.32px */
+  text-align: right;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* ── Step list ──────────────────────────────────────────────────────────────
+   Five rows on a 136px pitch (120px row + 16px gap). Each row: index number
+   (25px, muted) over a name/description line (name 76px, desc 16px right-aligned),
+   then a full-width hairline as the row's bottom border. */
+.method__steps {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.0582vw; /* 16px */
+}
+.method__step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8598vw; /* 13px — between the number and the name line */
+  padding-bottom: 1.5212vw; /* 23px — number/name to rule */
+  border-bottom: 1px solid rgba(247, 244, 240, 0.28); /* the hairline */
+}
+.method__step-num {
+  font-weight: 400; /* Book */
+  font-size: 1.6534vw; /* 25px */
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: rgba(247, 244, 240, 0.6);
+}
+.method__step-row {
+  display: flex;
+  align-items: flex-end; /* baseline-align the description to the big name */
+  justify-content: space-between;
+  white-space: nowrap;
+}
+.method__step-name {
+  font-weight: 500; /* Medium → Book */
+  font-size: 5.0265vw; /* 76px */
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--pp-bone);
+  text-box: trim-both cap alphabetic; /* tight cap-to-baseline box (Chrome) */
+}
+.method__step-desc {
+  font-weight: 400; /* Book */
+  font-size: 1.0582vw; /* 16px */
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: rgba(247, 244, 240, 0.6);
+}
+
+/* ── Footer link — bottom-right, underlined, arrow nudges on hover ───────────*/
+.method__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3968vw; /* 6px */
+  padding-bottom: 0.3968vw; /* 6px — text to underline */
+  border-bottom: 1px solid var(--pp-bone);
+  font-weight: 500;
+  font-size: 1.0582vw; /* 16px */
+  color: var(--pp-bone);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.method__link svg {
+  width: 1.1905vw; /* 18px */
+  height: 1.1905vw;
+  stroke: currentColor;
+  transition: transform 0.4s var(--pp-ease-out);
+}
+.method__link:hover svg {
+  transform: translateX(0.2646vw); /* 4px */
+}
+
+/* ── Reveal masks (per-word, house style) ───────────────────────────────────
+   Extends theme.css's .r-word with padding/negative-margin so the clip never
+   crops an ascender/descender (scoped to .method, matching profiles/problem). */
+.method .r-word {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+/* Armed state — JS reveals these once the timeline is built. No JS / reduced
+   motion → the settled state renders as-is. */
+.js .method__head,
+.js .method__steps,
+.js .method__link {
+  visibility: hidden;
+}
