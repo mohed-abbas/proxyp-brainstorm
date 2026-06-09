@@ -12,14 +12,18 @@
       document.documentElement.classList.add("js");
     </script>
 
+    <link rel="preload" as="image" href="assets/problem-accent-underline.svg" />
+
     <link rel="stylesheet" href="styles/theme.css?v=3" />
     <link rel="stylesheet" href="styles/navbar.css?v=1" />
     <link rel="stylesheet" href="styles/hero.css?v=5" />
+    <link rel="stylesheet" href="styles/problem.css?v=1" />
 
-    <!-- GSAP + Lenis (CDN, no build step) -->
+    <!-- GSAP + ScrollTrigger + Lenis (CDN, no build step) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=2" defer></script>
+    <script src="scripts/hero.js?v=4" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -125,5 +129,75 @@
         </p>
       </div>
     </main>
+
+    <!-- Problem section (Figma 17:2) — revealed as it scrolls into view.
+         Shares the fixed navbar above; no navbar of its own. -->
+    <section class="problem" aria-label="The problem Proxy Papers solves">
+      <div class="problem__content">
+        <!-- Left editorial column -->
+        <p class="problem__eyebrow">
+          <span class="problem__eyebrow-label">PROBLEM</span>
+          <span class="problem__eyebrow-rule" aria-hidden="true">
+            <img src="assets/problem-accent-underline.svg" alt="" />
+          </span>
+        </p>
+
+        <h2 class="problem__headline">Your estate is structured. Your documents often aren't.</h2>
+
+        <p class="problem__body">
+          Your advisors take care of your taxes, your investments, your
+          companies. No one really takes care of the rest: the deeds, the
+          contracts, the deadlines, the documents that move between your advisors
+          and that have to be retrieved at every meeting, every decision, every
+          transmission. That is where things get complicated.
+        </p>
+
+        <!-- VOLUME -->
+        <article class="problem-card problem-card--volume">
+          <p class="problem-card__label">VOLUME</p>
+          <p class="problem-card__copy">
+            200 to 400 essential documents to manage for a structured estate.
+          </p>
+          <div class="problem-volume-graphic" aria-hidden="true">
+            <div class="problem-graphic__inner">
+              <svg class="zigzag" viewBox="0 0 373.321 394.919" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="zigzag__path" d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158" stroke="#5A90F4" stroke-width="59" pathLength="100" />
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <!-- FRICTION -->
+        <article class="problem-card problem-card--friction">
+          <p class="problem-card__label">FRICTION</p>
+          <p class="problem-card__copy">
+            Up to 30% of the time spent with your advisors goes into retrieving
+            or forwarding information
+          </p>
+          <div class="problem-card-graphic" aria-hidden="true">
+            <div class="problem-graphic__inner">
+              <svg class="zigzag" viewBox="0 0 373.321 394.919" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="zigzag__path" d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158" stroke="#5A90F4" stroke-width="59" pathLength="100" />
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <!-- RISK -->
+        <article class="problem-card problem-card--risk">
+          <p class="problem-card__label">RISK</p>
+          <p class="problem-card__copy">
+            One person in four has already lost an important document.
+          </p>
+          <div class="problem-card-graphic" aria-hidden="true">
+            <div class="problem-graphic__inner">
+              <svg class="zigzag" viewBox="0 0 373.321 394.919" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="zigzag__path" d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158" stroke="#5A90F4" stroke-width="59" pathLength="100" />
+              </svg>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
   </body>
 </html>

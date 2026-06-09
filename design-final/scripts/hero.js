@@ -79,6 +79,105 @@
     ctTrack.innerHTML = content + content;
   };
 
+  // ── Problem section (below the hero) ───────────────────────────────────────
+  // Wrap each WORD of an element in its own overflow-masked track and return the
+  // inner spans, so they rise + clip in independently. Words stay inline-block,
+  // so they still wrap naturally across lines.
+  const splitWords = (el) => {
+    const text = el.textContent.replace(/\s+/g, " ").trim();
+    el.textContent = "";
+    return text.split(" ").map((w) => {
+      const word = document.createElement("span");
+      word.className = "r-word";
+      const inner = document.createElement("span");
+      inner.className = "r-word__in";
+      inner.textContent = w;
+      word.appendChild(inner);
+      el.appendChild(word);
+      el.appendChild(document.createTextNode(" "));
+      return inner;
+    });
+  };
+
+  // The problem section reveals as it scrolls into view (ScrollTrigger), not on
+  // load — the visitor is still on the hero at load. Same per-word stagger as
+  // the rest of the brand; the three data cards settle up after the body. Each
+  // card traces its blue zigzag on hover.
+  const setupProblem = (gsap) => {
+    const section = document.querySelector(".problem");
+    if (!section) return;
+    const ST = window.ScrollTrigger;
+
+    const eyebrowWords = splitWords(section.querySelector(".problem__eyebrow-label"));
+    const headlineWords = splitWords(section.querySelector(".problem__headline"));
+    const bodyWords = splitWords(section.querySelector(".problem__body"));
+    const rule = section.querySelector(".problem__eyebrow-rule");
+    const cards = gsap.utils.toArray(".problem-card");
+    const allWords = [...eyebrowWords, ...headlineWords, ...bodyWords];
+
+    // Unhide the containers (the words/cards are parked, so still invisible).
+    gsap.set([".problem__eyebrow", ".problem__headline", ".problem__body"], {
+      visibility: "visible",
+    });
+
+    // Two zigzag behaviours (pathLength=100 normalises the draw across sizes):
+    //  • VOLUME (large) — draws itself in with the reveal and rests DRAWN; hover
+    //    plays it in REVERSE (undraws), leaving redraws it.
+    //  • FRICTION + RISK (small) — rest invisible; draw on hover, erase on leave.
+    const volumeCard = section.querySelector(".problem-card--volume");
+    const volumePath = volumeCard && volumeCard.querySelector(".zigzag__path");
+    const smallPaths = cards
+      .filter((c) => c !== volumeCard)
+      .map((c) => c.querySelector(".zigzag__path"))
+      .filter(Boolean);
+
+    const animate = (path, offset, dur = 0.9) =>
+      gsap.to(path, { strokeDashoffset: offset, duration: dur, ease: "power2.inOut", overwrite: true });
+
+    gsap.set([volumePath, ...smallPaths], { strokeDasharray: 100 });
+
+    if (volumePath) {
+      volumeCard.addEventListener("mouseenter", () => animate(volumePath, 100)); // reverse
+      volumeCard.addEventListener("mouseleave", () => animate(volumePath, 0)); // redraw
+    }
+    smallPaths.forEach((path) => {
+      gsap.set(path, { strokeDashoffset: 100 }); // rests invisible
+      const card = path.closest(".problem-card");
+      card.addEventListener("mouseenter", () => animate(path, 0));
+      card.addEventListener("mouseleave", () => animate(path, 100));
+    });
+
+    // No ScrollTrigger → just show the settled state (VOLUME drawn).
+    if (!ST) {
+      gsap.set(allWords, { yPercent: 0 });
+      gsap.set(rule, { autoAlpha: 1, scaleX: 1 });
+      gsap.set(cards, { autoAlpha: 1, y: 0 });
+      if (volumePath) gsap.set(volumePath, { strokeDashoffset: 0 });
+      return;
+    }
+
+    // Parked start state.
+    gsap.set(allWords, { yPercent: 120 });
+    gsap.set(rule, { autoAlpha: 0, scaleX: 0, rotation: 0.33, transformOrigin: "left center" });
+    gsap.set(cards, { autoAlpha: 0, y: 28 });
+    if (volumePath) gsap.set(volumePath, { strokeDashoffset: 100 }); // starts undrawn
+
+    const tl = gsap
+      .timeline({
+        defaults: { ease: "power3.out", force3D: true },
+        scrollTrigger: { trigger: section, start: "top 72%", once: true },
+      })
+      .to(eyebrowWords, { yPercent: 0, duration: 0.6 }, 0.0)
+      .to(rule, { autoAlpha: 1, scaleX: 1, duration: 0.7 }, 0.1)
+      .to(headlineWords, { yPercent: 0, duration: 0.7, stagger: 0.06 }, 0.25)
+      .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.7)
+      .to(cards, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.14 }, 0.95);
+
+    // VOLUME's zigzag draws itself along its path as the card settles in.
+    if (volumePath)
+      tl.to(volumePath, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" }, 0.95);
+  };
+
   const start = () => {
     buildConveyor(); // rows exist regardless of GSAP (decorative, progressive)
 
@@ -87,6 +186,7 @@
       root.classList.remove("js"); // settled state
       return;
     }
+    if (window.ScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
 
     // ── Intro timeline ────────────────────────────────────────────────────────
     const words = gsap.utils.toArray(".hero-lead__title .r-word__in");
@@ -163,7 +263,7 @@
 
     window.__heroIntro = tl;
 
-    // ── Lenis (shared house scroll feel; ready for the page below the hero) ─────
+    // ── Lenis — one shared instance for the whole page (hero + problem + …) ─────
     if (window.Lenis) {
       const lenis = new window.Lenis({
         duration: 1.8,
@@ -171,8 +271,13 @@
       });
       gsap.ticker.add((time) => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
+      // Keep ScrollTrigger in sync with Lenis's virtual scroll position.
+      if (window.ScrollTrigger) lenis.on("scroll", window.ScrollTrigger.update);
       window.__lenis = lenis;
     }
+
+    // Build the problem section's scroll-in reveal (+ zigzag hover).
+    setupProblem(gsap);
 
     // ── Asset gate ──────────────────────────────────────────────────────────────
     const decode = (src) => {
