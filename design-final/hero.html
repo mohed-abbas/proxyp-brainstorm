@@ -23,12 +23,13 @@
     <link rel="stylesheet" href="styles/trust.css?v=1" />
     <link rel="stylesheet" href="styles/referrers.css?v=1" />
     <link rel="stylesheet" href="styles/closing.css?v=1" />
+    <link rel="stylesheet" href="styles/footer.css?v=7" />
 
     <!-- GSAP + ScrollTrigger + Lenis (CDN, no build step) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=10" defer></script>
+    <script src="scripts/hero.js?v=13" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -393,5 +394,46 @@
         </p>
       </div>
     </section>
+
+    <!-- Footer (Figma 68:813 / frame 74:945) — the site close. Dark ground, so
+         the navbar keeps its dark theme over it. The oversized wordmark is live
+         text + the shared inline P-mark (recolors via the lockup tokens); the
+         nav + legal links port to .map()s (see setupFooter in hero.js). -->
+    <footer class="footer" data-nav-theme="dark">
+      <div class="footer__inner">
+        <!-- Secondary nav — Approach is the active link -->
+        <nav class="footer__nav" aria-label="Footer">
+          <a class="footer__nav-link is-active" href="#">Approach</a>
+          <a class="footer__nav-link" href="#">Referrers</a>
+          <a class="footer__nav-link" href="#">Contact</a>
+          <a class="footer__nav-link" href="#">Services</a>
+        </nav>
+
+        <span class="footer__rule" aria-hidden="true"></span>
+
+        <!-- Oversized lockup: the shared P-mark beside the two-line wordmark -->
+        <div class="footer__lockup">
+          <svg class="footer__mark" viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+            <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+          </svg>
+          <div class="footer__word" aria-label="Proxy Papers">
+            <span class="footer__word-line"><span class="footer__word-in">Proxy</span></span>
+            <span class="footer__word-line"><span class="footer__word-in">Papers</span></span>
+          </div>
+        </div>
+
+        <span class="footer__rule" aria-hidden="true"></span>
+
+        <!-- Legal row -->
+        <div class="footer__legal">
+          <p>All Rights Reserved © Proxy Papers 2026.</p>
+          <div class="footer__legal-links">
+            <a href="#">Terms &amp; Conditions</a>
+            <a href="#">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

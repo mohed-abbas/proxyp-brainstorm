@@ -373,6 +373,62 @@
       .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.016 }, 0.55);
   };
 
+  // The footer reveals as it scrolls into view: the secondary nav rises word-by
+  // -word, the oversized wordmark's two lines rise behind their clip masks (the
+  // P-mark fades + lifts beside them), then the legal row settles. House stagger.
+  const setupFooter = (gsap) => {
+    const section = document.querySelector(".footer");
+    if (!section) return;
+    const ST = window.ScrollTrigger;
+
+    const navWords = gsap.utils
+      .toArray(section.querySelectorAll(".footer__nav-link"))
+      .flatMap(splitWords);
+    const legalWords = gsap.utils
+      .toArray(section.querySelectorAll(".footer__legal p, .footer__legal-links a"))
+      .flatMap(splitWords);
+    const wordLines = gsap.utils.toArray(section.querySelectorAll(".footer__word-in"));
+    const wordMasks = gsap.utils.toArray(section.querySelectorAll(".footer__word-line"));
+    const mark = section.querySelector(".footer__mark");
+
+    gsap.set([".footer__nav", ".footer__lockup", ".footer__legal"], {
+      visibility: "visible",
+    });
+
+    if (!ST) {
+      gsap.set([...navWords, ...legalWords, ...wordLines], { yPercent: 0 });
+      gsap.set(mark, { autoAlpha: 1, y: 0 });
+      gsap.set(wordMasks, { overflow: "visible" });
+      return;
+    }
+
+    gsap.set([...navWords, ...legalWords], { yPercent: 120 });
+    gsap.set(mark, { autoAlpha: 0, y: 40 });
+    // Each wordmark line rises in behind its mask (staggered, line-by-line); the
+    // masks are released to overflow:visible on complete so the descenders (the
+    // y / p tails) show fully at rest.
+    gsap.set(wordLines, { yPercent: 110 });
+
+    gsap
+      .timeline({
+        defaults: { ease: "power3.out", force3D: true },
+        scrollTrigger: { trigger: section, start: "top 82%", once: true },
+      })
+      .to(navWords, { yPercent: 0, duration: 0.6, stagger: 0.04 }, 0.0)
+      .to(mark, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power2.out" }, 0.2)
+      .to(
+        wordLines,
+        {
+          yPercent: 0,
+          duration: 0.95,
+          stagger: 0.14,
+          onComplete: () => gsap.set(wordMasks, { overflow: "visible" }),
+        },
+        0.3,
+      )
+      .to(legalWords, { yPercent: 0, duration: 0.6, stagger: 0.012 }, 0.7);
+  };
+
   // Navbar theme switching — the fixed lockup recolors to match the section
   // currently under it, so its blue blade never lands blue-on-blue (e.g. over the
   // all-blue method panel the mark goes all-bone). Driven by an IntersectionObserver
@@ -518,6 +574,7 @@
     setupTrust(gsap);
     setupReferrers(gsap);
     setupClosing(gsap);
+    setupFooter(gsap);
 
     // ── Asset gate ──────────────────────────────────────────────────────────────
     const decode = (src) => {

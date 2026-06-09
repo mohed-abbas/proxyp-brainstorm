@@ -1,0 +1,167 @@
+/* ============================================================================
+   Footer — the site close (Figma node 68:813 / frame 74:945)
+   A dark band that signs off with the brand at full scale: a centred secondary
+   nav (Approach · Referrers · Contact · Services), a hairline rule, an oversized
+   "Proxy Papers" lockup (the P-mark beside the two-line wordmark), a second rule,
+   and the legal row (copyright left, Terms / Privacy right).
+
+   A DARK surface, so the fixed navbar keeps its dark theme over it
+   (data-nav-theme="dark") — bone links + blue blade.
+
+   The giant wordmark is LIVE TEXT (mark = the shared inline P-mark SVG, wordmark
+   = the brand font) rather than the outlined vectors Figma exports — it stays
+   selectable, recolors from the theme tokens, and ports cleanly. With PP Neue
+   Montreal absent it renders in the documented fallback (see theme.css), so the
+   wordmark's exact width is a close approximation of the Figma, not pixel-exact.
+
+   Lengths are fractions of the 1512px Figma frame (1px ≈ 0.066138vw) — same
+   convention as the other design-final sections.
+
+   Port note (React/Next): a self-contained <Footer />. The nav + legal links are
+   .map()s; the reveal is a useGSAP mount effect (see setupFooter in hero.js).
+   ========================================================================== */
+
+.footer {
+  position: relative;
+  width: 100%;
+  background: var(--pp-ink);
+  padding: 8.0238vw 4.9603vw 7.9815vw; /* 121.32 top · 75 sides · 120.68 bottom */
+  overflow: hidden;
+}
+
+.footer__inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5794vw; /* 39px */
+}
+
+/* ── Secondary nav — centred, the active link in Proxy Blue + underline ───────*/
+.footer__nav {
+  display: flex;
+  align-items: center;
+  gap: 10.119vw; /* 153px */
+  font-weight: 500; /* Medium → Book fallback */
+  font-size: 1.6534vw; /* 25px */
+  line-height: 1.2;
+}
+.footer__nav-link {
+  color: var(--pp-bone);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.4s var(--pp-ease-out);
+}
+.footer__nav-link:hover {
+  color: var(--pp-blue);
+}
+.footer__nav-link.is-active {
+  color: var(--pp-blue);
+  text-decoration: underline;
+  text-underline-offset: 0.2vw;
+}
+/* splitWords wraps each word in an inline-block (.r-word), which breaks the
+   anchor's underline inheritance — so carry the active underline on the inner
+   span too. The anchor-level rule above still covers the no-JS settled state. */
+.footer__nav-link.is-active .r-word__in {
+  text-decoration: underline;
+  text-underline-offset: 0.2vw;
+}
+
+/* ── Hairline rules ───────────────────────────────────────────────────────────*/
+.footer__rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(247, 244, 240, 0.22);
+}
+
+/* ── Oversized lockup — mark beside a two-line wordmark, flush top + bottom ───
+   Mark height is matched to the wordmark's cap-to-descender height so the two
+   read as one size. The tight line-height (0.82) makes the caps overflow ~60px
+   above the text box and the descenders ~60px below it; the lockup's vertical
+   padding reserves that room so the y / p tails stay clear of the hairlines. */
+.footer__lockup {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 4.1825vw; /* 63.24px — Figma gap between mark and wordmark */
+  padding-top: 3.9683vw; /* 60px — room for the cap overflow above the text box
+     (the descender below is already covered by the mark's full height) */
+}
+.footer__mark {
+  height: 41.667vw; /* 630px — matched to the wordmark's cap-to-descender height */
+  width: auto;
+  flex-shrink: 0;
+  /* The wordmark's cap sits ~60px above its text box (line-height leading);
+     lift the mark by the same so the two are flush top AND bottom. */
+  margin-top: -3.9683vw; /* -60px */
+}
+.footer__mark .lk-mark__stem {
+  fill: var(--pp-lockup-ink);
+}
+.footer__mark .lk-mark__blade {
+  fill: var(--pp-lockup-blade);
+}
+
+.footer__word {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 500; /* Medium → Book fallback */
+  font-size: 20.6vw; /* tuned so the wordmark fills toward the right edge */
+  line-height: 0.82; /* two lines stack tight */
+  letter-spacing: -0.04em;
+  color: var(--pp-lockup-ink);
+}
+/* Masked for the staggered rise — setupFooter releases each mask to
+   overflow:visible once its line lands, so descenders aren't trimmed at rest.
+   No-JS / reduced-motion never arms the masks, so the text just shows. */
+.footer__word-line {
+  display: block;
+}
+.js .footer__word-line {
+  overflow: hidden;
+}
+.footer__word-in {
+  display: block;
+  will-change: transform;
+}
+
+/* ── Legal row — copyright left, policy links right ──────────────────────────*/
+.footer__legal {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500; /* Medium → Book fallback */
+  font-size: 1.0582vw; /* 16px */
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+.footer__legal-links {
+  display: flex;
+  align-items: center;
+  gap: 1.3228vw; /* 20px */
+}
+.footer__legal-links a {
+  color: var(--pp-bone);
+  text-decoration: none;
+  transition: color 0.4s var(--pp-ease-out);
+}
+.footer__legal-links a:hover {
+  color: var(--pp-blue);
+}
+
+/* ── Reveal (house style) ─────────────────────────────────────────────────────
+   Per-word masks for the nav + legal copy keep descenders (the p in Approach /
+   Papers) from clipping at rest. */
+.footer .r-word {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+/* Armed state — JS reveals once the timeline is built. No JS / reduced motion →
+   the settled state renders as-is. */
+.js .footer__nav,
+.js .footer__lockup,
+.js .footer__legal {
+  visibility: hidden;
+}
