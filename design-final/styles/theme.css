@@ -1,0 +1,149 @@
+/* ============================================================================
+   Proxy Papers — Global theme
+   The single foundation shared by every "design-final" screen. Holds the brand
+   palette, typography, reset, Lenis smooth-scroll base, and the shared lockup
+   styling. Screen-specific layout lives in its own stylesheet (e.g.
+   onboarding.css) and only ever reads the tokens defined here.
+
+   Port note (React/Next): this maps 1:1 to a `globals.css`. Tokens are plain CSS
+   custom properties, so a Tailwind/MUI/styled theme can mirror them directly.
+   ========================================================================== */
+
+/* ── Typeface — PP Neue Montreal (commercial, Pangram Pangram) ───────────────
+   Book → 400, Bold → 700. Medium (500) is not bundled, so any 500 weight
+   resolves to Book via CSS font-matching. */
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("../assets/fonts/ppneuemontreal-book.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("../assets/fonts/ppneuemontreal-bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Brand palette — three restrained roles (see CLAUDE.md brand contract) */
+  --pp-blue: #5a90f4; /* Proxy Blue — accent / "full presence" moments */
+  --pp-ink: #161718; /* Chinese Black — structural ground */
+  --pp-bone: #f7f4f0; /* Bone White — typography + breathing space */
+
+  /* Type */
+  --pp-font:
+    "PP Neue Montreal", "Neue Haas Grotesk", "Inter", system-ui, sans-serif;
+
+  /* Lockup theming hooks — consumed by the .pp-lockup parts below and by the
+     standalone pp-lockup.svg. Defaults flip per theme context (see contexts). */
+  --pp-lockup-ink: var(--pp-bone); /* stem + wordmark */
+  --pp-lockup-blade: var(--pp-blue); /* mark blade */
+
+  /* Motion */
+  --pp-ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out, the house curve */
+}
+
+/* ── Theme contexts ──────────────────────────────────────────────────────────
+   Set one on <body> (or any wrapper). Each fixes a ground colour and the lockup
+   tone for that surface, so the same lockup markup renders correctly anywhere. */
+.pp-theme-blue {
+  --pp-ground: var(--pp-blue);
+  --pp-lockup-ink: var(--pp-bone);
+  --pp-lockup-blade: var(--pp-bone); /* brand at full presence → all Bone White */
+}
+.pp-theme-dark {
+  --pp-ground: var(--pp-ink);
+  --pp-lockup-ink: var(--pp-bone);
+  --pp-lockup-blade: var(--pp-blue);
+}
+.pp-theme-light {
+  --pp-ground: var(--pp-bone);
+  --pp-lockup-ink: var(--pp-ink);
+  --pp-lockup-blade: var(--pp-blue);
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────────*/
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--pp-ground, var(--pp-bone));
+  color: var(--pp-bone);
+  font-family: var(--pp-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  display: block;
+}
+
+/* ── Lenis smooth-scroll base (library-recommended) ──────────────────────────*/
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ── Shared lockup ───────────────────────────────────────────────────────────
+   Works inline (for per-glyph animation) or as a flat <img>. Parts read the
+   theme hooks above, so colour is owned by the theme context, never hard-coded. */
+.pp-lockup {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.pp-lockup .lk-mark__stem,
+.pp-lockup .lk-word {
+  fill: var(--pp-lockup-ink);
+}
+.pp-lockup .lk-mark__blade {
+  fill: var(--pp-lockup-blade);
+}
+
+/* ── Per-word/letter reveal masks (shared motion primitive) ──────────────────
+   A glyph wrapped in .r-word clips to its own box; the inner span rises in from
+   below. Used by the onboarding wordmark and reused by later editorial copy. */
+.r-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+.r-word__in {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Accessibility — anyone who opts out of motion gets the resolved state. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

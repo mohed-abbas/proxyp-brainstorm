@@ -1,0 +1,459 @@
+/* ============================================================================
+   Hero — landing page, first screen after the onboarding
+   A Chinese-Black canvas split by a Proxy-Blue "horizon lens": a band pinched at
+   the centre where clouds bleed in, a slow conveyor of document rows drifts
+   through, and the brand P-mark sits in a glass card on the vertical axis. The
+   headline sits above the lens, the positioning statement below it.
+
+   Reads tokens from theme.css. The screen is laid out inside .hero__frame — a
+   1512×789 reference box scaled to the viewport width — so every child can use
+   the Figma coordinates directly (1px ≈ 0.066138vw) and stay pixel-faithful.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  /* Top-anchored, dropped below the fixed navbar. In the Figma frame (58:5) the
+     headline lead-block sits at y=0 and the nav is a translucent layer at y=46
+     ON TOP of it — so the glass pill literally overlaps the headline's lower
+     edge and the body's top. That only reads in Figma because the pill is
+     barely-there glass; in a real browser with a hairline border it slices the
+     headline. So we give the nav its own clear band and start the composition
+     just below it, preserving every internal relationship of the hero. Taller
+     viewports letterbox on the ink ground below, leading into the next section. */
+  align-items: start;
+  justify-items: center;
+  padding-top: 8vw; /* clears the navbar (ends ≈7vw) + breathing room */
+  overflow: hidden;
+  background: var(--pp-ink);
+}
+
+/* The design reference box. Width drives everything; height keeps the 1512:789
+   ratio, so the whole composition scales uniformly and the dark ground letter-
+   boxes above/below on taller viewports (seamless — the ground is ink anyway). */
+.hero__frame {
+  position: relative;
+  width: 100vw;
+  height: 52.18vw; /* 789 / 1512 */
+}
+
+/* ── Horizon lens ────────────────────────────────────────────────────────────
+   Blue bowtie band (full height at the edges, pinched waist at centre). */
+.hero-lens {
+  position: absolute;
+  left: 0;
+  top: 8.52vw; /* 128.8 / 1512 */
+  width: 100%;
+  height: 39.38vw; /* 595.388 / 1512 */
+  z-index: 1;
+}
+.hero-lens__fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* Clouds bleed in from both sides but are masked to the bowtie, so they only
+   ever read inside the blue — never on the dark ground. */
+.hero-lens__clouds {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: url("../assets/hero-lens.webp");
+  mask-image: url("../assets/hero-lens.webp");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.hero-cloud {
+  position: absolute;
+  width: 108.6vw; /* 1642 / 1512 */
+  height: 108.6vw;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.hero-cloud--left {
+  left: -91.1vw;
+  top: -37.2vw;
+}
+.hero-cloud--right {
+  left: 75.1vw;
+  top: -33.4vw;
+}
+
+/* Gradient arc hairlines tracing the lens edges (bright at the centre pinch,
+   fading out toward the edges). Positions mirror Figma exactly: each full
+   ellipse (1512×533) is placed so only the curve that meets the blue shows.
+   Ellipse offsets are measured from the lens top (lens top = abs 128.8px):
+   ellipse1 (bottom) sits at abs 555 → +28.187vw; ellipse2 (top, flipped) sits
+   at abs −231 → −23.797vw. */
+.hero-lens__arc {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 35.252vw; /* 533 / 1512 — the ellipse's natural height */
+  pointer-events: none;
+}
+.hero-lens__arc--top {
+  top: -23.797vw; /* (−231 − 128.8) / 1512 */
+  transform: scaleY(-1);
+}
+.hero-lens__arc--bottom {
+  top: 28.187vw; /* (555 − 128.8) / 1512 */
+}
+
+/* ── Document conveyor ───────────────────────────────────────────────────────
+   A horizontal stream of document rows drifting LEFT→RIGHT through the lens
+   waist. Two synced tracks are stacked: a SKELETON layer (unstructured docs)
+   masked to the LEFT of centre, and a CONTENT layer (clear, structured docs)
+   masked to the RIGHT of centre. A row enters left as a skeleton and emerges
+   from behind the brand card already structured — the before/after Proxy Papers
+   story. The masks also fade the far ends. Each layer's crossfade sits exactly
+   at centre, hidden behind the brand card. */
+.hero-conveyor {
+  position: absolute;
+  left: 0;
+  top: 25.6vw; /* 387 / 1512 */
+  width: 100%;
+  height: 4.48vw; /* 67.77 / 1512 */
+  z-index: 2;
+  overflow: hidden;
+}
+.hero-conveyor__layer {
+  position: absolute;
+  inset: 0;
+}
+/* SKELETON — visible from the far-left edge up to centre. */
+.hero-conveyor__layer--skeleton {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 14%,
+    #000 49%,
+    transparent 51%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 14%,
+    #000 49%,
+    transparent 51%
+  );
+}
+/* CONTENT — visible from centre to the far-right edge. */
+.hero-conveyor__layer--content {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 49%,
+    #000 51%,
+    #000 86%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 49%,
+    #000 51%,
+    #000 86%,
+    transparent 100%
+  );
+}
+.hero-conveyor__track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.73vw; /* 11px */
+  height: 100%;
+  will-change: transform;
+}
+
+/* One document row */
+.doc-row {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6vw;
+  width: 17.06vw; /* 258 / 1512 */
+  height: 4.46vw; /* 67.46 */
+  padding: 0 0.6vw;
+  border-radius: 0.71vw; /* 10.77px */
+  background: rgba(255, 255, 255, 0.18);
+  border: 0.5px solid rgba(247, 244, 240, 0.3);
+  backdrop-filter: blur(2px);
+}
+.doc-row__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3.15vw;
+  height: 3.2vw;
+  border-radius: 0.5vw;
+  background: rgba(247, 244, 240, 0.1);
+  color: var(--pp-bone);
+}
+.doc-row__icon svg {
+  width: 2.05vw;
+  height: 2.05vw;
+}
+.doc-row__main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.doc-row__title {
+  font-weight: 500;
+  font-size: 0.93vw; /* ~14px */
+  line-height: 1.1;
+  color: var(--pp-bone);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.doc-row__sub {
+  margin-top: 0.18vw;
+  font-weight: 400;
+  font-size: 0.66vw; /* ~10px */
+  line-height: 1.1;
+  color: rgba(247, 244, 240, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.doc-row__chips {
+  display: flex;
+  gap: 0.6vw;
+  margin-top: 0.34vw;
+}
+.doc-row__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.26vw;
+  font-weight: 400;
+  font-size: 0.56vw; /* ~8.5px */
+  line-height: 1;
+  color: rgba(247, 244, 240, 0.75);
+  white-space: nowrap;
+}
+.doc-row__chip::before {
+  content: "";
+  width: 0.3vw;
+  height: 0.3vw;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.85;
+}
+.doc-row__chip--due {
+  color: #ffd27a;
+}
+.doc-row__cat {
+  flex: none;
+  align-self: flex-start;
+  font-weight: 400;
+  font-size: 0.62vw;
+  line-height: 1.1;
+  color: rgba(247, 244, 240, 0.45);
+  white-space: nowrap;
+}
+
+/* Skeleton variant — the unstructured "before" state: dimmer surface, a blank
+   document icon, and muted placeholder bars where the structured data will be. */
+.doc-row--skeleton {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(247, 244, 240, 0.22);
+}
+.doc-row--skeleton .doc-row__icon {
+  color: rgba(247, 244, 240, 0.45);
+  background: rgba(247, 244, 240, 0.1);
+}
+.sk-bar {
+  display: block;
+  border-radius: 999px;
+  background: rgba(247, 244, 240, 0.32);
+}
+.sk-bar--title {
+  width: 72%;
+  height: 0.62vw;
+}
+.sk-bar--sub {
+  width: 46%;
+  height: 0.46vw;
+  margin-top: 0.36vw;
+}
+.sk-bar--chip {
+  width: 1.7vw;
+  height: 0.42vw;
+}
+.sk-bar--cat {
+  flex: none;
+  align-self: flex-start;
+  width: 2.2vw;
+  height: 0.42vw;
+}
+
+/* ── Centre axis + brand card ────────────────────────────────────────────────*/
+.hero-axis {
+  position: absolute;
+  left: 50%;
+  top: 17.26vw; /* 261 / 1512 */
+  transform: translateX(-50%);
+  width: 5.53vw; /* 83.56 */
+  height: 21.69vw; /* 328 */
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+}
+.hero-axis__line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.9) 50%,
+    transparent
+  );
+}
+.hero-axis__card {
+  position: absolute;
+  top: 7.8vw; /* 118 / 1512 */
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 5.53vw; /* 83.56 */
+  height: 5.62vw; /* 85 */
+  border-radius: 0.62vw; /* 9.43px */
+  background: var(--pp-bone);
+  border: 0.5px solid rgba(247, 244, 240, 0.3);
+  box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.35);
+}
+.hero-axis__card img {
+  width: 2.41vw; /* mark ~36.5px */
+  height: auto;
+}
+
+/* ── Headline block (above the lens) ─────────────────────────────────────────*/
+.hero-lead {
+  position: absolute;
+  left: 50%;
+  top: 3rem; /* Figma 58:6 sits at y=0 within the frame */
+  transform: translateX(-50%);
+  width: 51.32vw; /* 776 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.653vw; /* 25px */
+  z-index: 4;
+  text-align: center;
+}
+.hero-lead__title {
+  font-weight: 500;
+  font-size: 3.704vw; /* 56px */
+  line-height: 1.2; /* Figma box is 67px tall (≈56×1.2) — keeps the flex flow
+                       placing the body at y≈92 so it clears the navbar logo */
+  letter-spacing: -0.074vw; /* -1.12px */
+  color: var(--pp-bone);
+}
+/* "data." — the only accent: a soft blue gradient on the turn word. */
+.hero-lead__title .grad {
+  background: linear-gradient(90deg, #e2ecff, var(--pp-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-lead__body {
+  width: 39.02vw; /* 590px */
+  font-weight: 400;
+  font-size: 1.058vw; /* 16px */
+  line-height: 1.4;
+  letter-spacing: 0.0212vw;
+  color: rgba(247, 244, 240, 0.7);
+}
+.hero-lead__cta {
+  display: flex;
+  align-items: center;
+  gap: 2.645vw; /* 40px */
+  margin-top: 0.4vw;
+}
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.661vw 1.323vw; /* 10px 20px */
+  border-radius: 2.976vw; /* pill */
+  background: var(--pp-blue);
+  color: var(--pp-bone);
+  font-weight: 500;
+  font-size: 1.058vw;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.3s var(--pp-ease-out), filter 0.3s var(--pp-ease-out);
+}
+.hero-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+.hero-link {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.4vw;
+  font-weight: 500;
+  font-size: 1.058vw;
+  color: rgba(247, 244, 240, 0.5);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.hero-link::after {
+  content: "";
+  width: 11.77vw; /* 178px */
+  height: 1px;
+  background: rgba(247, 244, 240, 0.5);
+  transition: background 0.3s var(--pp-ease-out);
+}
+.hero-link:hover {
+  color: rgba(247, 244, 240, 0.8);
+}
+.hero-link:hover::after {
+  background: rgba(247, 244, 240, 0.8);
+}
+
+/* ── Positioning statement (below the lens) ──────────────────────────────────*/
+.hero-statement {
+  position: absolute;
+  left: 50%;
+  top: 40.06vw; /* 651 / 1512 */
+  transform: translateX(-50%);
+  width: 37.5vw; /* 567px */
+  font-weight: 500;
+  font-size: 1.323vw; /* 20px */
+  line-height: 1.35;
+  color: #fff;
+  text-align: center;
+  z-index: 4;
+}
+
+/* ── Armed (intro start) states — JS only; no-JS/reduced renders settled ─────*/
+html.js .hero-lens {
+  opacity: 0;
+}
+html.js .hero-conveyor,
+html.js .hero-axis {
+  opacity: 0;
+}
+html.js .hero-statement {
+  opacity: 0;
+}
+/* headline words are wrapped + parked by JS; keep hidden until then */
+html.js .hero-lead__body,
+html.js .hero-lead__cta {
+  opacity: 0;
+}

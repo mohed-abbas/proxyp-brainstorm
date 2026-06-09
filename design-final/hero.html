@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxy Papers — Hero</title>
+
+    <link rel="preload" as="image" href="assets/hero-lens.webp" fetchpriority="high" />
+    <link rel="preload" as="font" type="font/woff" href="assets/fonts/ppneuemontreal-book.woff" crossorigin />
+
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+
+    <link rel="stylesheet" href="styles/theme.css?v=3" />
+    <link rel="stylesheet" href="styles/navbar.css?v=1" />
+    <link rel="stylesheet" href="styles/hero.css?v=5" />
+
+    <!-- GSAP + Lenis (CDN, no build step) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+    <script src="scripts/hero.js?v=2" defer></script>
+  </head>
+
+  <body class="pp-theme-dark">
+    <!-- Navbar — shared component (Figma 58:289). Mark inlined so it recolors
+         per theme (bone stem + blue blade on this dark surface). -->
+    <nav class="pp-nav" aria-label="Primary">
+      <div class="pp-nav__inner">
+        <div class="pp-nav__group">
+          <a class="pp-nav__link" href="#">
+            <span class="pp-nav__roll">
+              <span class="pp-nav__label">Approach</span>
+              <span class="pp-nav__label" aria-hidden="true">Approach</span>
+            </span>
+          </a>
+          <a class="pp-nav__link" href="#">
+            <span class="pp-nav__roll">
+              <span class="pp-nav__label">Services</span>
+              <span class="pp-nav__label" aria-hidden="true">Services</span>
+            </span>
+          </a>
+        </div>
+
+        <a class="pp-nav__logo" href="#" aria-label="Proxy Papers — home">
+          <svg viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+            <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+          </svg>
+        </a>
+
+        <div class="pp-nav__group">
+          <a class="pp-nav__link" href="#">
+            <span class="pp-nav__roll">
+              <span class="pp-nav__label">Referrers</span>
+              <span class="pp-nav__label" aria-hidden="true">Referrers</span>
+            </span>
+          </a>
+          <a class="pp-nav__link" href="#">
+            <span class="pp-nav__roll">
+              <span class="pp-nav__label">Contact</span>
+              <span class="pp-nav__label" aria-hidden="true">Contact</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="hero">
+      <div class="hero__frame">
+        <!-- Horizon lens: blue bowtie + masked clouds + arc hairlines -->
+        <div class="hero-lens" aria-hidden="true">
+          <img class="hero-lens__fill" src="assets/hero-lens.webp" alt="" />
+          <div class="hero-lens__clouds">
+            <img class="hero-cloud hero-cloud--left" src="assets/clouds.webp" alt="" />
+            <img class="hero-cloud hero-cloud--right" src="assets/clouds.webp" alt="" />
+          </div>
+          <img class="hero-lens__arc hero-lens__arc--top" src="assets/hero-arc.svg" alt="" />
+          <img class="hero-lens__arc hero-lens__arc--bottom" src="assets/hero-arc.svg" alt="" />
+        </div>
+
+        <!-- Document conveyor (rows injected + duplicated by JS).
+             Two synced layers: skeletons left of centre, clear content right. -->
+        <div class="hero-conveyor" aria-hidden="true">
+          <div class="hero-conveyor__layer hero-conveyor__layer--skeleton">
+            <div class="hero-conveyor__track" data-conveyor-skeleton></div>
+          </div>
+          <div class="hero-conveyor__layer hero-conveyor__layer--content">
+            <div class="hero-conveyor__track" data-conveyor-content></div>
+          </div>
+        </div>
+
+        <!-- Centre axis + brand card -->
+        <div class="hero-axis" aria-hidden="true">
+          <span class="hero-axis__line"></span>
+          <div class="hero-axis__card">
+            <img src="assets/pp-mark.svg" alt="" />
+          </div>
+        </div>
+
+        <!-- Headline block -->
+        <header class="hero-lead">
+          <h1 class="hero-lead__title">
+            <span class="r-word"><span class="r-word__in">Private</span></span>
+            <span class="r-word"><span class="r-word__in">management</span></span>
+            <span class="r-word"><span class="r-word__in">of</span></span>
+            <span class="r-word"><span class="r-word__in">your</span></span>
+            <span class="r-word"><span class="r-word__in grad">data.</span></span>
+          </h1>
+          <p class="hero-lead__body">
+            A bespoke framework to structure, secure and maintain the documents
+            that make up your personal estate. A dedicated advisor. Sovereign
+            technology.
+          </p>
+          <div class="hero-lead__cta">
+            <a class="hero-btn" href="#">Request a discovery meeting</a>
+            <a class="hero-link" href="#">Are you a referring advisor?</a>
+          </div>
+        </header>
+
+        <!-- Positioning statement -->
+        <p class="hero-statement">
+          We are not your bank, your notary, or your advisor. We are the
+          framework that connects them.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

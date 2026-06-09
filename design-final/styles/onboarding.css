@@ -1,0 +1,146 @@
+/* ============================================================================
+   Onboarding / Welcome screen — layout
+   The branded entry moment shown before the landing page: Proxy Blue "at full
+   presence", a grain-textured ground, soft cloud photography bleeding in from
+   the corners, the brand mark watermarked off the right edge, and the centred
+   white lockup over a hairline loader.
+
+   Reads tokens from theme.css only. Lengths are expressed as a fraction of the
+   1512×982 Figma frame (1px ≈ 0.066138vw) so the composition scales with the
+   viewport exactly as drawn.
+   ========================================================================== */
+
+/* Full-bleed canvas — one viewport, clips the bleeding clouds + watermark. */
+.ob-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--pp-blue);
+  isolation: isolate; /* own stacking context for the layered z-indexes below */
+}
+
+/* (1) Grain — a fine noise tile at 10% over the blue, for subtle depth
+   (the brand asks for gradient/grain depth, never flat colour). */
+.ob-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: url("../assets/grain.webp");
+  background-repeat: repeat;
+  background-size: 380px 380px;
+}
+
+/* (2) Watermark P-mark — bleeds off the right edge, faintly darker than the
+   ground. Anchored to the right + sized in vh so it keeps its aspect and the
+   bleed reads at any viewport ratio. */
+.ob-watermark {
+  position: absolute;
+  top: -5.7vh;
+  right: -13.77vw;
+  height: 115.05vh; /* 1129.77 / 982 */
+  aspect-ratio: 755.212 / 1129.77;
+  z-index: 2;
+  color: #404243; /* watermark fill (currentColor in the svg) */
+  opacity: 0.2;
+  pointer-events: none;
+}
+.ob-watermark img {
+  width: 100%;
+  height: 100%;
+}
+
+/* (3) Cloud overlays — same soft-wisp image placed twice, bleeding off-canvas
+   from the left and the top-right. Square wrappers keep the photo undistorted. */
+.ob-cloud {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: screen; /* let the white wisps lift the blue, not paint over it */
+}
+.ob-cloud img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ob-cloud--left {
+  left: -82.67vw; /* -1250 / 1512 */
+  top: -22.6vh; /* -222 / 982 */
+  width: 108.6vw; /* 1642 / 1512 */
+  height: 108.6vw;
+}
+.ob-cloud--top-right {
+  left: 65vw; /* 983 / 1512 */
+  top: -98.8vh; /* -970 / 982 */
+  width: 108.6vw;
+  height: 108.6vw;
+}
+
+/* (4) Brand block — centred column: lockup over the hairline loader. */
+.ob-brand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(232px, 23.23vw, 360px); /* 351.186 / 1512 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 4;
+}
+
+.ob-lockup {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* (4a) Hairline loader — faint full track + a solid rounded fill that grows as
+   the intro plays. The Figma still shows it mid-fill; here it animates 0→100%. */
+.ob-divider {
+  position: relative;
+  width: 66.6%; /* 234 / 351.186 */
+  height: 3px;
+  margin-top: clamp(26px, 2.94vw, 46px); /* 44.5px gap below the lockup */
+}
+.ob-divider__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 1px;
+  height: 1px;
+  background: rgba(247, 244, 240, 0.5);
+}
+.ob-divider__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%; /* resolved / no-JS state — fully drawn */
+  height: 3px;
+  background: var(--pp-bone);
+  border-radius: 999px;
+}
+
+/* ── Armed (welcome start) states — applied only when JS is present. The intro
+   timeline (onboarding.js) plays from here to the resolved state above. Without
+   JS (or with reduced motion) these never apply, so the page renders settled. */
+html.js .ob-cloud {
+  opacity: 0;
+}
+html.js .ob-watermark {
+  opacity: 0;
+}
+html.js .ob-divider__fill {
+  width: 0;
+}
+/* Lockup parts are wrapped + parked below their baseline by JS; this just keeps
+   them invisible until that wrap exists, avoiding a one-frame flash of the
+   assembled logo on a cold load. */
+html.js .ob-lockup .lk-mark,
+html.js .ob-lockup .lk-glyph {
+  opacity: 0;
+}

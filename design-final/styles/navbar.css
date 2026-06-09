@@ -1,0 +1,115 @@
+/* ============================================================================
+   Navbar — shared across every design-final screen (Figma node 58:289)
+   A floating glass pill pinned to the top of the viewport: link pair left, the
+   P-mark centred, link pair right. Bone-white type on a faint warm gradient with
+   a hairline border and a soft backdrop blur. Colours read the theme tokens, so
+   the same markup works on the dark hero, the blue onboarding handoff, or a
+   light surface — only the context class on <body> changes the mark tone.
+
+   All layout lengths are fractions of the 1512px Figma frame (px ÷ 1512 × 100),
+   so the bar maps 1:1 to the design and scales proportionally with the viewport
+   — consistent with the hero's vw convention.
+
+   Port note (React/Next): this is a self-contained <Navbar /> + CSS module. The
+   link list is a .map(); the hover roll is pure CSS (no JS).
+   ========================================================================== */
+
+.pp-nav {
+  position: fixed;
+  top: 3.0423vw; /* 46 / 1512 */
+  left: 5.2249vw; /* 79 / 1512 */
+  width: 89.7487vw; /* 1357 / 1512 */
+  height: 3.836vw; /* 58 / 1512 */
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+
+  border: 0.5px solid rgba(247, 244, 240, 0.5);
+  border-radius: 1.3228vw; /* 20 / 1512 */
+  background-image: linear-gradient(
+    97.99deg,
+    rgba(247, 244, 240, 0.05) 15.178%,
+    rgba(154, 153, 152, 0.05) 99.445%
+  );
+  -webkit-backdrop-filter: blur(3.7px);
+  backdrop-filter: blur(3.7px);
+}
+
+/* Inner padded row: link group ↔ space ↔ link group, mark pinned dead-centre. */
+.pp-nav__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3.1085vw; /* 47 / 1512 */
+}
+
+.pp-nav__group {
+  display: flex;
+  align-items: center;
+  gap: 3.9683vw; /* 60 / 1512 */
+}
+
+/* ── Links — bone-white Book 16px, with a restrained hover "roll" ────────────
+   On hover the label rolls up and a duplicate rolls in from below — the same
+   text-wipe gesture used elsewhere in the brand, done purely in CSS. */
+.pp-nav__link {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.2566vw; /* 19 / 1512 — one line box */
+  font-family: var(--pp-font);
+  font-weight: 400;
+  font-size: 1.0582vw; /* 16 / 1512 */
+  line-height: 1.2566vw;
+  color: var(--pp-bone);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.pp-nav__roll {
+  display: block;
+  transition: transform 0.55s var(--pp-ease-out);
+}
+.pp-nav__label {
+  display: block;
+}
+.pp-nav__link:hover .pp-nav__roll,
+.pp-nav__link:focus-visible .pp-nav__roll {
+  transform: translateY(-50%);
+}
+.pp-nav__link:focus-visible {
+  outline: none;
+}
+
+/* ── Centre mark ─────────────────────────────────────────────────────────────
+   Inlined P-mark so its parts recolor from the theme tokens (bone stem + blue
+   blade on the dark hero). Aspect ratio is preserved from the Figma group. */
+.pp-nav__logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  line-height: 0;
+}
+.pp-nav__logo svg {
+  display: block;
+  height: 2.1142vw; /* 31.966 / 1512 */
+  width: auto;
+}
+.pp-nav__logo .lk-mark__stem {
+  fill: var(--pp-lockup-ink);
+}
+.pp-nav__logo .lk-mark__blade {
+  fill: var(--pp-lockup-blade);
+}
+
+/* Reduced motion: hover roll stays put. */
+@media (prefers-reduced-motion: reduce) {
+  .pp-nav__roll {
+    transition: none;
+  }
+}
