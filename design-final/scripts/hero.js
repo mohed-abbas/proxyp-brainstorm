@@ -340,6 +340,39 @@
       .to(cta, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.0);
   };
 
+  // The closing CTA band reveals as it scrolls into view (ScrollTrigger): the
+  // oversized headline rises word-by-word, then the link + reassurance copy
+  // settle in. Link hover is pure CSS.
+  const setupClosing = (gsap) => {
+    const section = document.querySelector(".closing");
+    if (!section) return;
+    const ST = window.ScrollTrigger;
+
+    const titleWords = splitWords(section.querySelector(".closing__title"));
+    const bodyWords = splitWords(section.querySelector(".closing__body"));
+    const link = section.querySelector(".closing__link");
+
+    gsap.set([".closing__title", ".closing__action"], { visibility: "visible" });
+
+    if (!ST) {
+      gsap.set([...titleWords, ...bodyWords], { yPercent: 0 });
+      gsap.set(link, { autoAlpha: 1, y: 0 });
+      return;
+    }
+
+    gsap.set([...titleWords, ...bodyWords], { yPercent: 120 });
+    gsap.set(link, { autoAlpha: 0, y: 16 });
+
+    gsap
+      .timeline({
+        defaults: { ease: "power3.out", force3D: true },
+        scrollTrigger: { trigger: section, start: "top 78%", once: true },
+      })
+      .to(titleWords, { yPercent: 0, duration: 0.75, stagger: 0.07 }, 0.0)
+      .to(link, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.45)
+      .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.016 }, 0.55);
+  };
+
   // Navbar theme switching — the fixed lockup recolors to match the section
   // currently under it, so its blue blade never lands blue-on-blue (e.g. over the
   // all-blue method panel the mark goes all-bone). Driven by an IntersectionObserver
@@ -484,6 +517,7 @@
     setupMethod(gsap);
     setupTrust(gsap);
     setupReferrers(gsap);
+    setupClosing(gsap);
 
     // ── Asset gate ──────────────────────────────────────────────────────────────
     const decode = (src) => {

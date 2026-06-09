@@ -1,0 +1,92 @@
+/* ============================================================================
+   Closing — "Take back control of what is yours"
+   (Figma node 58:248). The page's final call to action: a short Bone White band
+   carrying an oversized Proxy Blue headline (upper-left) and, lower-right, the
+   "Request a discovery meeting" link over a line of reassurance copy.
+
+   A LIGHT surface (like trust), so the fixed navbar flips to its light theme
+   over it (data-nav-theme="light").
+
+   The two blocks are corner-anchored, so they're absolutely positioned within
+   the band (vw fractions of the 1512px Figma frame, 1px ≈ 0.066138vw) — same
+   convention as the other design-final sections.
+
+   Port note (React/Next): a self-contained band; the reveal is a useGSAP mount
+   effect (see setupClosing in hero.js); the link hover is pure CSS.
+   ========================================================================== */
+
+.closing {
+  position: relative;
+  width: 100%;
+  min-height: 34.5899vw; /* 523px — a short band */
+  background: var(--pp-bone);
+  border-radius: 1.3228vw; /* 20px */
+  overflow: hidden;
+}
+
+/* Oversized headline, upper-left — Proxy Blue at full presence on the bone. */
+.closing__title {
+  position: absolute;
+  left: 4.9603vw; /* 75px */
+  top: 6.2169vw; /* 94px */
+  width: 44.4444vw; /* 672px */
+  font-weight: 500; /* Medium → Book fallback */
+  font-size: 5.0265vw; /* 76px */
+  line-height: 1;
+  letter-spacing: -0.02em; /* -1.52px */
+  color: var(--pp-blue);
+}
+
+/* Lower-right action block — link above, reassurance copy below, both right-set. */
+.closing__action {
+  position: absolute;
+  left: 49.6032vw; /* 750px */
+  top: 20.2381vw; /* 306px */
+  width: 45.4365vw; /* 687px */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.455vw; /* 22px */
+}
+.closing__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3968vw; /* 6px */
+  padding-bottom: 0.3968vw; /* 6px — text to underline */
+  border-bottom: 1px solid var(--pp-blue);
+  font-weight: 500;
+  font-size: 1.0582vw; /* 16px */
+  color: var(--pp-blue);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.closing__link svg {
+  width: 1.1905vw; /* 18px */
+  height: 1.1905vw;
+  stroke: currentColor;
+  transition: transform 0.4s var(--pp-ease-out);
+}
+.closing__link:hover svg {
+  transform: translateX(0.2646vw); /* 4px */
+}
+.closing__body {
+  width: 100%;
+  font-weight: 400; /* Book */
+  font-size: 1.0582vw; /* 16px */
+  line-height: 1.45;
+  letter-spacing: 0.02em; /* 0.32px */
+  text-align: right;
+  color: rgba(22, 23, 24, 0.7); /* ink 70% */
+}
+
+/* ── Reveal masks (per-word, house style) ───────────────────────────────────*/
+.closing .r-word {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+/* Armed state — JS reveals once the timeline is built. No JS / reduced motion →
+   the settled state renders as-is. */
+.js .closing__title,
+.js .closing__action {
+  visibility: hidden;
+}
