@@ -1,0 +1,149 @@
+/* ============================================================
+   Proxy Papers — Section 09: "Trois profils" (below-hero section)
+   Fanned three-card deck: Essentiel / Signature / Exception.
+   Translated from Figma 58:149. Light mode default; [data-theme="dark"] overrides.
+   ============================================================ */
+:root {
+  --bone: #f7f4f0; --black: #161718; --blue: #5a90f4; --blue-lift: #6ea1ff;
+  --bg: #f7f4f0; --ink: #161718; --ink-soft: rgba(22,23,24,0.56);
+  --hairline: rgba(22,23,24,0.14); --mark-ink: #161718;
+  --surface: rgba(22,23,24,0.04); --surface-border: rgba(22,23,24,0.10);
+  --nav-bg: rgba(247,244,240,0.72); --cta-ink: var(--bone);
+  --depth: radial-gradient(120% 90% at 50% -10%, rgba(90,144,244,0.08), transparent 60%);
+  --grain-opacity: 0.045;
+
+  /* contrast (centre) card — light theme: structural-black card */
+  --card-c-bg: #161718;
+  --card-c-num: rgba(247,244,240,0.10);
+  --card-c-mark: rgba(247,244,240,0.16);
+  --card-c-name: rgba(247,244,240,0.72);
+  --card-shadow: 0 60px 120px -50px rgba(20,30,60,0.45);
+  --card-shadow-hover: 0 84px 150px -48px rgba(20,30,60,0.55);
+}
+[data-theme="dark"] {
+  --bg: #161718; --ink: #f7f4f0; --ink-soft: rgba(247,244,240,0.60);
+  --hairline: rgba(247,244,240,0.14); --mark-ink: #f7f4f0;
+  --surface: rgba(247,244,240,0.055); --surface-border: rgba(247,244,240,0.12);
+  --nav-bg: rgba(22,23,24,0.66); --cta-ink: var(--black);
+  --depth: radial-gradient(120% 90% at 50% -10%, rgba(90,144,244,0.12), transparent 62%);
+  --grain-opacity: 0.05;
+
+  /* contrast (centre) card — dark theme: warm bone card (matches Figma) */
+  --card-c-bg: #f7f4f0;
+  --card-c-num: #dfddda;
+  --card-c-mark: #dfddda;
+  --card-c-name: rgba(22,23,24,0.68);
+  --card-shadow: 0 70px 140px -54px rgba(0,0,0,0.78);
+  --card-shadow-hover: 0 94px 176px -54px rgba(0,0,0,0.85);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: "General Sans", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased; min-height: 100vh; overflow-x: hidden;
+  transition: background 0.6s ease, color 0.6s ease;
+}
+a { color: inherit; text-decoration: none; }
+
+.bg-depth { position: fixed; inset: 0; z-index: 0; background: var(--depth); pointer-events: none; transition: background 0.6s ease; }
+.bg-grain { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: var(--grain-opacity); mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* NAVBAR */
+.navbar { position: fixed; inset: 0 0 auto 0; z-index: 30; height: 64px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 clamp(1.1rem,3vw,2.4rem); transition: background .4s ease, border-color .4s ease; border-bottom: 1px solid transparent; }
+.navbar.scrolled { background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--hairline); }
+.nav-links { display: flex; gap: clamp(1rem,2.4vw,2.1rem); font-size: .86rem; font-weight: 500; }
+.nav-links a { color: var(--ink-soft); transition: color .3s ease; } .nav-links a:hover { color: var(--ink); }
+.nav-actions { display: flex; align-items: center; justify-content: flex-end; gap: .9rem; }
+.theme-toggle { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: none; border: 1px solid var(--hairline); color: var(--ink); cursor: pointer; }
+.theme-toggle:hover { border-color: var(--ink-soft); } .theme-toggle svg { transition: transform .5s cubic-bezier(.4,0,.2,1); } [data-theme="dark"] .theme-toggle svg { transform: rotate(180deg); }
+.cta { font-size: .82rem; font-weight: 500; padding: .6rem 1.05rem; border-radius: 999px; background: var(--blue); color: var(--cta-ink); transition: transform .3s ease, filter .3s ease; }
+.cta:hover { filter: brightness(1.06); transform: translateY(-1px); }
+
+.brand-lockup { display: inline-flex; align-items: center; gap: .4em; font-size: 1.06rem; font-weight: 500; letter-spacing: -.02em; white-space: nowrap; }
+.brand-lockup .mark { height: .96em; width: auto; display: block; overflow: visible; }
+.mark-stem { fill: var(--mark-ink); transition: fill .6s ease; } .mark-blade { fill: var(--blue); }
+
+/* SECTION */
+.profiles {
+  position: relative; z-index: 10; min-height: 100vh;
+  max-width: 1360px; margin: 0 auto;
+  padding: clamp(96px, 12vh, 140px) clamp(1.4rem, 4vw, 3.4rem) 8vh;
+  display: flex; flex-direction: column; gap: clamp(48px, 7vh, 92px);
+  perspective: 1500px;
+}
+
+.profiles__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 3vw; }
+.profiles__title { font-size: clamp(2rem, 3.4vw, 3.06rem); font-weight: 500; line-height: 1.04; letter-spacing: -.03em; }
+.profiles__title .ln { display: block; overflow: hidden; }
+.profiles__title .ln > span { display: block; will-change: transform; }
+.profiles__title .muted { color: var(--ink-soft); }
+.profiles__lede { max-width: 590px; padding-top: .4rem; font-size: 1rem; font-weight: 400; line-height: 1.55; letter-spacing: .02em; color: var(--ink-soft); text-align: right; }
+
+/* DECK */
+/* group tilts as one flat plane (no preserve-3d, so z-index stacking stays sane) */
+.deck { --rx: 0; --ry: 0; position: relative; align-self: center; width: min(900px, 100%); height: clamp(440px, 56vh, 600px); transform: rotateX(calc(var(--rx) * 1deg)) rotateY(calc(var(--ry) * 1deg)); will-change: transform; }
+
+/* .card = GSAP-owned wrapper (intro fan + pointer parallax). No visuals here, so
+   GSAP's transform never collides with the CSS hover-lift on .card__face. */
+.card {
+  --w: clamp(248px, 23vw, 325px);
+  position: absolute; top: 0; left: 50%;
+  width: var(--w); height: calc(var(--w) * 1.643); /* 534/325 */
+  z-index: var(--z);
+  transform-origin: 50% 8%;
+  /* no-JS / reduced-motion resting state (GSAP composes the same values) */
+  transform: translateX(-50%) translate(var(--tx), var(--ty)) rotate(var(--rot));
+  cursor: pointer;
+  transition: filter .4s ease;
+}
+/* .card__face = the visible card; CSS owns its hover-lift transform exclusively. */
+.card__face {
+  position: absolute; inset: 0;
+  border-radius: 20px; overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: transform .45s cubic-bezier(.22,1,.36,1), box-shadow .45s ease, background .6s ease;
+  will-change: transform;
+}
+.card--blue .card__face { background: var(--blue); }
+.card--contrast .card__face { background: var(--card-c-bg); }
+
+.card__num {
+  position: absolute; left: 50%; top: -34px; transform: translateX(-50%);
+  font-size: clamp(140px, 14vw, 191px); font-weight: 500; line-height: 1;
+  letter-spacing: -.02em; white-space: nowrap; user-select: none; pointer-events: none;
+}
+.card--blue .card__num { color: var(--blue-lift); }
+.card--contrast .card__num { color: var(--card-c-num); }
+
+.card__name {
+  position: absolute; left: 26px; top: 28px; z-index: 2;
+  font-size: .92rem; font-weight: 500; letter-spacing: .01em;
+}
+.card--blue .card__name { color: rgba(247,244,240,0.92); }
+.card--contrast .card__name { color: var(--card-c-name); }
+
+.card__mark {
+  position: absolute; left: 6%; bottom: -6%; width: 49%; height: auto;
+  pointer-events: none;
+}
+.card--blue .card__mark path { fill: var(--blue-lift); }
+.card--contrast .card__mark path { fill: var(--card-c-mark); }
+
+/* hover: lift the hovered card to the front, gently recede the siblings */
+.deck:hover .card { filter: saturate(.94) brightness(.975); }
+.deck .card:hover { filter: none; z-index: 9; }
+.deck .card:hover .card__face { transform: translateY(-16px) scale(1.012); box-shadow: var(--card-shadow-hover); }
+
+/* replay */
+.replay { position: fixed; right: 1rem; bottom: 1rem; z-index: 60; padding: .5rem .85rem; border-radius: 999px; background: var(--surface); border: 1px solid var(--surface-border); color: var(--ink-soft); font-family: inherit; font-size: .76rem; cursor: pointer; backdrop-filter: blur(8px); }
+.replay:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+@media (max-width: 880px) {
+  .profiles__head { flex-direction: column; gap: 1.6rem; }
+  .profiles__lede { text-align: left; max-width: 46ch; }
+  .nav-links { display: none; }
+  .card { --w: clamp(190px, 42vw, 248px); }
+}
+@media (prefers-reduced-motion: reduce) { .card, .card__face { transition: none; } }

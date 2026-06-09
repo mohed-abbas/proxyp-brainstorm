@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:," />
+    <title>Proxy Papers — Trois profils (prototype)</title>
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="pre-intro">
+    <div class="bg-depth" aria-hidden="true"></div>
+    <div class="bg-grain" aria-hidden="true"></div>
+
+    <!-- NAVBAR — the persistent lockup rests pinned centre (proven in 02–04) -->
+    <header class="navbar scrolled" id="navbar">
+      <nav class="nav-links" aria-label="Principal">
+        <a href="#">La méthode</a><a href="#">Le service</a
+        ><a href="#">La confiance</a>
+      </nav>
+      <a href="#" class="brand-lockup" aria-label="Proxy Papers, accueil">
+        <svg class="mark" viewBox="0 0 110 120" aria-hidden="true">
+          <rect class="mark-stem" x="26" y="16" width="22" height="90" rx="11" />
+          <path
+            class="mark-blade"
+            d="M46 20 L92 20 Q100 20 96 29 L64 64 Q57 71 50 67 L46 63 Z"
+          />
+        </svg>
+        <span class="wordmark">Proxy&nbsp;Papers</span>
+      </a>
+      <div class="nav-actions">
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          type="button"
+          aria-label="Basculer le thème"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.5" />
+            <path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor" />
+          </svg>
+        </button>
+        <a href="#" class="cta">Prendre rendez-vous</a>
+      </div>
+    </header>
+
+    <!-- SECTION — Trois profils -->
+    <section class="profiles" id="profiles">
+      <header class="profiles__head">
+        <h2 class="profiles__title">
+          <span class="ln"><span>Trois profils d'accompagnement.</span></span>
+          <span class="ln muted"><span>Une seule méthode.</span></span>
+        </h2>
+        <p class="profiles__lede">
+          Essentiel, Signature, Exception — chaque profil s'ajuste à la
+          complexité de votre patrimoine et à votre rythme de vie. La méthode,
+          elle, ne change pas.
+        </p>
+      </header>
+
+      <div class="deck" id="deck">
+        <!-- 01 · Essentiel -->
+        <article class="card card--blue card--a" data-depth="46" style="--tx: -238px; --ty: 34px; --rot: -10deg; --z: 1">
+          <div class="card__face">
+            <span class="card__num">01</span>
+            <span class="card__name">Essentiel</span>
+            <svg class="card__mark" viewBox="0 0 144.674 216.424" aria-hidden="true">
+              <path d="M72.3361 72.1409V210.659C72.3361 213.851 69.7368 216.424 66.5555 216.424H11.5809C5.17953 216.424 0.000203677 211.259 0.000203677 204.874V149.061C0.000203677 146.004 1.22229 143.064 3.39489 140.897L72.3361 72.1409Z" />
+              <path d="M144.674 40.3947V132.734C144.674 139.118 139.495 144.283 133.093 144.283H72.3185V72.1416H11.5827C5.18129 72.1416 0.00196585 66.9762 0.00196585 60.592V11.5497C0.00196585 5.1655 5.18129 9.8725e-05 11.5827 9.8725e-05H104.17C126.536 9.8725e-05 144.674 18.0887 144.674 40.3947Z" />
+            </svg>
+          </div>
+        </article>
+
+        <!-- 03 · Exception (rendered before the centre so the centre stacks on top) -->
+        <article class="card card--blue card--c" data-depth="46" style="--tx: 238px; --ty: 34px; --rot: 10deg; --z: 2">
+          <div class="card__face">
+            <span class="card__num">03</span>
+            <span class="card__name">Exception</span>
+            <svg class="card__mark" viewBox="0 0 144.674 216.424" aria-hidden="true">
+              <path d="M72.3361 72.1409V210.659C72.3361 213.851 69.7368 216.424 66.5555 216.424H11.5809C5.17953 216.424 0.000203677 211.259 0.000203677 204.874V149.061C0.000203677 146.004 1.22229 143.064 3.39489 140.897L72.3361 72.1409Z" />
+              <path d="M144.674 40.3947V132.734C144.674 139.118 139.495 144.283 133.093 144.283H72.3185V72.1416H11.5827C5.18129 72.1416 0.00196585 66.9762 0.00196585 60.592V11.5497C0.00196585 5.1655 5.18129 9.8725e-05 11.5827 9.8725e-05H104.17C126.536 9.8725e-05 144.674 18.0887 144.674 40.3947Z" />
+            </svg>
+          </div>
+        </article>
+
+        <!-- 02 · Signature (centre, contrast card, on top) -->
+        <article class="card card--contrast card--b" data-depth="20" style="--tx: 0px; --ty: 0px; --rot: 0deg; --z: 3">
+          <div class="card__face">
+            <span class="card__num">02</span>
+            <span class="card__name">Signature</span>
+            <svg class="card__mark" viewBox="0 0 144.674 216.424" aria-hidden="true">
+              <path d="M72.3361 72.1409V210.659C72.3361 213.851 69.7368 216.424 66.5555 216.424H11.5809C5.17953 216.424 0.000203677 211.259 0.000203677 204.874V149.061C0.000203677 146.004 1.22229 143.064 3.39489 140.897L72.3361 72.1409Z" />
+              <path d="M144.674 40.3947V132.734C144.674 139.118 139.495 144.283 133.093 144.283H72.3185V72.1416H11.5827C5.18129 72.1416 0.00196585 66.9762 0.00196585 60.592V11.5497C0.00196585 5.1655 5.18129 9.8725e-05 11.5827 9.8725e-05H104.17C126.536 9.8725e-05 144.674 18.0887 144.674 40.3947Z" />
+            </svg>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <button class="replay" id="replay" type="button" title="Rejouer l'animation">
+      ↻ Rejouer
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
