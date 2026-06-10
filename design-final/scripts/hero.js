@@ -734,7 +734,7 @@
     const GAP_TRIG = 5 * rem; // the mark begins easing up once the edge is this far below its base
     // (early enough that it's already moving near edge-speed before the curtain closes in,
     // so the cushion below holds without the mark ever snapping into motion)
-    const BASE_GAP = 2 * rem; // hard floor — the edge is NEVER allowed within this of the mark's base
+    const BASE_GAP = 3 * rem; // hard floor — the edge is NEVER allowed within this of the mark's base
     const restH = restMark.height;
     const navH = restNav.height;
     const markBottom = markCY + restH / 2;
