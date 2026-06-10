@@ -178,10 +178,17 @@
       tl.to(volumePath, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" }, 0.95);
   };
 
-  // The profiles section reveals as it scrolls into view (ScrollTrigger), same
-  // as the problem section: title + body rise word-by-word, then the three fanned
-  // cards settle up centre-first. Hover lift is pure CSS (see profiles.css), so
-  // there's nothing to wire here for it.
+  // The profiles section is a PINNED, scrubbed 3D flip. Two independent triggers:
+  //  A) the header (title + body) rises word-by-word on its own once-reveal;
+  //  B) the deck + CTA: the section pins when framed, and the flip scrubs across
+  //     the pin — each card winds out of a fanned FRONT stack (un-tilting rotation→0,
+  //     spreading x/y→0, flipping rotateY 0→180 to its named BACK), centre-first,
+  //     then the CTA fades up and the deck HOLDS for a reading dwell before release.
+  // The CSS base is the resolved flat back-spread, so no-JS / reduced motion lands
+  // there; here we wind the cards back into the fan and play them forward.
+  // Transform layering (see profiles.css): outer .profiles__card = slot + perspective
+  // + hover (GSAP-free); .profiles__card-pos = spread + tilt; .profiles__card-flip =
+  // rotateY. The fan offset lives in each card's --dx/--dy/--rot vars (read here).
   const setupProfiles = (gsap) => {
     const section = document.querySelector(".profiles");
     if (!section) return;
@@ -193,32 +200,103 @@
     const bodyWords = splitWords(section.querySelector(".profiles__body"));
     const allWords = [...titleWords, ...bodyWords];
 
-    // Reveal order: 02 (centre, on top) first, then the two blue cards.
+    // Centre-first order (02 leads), matching the deck's read.
     const cards = ["--02", "--01", "--03"]
       .map((m) => section.querySelector(`.profiles__card${m}`))
       .filter(Boolean);
+    const pos = cards.map((c) => c.querySelector(".profiles__card-pos"));
+    const flips = cards.map((c) => c.querySelector(".profiles__card-flip"));
+    const cta = section.querySelector(".profiles__cta");
+
+    // Fan offset each card winds back to at p=0 — single source: the inline vars.
+    // GSAP 3.12 does NOT resolve vw units on x/y (it treats "18.98vw" as ~19px),
+    // so we convert the authored vw offsets to pixels against the live viewport
+    // here — keeping the deltas responsive while landing the exact stack we want.
+    const vwToPx = (v) => {
+      v = (v || "").trim();
+      if (v.endsWith("vw")) return (parseFloat(v) * window.innerWidth) / 100;
+      return parseFloat(v) || 0;
+    };
+    const fan = cards.map((c) => {
+      const cs = getComputedStyle(c);
+      return {
+        dx: vwToPx(cs.getPropertyValue("--dx")),
+        dy: vwToPx(cs.getPropertyValue("--dy")),
+        rot: parseFloat(cs.getPropertyValue("--rot")) || 0,
+      };
+    });
 
     gsap.set([".profiles__title", ".profiles__body"], { visibility: "visible" });
 
-    // No ScrollTrigger → settled state.
+    // No ScrollTrigger → resolved state (flat spread, backs out, CTA shown).
     if (!ST) {
       gsap.set(allWords, { yPercent: 0 });
-      gsap.set(cards, { autoAlpha: 1, y: 0 });
+      gsap.set(pos, { x: 0, y: 0, rotation: 0 });
+      gsap.set(flips, { rotationY: 180 });
+      gsap.set(cta, { autoAlpha: 1, y: 0 });
+      cards.forEach((c) => c.classList.add("is-settled"));
       return;
     }
 
-    // Parked start state.
+    // ── A. Header once-reveal ──────────────────────────────────────────────
     gsap.set(allWords, { yPercent: 120 });
-    gsap.set(cards, { autoAlpha: 0, y: 30 });
-
     gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
         scrollTrigger: { trigger: section, start: "top 72%", once: true },
       })
       .to(titleWords, { yPercent: 0, duration: 0.7, stagger: 0.06 }, 0.0)
-      .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.35)
-      .to(cards, { autoAlpha: 1, y: 0, duration: 0.85, stagger: 0.12 }, 0.5);
+      .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.35);
+
+    // ── B. Deck + CTA — pinned, scrubbed flip with a reading dwell ─────────
+    // The section PINS when it reaches the top of the viewport (whole composition
+    // framed), then the flip SCRUBS across the pin. Because the pace is set by the
+    // pin DISTANCE we choose (one viewport) rather than scroll velocity, it's slow
+    // and smooth — and eased tweens keep it consistent with the rest of the site.
+    // The flip resolves in the first ~⅔ of the pin; the tail HOLDS the flipped deck
+    // still so the cards can be read before the section releases.
+    // Park at the fanned FRONT: wind back from the CSS base (flat back-spread).
+    pos.forEach((p, i) =>
+      gsap.set(p, { x: fan[i].dx, y: fan[i].dy, rotation: fan[i].rot, force3D: true })
+    );
+    gsap.set(flips, { rotationY: 0, force3D: true });
+    gsap.set(cta, { autoAlpha: 0, y: 16 });
+
+    const deck = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: "+=160%", // generous pin → the flip is spread over ~1.5× more scroll
+                       // than a one-viewport pin, so each degree of rotation costs
+                       // more wheel — the motion reads slow and deliberate, not fast.
+        pin: true,
+        anticipatePin: 1,
+        scrub: 2.4, // heavy smoothing: the timeline trails the wheel by a longer
+                    // beat and glides to rest when you stop, so the pin feels soft
+                    // and inertial. NB this does not change the SPEED — the scroll-
+                    // distance→rotation mapping (set by the pin distance) is the
+                    // same; scrub only governs how softly it tracks/settles.
+        onUpdate: (self) => {
+          // Hover enabled only after the flip resolves (~0.66 through the timeline;
+          // the remainder is the reading dwell).
+          const settled = self.progress > 0.66;
+          cards.forEach((c) => c.classList.toggle("is-settled", settled));
+        },
+      },
+    });
+    deck
+      // un-tilt + spread to the flat slots. ease-IN-out (not out): the cards ease
+      // INTO motion as the pin engages, so the lock feels soft instead of snapping
+      // straight to full speed; they also ease to rest at the slots.
+      .to(pos, { x: 0, y: 0, rotation: 0, duration: 1.2, stagger: 0.15, ease: "power1.inOut", force3D: true }, 0)
+      // flip front→back — gentle in-out so there's no fast mid-rotation burst.
+      .to(flips, { rotationY: 180, duration: 1.4, stagger: 0.15, ease: "power1.inOut", force3D: true }, 0.3)
+      // CTA fades up as the flip lands
+      .to(cta, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.6)
+      // dwell — hold the flipped deck still so the cards can be read before release
+      .to({}, { duration: 0.9 });
+
+    window.__profilesDeck = deck;
   };
 
   // The method section reveals as it scrolls into view (ScrollTrigger), same

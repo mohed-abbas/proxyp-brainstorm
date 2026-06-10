@@ -26,24 +26,31 @@
   width: 100%;
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  padding-inline: 5.0265vw; /* 76px — matches the Figma frame's x=76 margins */
+  align-items: flex-start; /* top-anchored below the navbar (like the hero), not
+                              centred — centring can't clear the nav AND leave the
+                              CTA room, since the deck is tall. */
+  padding-top: 8.5vw; /* 129 — clears the navbar AND keeps the whole composition
+                         (header → cards → CTA) inside the viewport while the
+                         section is pinned, so it's all visible during the dwell. */
+  padding-bottom: 6vw; /* breathing room so the CTA never abuts the next section */
   background: var(--pp-ink);
   overflow: hidden;
 }
 
-/* The 1360px content block (== full width inside the page margins). Holds the
-   Figma frame's own height so the header and deck keep their vertical rhythm. */
+/* Full-viewport content box (no inline padding): every child is positioned with
+   viewport-absolute vw straight from the Figma 78:5 frame (px ÷ 1512 × 100), so
+   the composition maps 1:1. Height wraps the WHOLE composition through the CTA
+   (770px) so the section reserves space for it — the box bottom is the CTA. */
 .profiles__content {
   position: relative;
   width: 100%;
-  height: 52.381vw; /* 792px — the Figma frame height */
+  height: 50.93vw; /* 770px — header top → CTA bottom (Figma 78:5 + 78:25) */
 }
 
 /* ── Editorial header ──────────────────────────────────────────────────────*/
 .profiles__title {
   position: absolute;
-  left: 0;
+  left: 5.2249vw; /* 79 — aligned to the navbar's left edge (Figma 78:7) */
   top: 0;
   font-weight: 500; /* Medium → falls back to Book (see theme.css) */
   font-size: 3.2407vw; /* 49px */
@@ -60,9 +67,9 @@
 
 .profiles__body {
   position: absolute;
-  top: 2.6455vw; /* 40px */
-  right: 0;
-  width: 39.0212vw; /* 590px */
+  top: 2.0172vw; /* 30.5px (Figma 78:8) */
+  right: 8.1349vw; /* 123 — right edge at abs 1389 (Figma 78:8) */
+  width: 30.0926vw; /* 455px — Figma 78:8, right-aligned */
   font-weight: 400; /* Book */
   font-size: 1.0582vw; /* 16px */
   line-height: 1.45;
@@ -86,32 +93,63 @@
 }
 
 .profiles__card {
-  /* WRAPPER — position + GSAP reveal only. No CSS transform lives here, so the
-     reveal (translateY/opacity) never clobbers the face's rotation. */
+  /* OUTER wrapper — owns the resolved SLOT position (flat, evenly spaced), the
+     3D perspective for the flip, and the hover lift. GSAP never touches this
+     node, so the hover-lift transform can't fight the scrubbed spread/flip
+     transforms (which live on the inner -pos / -flip nodes). */
   position: absolute;
   width: 21.4947vw; /* 325px */
   height: 35.3175vw; /* 534px */
+  perspective: 1600px; /* on the ancestor of the flipping node, never on it */
+  transition: transform 0.45s var(--pp-ease-out);
 }
-/* top: 13.8889vw = 210px (02's baseline); 15.4868vw = 234px (side-card dip). */
-.profiles__card--01 { left: 18.1956vw; top: 15.4868vw; z-index: 1; } /* centre x ≈ 438 — dipped, behind */
-.profiles__card--02 { left: 32.0107vw; top: 13.8889vw; z-index: 2; } /* centre x ≈ 646 — straight, highest */
-.profiles__card--03 { left: 50.2570vw; top: 15.4868vw; z-index: 3; } /* centre x ≈ 922 — dipped, on top */
+/* Resolved slots (Figma 78:9): flat row, equal tops, 50px (3.31vw) gaps. The
+   1075-wide card group is centred inside the 1310 frame (abs x 196.5/571.5/946.5,
+   top 143). The fanned ENTRY positions are reached by GSAP via the per-card
+   --dx/--dy/--rot offset on .profiles__card-pos (so this stays the no-JS state). */
+.profiles__card--01 { left: 12.9960vw; top: 9.4577vw; z-index: 1; } /* abs 196.5 */
+.profiles__card--03 { left: 62.5992vw; top: 9.4577vw; z-index: 2; } /* abs 946.5 */
+.profiles__card--02 { left: 37.7976vw; top: 9.4577vw; z-index: 3; } /* abs 571.5 — on
+   top: in the stacked entry the white Signature card is the focal point, with 01/03
+   peeking symmetrically behind it. (Spread cards don't overlap, so this only shapes
+   the stack + the flip transition; hover still raises any card via z-index:9.) */
+
+/* POS — GSAP owns transform (x/y spread + rotation tilt, one matrix). Carries
+   preserve-3d so the card's perspective reaches the flip (its child), otherwise
+   this intermediate node would flatten the rotateY into a depthless squash. */
+.profiles__card-pos {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+/* FLIP — GSAP owns rotateY; the 3D stage holding the two faces. Base is the
+   RESOLVED back-showing state (180°), so no-JS / reduced-motion shows the named
+   back. GSAP parks it to 0° (front-fan) at p=0 and scrubs it to 180°. */
+.profiles__card-flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+}
 
 .profiles__card-face {
-  /* FACE — the visible card. CSS owns its transform exclusively: the resting fan
-     rotation, and the hover lift (which keeps the rotation so it lifts straight
-     up in screen space). */
+  /* FACE — one side of the flip. Both faces are stacked; backface-visibility
+     hides whichever is turned away. overflow:hidden clips the bleeding giant
+     number (orthogonal to backface-visibility). */
   position: absolute;
   inset: 0;
   border-radius: 1.3228vw; /* 20px */
   overflow: hidden;
-  transform: rotate(var(--rot, 0deg));
-  transform-origin: 50% 50%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   box-shadow: 0 2.6vw 4.6vw -1.9vw rgba(0, 0, 0, 0.55);
   transition:
-    transform 0.5s var(--pp-ease-out),
-    box-shadow 0.5s var(--pp-ease-out),
+    box-shadow 0.45s var(--pp-ease-out),
     filter 0.4s var(--pp-ease-out);
+}
+/* The back is pre-rotated so it faces out when the flip node is at 180°. */
+.profiles__card-face--back {
+  transform: rotateY(180deg);
 }
 .profiles__card--01 .profiles__card-face,
 .profiles__card--03 .profiles__card-face { background: var(--pp-blue); }
@@ -153,14 +191,48 @@
 .profiles__card--03 { --card-tint: #6ea1ff; } /* lighter Proxy Blue */
 .profiles__card--02 { --card-tint: #dfddda; } /* warm grey on Bone */
 
-/* ── Hover: lift the card straight up and bring it to the front ─────────────*/
+/* ── Back face content (number + name + description), Figma 78:3 ─────────────
+   The giant .profiles__card-num is shared with the front. The name + desc sit
+   bottom-left in a 173px column (left 20 / top 416). */
+.profiles__card-meta {
+  position: absolute;
+  left: 1.3228vw; /* 20px */
+  top: 27.5132vw; /* 416px */
+  width: 11.4418vw; /* 173px */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5291vw; /* 8px */
+}
+.profiles__card-name {
+  font-weight: 500; /* Medium → Book */
+  font-size: 2.5794vw; /* 39px */
+  line-height: 1.05;
+  letter-spacing: -0.0106vw;
+}
+.profiles__card-desc {
+  font-weight: 400; /* Book */
+  font-size: 1.0582vw; /* 16px */
+  line-height: 1.35;
+}
+/* Back text: bone on the blue cards, ink on the bone card. */
+.profiles__card--01 .profiles__card-face--back,
+.profiles__card--03 .profiles__card-face--back { color: var(--pp-bone); }
+.profiles__card--02 .profiles__card-face--back { color: #161718; }
+
+/* ── Hover: lift the card straight up and bring it to the front ─────────────
+   Gated to the settled (fully spread + flipped) state via .is-settled, so a
+   half-flipped card mid-scroll never lifts. The lift lives on the OUTER card
+   (GSAP-free), so it can't fight the scrubbed -pos / -flip transforms; --rot is
+   0 at rest, so it's a clean translate + scale. */
 .profiles__deck:hover .profiles__card-face {
   filter: brightness(0.97);
 }
 .profiles__card:hover { z-index: 9; }
-.profiles__card:hover .profiles__card-face {
+.profiles__card.is-settled:hover {
+  transform: translateY(-1.6vw) scale(1.015);
+}
+.profiles__card.is-settled:hover .profiles__card-face {
   filter: none;
-  transform: translateY(-1.6vw) scale(1.015) rotate(var(--rot, 0deg));
   box-shadow: 0 3.4vw 6vw -1.9vw rgba(0, 0, 0, 0.62);
 }
 
@@ -171,10 +243,20 @@
   padding: 0.06em 0 0.14em;
   margin: -0.06em 0 -0.14em;
 }
-/* Armed state — JS reveals these once the timeline is built. No JS / reduced
-   motion → the settled state renders as-is. */
+/* ── CTA (Figma 78:25) — pill under the deck, centred. .hero-btn carries the
+   visual; this only positions it. Revealed by GSAP once the deck has flipped. */
+.profiles__cta {
+  position: absolute;
+  left: 48.51%; /* centred on the card group (abs x ≈ 733.5), Figma 78:25 */
+  top: 48.346vw; /* 731 — 54px below the deck */
+  transform: translateX(-50%);
+}
+
+/* Armed state — JS reveals these once the timeline is built. The cards are NOT
+   hidden: their CSS base IS the resolved flat back-spread (the no-JS / reduced-
+   motion state), and GSAP winds them into the fan via transform synchronously,
+   so there's no flash. Only the header words + CTA wait for JS. */
 .js .profiles__title,
-.js .profiles__body,
-.js .profiles__card {
+.js .profiles__body {
   visibility: hidden;
 }

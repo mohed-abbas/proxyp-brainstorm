@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="styles/intro.css?v=1" />
     <link rel="stylesheet" href="styles/hero.css?v=5" />
     <link rel="stylesheet" href="styles/problem.css?v=1" />
-    <link rel="stylesheet" href="styles/profiles.css?v=1" />
+    <link rel="stylesheet" href="styles/profiles.css?v=5" />
     <link rel="stylesheet" href="styles/method.css?v=2" />
     <link rel="stylesheet" href="styles/trust.css?v=1" />
     <link rel="stylesheet" href="styles/referrers.css?v=1" />
@@ -32,7 +32,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=23" defer></script>
+    <script src="scripts/hero.js?v=32" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -274,10 +274,21 @@
       </div>
     </section>
 
-    <!-- Profiles section (Figma 58:149) — revealed as it scrolls into view.
-         Shares the fixed navbar + the single Lenis/ScrollTrigger above. Each
-         card is a GSAP-owned wrapper around a CSS-owned face (see profiles.css);
-         the three cards port to a .map() over a PROFILES array. -->
+    <!-- Profiles section (Figma 78:3) — a scroll-SCRUBBED 3D flip. On entry the
+         deck is a fanned stack showing each card's FRONT (big number + P-mark
+         watermark). As the section scrolls through ~50% viewport, each card
+         un-tilts, spreads to a flat even slot, and flips on its Y axis to reveal
+         its BACK (number + profile name + one-line description). The motion is
+         tied to scroll position (reversible). See setupProfiles in hero.js.
+
+         Transform-layering contract (each transform on its OWN node so nothing
+         fights): .profiles__card = slot position + perspective + CSS hover-lift
+         (GSAP never touches it) → .profiles__card-pos = GSAP spread (x/y) + tilt
+         (rotation) → .profiles__card-flip = GSAP rotateY (preserve-3d) → the two
+         backface-hidden faces. CSS base is the RESOLVED back-spread, so no-JS /
+         reduced-motion lands on the informative Figma layout. The fan offset each
+         card winds back to at p=0 lives in the per-card --dx/--dy/--rot vars
+         (single source of truth, read by JS). Cards port to a .map(). -->
     <section class="profiles" aria-label="The three support profiles" data-nav-theme="dark">
       <div class="profiles__content">
         <!-- Editorial header -->
@@ -290,27 +301,64 @@
           of your estate and your pace of life. The method remains the same.
         </p>
 
-        <!-- Fanned deck: 01 / 03 in Proxy Blue, 02 in Bone White on top -->
-        <div class="profiles__deck" aria-hidden="true">
-          <article class="profiles__card profiles__card--01" style="--rot: -10deg">
-            <div class="profiles__card-face">
-              <span class="profiles__card-num">01</span>
-              <span class="profiles__card-mark"></span>
+        <!-- Flat even deck (resolved state). Each card flips between a watermark
+             FRONT and a named BACK; 01 / 03 in Proxy Blue, 02 in Bone White. -->
+        <div class="profiles__deck">
+          <article class="profiles__card profiles__card--01" style="--rot: -10deg; --dx: 18.98vw; --dy: 1.59vw">
+            <div class="profiles__card-pos">
+              <div class="profiles__card-flip">
+                <div class="profiles__card-face profiles__card-face--front">
+                  <span class="profiles__card-num">01</span>
+                  <span class="profiles__card-mark"></span>
+                </div>
+                <div class="profiles__card-face profiles__card-face--back">
+                  <span class="profiles__card-num">01</span>
+                  <div class="profiles__card-meta">
+                    <span class="profiles__card-name">Essentiel</span>
+                    <span class="profiles__card-desc">Set in order. Keep current.</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </article>
-          <article class="profiles__card profiles__card--03" style="--rot: 10deg">
-            <div class="profiles__card-face">
-              <span class="profiles__card-num">03</span>
-              <span class="profiles__card-mark"></span>
+          <article class="profiles__card profiles__card--03" style="--rot: 10deg; --dx: -16.07vw; --dy: 1.59vw">
+            <div class="profiles__card-pos">
+              <div class="profiles__card-flip">
+                <div class="profiles__card-face profiles__card-face--front">
+                  <span class="profiles__card-num">03</span>
+                  <span class="profiles__card-mark"></span>
+                </div>
+                <div class="profiles__card-face profiles__card-face--back">
+                  <span class="profiles__card-num">03</span>
+                  <div class="profiles__card-meta">
+                    <span class="profiles__card-name">Exception</span>
+                    <span class="profiles__card-desc">A framework on its own scale.</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </article>
-          <article class="profiles__card profiles__card--02" style="--rot: 0deg">
-            <div class="profiles__card-face">
-              <span class="profiles__card-num">02</span>
-              <span class="profiles__card-mark"></span>
+          <article class="profiles__card profiles__card--02" style="--rot: 0deg; --dx: 1.46vw; --dy: 0vw">
+            <div class="profiles__card-pos">
+              <div class="profiles__card-flip">
+                <div class="profiles__card-face profiles__card-face--front">
+                  <span class="profiles__card-num">02</span>
+                  <span class="profiles__card-mark"></span>
+                </div>
+                <div class="profiles__card-face profiles__card-face--back">
+                  <span class="profiles__card-num">02</span>
+                  <div class="profiles__card-meta">
+                    <span class="profiles__card-name">Signature</span>
+                    <span class="profiles__card-desc">A living framework. For an active estate.</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </article>
         </div>
+
+        <!-- Resolved-state CTA (Figma 78:25), revealed once the deck has flipped. -->
+        <a class="profiles__cta hero-btn" href="#services">Explore the services</a>
       </div>
     </section>
 
