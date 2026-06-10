@@ -1,0 +1,66 @@
+/* ============================================================================
+   Intro handoff — onboarding → hero, in one continuous scroll
+   Layers the onboarding screen as a FIXED overlay on top of the landing page,
+   so the welcome plays first and then hands off to the hero on scroll: the blue
+   atmosphere fades, the centred lockup's P-mark shrinks and flies up into the
+   navbar, and the hero assembles behind it. Reuses onboarding.css for the
+   atmosphere/lockup/loader styling — this file only re-roles those pieces as an
+   overlay and adds the handoff furniture (the flying mark, scroll lock, no-JS
+   fallback).
+
+   Port note (React/Next): this is the glue that turns <Onboarding/> + <Hero/>
+   into one route. The overlay + flight are a mount effect on the page; the no-JS
+   rules below are the SSR/first-paint fallback (skip the welcome, show the hero).
+   ========================================================================== */
+
+/* ── Onboarding as a fixed overlay ───────────────────────────────────────────
+   Standalone, the onboarding is its own 100vh page (onboarding.css). Here it
+   becomes a fixed full-viewport layer ABOVE the hero (z 200), covering it while
+   the welcome plays. Without JS there is no handoff to clear it, so it would
+   trap the page — so the overlay only exists WITH JS; no-JS lands on the hero. */
+.ob-stage {
+  display: none;
+}
+html.js .ob-stage {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  height: 100vh;
+  height: 100svh;
+  /* The curtain handoff clip-wipes this overlay away from the bottom up. */
+  will-change: clip-path;
+}
+
+/* ── The flying P-mark ───────────────────────────────────────────────────────
+   A standalone clone of just the mark (stem + blade), lifted out of the lockup
+   so it can travel to the navbar centre while the wordmark wipes away beneath
+   it and the blue overlay fades. Sits above the overlay so it stays visible
+   through the fade; becomes the navbar logo once it lands. */
+.pp-nav-fly {
+  position: fixed;
+  z-index: 250;
+  pointer-events: none;
+  overflow: visible;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* The navbar's own centre mark is the LANDING target — hidden until the flight
+   lands (JS swaps it in for the clone, an invisible coincident swap). No-JS
+   shows it immediately (the real navbar logo, no flight). */
+html.js .pp-nav__logo {
+  opacity: 0;
+}
+html.js .pp-nav__logo.is-landed {
+  opacity: 1;
+}
+
+/* ── Scroll lock while the welcome assembles ─────────────────────────────────
+   The intro plays on a clock first; the page can't scroll into the handoff
+   until it resolves (then JS adds .pp-ready and releases the lock + Lenis). */
+html.js:not(.pp-ready),
+html.js:not(.pp-ready) body {
+  overflow: hidden;
+  height: 100%;
+}

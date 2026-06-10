@@ -468,25 +468,118 @@
     addEventListener("resize", build, { passive: true });
   };
 
-  const start = () => {
-    buildConveyor(); // rows exist regardless of GSAP (decorative, progressive)
-    setupNavTheme(); // always on — not gated behind GSAP/reduced motion
+  // SVG namespace for the runtime-built clip wraps + the flying mark clone.
+  const SVGNS = "http://www.w3.org/2000/svg";
 
-    const gsap = window.gsap;
-    if (!gsap || prefersReduced) {
-      root.classList.remove("js"); // settled state
-      return;
+  // ── Onboarding assemble (the welcome intro) ────────────────────────────────
+  // Ported from onboarding.js so the merged page has ONE controller. The brand
+  // resolves onto the blue overlay: atmosphere breathes in, the P-mark assembles,
+  // "Proxy" then "Papers" reveal letter-by-letter via a per-glyph clip-wipe from
+  // each glyph's own baseline, and the hairline loader fills. Returns the wrapped
+  // parts + their rise distances so the handoff can wipe the wordmark back out and
+  // fly the mark, plus the paused timeline.
+  const setupOnboardingIntro = (gsap) => {
+    const lockup = document.querySelector(".ob-lockup");
+    if (!lockup) return null;
+
+    const PAD_X = 2;
+    const PAD_TOP = 6;
+    const rise = new Map();
+    let clipN = 0;
+
+    let defs = lockup.querySelector("defs");
+    if (!defs) {
+      defs = document.createElementNS(SVGNS, "defs");
+      lockup.insertBefore(defs, lockup.firstChild);
     }
-    if (window.ScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
 
-    // ── Intro timeline ────────────────────────────────────────────────────────
+    // Wrap a path in a <g clip-path> whose rect bottom sits on the path's own base,
+    // then park the path below that base (clipped away) so it can slide up into view.
+    const wrap = (path) => {
+      const bb = path.getBBox();
+      const id = "ob-clip-" + clipN++;
+      const cp = document.createElementNS(SVGNS, "clipPath");
+      cp.setAttribute("id", id);
+      cp.setAttribute("clipPathUnits", "userSpaceOnUse");
+      const rect = document.createElementNS(SVGNS, "rect");
+      rect.setAttribute("x", bb.x - PAD_X);
+      rect.setAttribute("y", bb.y - PAD_TOP);
+      rect.setAttribute("width", bb.width + PAD_X * 2);
+      rect.setAttribute("height", bb.height + PAD_TOP);
+      cp.appendChild(rect);
+      defs.appendChild(cp);
+
+      const g = document.createElementNS(SVGNS, "g");
+      g.setAttribute("clip-path", "url(#" + id + ")");
+      path.parentNode.insertBefore(g, path);
+      g.appendChild(path);
+
+      rise.set(path, bb.height + PAD_TOP);
+    };
+
+    const stem = lockup.querySelector(".lk-mark__stem");
+    const blade = lockup.querySelector(".lk-mark__blade");
+    const proxy = gsap.utils.toArray(
+      lockup.querySelectorAll('[data-word="proxy"] .lk-glyph'),
+    );
+    const papers = gsap.utils.toArray(
+      lockup.querySelectorAll('[data-word="papers"] .lk-glyph'),
+    );
+    const parts = [stem, blade, ...proxy, ...papers];
+    parts.forEach(wrap);
+
+    gsap.set(lockup.querySelector(".lk-mark"), { opacity: 1 });
+    gsap.set(parts, { opacity: 1, y: (i, t) => rise.get(t) });
+
+    const STAG = 0.06;
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
+
+    tl.to(".ob-watermark", { opacity: 0.2, duration: 1.6, ease: "power2.out" }, 0)
+      .fromTo(
+        ".ob-cloud--left",
+        { opacity: 0, xPercent: -6 },
+        { opacity: 1, xPercent: 0, duration: 1.8, ease: "power2.out" },
+        0,
+      )
+      .fromTo(
+        ".ob-cloud--top-right",
+        { opacity: 0, yPercent: -5 },
+        { opacity: 1, yPercent: 0, duration: 1.8, ease: "power2.out" },
+        0.1,
+      );
+
+    tl.to([stem, blade], { y: 0, duration: 0.7, stagger: 0.14 }, 0.35)
+      .to(proxy, { y: 0, duration: 0.7, stagger: STAG }, 0.65)
+      .to(papers, { y: 0, duration: 0.7, stagger: STAG }, 0.93);
+
+    tl.fromTo(
+      ".ob-divider__fill",
+      { width: "0%" },
+      { width: "100%", duration: 1.7, ease: "none" },
+      0.35,
+    );
+
+    return {
+      tl,
+      lockup,
+      stem,
+      blade,
+      mark: lockup.querySelector(".lk-mark"),
+      wordGlyphs: [...proxy, ...papers],
+      rise,
+    };
+  };
+
+  // ── Hero intro (built paused; fired when the handoff lands) ─────────────────
+  // In the merged page the visitor is on the onboarding at load, so the hero no
+  // longer plays on load — it plays when the lockup lands in the navbar (the blue
+  // dissolves to the dark canvas, then the hero assembles onto it). Returns the
+  // paused timeline plus the two endless drifts to start alongside it.
+  const buildHeroIntro = (gsap) => {
     const words = gsap.utils.toArray(".hero-lead__title .r-word__in");
     gsap.set(words, { yPercent: 110 });
 
-    const tl = gsap.timeline({
-      defaults: { ease: "power3.out" },
-      paused: true,
-    });
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
 
     // Lens opens from its waist, arcs included.
     tl.fromTo(
@@ -495,10 +588,8 @@
       { opacity: 1, scaleY: 1, duration: 1.3, ease: "power2.out" },
       0,
     );
-
     // Headline reveals word-by-word.
     tl.to(words, { yPercent: 0, duration: 0.75, stagger: 0.08 }, 0.25);
-
     // Body + CTAs rise in.
     tl.fromTo(
       [".hero-lead__body", ".hero-lead__cta"],
@@ -506,7 +597,6 @@
       { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 },
       0.6,
     );
-
     // Axis line draws, brand card pops, conveyor fades up.
     tl.fromTo(
       ".hero-axis__line",
@@ -522,7 +612,6 @@
         1.0,
       )
       .to(".hero-conveyor", { opacity: 1, duration: 0.9 }, 0.9);
-
     // Statement settles in last.
     tl.fromTo(
       ".hero-statement",
@@ -531,9 +620,8 @@
       1.2,
     );
 
-    // ── Endless conveyor drift LEFT→RIGHT (the product-feel moment) ─────────────
-    // Both tracks run in lockstep so each skeleton row becomes its own content
-    // row as it passes the centre. -50→0 moves the content rightward seamlessly.
+    // Endless conveyor drift LEFT→RIGHT (the product-feel moment), started once
+    // the intro resolves so each skeleton row becomes its content row at centre.
     const tracks = gsap.utils.toArray(".hero-conveyor__track");
     const marquee = () => {
       if (tracks.length)
@@ -550,24 +638,205 @@
       gsap.to(".hero-cloud--left", { xPercent: 3, duration: 18, ease: "sine.inOut", repeat: -1, yoyo: true });
       gsap.to(".hero-cloud--right", { xPercent: -3, duration: 20, ease: "sine.inOut", repeat: -1, yoyo: true });
     };
-    idle();
 
-    window.__heroIntro = tl;
+    return { tl, idle };
+  };
 
-    // ── Lenis — one shared instance for the whole page (hero + problem + …) ─────
-    if (window.Lenis) {
-      const lenis = new window.Lenis({
-        duration: 1.8,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      });
-      gsap.ticker.add((time) => lenis.raf(time * 1000));
-      gsap.ticker.lagSmoothing(0);
-      // Keep ScrollTrigger in sync with Lenis's virtual scroll position.
-      if (window.ScrollTrigger) lenis.on("scroll", window.ScrollTrigger.update);
-      window.__lenis = lenis;
+  // ── The curtain handoff (welcome → hero), auto-played ───────────────────────
+  // Once the welcome resolves it plays itself — no scroll. Beat 1: the loader fades
+  // away. Beat 2: a curtain rises from the bottom, revealing the dark hero — the blue
+  // overlay is clip-wiped away from the bottom up, so its rising top edge is the
+  // curtain. The curtain rises in ONE fluent, uninterrupted motion — it never pauses. The
+  // P-mark reacts to the APPROACHING edge: it rests until the edge climbs to within 2rem of
+  // its base, then eases up and into the navbar over the rest of the rise (riding a
+  // smootherstep, so it lifts off from rest with no jump and softens into the dock, all
+  // while the curtain keeps moving past it at full speed), shrinking to navbar size, its
+  // blade flipping bone→blue as it crosses onto the dark. The wordmark fades + lifts over
+  // the curtain's climb, gone by the time the mark lifts off. When the mark docks the real
+  // navbar logo swaps in for the clone (coincident, unseen), the hero assembles, and only
+  // then is the scroll lock released.
+  const runCurtain = (gsap, ob, hero, lenis) => {
+    const obStage = document.querySelector(".ob-stage");
+    const navLogo = document.querySelector(".pp-nav__logo");
+    const divider = document.querySelector(".ob-divider");
+
+    // Release the scroll lock + hand the page over to normal scrolling.
+    const release = () => {
+      root.classList.add("pp-ready");
+      if (lenis) lenis.start();
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    };
+
+    // No overlay / mark to fly → just reveal the hero and release.
+    if (!ob || !obStage || !navLogo) {
+      if (obStage) gsap.set(obStage, { autoAlpha: 0, pointerEvents: "none" });
+      if (navLogo) navLogo.classList.add("is-landed");
+      hero.tl.play();
+      hero.idle();
+      release();
+      return;
     }
 
-    // Build the problem + profiles scroll-in reveals.
+    const BONE = "#f7f4f0";
+    const BLUE = "#5a90f4";
+
+    // The flying mark — a standalone svg holding clones of just the stem + blade,
+    // lifted ABOVE the overlay (z 250) so the rising curtain never clips it: it rides
+    // the edge whole while the wordmark beneath it is consumed.
+    const bb = ob.mark.getBBox();
+    const fly = document.createElementNS(SVGNS, "svg");
+    fly.setAttribute("class", "pp-nav-fly");
+    fly.setAttribute("viewBox", `${bb.x} ${bb.y} ${bb.width} ${bb.height}`);
+    fly.setAttribute("fill", "none");
+    fly.setAttribute("aria-hidden", "true");
+    const flyStem = document.createElementNS(SVGNS, "path");
+    flyStem.setAttribute("d", ob.stem.getAttribute("d"));
+    const flyBlade = document.createElementNS(SVGNS, "path");
+    flyBlade.setAttribute("d", ob.blade.getAttribute("d"));
+    fly.appendChild(flyStem);
+    fly.appendChild(flyBlade);
+    document.body.appendChild(fly);
+
+    // Rest geometry (the lockup is settled — the welcome just finished). The clone
+    // starts coincident with the lockup's mark and the lockup's own mark is hidden,
+    // so the clone is the only mark on screen.
+    const restMark = ob.mark.getBoundingClientRect();
+    const restNav = navLogo.getBoundingClientRect();
+    gsap.set(fly, {
+      left: restMark.left,
+      top: restMark.top,
+      width: restMark.width,
+      height: restMark.height,
+      x: 0,
+      y: 0,
+      scale: 1,
+      transformOrigin: "center center",
+    });
+    gsap.set([flyStem, flyBlade], { fill: BONE }); // welcome look — all bone on blue
+    gsap.set(ob.mark, { opacity: 0 }); // the clone stands in for it
+
+    // Geometry for the ride. The curtain edge's screen-Y as a function of coverage
+    // e∈[0,1] (0 = at the bottom, 1 = at the top) is vh·(1−e). The mark latches when
+    // that edge reaches its centre (eLatch) and is fully in the navbar when the edge
+    // reaches the navbar centre (eNav); between, its centre IS the edge.
+    const vh = window.innerHeight;
+    const markCX = restMark.left + restMark.width / 2;
+    const markCY = restMark.top + restMark.height / 2;
+    const navCX = restNav.left + restNav.width / 2;
+    const navCY = restNav.top + restNav.height / 2;
+    const navScale = restNav.height / restMark.height;
+    // The mark reacts to the APPROACHING curtain rather than waiting for exact contact: it
+    // begins easing up once the edge is GAP_TRIG below its base, and a hard floor (BASE_GAP)
+    // guarantees the rising edge never comes closer than that to the mark's base — if the
+    // curtain climbs too near, it pushes the mark ahead, so they never touch. eLatch = where
+    // the easing begins; eNav = edge at the navbar centre.
+    const rem = parseFloat(getComputedStyle(root).fontSize || "16");
+    const GAP_TRIG = 5 * rem; // the mark begins easing up once the edge is this far below its base
+    // (early enough that it's already moving near edge-speed before the curtain closes in,
+    // so the cushion below holds without the mark ever snapping into motion)
+    const BASE_GAP = 2 * rem; // hard floor — the edge is NEVER allowed within this of the mark's base
+    const restH = restMark.height;
+    const navH = restNav.height;
+    const markBottom = markCY + restH / 2;
+    const eLatch = gsap.utils.clamp(0, 1, 1 - (markBottom + GAP_TRIG) / vh);
+    const eNav = gsap.utils.clamp(0, 1, 1 - navCY / vh);
+    // Smootherstep — zero slope at BOTH ends. The mark's travel rides this, so it eases off
+    // its rest and softens into the dock WITHOUT the curtain ever having to slow down: the
+    // curtain stays one fluent motion; only the mark's own progress is eased.
+    const sstep = (x) => x * x * x * (x * (x * 6 - 15) + 10);
+
+    // The wordmark fades + lifts as the curtain climbs toward the mark, gone by the time
+    // the mark lifts off — a smooth dissolve in step with the rise, never a hard clip.
+    const wordGroups = ob.lockup.querySelectorAll("[data-word]");
+    const lockRect = ob.lockup.getBoundingClientRect();
+    const toUnits = 783 / (lockRect.width || 351); // screen px → lockup user units
+    const TEXT_LIFT = 44; // px the wordmark rises as it dissolves (it moves along too)
+
+    let landed = false;
+    const applyCurtain = (e) => {
+      // The curtain — wipe the blue overlay away from the bottom up. Its rising top edge:
+      const edgeY = vh * (1 - e);
+      gsap.set(obStage, { clipPath: `inset(0px 0px ${(e * 100).toFixed(3)}% 0px)` });
+
+      // The mark eases up along a smootherstep (smooth lift-off from rest — no jump — even
+      // as the curtain sweeps past at full speed). BUT it is ALSO never allowed within
+      // BASE_GAP of the rising edge: if the curtain climbs close, it pushes the mark ahead
+      // so a constant cushion stays between the edge and the mark's base — the curtain never
+      // touches the mark. The position is whichever sits higher (smaller Y).
+      const f = gsap.utils.clamp(0, 1, (e - eLatch) / (eNav - eLatch));
+      const mEase = sstep(f);
+      const cyEase = markCY + (navCY - markCY) * mEase; // the mark's own eased schedule
+      const hEase = restH + (navH - restH) * mEase; // its height at this progress
+      const cyGap = edgeY - BASE_GAP - hEase / 2; // highest its centre may sit and keep the cushion
+      const cy = gsap.utils.clamp(navCY, markCY, Math.min(cyEase, cyGap));
+      // Scale + horizontal drift follow the ACTUAL vertical progress, so they stay in step.
+      const p = gsap.utils.clamp(0, 1, (markCY - cy) / (markCY - navCY));
+      gsap.set(fly, {
+        x: (navCX - markCX) * p,
+        y: cy - markCY,
+        scale: 1 + (navScale - 1) * p,
+      });
+
+      // The wordmark fades + lifts over the curtain's CLIMB to the mark, fully gone by
+      // the time the mark lifts off (eLatch), so the mark leaves a clean ground.
+      const tg = gsap.utils.clamp(0, 1, e / eLatch);
+      gsap.set(wordGroups, { autoAlpha: 1 - tg, y: -TEXT_LIFT * toUnits * tg });
+
+      // Blade flips bone→blue over the back half of the ride as the mark crosses onto the dark.
+      const bf = gsap.utils.clamp(0, 1, (p - 0.5) / 0.5);
+      gsap.set(flyBlade, { fill: gsap.utils.interpolate(BONE, BLUE, bf) });
+
+      // Once the rising edge has cleared the mark's docked spot, the navbar is revealed:
+      // swap the clone for the real logo (coincident, unseen) and assemble the hero.
+      if (!landed && edgeY <= navCY - navH / 2) {
+        landed = true;
+        navLogo.classList.add("is-landed");
+        gsap.set(fly, { autoAlpha: 0 });
+        hero.tl.play();
+        hero.idle();
+      }
+    };
+
+    const proxy = { e: 0 };
+    gsap.set(obStage, { clipPath: "inset(0px 0px 0px 0px)" });
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.set(obStage, { autoAlpha: 0, pointerEvents: "none" });
+        release();
+      },
+    });
+    // Beat 1 — the loader, its job done, fades away.
+    tl.to(divider, { autoAlpha: 0, duration: 0.5, ease: "power1.out" }, 0);
+    // Beat 2 — the curtain rises in ONE fluent, uninterrupted motion from the bottom to
+    // the top (it never slows or pauses mid-rise). The mark and wordmark respond to it via
+    // their own eased mappings in applyCurtain, so the curtain stays continuous throughout.
+    tl.to(
+      proxy,
+      { e: 1, duration: 2.0, ease: "power1.inOut", onUpdate: () => applyCurtain(proxy.e) },
+      0.55,
+    );
+
+    window.__curtain = tl;
+  };
+
+  const start = () => {
+    buildConveyor(); // rows exist regardless of GSAP (decorative, progressive)
+    setupNavTheme(); // always on — not gated behind GSAP/reduced motion
+
+    const gsap = window.gsap;
+    if (!gsap || prefersReduced) {
+      root.classList.remove("js"); // settled state (no welcome — lands on the hero)
+      return;
+    }
+    if (window.ScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
+
+    const ob = setupOnboardingIntro(gsap);
+    const hero = buildHeroIntro(gsap);
+    window.__obIntro = ob && ob.tl;
+    window.__heroIntro = hero.tl;
+
+    // Section reveals below the hero — built now; each fires on its own scroll-in.
     setupProblem(gsap);
     setupProfiles(gsap);
     setupMethod(gsap);
@@ -575,6 +844,31 @@
     setupReferrers(gsap);
     setupClosing(gsap);
     setupFooter(gsap);
+
+    // One shared Lenis — STOPPED until the curtain handoff finishes, so the page
+    // can't scroll while the welcome assembles and the curtain plays. Started on ready.
+    let lenis = null;
+    if (window.Lenis) {
+      lenis = new window.Lenis({
+        duration: 1.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+      if (window.ScrollTrigger) lenis.on("scroll", window.ScrollTrigger.update);
+      lenis.stop();
+      window.__lenis = lenis;
+    }
+
+    // No onboarding overlay present (shouldn't happen) → straight to the hero.
+    if (!ob) {
+      runCurtain(gsap, null, hero, lenis);
+      return;
+    }
+
+    // When the welcome resolves, auto-play the curtain handoff (the lockup is at rest,
+    // so the ride geometry is exact). It releases the scroll lock when it lands.
+    ob.tl.eventCallback("onComplete", () => runCurtain(gsap, ob, hero, lenis));
 
     // ── Asset gate ──────────────────────────────────────────────────────────────
     const decode = (src) => {
@@ -584,11 +878,12 @@
     };
     const ready = Promise.all([
       document.fonts ? document.fonts.ready : Promise.resolve(),
-      decode("assets/hero-lens.webp"),
       decode("assets/clouds.webp"),
+      decode("assets/grain.webp"),
+      decode("assets/hero-lens.webp"),
     ]);
     Promise.race([ready, new Promise((r) => setTimeout(r, 1400))]).then(() =>
-      tl.play(),
+      ob.tl.play(),
     );
   };
 

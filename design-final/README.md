@@ -22,11 +22,16 @@ design-final/
 │   │                      #   the shared .pp-lockup, the .r-word reveal primitive.
 │   ├── navbar.css          # SHARED navbar (glass pill, .pp-nav); reads theme tokens.
 │   ├── onboarding.css      # Onboarding layout only; reads theme tokens.
+│   ├── intro.css           # Re-roles the onboarding as a fixed overlay ON hero.html
+│   │                       #   and styles the handoff (flying mark, scroll lock,
+│   │                       #   no-JS fallback). Reuses onboarding.css for the visuals.
 │   ├── hero.css            # Hero-section layout only; reads theme tokens.
 │   └── problem.css         # Problem-section layout only; reads theme tokens.
 ├── scripts/
-│   ├── onboarding.js       # Onboarding intro choreography + Lenis init.
-│   └── hero.js             # Landing-page controller: hero intro + conveyor, the
+│   ├── onboarding.js       # Standalone onboarding.html's intro + Lenis init. (The
+│   │                       #   merged page re-implements this inside hero.js so it
+│   │                       #   has one controller for the whole flow.)
+│   └── hero.js             # Page controller: onboarding assemble → curtain handoff
 │   │                       #   problem section's scroll-in reveal + zigzag hover,
 │   │                       #   and the single shared Lenis + ScrollTrigger.
 └── assets/
@@ -43,16 +48,34 @@ design-final/
 
 ### Screens
 
-- **onboarding.html** — `.pp-theme-blue`. Its own page: the branded entry moment
-  *before* the landing page. Proxy Blue at full presence: grain depth, corner
-  clouds, watermark P, centred all-white lockup over a hairline loader. The brand
-  resolves in; the welcome→hero scroll handoff composes later.
+- **onboarding.html** — `.pp-theme-blue`. The standalone reference for the
+  branded entry moment *before* the landing page. Proxy Blue at full presence:
+  grain depth, corner clouds, watermark P, centred all-white lockup over a
+  hairline loader. The brand resolves in. **This page is now also embedded as the
+  opening screen of `hero.html`** (see the handoff below); keep it as the isolated
+  reference, but the live, connected experience is `hero.html`.
 
-- **hero.html** — `.pp-theme-dark`. The **landing page**: one continuous scroll
-  holding the hero section and the problem section under a single fixed navbar
-  and one shared Lenis + ScrollTrigger. `hero.js` is the page controller. (When
-  ported to Next, this is one route composed of `<Hero/>`, `<Problem/>`, … each a
-  component + CSS module + mount effect.)
+- **hero.html** — the full **landing page**, now joined to the onboarding as one
+  continuous experience. It opens on the blue onboarding overlay (`.pp-theme-blue`),
+  **auto-plays** a curtain handoff to the dark landing page (`.pp-theme-dark`), and
+  then lets the visitor scroll through every section under a single fixed navbar and
+  one shared Lenis + ScrollTrigger. `hero.js` is the page controller. (When ported to
+  Next, this is one route composed of `<Onboarding/>`, `<Hero/>`, `<Problem/>`, …
+  each a component + CSS module + mount effect.)
+
+  - **Onboarding → hero curtain handoff** (`styles/intro.css`, `runCurtain` in
+    `hero.js`) — the welcome plays first (scroll locked) on a fixed blue overlay
+    above the landing page. When it resolves, the handoff **plays itself, no scroll**:
+    the loader fades, then a **curtain rises from the bottom** — the blue overlay is
+    clip-wiped away from the bottom up, so its rising top edge reveals the dark hero
+    behind it. The lockup's **P-mark rides on that edge**: it rests until the edge
+    reaches it, then travels up to the navbar centre, shrinking to navbar size with
+    its blade flipping bone→blue as it crosses onto the dark. The **wordmark stays in
+    the overlay, so the same rising edge consumes it** (the text disappears as the
+    curtain passes). When the mark lands, the real navbar logo swaps in for the flown
+    clone (a sub-pixel-coincident, invisible swap), the hero assembles, and only then
+    is the scroll lock released. No JS / reduced motion skips the welcome and lands
+    straight on the hero.
 
   - **Hero section** — a Chinese-Black canvas split by a Proxy-Blue *horizon lens*
     (a band pinched at the centre). Clouds bleed into the lens; a slow conveyor of
@@ -72,9 +95,8 @@ design-final/
     normalises the draw across the three sizes). The cards are a natural `.map()`
     over a CARDS array when porting.
 
-  *Onboarding is still a separate page; the welcome→hero lockup flight that joins
-  it to the landing page is wired later. `hero.html` now effectively holds the
-  whole landing page — consider renaming it `index.html` at the Framer/Next stage.*
+  *`hero.html` now holds the whole connected experience — onboarding + hero +
+  every section — so consider renaming it `index.html` at the Framer/Next stage.*
 
 ### Shared components
 
@@ -106,4 +128,6 @@ design-final/
 ## Run
 
 From the repo root: `python3 -m http.server 8000`, then open
-`http://localhost:8000/design-final/onboarding.html`. Targets Chrome.
+`http://localhost:8000/design-final/hero.html` for the full connected experience
+(onboarding → auto-play curtain handoff → landing page). `onboarding.html` still opens the
+welcome on its own as the isolated reference. Targets Chrome.
