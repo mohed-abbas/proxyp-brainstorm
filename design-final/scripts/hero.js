@@ -451,9 +451,20 @@
       .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.016 }, 0.55);
   };
 
-  // The footer reveals as it scrolls into view: the secondary nav rises word-by
-  // -word, the oversized wordmark's two lines rise behind their clip masks (the
-  // P-mark fades + lifts beside them), then the legal row settles. House stagger.
+  // The footer is where the brand comes HOME — the reverse of the onboarding
+  // curtain (see runCurtain). As the visitor scrolls into the bottom of the page,
+  // the navbar's pinned P-mark detaches, grows ~20x and settles into the footer
+  // lockup; "Proxy / Papers" rises behind its masks; the footer nav row + legal
+  // settle; and the now-empty navbar pill fades away. Scroll back up and it all
+  // reverses (the mark shrinks back into the navbar). Scroll-SCRUBBED across the
+  // footer's own height (it is taller than the viewport, so we don't pin) — the
+  // whole sequence is tied to scroll position and fully reversible.
+  //
+  // Mechanic mirrors runCurtain: a position:fixed SVG clone of the mark's two
+  // paths flies between two live-measured rects. Here source = the navbar logo
+  // (fixed, stable) and target = where the footer mark rests AT PAGE BOTTOM —
+  // computable without scrolling there (docTop - maxScroll), since the footer is
+  // the last element. Geometry is re-measured on ScrollTrigger refresh (resize).
   const setupFooter = (gsap) => {
     const section = document.querySelector(".footer");
     if (!section) return;
@@ -467,44 +478,182 @@
       .flatMap(splitWords);
     const wordLines = gsap.utils.toArray(section.querySelectorAll(".footer__word-in"));
     const wordMasks = gsap.utils.toArray(section.querySelectorAll(".footer__word-line"));
+    const rules = gsap.utils.toArray(section.querySelectorAll(".footer__rule"));
     const mark = section.querySelector(".footer__mark");
 
     gsap.set([".footer__nav", ".footer__lockup", ".footer__legal"], {
       visibility: "visible",
     });
 
+    // Settled fallback — no ScrollTrigger (also the !gsap / reduced-motion paths,
+    // which strip .js upstream so the CSS armed states paint): footer fully shown,
+    // navbar untouched, no clone, descenders visible.
     if (!ST) {
       gsap.set([...navWords, ...legalWords, ...wordLines], { yPercent: 0 });
-      gsap.set(mark, { autoAlpha: 1, y: 0 });
+      gsap.set([mark, ...rules], { autoAlpha: 1 });
       gsap.set(wordMasks, { overflow: "visible" });
       return;
     }
 
-    gsap.set([...navWords, ...legalWords], { yPercent: 120 });
-    gsap.set(mark, { autoAlpha: 0, y: 40 });
-    // Each wordmark line rises in behind its mask (staggered, line-by-line); the
-    // masks are released to overflow:visible on complete so the descenders (the
-    // y / p tails) show fully at rest.
-    gsap.set(wordLines, { yPercent: 110 });
+    const INK = "#161718";
+    const BONE = "#f7f4f0";
+    const BLUE = "#5a90f4";
 
-    gsap
-      .timeline({
-        defaults: { ease: "power3.out", force3D: true },
-        scrollTrigger: { trigger: section, start: "top 82%", once: true },
-      })
-      .to(navWords, { yPercent: 0, duration: 0.6, stagger: 0.04 }, 0.0)
-      .to(mark, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power2.out" }, 0.2)
-      .to(
-        wordLines,
-        {
-          yPercent: 0,
-          duration: 0.95,
-          stagger: 0.14,
-          onComplete: () => gsap.set(wordMasks, { overflow: "visible" }),
+    // The footer is taller than the viewport, so we can't pin and can't see the whole
+    // band at once — it reveals top-to-bottom as you scroll. The flow the client asked
+    // for is strictly LOGO-FIRST, TEXT-SECOND:
+    //   0   .. ARM   the footer rises into view BLANK (the dark band, nothing armed)
+    //   ARM          the footer has climbed to ~60% of the viewport → the navbar's
+    //                pinned mark UNPINS (a fixed clone stands in) and the pill fades
+    //   ARM .. LAND  the clone flies DOWN + grows ~20× into the footer lockup
+    //   LAND         the clone lands exactly on the real .footer__mark — swapped for it
+    //   LAND .. 1    only NOW does the text reveal — wordmark, nav row, rules, legal —
+    //                in physical top-to-bottom order so each lands while it is on screen
+    // Fully scroll-scrubbed and reversible (scroll up → text retracts, mark shrinks back
+    // into the navbar, pill returns). ARM/LAND are scroll-progress fractions of the
+    // footer's own height; the landing GEOMETRY is re-measured live, so the swap is
+    // pixel-exact at any viewport size even though the beats stay fixed.
+    const ARM = 0.4; // flight begins — footer ~60% up the viewport (tuned in verify)
+    const LAND = 0.7; // clone lands on the real mark; the text reveal starts here
+
+    // ── Build the flying mark — a clone of the navbar logo's stem + blade, lifted to
+    // z 150 (above the navbar's 100) so it rides over everything as it flies. The stem
+    // starts INK (matching the navbar over the light closing section, where a bone stem
+    // would vanish) and flips to BONE as it grows onto the dark footer; the blade stays
+    // Proxy Blue throughout.
+    const navLogo = document.querySelector(".pp-nav__logo");
+    const navSvg = navLogo && navLogo.querySelector("svg");
+    const nav = document.querySelector(".pp-nav");
+    let fly = null;
+    let flyStem = null;
+    let flyBlade = null;
+    if (navSvg) {
+      fly = document.createElementNS(SVGNS, "svg");
+      fly.setAttribute("class", "pp-footer-fly");
+      fly.setAttribute("viewBox", navSvg.getAttribute("viewBox"));
+      fly.setAttribute("fill", "none");
+      fly.setAttribute("aria-hidden", "true");
+      flyStem = document.createElementNS(SVGNS, "path");
+      flyStem.setAttribute("d", navSvg.querySelector(".lk-mark__stem").getAttribute("d"));
+      flyBlade = document.createElementNS(SVGNS, "path");
+      flyBlade.setAttribute("d", navSvg.querySelector(".lk-mark__blade").getAttribute("d"));
+      fly.appendChild(flyStem);
+      fly.appendChild(flyBlade);
+      document.body.appendChild(fly);
+      gsap.set(flyStem, { fill: INK });
+      gsap.set(flyBlade, { fill: BLUE });
+      gsap.set(fly, { autoAlpha: 0, transformOrigin: "center center" });
+    }
+
+    // ── Live geometry (FLIP-invert): the clone's UNTRANSFORMED box is the footer
+    // mark's on-screen rect AT THE LANDING SCROLL (progress = LAND), so at the end of
+    // the flight the clone equals the real mark exactly — a pixel-clean, reversible
+    // swap. At flight progress f<1 it is scaled DOWN + translated back toward the navbar
+    // logo (invScale ≈ navH/markH); basing the box on the big target (not the ~21px
+    // navbar) keeps the LANDING exact and pushes any sub-pixel rounding to the navbar
+    // end, where the clone is hidden + coincident with the tiny logo. The landing scroll
+    // is  Sland = st.start + LAND·(st.end − st.start);  the mark's on-screen top there
+    // is its document-top minus Sland — computable without scrolling there. Re-measured
+    // on refresh so resize never drifts.
+    const flightEase = gsap.parseEase("power2.inOut");
+    const geo = { left: 0, top: 0, w: 0, h: 0, invScale: 1, dx0: 0, dy0: 0 };
+    let stRef = null;
+    const flightProgress = (p) =>
+      flightEase(gsap.utils.clamp(0, 1, (p - ARM) / (LAND - ARM)));
+    const applyFlight = (f) => {
+      if (!fly) return;
+      gsap.set(fly, {
+        left: geo.left,
+        top: geo.top,
+        width: geo.w,
+        height: geo.h,
+        x: geo.dx0 * (1 - f),
+        y: geo.dy0 * (1 - f),
+        scale: geo.invScale + (1 - geo.invScale) * f,
+      });
+      // Stem INK → BONE across the descent, as it crosses onto the dark footer.
+      const sf = gsap.utils.clamp(0, 1, (f - 0.15) / 0.6);
+      gsap.set(flyStem, { fill: gsap.utils.interpolate(INK, BONE, sf) });
+    };
+    const measure = () => {
+      if (!fly || !navSvg || !stRef) return;
+      const navRect = navSvg.getBoundingClientRect();
+      const markRect = mark.getBoundingClientRect(); // hidden (autoAlpha) but still laid out
+      const markDocTop = markRect.top + window.scrollY; // document-space, scroll-invariant
+      const sland = stRef.start + LAND * (stRef.end - stRef.start); // scroll at the landing
+      geo.left = markRect.left; // x is unaffected by vertical scroll
+      geo.top = markDocTop - sland; // the mark's on-screen top at the landing scroll
+      geo.w = markRect.width;
+      geo.h = markRect.height;
+      geo.invScale = navRect.height / markRect.height;
+      // Offset that carries the clone's centre back to the navbar logo's centre at f=0.
+      geo.dx0 = navRect.left + navRect.width / 2 - (geo.left + geo.w / 2);
+      geo.dy0 = navRect.top + navRect.height / 2 - (geo.top + geo.h / 2);
+      applyFlight(flightProgress(stRef.progress)); // keep the clone correct right now
+    };
+
+    // Park (p=0): footer content hidden, clone hidden + parked on the navbar. We do
+    // NOT touch the navbar logo here — the onboarding curtain still owns it at load;
+    // the latch only manages it once the visitor scrolls into the footer band (long
+    // after the curtain has landed).
+    gsap.set([...navWords, ...legalWords], { yPercent: 120 });
+    gsap.set(wordLines, { yPercent: 110 });
+    gsap.set([mark, ...rules], { autoAlpha: 0 });
+
+    // Swap latch (reversible): below ARM the real navbar logo shows and the footer is
+    // blank; in [ARM, LAND) the clone stands in for the logo and flies; at/after LAND
+    // the real footer mark is swapped in (coincident with the clone at the landing
+    // scroll, so the handoff is invisible both ways). Wordmark masks open just past the
+    // landing so descenders show at rest, and re-close on scroll-up.
+    // touchNav=false on refresh: the onboarding curtain owns the navbar logo at the
+    // INITIAL refresh (pre-handoff), so refresh only touches the footer-side elements;
+    // the navbar logo is managed on scroll (onUpdate).
+    const latch = (p, touchNav) => {
+      const flying = p >= ARM && p < LAND;
+      const landed = p >= LAND;
+      if (touchNav && navLogo) gsap.set(navLogo, { autoAlpha: p >= ARM ? 0 : 1 });
+      if (fly) gsap.set(fly, { autoAlpha: flying ? 1 : 0 });
+      gsap.set(mark, { autoAlpha: landed ? 1 : 0 });
+      gsap.set(wordMasks, { overflow: p > LAND + 0.05 ? "visible" : "hidden" });
+    };
+
+    const tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: section,
+        start: "top bottom", // footer's top reaches the viewport bottom (it enters)
+        end: "bottom bottom", // footer's bottom reaches the viewport bottom (page end)
+        scrub: 1,
+        onRefresh: (self) => {
+          stRef = self;
+          measure();
+          latch(self.progress, false);
         },
-        0.3,
-      )
-      .to(legalWords, { yPercent: 0, duration: 0.6, stagger: 0.012 }, 0.7);
+        onUpdate: (self) => {
+          applyFlight(flightProgress(self.progress));
+          latch(self.progress, true);
+        },
+      },
+    });
+
+    // CONTENT reveals — all gated AFTER the logo lands (positions ≥ LAND). The terminal
+    // marker below pins the timeline's total duration to exactly 1.0, so each authored
+    // position maps 1:1 to scroll progress and shares the flight's clock. (Without it the
+    // 12-word legal stagger pushes the total past 1.0; GSAP then normalises against that
+    // total and every reveal fires EARLIER — bleeding the text back into the flight.)
+    // Order follows physical top-to-bottom visibility so every row lands while it is on
+    // screen: the navbar pill fades as the mark detaches; the rules, the footer nav row
+    // and the giant wordmark reveal right on landing (the payoff beside the freshly-grown
+    // mark); the legal row settles last, as it scrolls into view at the very bottom.
+    tl
+      .to(nav, { autoAlpha: 0, duration: 0.12 }, ARM)
+      .to(rules, { autoAlpha: 1, duration: 0.14 }, LAND + 0.02)
+      .to(navWords, { yPercent: 0, duration: 0.13, stagger: 0.025 }, LAND + 0.02)
+      .to(wordLines, { yPercent: 0, duration: 0.15, stagger: 0.06 }, LAND + 0.03)
+      .to(legalWords, { yPercent: 0, duration: 0.09, stagger: 0.0045 }, 0.85)
+      .set({}, { x: 0 }, 1.0); // pin total duration to 1.0 (see note above)
+
+    window.__footerST = tl.scrollTrigger;
   };
 
   // Navbar theme switching — the fixed lockup recolors to match the section

@@ -68,6 +68,20 @@
   text-underline-offset: 0.2vw;
 }
 
+/* ── The flying mark (reverse curtain) ───────────────────────────────────────
+   A JS-built clone of the navbar logo's stem + blade that flies DOWN into the
+   footer lockup as the page reaches the bottom (see setupFooter in hero.js).
+   Fixed + above the navbar (z 100), like intro.css's .pp-nav-fly. Hidden until
+   the flight begins; swapped for the real .footer__mark when it lands. */
+.pp-footer-fly {
+  position: fixed;
+  z-index: 150;
+  pointer-events: none;
+  overflow: visible;
+  transform-origin: center center;
+  will-change: transform;
+}
+
 /* ── Hairline rules ───────────────────────────────────────────────────────────*/
 .footer__rule {
   width: 100%;
