@@ -2,8 +2,9 @@
    Profiles section — "Three support profiles. One shared framework."
    (Figma node 58:149). A full-bleed dark ground carrying a left/right editorial
    header (title left, supporting copy right) and a fanned deck of three cards —
-   01 Essentiel and 03 Exception in Proxy Blue, 02 Signature in Bone White on top
-   — each a giant tinted number above a giant tinted P-mark watermark.
+   01 Essentiel and 03 Exception in Proxy Blue, 02 Signature in Bone White — each a
+   giant tinted number above a giant tinted P-mark watermark. The stacked entry
+   riffles left→right with 03 on top (Figma 58:153).
 
    Reads tokens from theme.css. Lengths are fractions of the 1512px Figma frame
    (1px ≈ 0.066138vw), so the section is pixel-faithful at 1512 and scales
@@ -105,12 +106,12 @@
    1075-wide card group is centred inside the 1310 frame (abs x 196.5/571.5/946.5,
    top 143). The fanned ENTRY positions are reached by GSAP via the per-card
    --dx/--dy/--rot offset on .profiles__card-pos (so this stays the no-JS state). */
-.profiles__card--01 { left: 12.9960vw; top: 9.4577vw; z-index: 1; } /* abs 196.5 */
-.profiles__card--03 { left: 62.5992vw; top: 9.4577vw; z-index: 2; } /* abs 946.5 */
-.profiles__card--02 { left: 37.7976vw; top: 9.4577vw; z-index: 3; } /* abs 571.5 — on
-   top: in the stacked entry the white Signature card is the focal point, with 01/03
-   peeking symmetrically behind it. (Spread cards don't overlap, so this only shapes
-   the stack + the flip transition; hover still raises any card via z-index:9.) */
+.profiles__card--01 { left: 12.9960vw; top: 9.4577vw; z-index: 1; } /* abs 196.5 — behind */
+.profiles__card--02 { left: 37.7976vw; top: 9.4577vw; z-index: 2; } /* abs 571.5 — middle */
+.profiles__card--03 { left: 62.5992vw; top: 9.4577vw; z-index: 3; } /* abs 946.5 — on top:
+   the stack riffles left→right (01 behind, 02 over it, 03 on top), matching Figma
+   58:153's paint order so 03 overlaps 02 on its right. (Spread cards don't overlap,
+   so z-index only shapes the stacked entry + the flip transition.) */
 
 /* POS — GSAP owns transform (x/y spread + rotation tilt, one matrix). Carries
    preserve-3d so the card's perspective reaches the flip (its child), otherwise
