@@ -8,3 +8,7 @@ Thumbs.db
 
 # Playwright prototype-testing artifacts
 .playwright-mcp/
+
+# Design export archives
+design-final.zip
+*.zip
