@@ -505,19 +505,21 @@
       .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.016 }, 0.55);
   };
 
-  // The footer reveals as it scrolls into view: the oversized wordmark's two lines
-  // rise behind their clip masks (the P-mark fades + lifts beside them), then the
-  // legal row settles. House stagger.
-  //
-  // v2 — the footer's own centred nav row is dropped: the fixed navbar DOCKS into the
-  // footer top instead (see setupNavDock), so it is the only nav here. We hide the row
-  // in the motion path only; reduced-motion / no-JS skip setupFooter (and .js is
-  // stripped), so the centred row stays visible there as the fallback nav.
+  // The footer is the page's full-screen close. As it scrolls in, the fixed navbar
+  // hands off (setupNavHandoff fades the pill out) and the footer reveals its OWN
+  // nav: the nav rises at the top, the oversized wordmark's two lines rise behind
+  // their clip masks (the P-mark fades + lifts beside them), then the legal row
+  // settles at the bottom — nav, lockup and legal sharing the one viewport. House
+  // stagger. Reduced-motion / no-JS skip this (and .js is stripped), so the settled
+  // full footer just renders.
   const setupFooter = (gsap) => {
     const section = document.querySelector(".footer");
     if (!section) return;
     const ST = window.ScrollTrigger;
 
+    const navWords = gsap.utils
+      .toArray(section.querySelectorAll(".footer__nav-link"))
+      .flatMap(splitWords);
     const legalWords = gsap.utils
       .toArray(section.querySelectorAll(".footer__legal p, .footer__legal-links a"))
       .flatMap(splitWords);
@@ -530,16 +532,13 @@
     });
 
     if (!ST) {
-      gsap.set([...legalWords, ...wordLines], { yPercent: 0 });
+      gsap.set([...navWords, ...legalWords, ...wordLines], { yPercent: 0 });
       gsap.set(mark, { autoAlpha: 1, y: 0 });
       gsap.set(wordMasks, { overflow: "visible" });
       return;
     }
 
-    // The docked navbar replaces the centred nav row (motion path only).
-    gsap.set(".footer__nav", { display: "none" });
-
-    gsap.set(legalWords, { yPercent: 120 });
+    gsap.set([...navWords, ...legalWords], { yPercent: 120 });
     gsap.set(mark, { autoAlpha: 0, y: 40 });
     // Each wordmark line rises in behind its mask (staggered, line-by-line); the
     // masks are released to overflow:visible on complete so the descenders (the
@@ -551,7 +550,8 @@
         defaults: { ease: "power3.out", force3D: true },
         scrollTrigger: { trigger: section, start: "top 82%", once: true },
       })
-      .to(mark, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power2.out" }, 0.2)
+      .to(navWords, { yPercent: 0, duration: 0.7, stagger: 0.03 }, 0.0)
+      .to(mark, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power2.out" }, 0.25)
       .to(
         wordLines,
         {
@@ -560,49 +560,32 @@
           stagger: 0.14,
           onComplete: () => gsap.set(wordMasks, { overflow: "visible" }),
         },
-        0.3,
+        0.35,
       )
-      .to(legalWords, { yPercent: 0, duration: 0.6, stagger: 0.012 }, 0.7);
+      .to(legalWords, { yPercent: 0, duration: 0.6, stagger: 0.012 }, 0.75);
   };
 
-  // v2 footer mechanic — the fixed navbar DOCKS into the footer top. The pill holds
-  // its fixed slot down the whole page; once the footer's top edge rises to that slot
-  // it releases and rides the footer top upward (scrolling off with it), then returns
-  // on scroll-up. Pure translateY on the fixed .pp-nav (nothing else transforms it) —
-  // recomputed each frame from the live footer rect, so it tracks with no lag. We never
-  // touch the bar's theme (setupNavTheme) or the logo's .is-landed opacity (the curtain).
-  const setupNavDock = (gsap) => {
+  // Footer mechanic — the fixed navbar HANDS OFF to the footer's own nav. As the
+  // full-height footer scrolls in, the pill fades out smoothly (scrubbed to the
+  // scroll) so by the time the footer fills the screen only the footer's nav remains;
+  // it fades back in on scroll-up. Opacity only — never touches the bar's theme
+  // (setupNavTheme) or the logo's .is-landed opacity (the curtain).
+  const setupNavHandoff = (gsap) => {
     const ST = window.ScrollTrigger;
     const nav = document.querySelector(".pp-nav");
     const section = document.querySelector(".footer");
     if (!ST || !nav || !section) return;
 
-    const DOCK_OFFSET = 24; // px — seats the pill inside the footer's top padding band
-    let navSlotTop = 0;
-
-    // Read the bar's true fixed slot with its transform reset (resize-safe via refresh).
-    const measure = () => {
-      gsap.set(nav, { y: 0 });
-      navSlotTop = nav.getBoundingClientRect().top;
-    };
-    // ty stays 0 until the footer top reaches the slot, then goes negative so the pill
-    // rides the footer top up. Never positive — the bar never dips below its slot.
-    const apply = () => {
-      const footerTop = section.getBoundingClientRect().top;
-      gsap.set(nav, { y: Math.min(0, footerTop + DOCK_OFFSET - navSlotTop) });
-    };
-
-    const st = ST.create({
-      trigger: section,
-      start: "top bottom", // footer enters the viewport
-      end: "bottom top", // never actually reached (footer is the last element) — stays live
-      onRefresh: () => {
-        measure();
-        apply();
+    gsap.to(nav, {
+      autoAlpha: 0,
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top 75%", // footer is well into view
+        end: "top 15%", // footer has nearly taken over the screen
+        scrub: true,
       },
-      onUpdate: apply,
     });
-    window.__navDockST = st;
   };
 
   // Navbar theme switching — the fixed lockup recolors to match the section
@@ -1020,7 +1003,7 @@
     setupReferrers(gsap);
     setupClosing(gsap);
     setupFooter(gsap);
-    setupNavDock(gsap);
+    setupNavHandoff(gsap);
 
     // One shared Lenis — STOPPED until the curtain handoff finishes, so the page
     // can't scroll while the welcome assembles and the curtain plays. Started on ready.

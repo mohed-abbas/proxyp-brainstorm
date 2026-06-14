@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="styles/trust.css?v=1" />
     <link rel="stylesheet" href="styles/referrers.css?v=1" />
     <link rel="stylesheet" href="styles/closing.css?v=1" />
-    <link rel="stylesheet" href="styles/footer.css?v=7" />
+    <link rel="stylesheet" href="styles/footer.css?v=8" />
 
     <!-- GSAP + ScrollTrigger + Lenis (CDN, no build step) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -528,15 +528,19 @@
          nav + legal links port to .map()s (see setupFooter in hero.js). -->
     <footer class="footer" data-nav-theme="dark">
       <div class="footer__inner">
-        <!-- Secondary nav — Approach is the active link -->
-        <nav class="footer__nav" aria-label="Footer">
-          <a class="footer__nav-link is-active" href="#">Approach</a>
-          <a class="footer__nav-link" href="#">Referrers</a>
-          <a class="footer__nav-link" href="#">Contact</a>
-          <a class="footer__nav-link" href="#">Services</a>
-        </nav>
-
-        <span class="footer__rule" aria-hidden="true"></span>
+        <!-- Top group — the footer's own secondary nav (Approach is active) over a
+             hairline. Pinned to the top of the full-height footer; this is the nav
+             that takes over once the fixed navbar fades out (see setupFooter +
+             setupNavHandoff in hero.js). -->
+        <div class="footer__top">
+          <nav class="footer__nav" aria-label="Footer">
+            <a class="footer__nav-link is-active" href="#">Approach</a>
+            <a class="footer__nav-link" href="#">Referrers</a>
+            <a class="footer__nav-link" href="#">Contact</a>
+            <a class="footer__nav-link" href="#">Services</a>
+          </nav>
+          <span class="footer__rule" aria-hidden="true"></span>
+        </div>
 
         <!-- Oversized lockup: the shared P-mark beside the two-line wordmark -->
         <div class="footer__lockup">
@@ -550,14 +554,16 @@
           </div>
         </div>
 
-        <span class="footer__rule" aria-hidden="true"></span>
-
-        <!-- Legal row -->
-        <div class="footer__legal">
-          <p>All Rights Reserved © Proxy Papers 2026.</p>
-          <div class="footer__legal-links">
-            <a href="#">Terms &amp; Conditions</a>
-            <a href="#">Privacy Policy</a>
+        <!-- Bottom group — a hairline over the legal row. Pinned to the bottom of
+             the full-height footer. -->
+        <div class="footer__bottom">
+          <span class="footer__rule" aria-hidden="true"></span>
+          <div class="footer__legal">
+            <p>All Rights Reserved © Proxy Papers 2026.</p>
+            <div class="footer__legal-links">
+              <a href="#">Terms &amp; Conditions</a>
+              <a href="#">Privacy Policy</a>
+            </div>
           </div>
         </div>
       </div>

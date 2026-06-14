@@ -24,12 +24,31 @@
 .footer {
   position: relative;
   width: 100%;
+  /* Full-screen close: the nav (top), the lockup (centre) and the legal row
+     (bottom) all share ONE viewport so they read together the moment the fixed
+     navbar hands off. */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: var(--pp-ink);
-  padding: 8.0238vw 4.9603vw 7.9815vw; /* 121.32 top · 75 sides · 120.68 bottom */
+  padding: 2.6455vw 4.9603vw; /* 40px top/bottom · 75px sides */
   overflow: hidden;
 }
 
 .footer__inner {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Three zones spread across the height: top group, lockup, bottom group. */
+  justify-content: space-between;
+}
+
+/* Top / bottom groups — each pairs a row (nav · legal) with its hairline and
+   stays anchored to its edge of the full-height footer. */
+.footer__top,
+.footer__bottom {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -81,20 +100,27 @@
    above the text box and the descenders ~60px below it; the lockup's vertical
    padding reserves that room so the y / p tails stay clear of the hairlines. */
 .footer__lockup {
+  /* --lk-h drives the whole lockup so the mark + wordmark scale as one. It is the
+     mark's height, capped by viewport height so the lockup always fits the centre
+     zone of the full-height footer (on tall/wide screens it relaxes back toward
+     the Figma 41.667vw = 630px). Everything below is a fixed fraction of it, kept
+     to the original Figma ratios (gap 0.1004, pad/lift 0.0952, font 0.4944). */
+  --lk-h: min(41.667vw, 62vh);
   width: 100%;
   display: flex;
   align-items: flex-start;
-  gap: 4.1825vw; /* 63.24px — Figma gap between mark and wordmark */
-  padding-top: 3.9683vw; /* 60px — room for the cap overflow above the text box
-     (the descender below is already covered by the mark's full height) */
+  justify-content: center; /* centre the group when it scales below full width */
+  gap: calc(var(--lk-h) * 0.10038); /* 63.24px @ full scale */
+  padding-top: calc(var(--lk-h) * 0.09524); /* room for the cap overflow above the
+     text box (the descender below is already covered by the mark's full height) */
 }
 .footer__mark {
-  height: 41.667vw; /* 630px — matched to the wordmark's cap-to-descender height */
+  height: var(--lk-h); /* matched to the wordmark's cap-to-descender height */
   width: auto;
   flex-shrink: 0;
-  /* The wordmark's cap sits ~60px above its text box (line-height leading);
-     lift the mark by the same so the two are flush top AND bottom. */
-  margin-top: -3.9683vw; /* -60px */
+  /* The wordmark's cap sits above its text box (line-height leading); lift the
+     mark by the same so the two are flush top AND bottom. */
+  margin-top: calc(var(--lk-h) * -0.09524);
 }
 .footer__mark .lk-mark__stem {
   fill: var(--pp-lockup-ink);
@@ -104,10 +130,10 @@
 }
 
 .footer__word {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
   font-weight: 500; /* Medium → Book fallback */
-  font-size: 20.6vw; /* tuned so the wordmark fills toward the right edge */
+  font-size: calc(var(--lk-h) * 0.49440); /* scales with the mark (20.6vw @ full) */
   line-height: 0.82; /* two lines stack tight */
   letter-spacing: -0.04em;
   color: var(--pp-lockup-ink);
