@@ -372,6 +372,8 @@
     const eyebrow = section.querySelector(".trust__eyebrow");
     const content = section.querySelector(".trust__content");
     const title = section.querySelector(".trust__title");
+    const titleLines = gsap.utils.toArray(".trust__title-line", section);
+    const line2 = titleLines[1]; // "Protected data." — hidden in the tiny card
     const body = section.querySelector(".trust__body");
     const bodyWords = splitWords(body);
 
@@ -385,31 +387,46 @@
 
     // Collapsed initial state — a small centred window on the dark ground (the
     // Vooban c-abstract-mask "from" box). The hairline frame is present from the
-    // start so it reads as a framed window; the title shows dimmed and pushed
-    // low; body stays masked; the eyebrow tag sits up top.
-    gsap.set(panel, { width: "26vw", minHeight: 0, height: "27vw" });
+    // start so it reads as a framed window. The card is sized to show ONLY the
+    // eyebrow tag and the first title line ("Sovereign infrastructure.");
+    // "Protected data." and the body stay hidden until the window opens.
+    gsap.set(panel, { width: "44vw", minHeight: 0, height: "24vw" });
     gsap.set(frame, { autoAlpha: 1 });
     gsap.set(eyebrow, { autoAlpha: 1, y: 0 });
-    gsap.set(content, { y: "6.35vw" }); /* title sits near the bottom of the card */
+    gsap.set(content, { y: "2vw" });
     gsap.set(title, { color: "rgba(22, 23, 24, 0.6)" });
+    gsap.set(line2, { autoAlpha: 0, yPercent: 40 });
     gsap.set(bodyWords, { yPercent: 120 });
     gsap.set(body, { autoAlpha: 0 });
 
     gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
-        // Fires only once the whole collapsed card is framed (start "bottom
-        // bottom"), then the window opens on BOTH axes as it travels up — a
-        // gradual, scrubbed unfold that completes while still comfortably in
-        // view (end "center 35%").
-        scrollTrigger: REVEAL_ST(section, { start: "bottom bottom", end: "center 35%" }),
+        // Vooban's solution: PIN the card centred in the viewport, then scrub the
+        // window open over the pin distance so it unfolds while held in view (not
+        // racing off to the top edge). A short dwell at the end holds the full
+        // band centred before it releases, so the reveal has room to land.
+        scrollTrigger: {
+          trigger: section,
+          start: "center center", // pin once the card is centred
+          end: "+=640", // pin + scrub distance
+          scrub: 1.2,
+          pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
       })
       .to(panel, { width: "100%", height: "34.5899vw", duration: 1.9, ease: "power2.inOut" }, 0)
       .to(content, { y: 0, duration: 1.9, ease: "power2.inOut" }, 0)
       .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.5 }, 0)
+      .to(line2, { autoAlpha: 1, yPercent: 0, duration: 0.7 }, 0.6)
       .to(title, { color: "rgb(22, 23, 24)", duration: 0.9 }, 0.7)
       .to(body, { autoAlpha: 1, duration: 0.6 }, 0.95)
-      .to(bodyWords, { yPercent: 0, duration: 0.6, stagger: 0.008 }, 1.0);
+      .to(bodyWords, { yPercent: 0, duration: 0.6, stagger: 0.008 }, 1.0)
+      // Dwell — a no-op hold on the panel keeps the fully-open band centred for a
+      // beat before the pin releases (a real DOM target, so no force3D warning).
+      .to(panel, { duration: 0.7 });
   };
 
   // The referrers section reveals as it scrolls into view (ScrollTrigger): the
