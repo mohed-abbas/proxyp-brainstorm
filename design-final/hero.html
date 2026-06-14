@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="styles/problem.css?v=1" />
     <link rel="stylesheet" href="styles/profiles.css?v=9" />
     <link rel="stylesheet" href="styles/method.css?v=2" />
-    <link rel="stylesheet" href="styles/trust.css?v=1" />
+    <link rel="stylesheet" href="styles/trust.css?v=2" />
     <link rel="stylesheet" href="styles/referrers.css?v=1" />
     <link rel="stylesheet" href="styles/closing.css?v=1" />
     <link rel="stylesheet" href="styles/footer.css?v=9" />
@@ -32,7 +32,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=36" defer></script>
+    <script src="scripts/hero.js?v=37" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -433,21 +433,26 @@
     <!-- Trust section (Figma 58:219) — the reassurance band. First LIGHT surface:
          the fixed navbar flips to its light theme over it (data-nav-theme). -->
     <section class="trust" aria-label="Sovereign infrastructure and data protection" data-nav-theme="light">
-      <span class="trust__frame" aria-hidden="true"></span>
-      <!-- Eyebrow from the collapsed initial state (Figma 58:684). Intro-only:
-           shown while the band is the narrow card, fades out as it expands. -->
-      <p class="trust__eyebrow" aria-hidden="true">Sovereignty &amp; trust</p>
-      <div class="trust__content">
-        <h2 class="trust__title">
-          <span class="trust__title-line">Sovereign infrastructure.</span>
-          <span class="trust__title-line">Protected data.</span>
-        </h2>
-        <p class="trust__body">
-          Your documents are hosted in France, on an independent infrastructure.
-          Our tools comply with the GDPR and the AI Act, and are certified NF 203
-          CCFN digital vaults. Proxy Papers is recognised as a trusted third party
-          for tax purposes.
-        </p>
+      <!-- Inner bone panel = the animated "window". It opens from a small centred
+           card on the dark ground to the full band (both axes), Vooban-style. The
+           outer .trust reserves the full height so nothing below it reflows. -->
+      <div class="trust__panel">
+        <span class="trust__frame" aria-hidden="true"></span>
+        <!-- Eyebrow from the collapsed initial state (Figma 58:684). Intro-only:
+             shown while the band is the narrow card, fades out as it expands. -->
+        <p class="trust__eyebrow" aria-hidden="true">Sovereignty &amp; trust</p>
+        <div class="trust__content">
+          <h2 class="trust__title">
+            <span class="trust__title-line">Sovereign infrastructure.</span>
+            <span class="trust__title-line">Protected data.</span>
+          </h2>
+          <p class="trust__body">
+            Your documents are hosted in France, on an independent infrastructure.
+            Our tools comply with the GDPR and the AI Act, and are certified NF 203
+            CCFN digital vaults. Proxy Papers is recognised as a trusted third party
+            for tax purposes.
+          </p>
+        </div>
       </div>
     </section>
 

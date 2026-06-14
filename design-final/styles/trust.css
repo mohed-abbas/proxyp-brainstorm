@@ -15,12 +15,25 @@
    effect (see setupTrust in hero.js).
    ========================================================================== */
 
+/* Outer field — a transparent box that reserves the full band height on the dark
+   page ground. The bone panel inside opens from a small centred window to fill
+   it (Vooban c-abstract-mask vibe), so the panel can grow on BOTH axes without
+   reflowing the sections below. */
 .trust {
   position: relative;
   width: 100%;
-  /* Centre the band when JS collapses it to the narrow initial card (the
-     expand-on-reveal intro shrinks width, then animates back to 100%). */
-  margin-inline: auto;
+  min-height: 34.5899vw; /* 523px — reserves the full band height */
+  display: flex;
+  align-items: center; /* keeps the panel centred as it grows on both axes */
+  justify-content: center;
+}
+
+/* Inner bone panel — the animated "window". Defaults to the full settled band so
+   no-JS / reduced motion renders the final state; JS collapses it to the small
+   centred card and opens it on scroll. */
+.trust__panel {
+  position: relative;
+  width: 100%;
   min-height: 34.5899vw; /* 523px — a short band, not a full screen */
   display: flex;
   align-items: center;
