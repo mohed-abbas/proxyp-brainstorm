@@ -106,9 +106,9 @@
   // outrun (and "miss") the animation the way once-timed reveals do.
   const REVEAL_ST = (trigger, overrides = {}) => ({
     trigger,
-    start: "top 80%", // arms as the section enters from the bottom
-    end: "top 35%", // fully revealed while still on screen
-    scrub: 1, // ~1s smoothing tail — fast flicks ease, never jump
+    start: "top bottom", // begins the moment the section edges in from the bottom
+    end: "top 25%", // a long window so deliberate scrolling unfolds it gradually
+    scrub: 2.5, // heavy smoothing — even a fast flick eases over ~2.5s, never snaps
     invalidateOnRefresh: true, // recompute vw/width start values on resize
     ...overrides,
   });
@@ -387,7 +387,7 @@
     gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
-        scrollTrigger: REVEAL_ST(section, { end: "top 30%" }),
+        scrollTrigger: REVEAL_ST(section),
       })
       .to(section, { width: "100%", duration: 1.15, ease: "expo.inOut" }, 0)
       .to(content, { y: 0, duration: 1.15, ease: "expo.inOut" }, 0)
