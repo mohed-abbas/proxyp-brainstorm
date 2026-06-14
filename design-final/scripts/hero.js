@@ -251,6 +251,26 @@
       return;
     }
 
+    // ── Fit-to-viewport ────────────────────────────────────────────────────
+    // The whole composition (header → cards → CTA) is authored in vw, so on
+    // wide/short screens (16:9 and wider) it grows taller than the viewport and the
+    // pinned CTA drops below the fold. Scale .profiles__content down to whatever the
+    // viewport height allows — never up past 1:1 — so the CTA is always in view while
+    // the section is pinned. Anchored top-centre so the header stays put and the
+    // composition stays balanced. Recomputed on resize (ScrollTrigger re-pins itself).
+    const content = section.querySelector(".profiles__content");
+    const fitDeck = () => {
+      const vw = window.innerWidth / 100;
+      const padTop = 8.5 * vw; // matches .profiles padding-top
+      const bottomGap = 4 * vw; // breathing room so the CTA never abuts the edge
+      const naturalH = 50.93 * vw; // matches .profiles__content height
+      const avail = window.innerHeight - padTop - bottomGap;
+      const scale = Math.max(0, Math.min(1, avail / naturalH));
+      gsap.set(content, { scale, transformOrigin: "top center" });
+    };
+    fitDeck();
+    addEventListener("resize", fitDeck, { passive: true });
+
     // ── A. Header once-reveal ──────────────────────────────────────────────
     gsap.set(allWords, { yPercent: 120 });
     gsap
