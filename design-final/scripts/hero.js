@@ -110,7 +110,7 @@
     trigger,
     start: "top 85%", // arms just as the section enters from the bottom
     end: "top 60%", // short window — entering quickly drives the reveal to play
-    scrub: 2, // ~2s catch-up ≈ the non-scrubbed sections' authored pace
+    scrub: 3, // softer, longer catch-up tail for a gentler reveal
     invalidateOnRefresh: true, // recompute vw/width start values on resize
     ...overrides,
   });
@@ -389,10 +389,12 @@
     gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
-        scrollTrigger: REVEAL_ST(section),
+        // Trust gets a longer window so the band unfolds gradually with the
+        // scroll (smooth + elegant) rather than as a quick front-loaded catch-up.
+        scrollTrigger: REVEAL_ST(section, { start: "top bottom", end: "top 20%" }),
       })
-      .to(section, { width: "100%", duration: 1.15, ease: "expo.inOut" }, 0)
-      .to(content, { y: 0, duration: 1.15, ease: "expo.inOut" }, 0)
+      .to(section, { width: "100%", duration: 1.15, ease: "power2.inOut" }, 0)
+      .to(content, { y: 0, duration: 1.15, ease: "power2.inOut" }, 0)
       .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.5 }, 0)
       .to(frame, { autoAlpha: 1, duration: 0.8 }, 0.35)
       .to(title, { color: "rgb(22, 23, 24)", duration: 0.8 }, 0.5)
