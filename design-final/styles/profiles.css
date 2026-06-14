@@ -29,7 +29,11 @@
      it, so the deck stays self-similar as it scales and the CTA rides up beneath it.
      Every formula reduces to the original value at native size, so tall / 16:10
      screens render pixel-identical to before. Pure CSS; no JS scale. */
-  --card-h: clamp(22vh, calc(100vh - 27.13vw), 35.3175vw); /* 534px native */
+  --card-h: clamp(390px, calc(100vh - 27.13vw), 35.3175vw);
+  /* MAX = the Figma card height (35.3175vw = 534px native, node 58:154 = 325×534).
+     MIN = 390px — the largest floor that still keeps the CTA in view down to a
+     1366×768 laptop (its fitting height is ~397px), so cards never shrink to an
+     unreadable size while the CTA stays visible on common devices. */
   --card-w: calc(var(--card-h) * 0.608614); /* 325 / 534 → 21.4947vw native */
   position: relative;
   width: 100%;
