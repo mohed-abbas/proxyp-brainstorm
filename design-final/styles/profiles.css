@@ -12,13 +12,11 @@
 
    Motion contract (learned the hard way): a card is a GSAP-owned WRAPPER
    (`.profiles__card` — reveal transform only, no CSS transform) around a
-   CSS-owned FACE (`.profiles__card-face` — the fan rotation + hover lift). The
-   two never share a `transform`, so the reveal and the hover never fight. No
-   `preserve-3d` on the deck, so `z-index` brings a hovered card cleanly forward.
+   CSS-owned FACE (`.profiles__card-face` — the fan rotation). The cards have no
+   hover behaviour; the only motion is the scroll-driven reveal.
 
    Port note (React/Next): the three cards are a .map() over a PROFILES array;
-   the reveal is a useGSAP/useEffect mount effect (see setupProfiles in hero.js);
-   the hover lift is pure CSS.
+   the reveal is a useGSAP/useEffect mount effect (see setupProfiles in hero.js).
    ========================================================================== */
 
 .profiles {
@@ -219,22 +217,8 @@
 .profiles__card--03 .profiles__card-face--back { color: var(--pp-bone); }
 .profiles__card--02 .profiles__card-face--back { color: #161718; }
 
-/* ── Hover: lift the card straight up and bring it to the front ─────────────
-   Gated to the settled (fully spread + flipped) state via .is-settled, so a
-   half-flipped card mid-scroll never lifts. The lift lives on the OUTER card
-   (GSAP-free), so it can't fight the scrubbed -pos / -flip transforms; --rot is
-   0 at rest, so it's a clean translate + scale. */
-.profiles__deck:hover .profiles__card-face {
-  filter: brightness(0.97);
-}
-.profiles__card:hover { z-index: 9; }
-.profiles__card.is-settled:hover {
-  transform: translateY(-1.6vw) scale(1.015);
-}
-.profiles__card.is-settled:hover .profiles__card-face {
-  filter: none;
-  box-shadow: 0 3.4vw 6vw -1.9vw rgba(0, 0, 0, 0.62);
-}
+/* No hover behaviour — the profile cards are a scroll-driven reveal only; once
+   settled they stay still. (The earlier lift-on-hover was removed by request.) */
 
 /* ── Reveal masks (per-word, house style) ──────────────────────────────────
    Extends theme.css's .r-word with padding/negative-margin so the clip never

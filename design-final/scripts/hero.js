@@ -184,9 +184,9 @@
   //     then the CTA fades up and the deck HOLDS for a reading dwell before release.
   // The CSS base is the resolved flat back-spread, so no-JS / reduced motion lands
   // there; here we wind the cards back into the fan and play them forward.
-  // Transform layering (see profiles.css): outer .profiles__card = slot + perspective
-  // + hover (GSAP-free); .profiles__card-pos = spread + tilt; .profiles__card-flip =
-  // rotateY. The fan offset lives in each card's --dx/--dy/--rot vars (read here).
+  // Transform layering (see profiles.css): outer .profiles__card = slot + perspective;
+  // .profiles__card-pos = spread + tilt; .profiles__card-flip = rotateY. The fan
+  // offset lives in each card's --dx/--dy/--rot vars (read here). No hover behaviour.
   const setupProfiles = (gsap) => {
     const section = document.querySelector(".profiles");
     if (!section) return;
@@ -232,7 +232,6 @@
       gsap.set(pos, { x: 0, y: 0, rotation: 0 });
       gsap.set(flips, { rotationY: 180 });
       gsap.set(cta, { autoAlpha: 1, y: 0 });
-      cards.forEach((c) => c.classList.add("is-settled"));
       return;
     }
 
@@ -274,12 +273,6 @@
                     // and inertial. NB this does not change the SPEED — the scroll-
                     // distance→rotation mapping (set by the pin distance) is the
                     // same; scrub only governs how softly it tracks/settles.
-        onUpdate: (self) => {
-          // Hover enabled only after the flip resolves (~0.66 through the timeline;
-          // the remainder is the reading dwell).
-          const settled = self.progress > 0.66;
-          cards.forEach((c) => c.classList.toggle("is-settled", settled));
-        },
       },
     });
     deck
