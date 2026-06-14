@@ -99,6 +99,20 @@
     });
   };
 
+  // Scroll-linked reveal config. Shared so reveals track the wheel instead of a
+  // fixed timer: progress follows scroll, scrub:1 eases a fast flick to
+  // completion instead of skipping it, and [start,end] is chosen so 100% is
+  // reached while the section is still on screen — so a quick scroll can never
+  // outrun (and "miss") the animation the way once-timed reveals do.
+  const REVEAL_ST = (trigger, overrides = {}) => ({
+    trigger,
+    start: "top 80%", // arms as the section enters from the bottom
+    end: "top 35%", // fully revealed while still on screen
+    scrub: 1, // ~1s smoothing tail — fast flicks ease, never jump
+    invalidateOnRefresh: true, // recompute vw/width start values on resize
+    ...overrides,
+  });
+
   // The problem section reveals as it scrolls into view (ScrollTrigger), not on
   // load — the visitor is still on the hero at load. Same per-word stagger as
   // the rest of the brand; the three data cards settle up after the body. Each
@@ -163,7 +177,7 @@
     const tl = gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
-        scrollTrigger: { trigger: section, start: "top 72%", once: true },
+        scrollTrigger: REVEAL_ST(section),
       })
       .to(eyebrowWords, { yPercent: 0, duration: 0.6 }, 0.0)
       .to(rule, { autoAlpha: 1, scaleX: 1, duration: 0.7 }, 0.1)
@@ -373,7 +387,7 @@
     gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
-        scrollTrigger: { trigger: section, start: "top 78%", once: true },
+        scrollTrigger: REVEAL_ST(section, { end: "top 30%" }),
       })
       .to(section, { width: "100%", duration: 1.15, ease: "expo.inOut" }, 0)
       .to(content, { y: 0, duration: 1.15, ease: "expo.inOut" }, 0)
