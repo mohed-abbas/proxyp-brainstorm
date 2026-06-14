@@ -404,29 +404,35 @@
         defaults: { ease: "power3.out", force3D: true },
         // Vooban's solution: PIN the card centred in the viewport, then scrub the
         // window open over the pin distance so it unfolds while held in view (not
-        // racing off to the top edge). A short dwell at the end holds the full
-        // band centred before it releases, so the reveal has room to land.
+        // racing off to the top edge).
+        //
+        // Smoothness comes from a LOW scrub, not from dead holds. Lenis already
+        // glides the scroll input heavily (duration 1.8); a low scrub (0.4) lets
+        // the open track that smoothed scroll closely, so it doesn't lag-then-
+        // lurch after the pin engages (the cause of the "hinge" feel). The expand
+        // eases in/out (power2.inOut), so motion is calm at the boundaries on its
+        // own; a short dwell at the end gives the "hold a beat, then let go".
         scrollTrigger: {
           trigger: section,
           start: "center center", // pin once the card is centred
-          end: "+=640", // pin + scrub distance
-          scrub: 1.2,
+          end: "+=600",
+          scrub: 0.4,
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       })
-      .to(panel, { width: "100%", height: "34.5899vw", duration: 1.9, ease: "power2.inOut" }, 0)
-      .to(content, { y: 0, duration: 1.9, ease: "power2.inOut" }, 0)
-      .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.5 }, 0)
-      .to(line2, { autoAlpha: 1, yPercent: 0, duration: 0.7 }, 0.6)
-      .to(title, { color: "rgb(22, 23, 24)", duration: 0.9 }, 0.7)
-      .to(body, { autoAlpha: 1, duration: 0.6 }, 0.95)
-      .to(bodyWords, { yPercent: 0, duration: 0.6, stagger: 0.008 }, 1.0)
-      // Dwell — a no-op hold on the panel keeps the fully-open band centred for a
-      // beat before the pin releases (a real DOM target, so no force3D warning).
-      .to(panel, { duration: 0.7 });
+      .to(panel, { width: "100%", height: "34.5899vw", duration: 1.5, ease: "power2.inOut" }, 0)
+      .to(content, { y: 0, duration: 1.5, ease: "power2.inOut" }, 0)
+      .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.45 }, 0)
+      .to(line2, { autoAlpha: 1, yPercent: 0, duration: 0.6 }, 0.5)
+      .to(title, { color: "rgb(22, 23, 24)", duration: 0.7 }, 0.6)
+      .to(body, { autoAlpha: 1, duration: 0.5 }, 0.85)
+      .to(bodyWords, { yPercent: 0, duration: 0.5, stagger: 0.008 }, 0.9)
+      // Brief dwell — the open band rests centred for a beat, then the pin releases
+      // (a real DOM target, so no force3D warning).
+      .to(panel, { duration: 0.35 });
   };
 
   // The referrers section reveals as it scrolls into view (ScrollTrigger): the
