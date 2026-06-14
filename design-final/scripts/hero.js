@@ -99,16 +99,18 @@
     });
   };
 
-  // Scroll-linked reveal config. Shared so reveals track the wheel instead of a
-  // fixed timer: progress follows scroll, scrub:1 eases a fast flick to
-  // completion instead of skipping it, and [start,end] is chosen so 100% is
-  // reached while the section is still on screen — so a quick scroll can never
-  // outrun (and "miss") the animation the way once-timed reveals do.
+  // Scroll-linked reveal config. Stays scrubbed (progress follows the wheel, so a
+  // fast scroll can't outrun and "miss" the reveal), but TUNED so its pace reads
+  // like the non-scrubbed sections' self-timed cascade (~2s on enter):
+  //   • a SHORT entry window — scrolling into the section quickly drives the
+  //     target toward full, so it isn't dragged out over a long scroll distance;
+  //   • scrub ≈ the authored timeline length (~2s) — so it then eases out over
+  //     about the same duration the non-scrubbed timelines play at.
   const REVEAL_ST = (trigger, overrides = {}) => ({
     trigger,
-    start: "top bottom", // begins the moment the section edges in from the bottom
-    end: "top 25%", // a long window so deliberate scrolling unfolds it gradually
-    scrub: 2.5, // heavy smoothing — even a fast flick eases over ~2.5s, never snaps
+    start: "top 85%", // arms just as the section enters from the bottom
+    end: "top 60%", // short window — entering quickly drives the reveal to play
+    scrub: 2, // ~2s catch-up ≈ the non-scrubbed sections' authored pace
     invalidateOnRefresh: true, // recompute vw/width start values on resize
     ...overrides,
   });
