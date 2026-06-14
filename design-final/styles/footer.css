@@ -65,7 +65,13 @@
   font-size: 1.6534vw; /* 25px */
   line-height: 1.2;
 }
+/* One-line clip box — masks both the entrance rise (setupFooter) and the hover
+   roll. Same mechanic as the primary navbar's .pp-nav__link. */
 .footer__nav-link {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.2em; /* one line box */
+  line-height: 1.2;
   color: var(--pp-bone);
   text-decoration: none;
   white-space: nowrap;
@@ -74,17 +80,33 @@
 .footer__nav-link:hover {
   color: var(--pp-blue);
 }
+/* Two stacked copies of the label; hover rolls the second up into view. */
+.footer__nav-roll {
+  display: block;
+  transition: transform 0.55s var(--pp-ease-out);
+}
+.footer__nav-label {
+  display: block;
+}
+.footer__nav-link:hover .footer__nav-roll,
+.footer__nav-link:focus-visible .footer__nav-roll {
+  transform: translateY(-50%);
+}
+.footer__nav-link:focus-visible {
+  outline: none;
+}
 .footer__nav-link.is-active {
   color: var(--pp-blue);
+}
+.footer__nav-link.is-active .footer__nav-label {
   text-decoration: underline;
   text-underline-offset: 0.2vw;
 }
-/* splitWords wraps each word in an inline-block (.r-word), which breaks the
-   anchor's underline inheritance — so carry the active underline on the inner
-   span too. The anchor-level rule above still covers the no-JS settled state. */
-.footer__nav-link.is-active .r-word__in {
-  text-decoration: underline;
-  text-underline-offset: 0.2vw;
+/* Reduced motion: hover roll stays put. */
+@media (prefers-reduced-motion: reduce) {
+  .footer__nav-roll {
+    transition: none;
+  }
 }
 
 /* ── Hairline rules ───────────────────────────────────────────────────────────*/

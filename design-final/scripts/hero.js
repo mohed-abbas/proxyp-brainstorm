@@ -517,9 +517,10 @@
     if (!section) return;
     const ST = window.ScrollTrigger;
 
-    const navWords = gsap.utils
-      .toArray(section.querySelectorAll(".footer__nav-link"))
-      .flatMap(splitWords);
+    // Nav links roll on hover (two stacked label copies, see footer.css). The
+    // entrance rises the roll behind the link's clip; on complete we clear the
+    // inline transform so the CSS hover roll isn't blocked by it.
+    const navRolls = gsap.utils.toArray(section.querySelectorAll(".footer__nav-roll"));
     const legalWords = gsap.utils
       .toArray(section.querySelectorAll(".footer__legal p, .footer__legal-links a"))
       .flatMap(splitWords);
@@ -532,13 +533,14 @@
     });
 
     if (!ST) {
-      gsap.set([...navWords, ...legalWords, ...wordLines], { yPercent: 0 });
+      gsap.set([...legalWords, ...wordLines], { yPercent: 0 });
       gsap.set(mark, { autoAlpha: 1, y: 0 });
       gsap.set(wordMasks, { overflow: "visible" });
       return;
     }
 
-    gsap.set([...navWords, ...legalWords], { yPercent: 120 });
+    gsap.set(navRolls, { yPercent: 50 }); // park one line below the clip box
+    gsap.set(legalWords, { yPercent: 120 });
     gsap.set(mark, { autoAlpha: 0, y: 40 });
     // Each wordmark line rises in behind its mask (staggered, line-by-line); the
     // masks are released to overflow:visible on complete so the descenders (the
@@ -550,7 +552,16 @@
         defaults: { ease: "power3.out", force3D: true },
         scrollTrigger: { trigger: section, start: "top 82%", once: true },
       })
-      .to(navWords, { yPercent: 0, duration: 0.7, stagger: 0.03 }, 0.0)
+      .to(
+        navRolls,
+        {
+          yPercent: 0,
+          duration: 0.7,
+          stagger: 0.06,
+          onComplete: () => gsap.set(navRolls, { clearProps: "transform" }),
+        },
+        0.0,
+      )
       .to(mark, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power2.out" }, 0.25)
       .to(
         wordLines,
