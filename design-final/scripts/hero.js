@@ -406,17 +406,19 @@
         // window open over the pin distance so it unfolds while held in view (not
         // racing off to the top edge).
         //
-        // Smoothness comes from a LOW scrub, not from dead holds. Lenis already
-        // glides the scroll input heavily (duration 1.8); a low scrub (0.4) lets
-        // the open track that smoothed scroll closely, so it doesn't lag-then-
-        // lurch after the pin engages (the cause of the "hinge" feel). The expand
-        // eases in/out (power2.inOut), so motion is calm at the boundaries on its
-        // own; a short dwell at the end gives the "hold a beat, then let go".
+        // Pace is decoupled from scroll FORCE — same recipe as the profiles deck:
+        // a HEAVY scrub (2.4) over a GENEROUS pin distance. The heavy scrub means
+        // the open always glides toward the scroll target over ~2.4s no matter how
+        // hard you flick (a hard scroll can't make it race), and the generous
+        // distance gives that smoothing room so it never lurches and always
+        // completes while still centred. Eased expand (power2.inOut) keeps the
+        // boundaries calm; the dwell holds the open band before the pin releases.
         scrollTrigger: {
           trigger: section,
           start: "center center", // pin once the card is centred
-          end: "+=600",
-          scrub: 0.4,
+          end: "+=120%", // generous runway (viewport-relative) so the heavy scrub
+                         // has room — mirrors the profiles deck's long pin
+          scrub: 2.4, // heavy smoothing → consistent pace regardless of scroll force
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
@@ -430,9 +432,10 @@
       .to(title, { color: "rgb(22, 23, 24)", duration: 0.7 }, 0.6)
       .to(body, { autoAlpha: 1, duration: 0.5 }, 0.85)
       .to(bodyWords, { yPercent: 0, duration: 0.5, stagger: 0.008 }, 0.9)
-      // Brief dwell — the open band rests centred for a beat, then the pin releases
+      // Dwell — the open band rests centred while the heavy scrub settles, so even
+      // a hard flick lands the completed open in view before the pin releases
       // (a real DOM target, so no force3D warning).
-      .to(panel, { duration: 0.35 });
+      .to(panel, { duration: 0.6 });
   };
 
   // The referrers section reveals as it scrolls into view (ScrollTrigger): the
