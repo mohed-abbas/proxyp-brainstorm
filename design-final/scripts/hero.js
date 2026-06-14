@@ -334,34 +334,54 @@
       .to(link, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.0);
   };
 
-  // The trust band reveals as it scrolls into view (ScrollTrigger), house style:
-  // the centred title and body rise word-by-word. The inset frame is static.
+  // The trust band EXPANDS as it scrolls into view (ScrollTrigger). It opens
+  // from the collapsed initial card (Figma 58:684) — a narrow 440px panel with a
+  // "Sovereignty & trust" eyebrow up top and the dimmed title sitting low and
+  // clipped — and grows to the full settled band (Figma 58:219): width fills,
+  // the hairline frame fades in, the eyebrow lifts away, the title rises to
+  // centre and brightens, and the body settles in word-by-word (house style).
   const setupTrust = (gsap) => {
     const section = document.querySelector(".trust");
     if (!section) return;
     const ST = window.ScrollTrigger;
 
-    const titleWords = gsap.utils
-      .toArray(".trust__title-line", section)
-      .flatMap(splitWords);
-    const bodyWords = splitWords(section.querySelector(".trust__body"));
-    const allWords = [...titleWords, ...bodyWords];
+    const frame = section.querySelector(".trust__frame");
+    const eyebrow = section.querySelector(".trust__eyebrow");
+    const content = section.querySelector(".trust__content");
+    const title = section.querySelector(".trust__title");
+    const body = section.querySelector(".trust__body");
+    const bodyWords = splitWords(body);
 
-    gsap.set(".trust__content", { visibility: "visible" });
+    gsap.set(content, { visibility: "visible" });
 
+    // No ScrollTrigger / reduced motion → render the settled full band as-is.
     if (!ST) {
-      gsap.set(allWords, { yPercent: 0 });
+      gsap.set(bodyWords, { yPercent: 0 });
       return;
     }
 
-    gsap.set(allWords, { yPercent: 120 });
+    // Collapsed initial state — the narrow card. Title shows immediately but
+    // dimmed and pushed low; body stays masked; eyebrow appears; frame hidden.
+    gsap.set(section, { width: "29.1005vw" }); /* 440px */
+    gsap.set(frame, { autoAlpha: 0 });
+    gsap.set(eyebrow, { autoAlpha: 1, y: 0 });
+    gsap.set(content, { y: "6.35vw" }); /* ~96px — title sits near the bottom */
+    gsap.set(title, { color: "rgba(22, 23, 24, 0.6)" });
+    gsap.set(bodyWords, { yPercent: 120 });
+    gsap.set(body, { autoAlpha: 0 });
+
     gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
         scrollTrigger: { trigger: section, start: "top 78%", once: true },
       })
-      .to(titleWords, { yPercent: 0, duration: 0.7, stagger: 0.06 }, 0.0)
-      .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.016 }, 0.3);
+      .to(section, { width: "100%", duration: 1.15, ease: "expo.inOut" }, 0)
+      .to(content, { y: 0, duration: 1.15, ease: "expo.inOut" }, 0)
+      .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.5 }, 0)
+      .to(frame, { autoAlpha: 1, duration: 0.8 }, 0.35)
+      .to(title, { color: "rgb(22, 23, 24)", duration: 0.8 }, 0.5)
+      .to(body, { autoAlpha: 1, duration: 0.5 }, 0.75)
+      .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.016 }, 0.78);
   };
 
   // The referrers section reveals as it scrolls into view (ScrollTrigger): the

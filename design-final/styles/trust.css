@@ -18,6 +18,9 @@
 .trust {
   position: relative;
   width: 100%;
+  /* Centre the band when JS collapses it to the narrow initial card (the
+     expand-on-reveal intro shrinks width, then animates back to 100%). */
+  margin-inline: auto;
   min-height: 34.5899vw; /* 523px — a short band, not a full screen */
   display: flex;
   align-items: center;
@@ -36,6 +39,27 @@
   border: 1px solid var(--pp-ink);
   border-radius: 1.3228vw; /* 20px */
   pointer-events: none;
+}
+
+/* Intro eyebrow — only present in the collapsed initial card (Figma 58:684),
+   centred near the top. Hidden by default so no-JS / reduced motion (the settled
+   full band) never shows it; GSAP reveals it for the expand intro then fades it
+   out. Centred via left/right:0 + text-align so GSAP's y tween stays conflict
+   free (no translateX to clobber). */
+.trust__eyebrow {
+  position: absolute;
+  top: 2.3148vw; /* 35px */
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+  font-weight: 500; /* Medium → falls back to Book */
+  font-size: 1.0582vw; /* 16px */
+  letter-spacing: 0.01em; /* 0.16px */
+  text-transform: uppercase;
+  color: var(--pp-ink);
+  white-space: nowrap;
+  opacity: 0;
 }
 
 /* Centred copy block — above the frame. */
