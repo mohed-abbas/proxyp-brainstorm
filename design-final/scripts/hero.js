@@ -434,10 +434,35 @@
     gsap.set([mark, ...avatars], { autoAlpha: 0, scale: 0, transformOrigin: "50% 50%" });
     gsap.set(cta, { autoAlpha: 0, y: 16 });
 
+    // Perpetual orbit — once the diagram has assembled, the three rings drift at
+    // their own slow pace, alternating direction (inner CW, middle CCW, outer CW)
+    // so the radar reads as living-but-calm. The centre mark holds still; the two
+    // inner/middle rings carry avatars, so each avatar's img counter-rotates to
+    // keep faces upright. The outer dashed ring spins on its own (the dashes make
+    // the rotation read). Linear ease + long durations keep it subtle and smooth.
+    const startOrbit = () => {
+      const innerLayer = section.querySelector(".referrers__orbit-layer--inner");
+      const middleLayer = section.querySelector(".referrers__orbit-layer--middle");
+      const outerRing = section.querySelector(".referrers__ring--outer");
+      const spin = { ease: "none", repeat: -1 };
+
+      // Inner ring + its avatars — clockwise.
+      gsap.to(innerLayer, { rotation: 360, duration: 42, transformOrigin: "50% 50%", ...spin });
+      gsap.to(innerLayer.querySelectorAll("img"), { rotation: -360, duration: 42, transformOrigin: "50% 50%", ...spin });
+
+      // Middle ring + its avatars — counter-clockwise.
+      gsap.to(middleLayer, { rotation: -360, duration: 52, transformOrigin: "50% 50%", ...spin });
+      gsap.to(middleLayer.querySelectorAll("img"), { rotation: 360, duration: 52, transformOrigin: "50% 50%", ...spin });
+
+      // Outer dashed ring — clockwise, rotated about the field centre (247,247).
+      gsap.to(outerRing, { rotation: 360, duration: 68, svgOrigin: "247 247", ...spin });
+    };
+
     gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
         scrollTrigger: { trigger: section, start: "top 70%", once: true },
+        onComplete: startOrbit,
       })
       .to(titleWords, { yPercent: 0, duration: 0.7, stagger: 0.05 }, 0.0)
       .to(rings, { autoAlpha: 1, scale: 1, duration: 0.9, ease: "power2.out" }, 0.25)

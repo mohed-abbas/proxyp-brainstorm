@@ -467,11 +467,19 @@
               <circle class="referrers__ring--outer" cx="247" cy="247" r="246" />
             </svg>
 
-            <span class="referrers__avatar referrers__avatar--1"><img src="assets/referrers/advisor-1.png" alt="" /></span>
-            <span class="referrers__avatar referrers__avatar--2"><img src="assets/referrers/advisor-2.png" alt="" /></span>
-            <span class="referrers__avatar referrers__avatar--3"><img src="assets/referrers/advisor-3.png" alt="" /></span>
-            <span class="referrers__avatar referrers__avatar--4"><img src="assets/referrers/advisor-4.png" alt="" /></span>
-            <span class="referrers__avatar referrers__avatar--5"><img src="assets/referrers/advisor-5.png" alt="" /></span>
+            <!-- Avatars are grouped per orbit so each ring revolves as one unit
+                 (see startOrbit in hero.js): inner ring (1–2) and middle ring
+                 (3–5) spin in opposite directions; the img inside each counter-
+                 rotates so faces stay upright. -->
+            <div class="referrers__orbit-layer referrers__orbit-layer--inner">
+              <span class="referrers__avatar referrers__avatar--1"><img src="assets/referrers/advisor-1.png" alt="" /></span>
+              <span class="referrers__avatar referrers__avatar--2"><img src="assets/referrers/advisor-2.png" alt="" /></span>
+            </div>
+            <div class="referrers__orbit-layer referrers__orbit-layer--middle">
+              <span class="referrers__avatar referrers__avatar--3"><img src="assets/referrers/advisor-3.png" alt="" /></span>
+              <span class="referrers__avatar referrers__avatar--4"><img src="assets/referrers/advisor-4.png" alt="" /></span>
+              <span class="referrers__avatar referrers__avatar--5"><img src="assets/referrers/advisor-5.png" alt="" /></span>
+            </div>
 
             <span class="referrers__mark">
               <svg viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

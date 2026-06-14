@@ -117,6 +117,18 @@
   fill: var(--pp-lockup-blade);
 }
 
+/* Orbit layers — each fills the field (so % avatar positions are unchanged) and
+   carries one ring's avatars. GSAP spins these around the field centre; the
+   alternating directions live in startOrbit (hero.js). Decorative, so they never
+   intercept pointer events. */
+.referrers__orbit-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
 /* Advisor avatars — 37px circles on the orbits (positions are % of the field). */
 .referrers__avatar {
   position: absolute;
