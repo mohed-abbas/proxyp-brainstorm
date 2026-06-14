@@ -121,8 +121,8 @@
     });
 
     // Two zigzag behaviours (pathLength=100 normalises the draw across sizes):
-    //  • VOLUME (large) — draws itself in with the reveal and rests DRAWN; hover
-    //    plays it in REVERSE (undraws), leaving redraws it.
+    //  • VOLUME (large) — draws itself in once with the reveal and rests DRAWN;
+    //    no hover behaviour (the draw is a load-in moment only).
     //  • FRICTION + RISK (small) — rest invisible; draw on hover, erase on leave.
     const volumeCard = section.querySelector(".problem-card--volume");
     const volumePath = volumeCard && volumeCard.querySelector(".zigzag__path");
@@ -136,10 +136,8 @@
 
     gsap.set([volumePath, ...smallPaths], { strokeDasharray: 100 });
 
-    if (volumePath) {
-      volumeCard.addEventListener("mouseenter", () => animate(volumePath, 100)); // reverse
-      volumeCard.addEventListener("mouseleave", () => animate(volumePath, 0)); // redraw
-    }
+    // VOLUME has no hover behaviour — its draw happens once on the scroll reveal
+    // (see the timeline below). Only the small cards react to hover.
     smallPaths.forEach((path) => {
       gsap.set(path, { strokeDashoffset: 100 }); // rests invisible
       const card = path.closest(".problem-card");
