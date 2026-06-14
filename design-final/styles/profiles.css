@@ -21,6 +21,16 @@
    ========================================================================== */
 
 .profiles {
+  /* Deck-only fit — the card deck (and ONLY the deck) shrinks to fit shorter
+     viewports, so the header type and the CTA button keep their exact native vw
+     size on every screen. --card-h caps the card height by the viewport height
+     (clamped to the Figma 534px native), and everything in the deck — card width,
+     slot positions, the giant number, the meta block, the CTA's top — derives from
+     it, so the deck stays self-similar as it scales and the CTA rides up beneath it.
+     Every formula reduces to the original value at native size, so tall / 16:10
+     screens render pixel-identical to before. Pure CSS; no JS scale. */
+  --card-h: clamp(22vh, calc(100vh - 27.13vw), 35.3175vw); /* 534px native */
+  --card-w: calc(var(--card-h) * 0.608614); /* 325 / 534 → 21.4947vw native */
   position: relative;
   width: 100%;
   min-height: 100vh;
@@ -97,8 +107,8 @@
      node, so the hover-lift transform can't fight the scrubbed spread/flip
      transforms (which live on the inner -pos / -flip nodes). */
   position: absolute;
-  width: 21.4947vw; /* 325px */
-  height: 35.3175vw; /* 534px */
+  width: var(--card-w); /* 21.4947vw (325px) native */
+  height: var(--card-h); /* 35.3175vw (534px) native */
   perspective: 1600px; /* on the ancestor of the flipping node, never on it */
   transition: transform 0.45s var(--pp-ease-out);
 }
@@ -106,9 +116,12 @@
    1075-wide card group is centred inside the 1310 frame (abs x 196.5/571.5/946.5,
    top 143). The fanned ENTRY positions are reached by GSAP via the per-card
    --dx/--dy/--rot offset on .profiles__card-pos (so this stays the no-JS state). */
-.profiles__card--01 { left: 12.9960vw; top: 9.4577vw; z-index: 1; } /* abs 196.5 — behind */
-.profiles__card--02 { left: 37.7976vw; top: 9.4577vw; z-index: 2; } /* abs 571.5 — middle */
-.profiles__card--03 { left: 62.5992vw; top: 9.4577vw; z-index: 3; } /* abs 946.5 — on top:
+/* Slots centred on the deck via --card-w so the row stays grouped (equal 50px
+   gaps) and centred as the cards scale. Each calc reduces to the original vw left
+   at native card width: 01 = 12.996vw, 02 = 37.7976vw, 03 = 62.5992vw. */
+.profiles__card--01 { left: calc(50% - var(--card-w) * 1.721536); top: 9.4577vw; z-index: 1; } /* abs 196.5 — behind */
+.profiles__card--02 { left: calc(50% - var(--card-w) * 0.567690); top: 9.4577vw; z-index: 2; } /* abs 571.5 — middle */
+.profiles__card--03 { left: calc(50% + var(--card-w) * 0.586156); top: 9.4577vw; z-index: 3; } /* abs 946.5 — on top:
    the stack riffles left→right (01 behind, 02 over it, 03 on top), matching Figma
    58:153's paint order so 03 overlaps 02 on its right. (Spread cards don't overlap,
    so z-index only shapes the stacked entry + the flip transition.) */
@@ -137,7 +150,7 @@
      number (orthogonal to backface-visibility). */
   position: absolute;
   inset: 0;
-  border-radius: 1.3228vw; /* 20px */
+  border-radius: calc(var(--card-h) * 0.037453); /* 20px native */
   overflow: hidden;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -157,12 +170,12 @@
 /* Giant number, bleeding off the top edge (clipped by the card). */
 .profiles__card-num {
   position: absolute;
-  top: -1.7857vw; /* -27px */
+  top: calc(var(--card-h) * -0.050562); /* -27px native */
   left: 36%; /* Figma: number rides left-of-centre (~118/325), not centred */
   transform: translateX(-50%);
   white-space: nowrap;
   font-weight: 500; /* Medium → Book */
-  font-size: 12.6323vw; /* 191px */
+  font-size: calc(var(--card-h) * 0.357678); /* 191px native */
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--card-tint);
@@ -195,22 +208,22 @@
    bottom-left in a 173px column (left 20 / top 416). */
 .profiles__card-meta {
   position: absolute;
-  left: 1.3228vw; /* 20px */
-  top: 27.5132vw; /* 416px */
-  width: 11.4418vw; /* 173px */
+  left: calc(var(--card-w) * 0.061538); /* 20px native */
+  top: calc(var(--card-h) * 0.778652); /* 416px native */
+  width: calc(var(--card-w) * 0.532308); /* 173px native */
   display: flex;
   flex-direction: column;
-  gap: 0.5291vw; /* 8px */
+  gap: calc(var(--card-h) * 0.014981); /* 8px native */
 }
 .profiles__card-name {
   font-weight: 500; /* Medium → Book */
-  font-size: 2.5794vw; /* 39px */
+  font-size: calc(var(--card-h) * 0.073034); /* 39px native */
   line-height: 1.05;
   letter-spacing: -0.0106vw;
 }
 .profiles__card-desc {
   font-weight: 400; /* Book */
-  font-size: 1.0582vw; /* 16px */
+  font-size: calc(var(--card-h) * 0.029963); /* 16px native */
   line-height: 1.35;
 }
 /* Back text: bone on the blue cards, ink on the bone card. */
@@ -233,7 +246,10 @@
 .profiles__cta {
   position: absolute;
   left: 48.51%; /* centred on the card group (abs x ≈ 733.5), Figma 78:25 */
-  top: 48.346vw; /* 731 — 54px below the deck */
+  /* Rides below the (possibly scaled) deck: card top + card height + 54px gap.
+     Reduces to 48.346vw (731px) at native card height. The button itself stays
+     native vw size — only its position follows the deck. */
+  top: calc(var(--card-h) + 13.0291vw);
   transform: translateX(-50%);
 }
 
