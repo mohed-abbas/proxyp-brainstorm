@@ -395,11 +395,15 @@
     // band, so it fades in as the card opens). "Protected data." + the body stay
     // hidden until the open. y is pushed in px (GSAP treats vw on transforms as px),
     // so convert against the live viewport.
+    // Cap design distances at the Figma px (min(vw, px)) so the collapsed card
+    // and its bleeding title stay Figma-accurate on >1512px screens, matching the
+    // CSS caps now that the panel opens full-bleed.
     const vwToPx = (vw) => (vw / 100) * window.innerWidth;
-    gsap.set(panel, { width: "29.1005vw" }); // 440px — height stays the full band
+    const cap = (vw, px) => Math.min(vwToPx(vw), px);
+    gsap.set(panel, { width: cap(29.1005, 440) }); // 440px — height stays the full band
     gsap.set(frame, { autoAlpha: 0 }); // no frame in the collapsed card (Figma)
     gsap.set(eyebrow, { autoAlpha: 1, y: 0 });
-    gsap.set(content, { y: vwToPx(18) }); // title sits low, bleeding off the edges
+    gsap.set(content, { y: cap(18, 272) }); // title sits low, bleeding off the edges
     gsap.set(title, { color: "rgba(22, 23, 24, 0.6)" });
     gsap.set(line2, { autoAlpha: 0, yPercent: 40 });
     gsap.set(bodyWords, { yPercent: 120 });

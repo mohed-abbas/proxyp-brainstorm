@@ -6,10 +6,16 @@
    hosting, GDPR, AI Act, NF 203 CCFN vaults, trusted third party for tax).
 
    The brand's first LIGHT surface, so the fixed navbar flips to its light theme
-   over it (ink links + mark, see theme.css / navbar.css + data-nav-theme).
+   over it (see theme.css / navbar.css + data-nav-theme).
 
-   Reads tokens from theme.css. Lengths are fractions of the 1512px Figma frame
-   (1px ≈ 0.066138cqw) — same convention as the other design-final sections.
+   FULL-BLEED EXCEPTION (same as the footer / closing): this band sits OUTSIDE
+   the .page-frame container (see hero.html), so when the panel OPENS it expands
+   sideways to the full viewport width instead of freezing into a centred 1512px
+   column with dark gutters. The text stays at the Figma size: the centred
+   .trust__content is width-capped and every metric is min(<vw>, <design px>) —
+   below 1512px the vw wins and the copy scales DOWN; at/above 1512px the px cap
+   wins, so the copy FREEZES at the Figma size while the bone panel keeps growing
+   to fill the width (1px ≈ 0.066138vw).
 
    Port note (React/Next): a self-contained band; the reveal is a useGSAP mount
    effect (see setupTrust in hero.js).
@@ -18,11 +24,11 @@
 /* Outer field — a transparent box that reserves the full band height on the dark
    page ground. The bone panel inside opens from a small centred window to fill
    it (Vooban c-abstract-mask vibe), so the panel can grow on BOTH axes without
-   reflowing the sections below. */
+   reflowing the sections below. Full width so the open panel runs edge-to-edge. */
 .trust {
   position: relative;
   width: 100%;
-  min-height: 34.5899cqw; /* 523px — reserves the full band height */
+  min-height: min(34.5899vw, 523px); /* 523px — reserves the full band height */
   display: flex;
   align-items: center; /* keeps the panel centred as it grows on both axes */
   justify-content: center;
@@ -30,27 +36,29 @@
 
 /* Inner bone panel — the animated "window". Defaults to the full settled band so
    no-JS / reduced motion renders the final state; JS collapses it to the small
-   centred card and opens it on scroll. */
+   centred card and opens it on scroll (width → 100% of the viewport). */
 .trust__panel {
   position: relative;
   width: 100%;
-  min-height: 34.5899cqw; /* 523px — a short band, not a full screen */
+  min-height: min(34.5899vw, 523px); /* 523px — a short band, not a full screen */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline: 5.0265cqw; /* 76px */
+  padding-inline: min(5.0265vw, 76px); /* 76px */
   background: var(--pp-bone);
-  border-radius: 1.3228cqw; /* 20px */
+  border-radius: min(1.3228vw, 20px); /* 20px */
   overflow: hidden;
 }
 
-/* Inset hairline frame — the bordered rectangle around the copy. Decorative, so
-   it never intercepts pointer events. */
+/* Inset hairline frame — the bordered rectangle around the copy. Rides the panel
+   as it expands (so it's a full-width certificate frame on wide screens), capped
+   inset so the border stays a thin margin from the edges. Decorative, so it never
+   intercepts pointer events. */
 .trust__frame {
   position: absolute;
-  inset: 0.9921cqw 1.1243cqw; /* 15px vertical, 17px horizontal */
+  inset: min(0.9921vw, 15px) min(1.1243vw, 17px); /* 15px vertical, 17px horizontal */
   border: 1px solid var(--pp-ink);
-  border-radius: 1.3228cqw; /* 20px */
+  border-radius: min(1.3228vw, 20px); /* 20px */
   pointer-events: none;
 }
 
@@ -61,13 +69,13 @@
    free (no translateX to clobber). */
 .trust__eyebrow {
   position: absolute;
-  top: 2.3148cqw; /* 35px */
+  top: min(2.3148vw, 35px); /* 35px */
   left: 0;
   right: 0;
   z-index: 2;
   text-align: center;
   font-weight: 500; /* Medium → falls back to Book */
-  font-size: 1.0582cqw; /* 16px */
+  font-size: min(1.0582vw, 16px); /* 16px */
   letter-spacing: 0.01em; /* 0.16px */
   text-transform: uppercase;
   color: var(--pp-ink);
@@ -75,20 +83,21 @@
   opacity: 0;
 }
 
-/* Centred copy block — above the frame. */
+/* Centred copy block — above the frame. Width-capped so the copy stays at the
+   Figma measure while the panel around it grows. */
 .trust__content {
   position: relative;
   z-index: 1;
-  width: 45.4365cqw; /* 687px */
+  width: min(45.4365vw, 687px); /* 687px */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2566cqw; /* 19px */
+  gap: min(1.2566vw, 19px); /* 19px */
   text-align: center;
 }
 .trust__title {
   font-weight: 500; /* Medium → falls back to Book (see theme.css) */
-  font-size: 3.2407cqw; /* 49px */
+  font-size: min(3.2407vw, 49px); /* 49px */
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--pp-ink);
@@ -99,7 +108,7 @@
 }
 .trust__body {
   font-weight: 400; /* Book */
-  font-size: 1.0582cqw; /* 16px */
+  font-size: min(1.0582vw, 16px); /* 16px */
   line-height: 1.45;
   letter-spacing: 0.02em; /* 0.32px */
   color: rgba(22, 23, 24, 0.7); /* ink 70% */

@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="styles/problem.css?v=2" />
     <link rel="stylesheet" href="styles/profiles.css?v=10" />
     <link rel="stylesheet" href="styles/method.css?v=3" />
-    <link rel="stylesheet" href="styles/trust.css?v=3" />
+    <link rel="stylesheet" href="styles/trust.css?v=4" />
     <link rel="stylesheet" href="styles/referrers.css?v=2" />
     <link rel="stylesheet" href="styles/closing.css?v=3" />
     <link rel="stylesheet" href="styles/footer.css?v=17" />
@@ -32,7 +32,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=48" defer></script>
+    <script src="scripts/hero.js?v=49" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -435,6 +435,10 @@
         </a>
       </div>
     </section>
+    </div>
+    <!-- /.page-frame — the trust band lives OUTSIDE it so its bone panel can
+         expand sideways to the full viewport when it opens; its text stays at the
+         Figma size (centred + min(vw, px) caps). The frame re-opens below it. -->
 
     <!-- Trust section (Figma 58:219) — the reassurance band. First LIGHT surface:
          the fixed navbar flips to its light theme over it (data-nav-theme). -->
@@ -461,6 +465,10 @@
         </div>
       </div>
     </section>
+
+    <!-- /.page-frame re-opens: the remaining capped sections (referrers) sit back
+         inside the 1512px frame. -->
+    <div class="page-frame">
 
     <!-- Referrers section (Figma 68:813) — the prescripteur block. Dark ground;
          an orbital diagram of advisor avatars around the P-mark. The orbit is
