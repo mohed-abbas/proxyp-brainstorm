@@ -29,25 +29,46 @@
      it, so the deck stays self-similar as it scales and the CTA rides up beneath it.
      Every formula reduces to the original value at native size, so tall / 16:10
      screens render pixel-identical to before. Pure CSS; no JS scale. */
-  --card-h: clamp(390px, calc(100vh - 27.13cqw), 35.3175cqw);
-  /* MAX = the Figma card height (35.3175cqw = 534px native, node 58:154 = 325×534).
-     MIN = 390px — the largest floor that still keeps the CTA in view down to a
-     1366×768 laptop (its fitting height is ~397px), so cards never shrink to an
-     unreadable size while the CTA stays visible on common devices. */
-  --card-w: calc(var(--card-h) * 0.608614); /* 325 / 534 → 21.4947cqw native */
+  --card-h: clamp(420px, calc(100vh - 22.5cqw), 35.3175cqw);
+  /* Non-scale on large screens (matches the live site): the cards are the hero of
+     this section; the CTA is not kept in view (it can fall below the fold).
+     MAX = 35.3175cqw = 534px at/above the 1512 design width — FROZEN there via the
+       .profiles__frame container (no growth on 2K/4K, mirroring the live site's
+       fixed sizing).
+     PREFERRED = calc(100vh - 22.5cqw): deck-only fit for SHORT viewports — 22.5cqw
+       (~340px) is just the space above the deck (nav clear + header + 92px gap), no
+       CTA reserve, so cards stay full size on common screens and only shrink on
+       short laptops.
+     MIN = 420px floor so cards never get unreadably small. */
+  --card-w: calc(var(--card-h) * 0.692884); /* 370 / 534 — card width matched to the live site (wider than Figma's 325) */
   position: relative;
-  width: 100%;
+  width: 100%; /* full-bleed dark ground (section is outside .page-frame) */
   min-height: 100vh;
   display: flex;
   align-items: flex-start; /* top-anchored below the navbar (like the hero), not
                               centred — centring can't clear the nav AND leave the
                               CTA room, since the deck is tall. */
-  padding-top: 8.5cqw; /* 129 — clears the navbar AND keeps the whole composition
-                         (header → cards → CTA) inside the viewport while the
-                         section is pinned, so it's all visible during the dwell. */
-  padding-bottom: 6cqw; /* breathing room so the CTA never abuts the next section */
+  justify-content: center; /* centre the capped .profiles__frame on wide screens */
+  /* Paddings are min(vw, px)-capped: this element is outside the container, so raw
+     cqw here would resolve against the viewport and balloon on large screens. The
+     deck's own cqw/calc all live inside .profiles__frame and stay container-based. */
+  padding-top: min(8.5vw, 129px); /* 129 — clears the navbar AND keeps the whole
+                         composition (header → cards → CTA) inside the viewport while
+                         the section is pinned, so it's all visible during the dwell. */
+  padding-bottom: min(6vw, 91px); /* breathing room so the CTA never abuts the next section */
   background: var(--pp-ink);
   overflow: hidden;
+}
+
+/* Per-section container that re-creates the 1512px Figma frame: capped width +
+   container-type so every descendant cqw/calc resolves against 1512 above the
+   design width (frozen at native size) and against the viewport below it (scales,
+   exactly as when the section lived inside the shared .page-frame). The dark
+   ground around it is the full-bleed .profiles section. */
+.profiles__frame {
+  position: relative;
+  width: min(100vw, 1512px);
+  container-type: inline-size;
 }
 
 /* Full-viewport content box (no inline padding): every child is positioned with
@@ -80,9 +101,9 @@
 
 .profiles__body {
   position: absolute;
-  top: 2.0172cqw; /* 30.5px (Figma 78:8) */
-  right: 8.1349cqw; /* 123 — right edge at abs 1389 (Figma 78:8) */
-  width: 30.0926cqw; /* 455px — Figma 78:8, right-aligned */
+  top: 2.6455cqw; /* 40px — vertically centred in the header (Figma 77:1290) */
+  right: 5.0265cqw; /* 76 — symmetric with the page margin (Figma 77:1287 frame) */
+  width: 39.0212cqw; /* 590px — Figma 77:1290, right-aligned (two lines) */
   font-weight: 400; /* Book */
   font-size: 1.0582cqw; /* 16px */
   line-height: 1.45;
@@ -123,9 +144,9 @@
 /* Slots centred on the deck via --card-w so the row stays grouped (equal 50px
    gaps) and centred as the cards scale. Each calc reduces to the original vw left
    at native card width: 01 = 12.996cqw, 02 = 37.7976cqw, 03 = 62.5992cqw. */
-.profiles__card--01 { left: calc(50% - var(--card-w) * 1.721536); top: 9.4577cqw; z-index: 1; } /* abs 196.5 — behind */
-.profiles__card--02 { left: calc(50% - var(--card-w) * 0.567690); top: 9.4577cqw; z-index: 2; } /* abs 571.5 — middle */
-.profiles__card--03 { left: calc(50% + var(--card-w) * 0.586156); top: 9.4577cqw; z-index: 3; } /* abs 946.5 — on top:
+.profiles__card--01 { left: calc(50% - var(--card-w) * 1.721536); top: 13.889cqw; z-index: 1; } /* abs 196.5 — behind */
+.profiles__card--02 { left: calc(50% - var(--card-w) * 0.567690); top: 13.889cqw; z-index: 2; } /* abs 571.5 — middle */
+.profiles__card--03 { left: calc(50% + var(--card-w) * 0.586156); top: 13.889cqw; z-index: 3; } /* abs 946.5 — on top:
    the stack riffles left→right (01 behind, 02 over it, 03 on top), matching Figma
    58:153's paint order so 03 overlaps 02 on its right. (Spread cards don't overlap,
    so z-index only shapes the stacked entry + the flip transition.) */
@@ -250,10 +271,11 @@
 .profiles__cta {
   position: absolute;
   left: 48.51%; /* centred on the card group (abs x ≈ 733.5), Figma 78:25 */
-  /* Rides below the (possibly scaled) deck: card top + card height + 54px gap.
-     Reduces to 48.346cqw (731px) at native card height. The button itself stays
-     native vw size — only its position follows the deck. */
-  top: calc(var(--card-h) + 13.0291cqw);
+  /* Rides below the (possibly scaled) deck: card top (now 13.889cqw) + card height
+     + 54px gap. The button itself stays native size — only its position follows the
+     deck. With the larger cards + lowered deck it can sit below the fold (by design;
+     the CTA is no longer kept in view). */
+  top: calc(var(--card-h) + 17.4604cqw);
   transform: translateX(-50%);
 }
 

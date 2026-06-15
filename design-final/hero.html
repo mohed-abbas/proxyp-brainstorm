@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="styles/intro.css?v=1" />
     <link rel="stylesheet" href="styles/hero.css?v=5" />
     <link rel="stylesheet" href="styles/problem.css?v=2" />
-    <link rel="stylesheet" href="styles/profiles.css?v=10" />
+    <link rel="stylesheet" href="styles/profiles.css?v=14" />
     <link rel="stylesheet" href="styles/method.css?v=3" />
     <link rel="stylesheet" href="styles/trust.css?v=4" />
     <link rel="stylesheet" href="styles/referrers.css?v=4" />
@@ -279,6 +279,12 @@
         </article>
       </div>
     </section>
+    </div>
+    <!-- /.page-frame — profiles lives OUTSIDE it so its dark ground runs
+         edge-to-edge (consistency with the other bands; no visual change since the
+         ground matches the page). Its composition stays frozen + centred at the
+         Figma 1512 via .profiles__frame (a per-section container). The frame
+         re-opens below for method. -->
 
     <!-- Profiles section (Figma 78:3) — a scroll-SCRUBBED 3D flip. On entry the
          deck is a fanned stack showing each card's FRONT (big number + P-mark
@@ -296,6 +302,11 @@
          card winds back to at p=0 lives in the per-card --dx/--dy/--rot vars
          (single source of truth, read by JS). Cards port to a .map(). -->
     <section class="profiles" aria-label="The three support profiles" data-nav-theme="dark">
+      <!-- Centred, width-capped container: re-creates the 1512 Figma frame so the
+           composition freezes at native size on wide screens while the dark ground
+           (the <section>) runs full-bleed. container-type keeps all the deck's
+           cqw/calc formulas resolving against 1512 (frozen) above the design width. -->
+      <div class="profiles__frame">
       <div class="profiles__content">
         <!-- Editorial header -->
         <h2 class="profiles__title">
@@ -366,7 +377,11 @@
         <!-- Resolved-state CTA (Figma 78:25), revealed once the deck has flipped. -->
         <a class="profiles__cta hero-btn" href="#services">Explore the services</a>
       </div>
+      </div>
     </section>
+
+    <!-- /.page-frame re-opens for method (still capped inside the 1512 frame). -->
+    <div class="page-frame">
 
     <!-- The Method section (Figma 58:170) — the brand's full-presence moment:
          a full Proxy Blue panel. Revealed as it scrolls into view; shares the
