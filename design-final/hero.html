@@ -26,13 +26,13 @@
     <link rel="stylesheet" href="styles/trust.css?v=2" />
     <link rel="stylesheet" href="styles/referrers.css?v=1" />
     <link rel="stylesheet" href="styles/closing.css?v=1" />
-    <link rel="stylesheet" href="styles/footer.css?v=9" />
+    <link rel="stylesheet" href="styles/footer.css?v=14" />
 
     <!-- GSAP + ScrollTrigger + Lenis (CDN, no build step) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=45" defer></script>
+    <script src="scripts/hero.js?v=47" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -527,68 +527,75 @@
       </div>
     </section>
 
-    <!-- Footer (Figma 68:813 / frame 74:945) — the site close. Dark ground, so
-         the navbar keeps its dark theme over it. The oversized wordmark is live
-         text + the shared inline P-mark (recolors via the lockup tokens); the
-         nav + legal links port to .map()s (see setupFooter in hero.js). -->
-    <footer class="footer" data-nav-theme="dark">
-      <div class="footer__inner">
-        <!-- Top group — the footer's own secondary nav (Approach is active) over a
-             hairline. Pinned to the top of the full-height footer; this is the nav
-             that takes over once the fixed navbar fades out (see setupFooter +
-             setupNavHandoff in hero.js). -->
-        <div class="footer__top">
-          <nav class="footer__nav" aria-label="Footer">
-            <a class="footer__nav-link is-active" href="#">
-              <span class="footer__nav-roll">
-                <span class="footer__nav-label">Approach</span>
-                <span class="footer__nav-label" aria-hidden="true">Approach</span>
-              </span>
-            </a>
-            <a class="footer__nav-link" href="#">
-              <span class="footer__nav-roll">
-                <span class="footer__nav-label">Referrers</span>
-                <span class="footer__nav-label" aria-hidden="true">Referrers</span>
-              </span>
-            </a>
-            <a class="footer__nav-link" href="#">
-              <span class="footer__nav-roll">
-                <span class="footer__nav-label">Contact</span>
-                <span class="footer__nav-label" aria-hidden="true">Contact</span>
-              </span>
-            </a>
-            <a class="footer__nav-link" href="#">
-              <span class="footer__nav-roll">
-                <span class="footer__nav-label">Services</span>
-                <span class="footer__nav-label" aria-hidden="true">Services</span>
-              </span>
-            </a>
-          </nav>
-          <span class="footer__rule" aria-hidden="true"></span>
-        </div>
+    <!-- Footer (Figma 251:50) — the site close, a Proxy Blue card rounded only at
+         the TOP (it meets the page bottom). Same atmosphere as the onboarding
+         canvas (grain @10% + the clouds image bled from top + bottom-left). The
+         content is one centred group, bottom-aligned: a left brand column (big
+         bone P-mark over the copyright) beside two link columns, each split off
+         by a hairline divider and stacking a top nav group over a bottom
+         social/legal group. A BLUE surface, so the navbar takes its blue theme
+         over it (mark goes all-bone) before the handoff fades it out (see
+         setupFooter + setupNavHandoff in hero.js). -->
+    <footer class="footer" data-nav-theme="blue">
+      <!-- Atmosphere — grain tile + two cloud overlays (reused onboarding assets). -->
+      <div class="footer__grain" aria-hidden="true"></div>
+      <div class="footer__cloud footer__cloud--top" aria-hidden="true">
+        <img src="assets/clouds.webp" alt="" />
+      </div>
+      <div class="footer__cloud footer__cloud--left" aria-hidden="true">
+        <img src="assets/clouds.webp" alt="" />
+      </div>
 
-        <!-- Oversized lockup: the shared P-mark beside the two-line wordmark -->
-        <div class="footer__lockup">
-          <svg class="footer__mark" viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
-            <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
-          </svg>
-          <div class="footer__word" aria-label="Proxy Papers">
-            <span class="footer__word-line"><span class="footer__word-in">Proxy</span></span>
-            <span class="footer__word-line"><span class="footer__word-in">Papers</span></span>
+      <!-- Centred content group (top:124, bottom-aligned). -->
+      <div class="footer__content">
+        <!-- Left brand column — big bone P-mark over the copyright. -->
+        <div class="footer__brand">
+          <div class="footer__mark" aria-hidden="true">
+            <svg class="footer__mark-svg" viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+              <path d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+            </svg>
           </div>
+          <p class="footer__legal">All Rights Reserved © Proxy Papers 2026.</p>
         </div>
 
-        <!-- Bottom group — a hairline over the legal row. Pinned to the bottom of
-             the full-height footer. -->
-        <div class="footer__bottom">
-          <span class="footer__rule" aria-hidden="true"></span>
-          <div class="footer__legal">
-            <p>All Rights Reserved © Proxy Papers 2026.</p>
-            <div class="footer__legal-links">
-              <a href="#">Terms &amp; Conditions</a>
-              <a href="#">Privacy Policy</a>
-            </div>
+        <!-- Right group — two divider + link-column units, spread apart. -->
+        <div class="footer__cols">
+          <!-- Column 1 — top: primary nav (Approach active) · bottom: social. -->
+          <div class="footer__unit">
+            <span class="footer__rule" aria-hidden="true"></span>
+            <nav class="footer__col footer__col--1" aria-label="Footer">
+              <ul class="footer__group">
+                <li><a class="footer__link is-active" href="#">Approach</a></li>
+                <li><a class="footer__link" href="#">Referrers</a></li>
+                <li><a class="footer__link" href="#">Contact</a></li>
+                <li><a class="footer__link" href="#">Services</a></li>
+              </ul>
+              <ul class="footer__group">
+                <li><a class="footer__link" href="#">Facebook</a></li>
+                <li><a class="footer__link" href="#">Instagram</a></li>
+                <li><a class="footer__link" href="#">Twitter</a></li>
+                <li><a class="footer__link" href="#">LinkedIn</a></li>
+              </ul>
+            </nav>
+          </div>
+
+          <!-- Column 2 — top: about (About active) · bottom: legal/policy. -->
+          <div class="footer__unit">
+            <span class="footer__rule" aria-hidden="true"></span>
+            <nav class="footer__col footer__col--2" aria-label="Resources">
+              <ul class="footer__group">
+                <li><a class="footer__link is-active" href="#">About</a></li>
+                <li><a class="footer__link" href="#">Sovereignty and Security</a></li>
+                <li><a class="footer__link" href="#">News</a></li>
+              </ul>
+              <ul class="footer__group">
+                <li><a class="footer__link" href="#">Terms of Sale</a></li>
+                <li><a class="footer__link" href="#">Privacy Policy</a></li>
+                <li><a class="footer__link" href="#">Legal Notice</a></li>
+                <li><a class="footer__link" href="#">Cookies Policy</a></li>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>

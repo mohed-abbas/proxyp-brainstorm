@@ -1,215 +1,253 @@
 /* ============================================================================
-   Footer — the site close (Figma node 68:813 / frame 74:945)
-   A dark band that signs off with the brand at full scale: a centred secondary
-   nav (Approach · Referrers · Contact · Services), a hairline rule, an oversized
-   "Proxy Papers" lockup (the P-mark beside the two-line wordmark), a second rule,
-   and the legal row (copyright left, Terms / Privacy right).
+   Footer — the site close (Figma node 251:50)
+   A Proxy Blue card rounded only at the TOP (it sits flush at the page bottom).
+   It reprises the onboarding canvas: a grain tile at 10% plus the soft clouds
+   image bled in from the top and bottom-left. The content is one centred group,
+   bottom-aligned: a left brand column (big bone P-mark over the copyright) beside
+   a right group of two link columns, each preceded by a hairline divider and
+   stacking a top nav group over a bottom social/legal group. All copy is Bone.
 
-   A DARK surface, so the fixed navbar keeps its dark theme over it
-   (data-nav-theme="dark") — bone links + blue blade.
-
-   The giant wordmark is LIVE TEXT (mark = the shared inline P-mark SVG, wordmark
-   = the brand font) rather than the outlined vectors Figma exports — it stays
-   selectable, recolors from the theme tokens, and ports cleanly. With PP Neue
-   Montreal absent it renders in the documented fallback (see theme.css), so the
-   wordmark's exact width is a close approximation of the Figma, not pixel-exact.
+   A BLUE surface, so the fixed navbar takes its blue theme over it
+   (data-nav-theme="blue" → mark goes all-bone) before the handoff fades it out.
 
    Lengths are fractions of the 1512px Figma frame (1px ≈ 0.066138vw) — same
-   convention as the other design-final sections.
+   convention as the other design-final sections. The 815px frame height maps to
+   53.9021vw, so every vw coordinate (x AND y) shares the one width-driven scale.
 
-   Port note (React/Next): a self-contained <Footer />. The nav + legal links are
-   .map()s; the reveal is a useGSAP mount effect (see setupFooter in hero.js).
+   SCALING: each metric is min(<vw>, <design px>). Below the 1512px design width
+   the vw wins and the footer scales DOWN with the viewport; at/above 1512px the px
+   cap wins, so the footer FREEZES at the exact Figma size and centres (the blue
+   ground fills the extra width). This bounds the layout on 2K/4K screens — without
+   it, vw would keep growing (e.g. ~1.69× at 2560px). The atmosphere (grain/clouds)
+   stays in vw so it keeps filling wide screens.
+
+   Port note (React/Next): a self-contained <Footer />. The columns + their link
+   lists are .map()s; the reveal is a useGSAP mount effect (see setupFooter in
+   hero.js).
    ========================================================================== */
 
 .footer {
   position: relative;
   width: 100%;
-  /* Full-screen close: the nav (top), the lockup (centre) and the legal row
-     (bottom) all share ONE viewport so they read together the moment the fixed
-     navbar hands off. */
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--pp-ink);
-  padding: 2.6455vw 4.9603vw; /* 40px top/bottom · 75px sides */
+  min-height: min(53.9021vw, 815px); /* Figma band height, capped at 815px */
+  padding-top: min(8.2011vw, 124px); /* 124px — lifts content to the Figma y=124 */
+  background: var(--pp-blue);
+  /* 20px top corners only; bottom square */
+  border-radius: min(1.3228vw, 20px) min(1.3228vw, 20px) 0 0;
   overflow: hidden;
-}
-
-.footer__inner {
-  flex: 1 1 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* Three zones spread across the height: top group, lockup, bottom group. */
-  justify-content: space-between;
-}
-
-/* Top / bottom groups — each pairs a row (nav · legal) with its hairline and
-   stays anchored to its edge of the full-height footer. */
-.footer__top,
-.footer__bottom {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2.5794vw; /* 39px */
-}
-
-/* ── Secondary nav — centred, the active link in Proxy Blue + underline ───────*/
-.footer__nav {
-  display: flex;
-  align-items: center;
-  gap: 10.119vw; /* 153px */
-  font-weight: 500; /* Medium → Book fallback */
-  font-size: 1.6534vw; /* 25px */
-  line-height: 1.2;
-}
-/* One-line clip box — masks both the entrance rise (setupFooter) and the hover
-   roll. Same mechanic as the primary navbar's .pp-nav__link. */
-.footer__nav-link {
-  display: inline-block;
-  overflow: hidden;
-  height: 1.2em; /* one line box */
-  line-height: 1.2;
+  isolation: isolate; /* own stacking context for the layered atmosphere below */
   color: var(--pp-bone);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.4s var(--pp-ease-out);
-}
-.footer__nav-link:hover {
-  color: var(--pp-blue);
-}
-/* Two stacked copies of the label; hover rolls the second up into view. */
-.footer__nav-roll {
-  display: block;
-  transition: transform 0.55s var(--pp-ease-out);
-}
-.footer__nav-label {
-  display: block;
-}
-.footer__nav-link:hover .footer__nav-roll,
-.footer__nav-link:focus-visible .footer__nav-roll {
-  transform: translateY(-50%);
-}
-.footer__nav-link:focus-visible {
-  outline: none;
-}
-.footer__nav-link.is-active {
-  color: var(--pp-blue);
-}
-.footer__nav-link.is-active .footer__nav-label {
-  text-decoration: underline;
-  text-underline-offset: 0.2vw;
-}
-/* Reduced motion: hover roll stays put. */
-@media (prefers-reduced-motion: reduce) {
-  .footer__nav-roll {
-    transition: none;
-  }
 }
 
-/* ── Hairline rules ───────────────────────────────────────────────────────────*/
-.footer__rule {
-  width: 100%;
-  height: 1px;
-  background: rgba(247, 244, 240, 0.22);
+/* ── Atmosphere — reused onboarding assets ───────────────────────────────────*/
+/* (1) Grain — fine noise tile at 10% over the blue, for subtle depth (the brand
+   asks for gradient/grain depth, never flat colour). Tile size capped so the
+   grain stays fine on large screens. */
+.footer__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: url("../assets/grain.webp");
+  background-repeat: repeat;
+  background-size: min(25.1323vw, 380px) min(25.1323vw, 380px); /* 380px */
 }
 
-/* ── Oversized lockup — mark beside a two-line wordmark, flush top + bottom ───
-   Mark height is matched to the wordmark's cap-to-descender height so the two
-   read as one size. The tight line-height (0.82) makes the caps overflow ~60px
-   above the text box and the descenders ~60px below it; the lockup's vertical
-   padding reserves that room so the y / p tails stay clear of the hairlines. */
-.footer__lockup {
-  /* --lk-h drives the whole lockup so the mark + wordmark scale as one. It is the
-     mark's height, capped by viewport height so the lockup always fits the centre
-     zone of the full-height footer (on tall/wide screens it relaxes back toward
-     the Figma 41.667vw = 630px). Everything below is a fixed fraction of it, kept
-     to the original Figma ratios (gap 0.1004, pad/lift 0.0952, font 0.4944). */
-  --lk-h: min(41.667vw, 62vh);
+/* (2) Cloud overlays — the same soft-wisp image placed twice, bleeding off-card
+   from the top and the bottom-left. Square wrappers keep the photo undistorted;
+   screen blend lets the white wisps lift the blue rather than paint over it. Left
+   in vw so the atmosphere keeps filling wider viewports. */
+.footer__cloud {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: screen;
+}
+.footer__cloud img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.footer__cloud--top {
+  left: 25.1323vw; /* 380px */
+  top: -81.6138vw; /* -1234px */
+  width: 108.5980vw; /* 1642px */
+  height: 108.5980vw;
+}
+.footer__cloud--left {
+  left: -82.5398vw; /* -1248px */
+  top: -24.0290vw; /* -363.32px */
+  width: 108.5980vw; /* 1642px */
+  height: 108.5980vw;
+}
+
+/* ── Centred content group — bottom-aligned so the brand column's baseline meets
+   the link columns' baseline (Figma items-end). In normal flow (not absolute) so
+   the footer height stays content-aware and the layout can reflow; the ~1161px
+   group is centred by justify-content rather than a translate. ───────────────*/
+.footer__content {
+  position: relative;
+  z-index: 3;
   display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: min(12.3016vw, 186px); /* 186px */
+}
+
+/* Left brand column — P-mark stacked over the copyright. */
+.footer__brand {
+  display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: center; /* centre the group when it scales below full width */
-  gap: calc(var(--lk-h) * 0.10038); /* 63.24px @ full scale */
-  padding-top: calc(var(--lk-h) * 0.09524); /* room for the cap overflow above the
-     text box (the descender below is already covered by the mark's full height) */
+  gap: min(12.3016vw, 186px); /* 186px */
+  width: min(19.3122vw, 292px); /* 292px */
 }
 .footer__mark {
-  height: var(--lk-h); /* matched to the wordmark's cap-to-descender height */
-  width: auto;
-  flex-shrink: 0;
-  /* The wordmark's cap sits above its text box (line-height leading); lift the
-     mark by the same so the two are flush top AND bottom. */
-  margin-top: calc(var(--lk-h) * -0.09524);
-}
-.footer__mark .lk-mark__stem {
-  fill: var(--pp-lockup-ink);
-}
-.footer__mark .lk-mark__blade {
-  fill: var(--pp-lockup-blade);
-}
-
-.footer__word {
-  flex: 0 1 auto;
-  min-width: 0;
-  font-weight: 500; /* Medium → Book fallback */
-  font-size: calc(var(--lk-h) * 0.49440); /* scales with the mark (20.6vw @ full) */
-  line-height: 0.82; /* two lines stack tight */
-  letter-spacing: -0.04em;
-  color: var(--pp-lockup-ink);
-}
-/* Masked for the staggered rise — setupFooter releases each mask to
-   overflow:visible once its line lands, so descenders aren't trimmed at rest.
-   No-JS / reduced-motion never arms the masks, so the text just shows. */
-.footer__word-line {
-  display: block;
-}
-.js .footer__word-line {
-  overflow: hidden;
-}
-.footer__word-in {
-  display: block;
-  will-change: transform;
-}
-
-/* ── Legal row — copyright left, policy links right ──────────────────────────*/
-.footer__legal {
-  width: 100%;
+  width: min(14.6101vw, 220.904px); /* 220.904px */
+  height: min(21.6906vw, 327.962px); /* 327.962px */
   display: flex;
   align-items: center;
-  justify-content: space-between;
+}
+.footer__mark-svg {
+  height: 100%;
+  width: auto; /* preserve the mark's aspect */
+  fill: var(--pp-bone);
+}
+.footer__legal {
   font-weight: 500; /* Medium → Book fallback */
-  font-size: 1.0582vw; /* 16px */
+  font-size: min(1.0582vw, 16px); /* 16px */
   color: var(--pp-bone);
   white-space: nowrap;
 }
-.footer__legal-links {
+
+/* ── Right group — two divider + column units spread apart ───────────────────*/
+.footer__cols {
+  width: min(45.1720vw, 683px); /* 683px */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer__unit {
   display: flex;
   align-items: center;
-  gap: 1.3228vw; /* 20px */
+  gap: min(2.1825vw, 33px); /* 33px */
 }
-.footer__legal-links a {
+
+/* Vertical hairline divider preceding each column. */
+.footer__rule {
+  flex-shrink: 0;
+  width: 1px;
+  height: min(41.5366vw, 628px); /* 628px */
+  background: rgba(247, 244, 240, 0.28);
+  transform-origin: top center; /* scaleY reveal draws downward */
+}
+
+/* Each column spans the divider's full height; space-between lands the bottom
+   group's first line at the Figma y=626 regardless of how many items the top
+   group has (4 vs 3). */
+.footer__col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: min(41.5366vw, 628px); /* 628px */
+}
+.footer__col--1 {
+  width: min(5.8201vw, 88px); /* 88px */
+}
+.footer__col--2 {
+  width: min(14.4180vw, 218px); /* 218px */
+}
+.footer__group {
+  display: flex;
+  flex-direction: column;
+  gap: min(0.6614vw, 10px); /* 10px */
+  list-style: none;
+}
+
+.footer__link {
+  display: inline-block;
+  font-weight: 500; /* Medium → Book fallback */
+  font-size: min(1.3228vw, 20px); /* 20px */
+  line-height: 1.2;
+  letter-spacing: 0.005em;
   color: var(--pp-bone);
   text-decoration: none;
-  transition: color 0.4s var(--pp-ease-out);
+  white-space: nowrap;
+  transition: opacity 0.4s var(--pp-ease-out);
 }
-.footer__legal-links a:hover {
-  color: var(--pp-blue);
+.footer__link:hover,
+.footer__link:focus-visible {
+  opacity: 0.6;
+  outline: none;
+}
+/* The current page in each column reads as underlined (Figma). */
+.footer__link.is-active {
+  text-decoration: underline;
+  text-underline-offset: min(0.2vw, 3px);
+  text-decoration-thickness: 1px;
 }
 
 /* ── Reveal (house style) ─────────────────────────────────────────────────────
-   Per-word masks for the nav + legal copy keep descenders (the p in Approach /
-   Papers) from clipping at rest. */
-.footer .r-word {
-  padding: 0.06em 0 0.14em;
-  margin: -0.06em 0 -0.14em;
-}
-/* Armed state — JS reveals once the timeline is built. No JS / reduced motion →
-   the settled state renders as-is. */
-.js .footer__nav,
-.js .footer__lockup,
+   Armed state — JS hides the foreground until the timeline is built; the
+   atmosphere (grain + clouds) always shows. No JS / reduced motion never arms
+   these, so the settled footer just renders. */
+.js .footer__mark,
+.js .footer__rule,
+.js .footer__col,
 .js .footer__legal {
   visibility: hidden;
+}
+
+/* ── Mobile — stack everything ───────────────────────────────────────────────
+   The vw band is width-locked, so it collapses on phones; below 768px we drop it
+   for a content-driven height and switch from vw to fixed px so the type stays
+   readable. Brand → columns → groups all stack; the tall vertical dividers (only
+   meaningful side-by-side) are dropped. */
+@media (max-width: 768px) {
+  .footer {
+    min-height: auto; /* content-driven so it can't overflow the viewport */
+    padding: 56px 24px 32px;
+    border-radius: 16px 16px 0 0;
+  }
+  .footer__content {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 40px;
+  }
+  .footer__brand {
+    width: auto;
+    gap: 28px;
+  }
+  .footer__mark {
+    width: 88px;
+    height: auto; /* svg keeps its aspect */
+  }
+  .footer__legal {
+    font-size: 13px;
+  }
+  .footer__cols {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start; /* override base center → left-align the stacked columns */
+    justify-content: flex-start;
+    gap: 36px;
+  }
+  .footer__rule {
+    display: none; /* a 628px vertical hairline is meaningless once stacked */
+  }
+  .footer__col {
+    height: auto;
+    width: auto;
+    justify-content: flex-start; /* override base space-between (no fixed height now) */
+    gap: 28px; /* natural distance now the fixed height + space-between is gone */
+  }
+  .footer__group {
+    gap: 8px;
+  }
+  .footer__link {
+    font-size: 16px;
+  }
 }

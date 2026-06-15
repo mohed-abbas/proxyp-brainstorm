@@ -546,75 +546,50 @@
       .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.016 }, 0.55);
   };
 
-  // The footer is the page's full-screen close. As it scrolls in, the fixed navbar
-  // hands off (setupNavHandoff fades the pill out) and the footer reveals its OWN
-  // nav: the nav rises at the top, the oversized wordmark's two lines rise behind
-  // their clip masks (the P-mark fades + lifts beside them), then the legal row
-  // settles at the bottom — nav, lockup and legal sharing the one viewport. House
-  // stagger. Reduced-motion / no-JS skip this (and .js is stripped), so the settled
-  // full footer just renders.
+  // The footer is the page's blue-card close. As it scrolls in, the fixed navbar
+  // hands off (setupNavHandoff fades the pill out) and the footer reveals: the
+  // hairline dividers draw down, the P-mark fades + lifts, the two columns of
+  // links rise in a staggered cascade, then the copyright settles. House stagger.
+  // Reduced-motion / no-JS skip this (and .js is stripped), so the settled footer
+  // just renders.
   const setupFooter = (gsap) => {
     const section = document.querySelector(".footer");
     if (!section) return;
     const ST = window.ScrollTrigger;
 
-    // Nav links roll on hover (two stacked label copies, see footer.css). The
-    // entrance rises the roll behind the link's clip; on complete we clear the
-    // inline transform so the CSS hover roll isn't blocked by it.
-    const navRolls = gsap.utils.toArray(section.querySelectorAll(".footer__nav-roll"));
-    const legalWords = gsap.utils
-      .toArray(section.querySelectorAll(".footer__legal p, .footer__legal-links a"))
-      .flatMap(splitWords);
-    const wordLines = gsap.utils.toArray(section.querySelectorAll(".footer__word-in"));
-    const wordMasks = gsap.utils.toArray(section.querySelectorAll(".footer__word-line"));
     const mark = section.querySelector(".footer__mark");
+    const cols = gsap.utils.toArray(section.querySelectorAll(".footer__col"));
+    const rules = gsap.utils.toArray(section.querySelectorAll(".footer__rule"));
+    const links = gsap.utils.toArray(section.querySelectorAll(".footer__link"));
+    const legal = section.querySelector(".footer__legal");
 
-    gsap.set([".footer__nav", ".footer__lockup", ".footer__legal"], {
-      visibility: "visible",
-    });
+    // Un-hide the column containers up front: the links use autoAlpha (which sets
+    // visibility:inherit when shown), so a parent left at the CSS-armed hidden
+    // state would keep them invisible.
+    gsap.set([mark, ...cols, ...rules, ...links, legal], { visibility: "visible" });
 
     if (!ST) {
-      gsap.set([...legalWords, ...wordLines], { yPercent: 0 });
-      gsap.set(mark, { autoAlpha: 1, y: 0 });
-      gsap.set(wordMasks, { overflow: "visible" });
+      gsap.set([mark, ...rules, ...links, legal], { autoAlpha: 1, y: 0 });
+      gsap.set(rules, { scaleY: 1 });
       return;
     }
 
-    gsap.set(navRolls, { yPercent: 50 }); // park one line below the clip box
-    gsap.set(legalWords, { yPercent: 120 });
-    gsap.set(mark, { autoAlpha: 0, y: 40 });
-    // Each wordmark line rises in behind its mask (staggered, line-by-line); the
-    // masks are released to overflow:visible on complete so the descenders (the
-    // y / p tails) show fully at rest.
-    gsap.set(wordLines, { yPercent: 110 });
+    // yPercent (element-relative) keeps the lift resolution-independent — GSAP
+    // would otherwise read a "vw" transform as px.
+    gsap.set(mark, { autoAlpha: 0, yPercent: 12 });
+    gsap.set(rules, { autoAlpha: 0, scaleY: 0 });
+    gsap.set(links, { autoAlpha: 0, yPercent: 70 });
+    gsap.set(legal, { autoAlpha: 0, yPercent: 85 });
 
     gsap
       .timeline({
         defaults: { ease: "power3.out", force3D: true },
         scrollTrigger: { trigger: section, start: "top 82%", once: true },
       })
-      .to(
-        navRolls,
-        {
-          yPercent: 0,
-          duration: 0.7,
-          stagger: 0.06,
-          onComplete: () => gsap.set(navRolls, { clearProps: "transform" }),
-        },
-        0.0,
-      )
-      .to(mark, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power2.out" }, 0.25)
-      .to(
-        wordLines,
-        {
-          yPercent: 0,
-          duration: 0.95,
-          stagger: 0.14,
-          onComplete: () => gsap.set(wordMasks, { overflow: "visible" }),
-        },
-        0.35,
-      )
-      .to(legalWords, { yPercent: 0, duration: 0.6, stagger: 0.012 }, 0.75);
+      .to(rules, { autoAlpha: 1, scaleY: 1, duration: 0.9, ease: "power2.out", stagger: 0.08 }, 0.0)
+      .to(mark, { autoAlpha: 1, yPercent: 0, duration: 0.9, ease: "power2.out" }, 0.15)
+      .to(links, { autoAlpha: 1, yPercent: 0, duration: 0.7, stagger: 0.05 }, 0.3)
+      .to(legal, { autoAlpha: 1, yPercent: 0, duration: 0.6 }, 0.7);
   };
 
   // Footer mechanic — the fixed navbar HANDS OFF to the footer's own nav. As the
