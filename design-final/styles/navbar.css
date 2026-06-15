@@ -24,10 +24,15 @@
   top: min(4.2328vw, 64px); /* 64 / 1512 */
   /* Full-bleed: the bar tracks the hero's full-bleed lens, so on large screens the
      logo + Menu sit out near the viewport edges (along the lens) instead of being
-     pulled into a centred column. Insets scale with the viewport (Figma 78px);
-     pill SIZE + bar height stay capped (below) so the chrome never balloons. */
-  left: 5.1587vw; /* 78 / 1512 */
-  right: 5.1587vw;
+     pulled into a centred column. pill SIZE + bar height stay capped (below) so the
+     chrome never balloons.
+     Inset follows the Figma frames: 78px @1512 (278:136) → 141px @1920 (283:282).
+     That is NOT a flat percentage — it grows linearly (≈ base 78px + ~31% of the
+     composition's side gutter). max() keeps the proportional 5.159vw at/below 1512
+     and switches to the linear growth above it (both equal 78px at 1512), so 2K
+     follows the same rule (~240px @2560). */
+  left: max(5.1587vw, 15.441vw - 155.5px); /* 78 @1512 · 141 @1920 */
+  right: max(5.1587vw, 15.441vw - 155.5px);
   height: min(3.3069vw, 50px); /* 50 / 1512 */
   z-index: 100;
 
