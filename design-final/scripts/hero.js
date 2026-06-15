@@ -385,15 +385,19 @@
       return;
     }
 
-    // Collapsed initial state — a small centred window on the dark ground (the
-    // Vooban c-abstract-mask "from" box). The hairline frame is present from the
-    // start so it reads as a framed window. The card is sized to show ONLY the
-    // eyebrow tag and the first title line ("Sovereign infrastructure.");
-    // "Protected data." and the body stay hidden until the window opens.
-    gsap.set(panel, { width: "44vw", minHeight: 0, height: "24vw" });
-    gsap.set(frame, { autoAlpha: 1 });
+    // Collapsed initial state — the Figma "from" card (node 58:684): a 440×520
+    // PORTRAIT card (so the open is width-only — Figma's collapsed height already
+    // matches the full band). Per Figma: the eyebrow tag sits up top, the big
+    // title sits LOW and bleeds off the card edges (clipped by the panel's
+    // overflow), and there is NO inset frame yet (the hairline belongs to the full
+    // band, so it fades in as the card opens). "Protected data." + the body stay
+    // hidden until the open. y is pushed in px (GSAP treats vw on transforms as px),
+    // so convert against the live viewport.
+    const vwToPx = (vw) => (vw / 100) * window.innerWidth;
+    gsap.set(panel, { width: "29.1005vw" }); // 440px — height stays the full band
+    gsap.set(frame, { autoAlpha: 0 }); // no frame in the collapsed card (Figma)
     gsap.set(eyebrow, { autoAlpha: 1, y: 0 });
-    gsap.set(content, { y: "2vw" });
+    gsap.set(content, { y: vwToPx(18) }); // title sits low, bleeding off the edges
     gsap.set(title, { color: "rgba(22, 23, 24, 0.6)" });
     gsap.set(line2, { autoAlpha: 0, yPercent: 40 });
     gsap.set(bodyWords, { yPercent: 120 });
@@ -425,9 +429,10 @@
           invalidateOnRefresh: true,
         },
       })
-      .to(panel, { width: "100%", height: "34.5899vw", duration: 1.5, ease: "power2.inOut" }, 0)
+      .to(panel, { width: "100%", duration: 1.5, ease: "power2.inOut" }, 0) // width-only open (Figma)
       .to(content, { y: 0, duration: 1.5, ease: "power2.inOut" }, 0)
       .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.45 }, 0)
+      .to(frame, { autoAlpha: 1, duration: 0.6 }, 0.4) // hairline frame fades in as it opens
       .to(line2, { autoAlpha: 1, yPercent: 0, duration: 0.6 }, 0.5)
       .to(title, { color: "rgb(22, 23, 24)", duration: 0.7 }, 0.6)
       .to(body, { autoAlpha: 1, duration: 0.5 }, 0.85)
