@@ -11,8 +11,17 @@
    clipped to the top 298px) so the rings, centre mark and avatars all share a
    single percentage coordinate system — port-clean and resolution-independent.
 
-   Reads tokens from theme.css. Outer lengths are fractions of the 1512px Figma
-   frame (1px ≈ 0.066138cqw) — same convention as the other design-final sections.
+   FULL-BLEED (consistency, like the other below-hero bands): this section sits
+   OUTSIDE the .page-frame container (see hero.html) and uses raw vw, so its dark
+   ground runs edge-to-edge. The ground matches the page ground, so there's no
+   visible change vs. the capped version — the move is for a uniform convention
+   ahead of the Next.js port. The centred column stays at the Figma size via
+   min(<vw>, <design px>) caps (1px ≈ 0.066138vw): below 1512px the vw wins and
+   the content scales DOWN; at/above 1512px the px cap wins and it freezes.
+
+   HEIGHT: capped at min(100vh, 800px). It stays near full-screen on laptops (the
+   immersive radar beat) but stops ballooning into a tall dark void between the
+   two bone bands (trust above, closing below) on large screens.
 
    Port note (React/Next): the five avatars are a .map() over an ADVISORS array;
    the reveal is a useGSAP mount effect (see setupReferrers in hero.js).
@@ -21,28 +30,28 @@
 .referrers {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: min(100vh, 800px); /* full-screen on laptops, capped on large screens */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline: 5.0265cqw; /* 76px */
+  padding-inline: min(5.0265vw, 76px); /* 76px */
   background: var(--pp-ink);
   overflow: hidden;
 }
 
 .referrers__content {
   position: relative;
-  width: 69.4444cqw; /* 1050px */
+  width: min(69.4444vw, 1050px); /* 1050px */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.7857cqw; /* 27px */
+  gap: min(1.7857vw, 27px); /* 27px */
   text-align: center;
 }
 
 .referrers__title {
   font-weight: 500; /* Medium → Book fallback */
-  font-size: 3.2407cqw; /* 49px */
+  font-size: min(3.2407vw, 49px); /* 49px */
   line-height: 1.1;
   letter-spacing: -0.02em; /* -0.98px */
   color: var(--pp-bone);
@@ -53,8 +62,12 @@
    494×494 circle box; everything inside is positioned as a % of it. */
 .referrers__orbit {
   position: relative;
-  width: 32.6720cqw; /* 494px */
-  height: 19.7090cqw; /* 298px */
+  /* Caps raised ~1.2× above the Figma 494×298 so the radar reads larger on wide
+     screens (everything inside is % of this box, so it all scales uniformly). The
+     vw coefficients are unchanged, so it's exact Figma size at the 1512 design
+     width and only grows beyond it. */
+  width: min(32.6720vw, 593px); /* 494px Figma → 593px cap */
+  height: min(19.7090vw, 358px); /* 298px Figma → 358px cap (same ratio) */
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -155,12 +168,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.7857cqw; /* 27px */
+  gap: min(1.7857vw, 27px); /* 27px */
 }
 .referrers__body {
   width: 100%;
   font-weight: 400; /* Book */
-  font-size: 1.0582cqw; /* 16px */
+  font-size: min(1.0582vw, 16px); /* 16px */
   line-height: 1.45;
   letter-spacing: 0.02em; /* 0.32px */
   color: rgba(247, 244, 240, 0.7);
@@ -169,12 +182,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.6614cqw 1.3228cqw; /* 10px 20px */
-  border-radius: 2.9762cqw; /* 45px */
+  padding: min(0.6614vw, 10px) min(1.3228vw, 20px); /* 10px 20px */
+  border-radius: min(2.9762vw, 45px); /* 45px */
   background: var(--pp-blue);
   color: var(--pp-bone);
   font-weight: 500;
-  font-size: 1.0582cqw; /* 16px */
+  font-size: min(1.0582vw, 16px); /* 16px */
   text-decoration: none;
   white-space: nowrap;
   transition:
@@ -182,7 +195,7 @@
     filter 0.4s var(--pp-ease-out);
 }
 .referrers__cta:hover {
-  transform: translateY(-0.1323cqw); /* -2px */
+  transform: translateY(max(-2px, -0.1323vw)); /* -2px */
   filter: brightness(1.07);
 }
 
