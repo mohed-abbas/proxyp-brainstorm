@@ -15,24 +15,24 @@
     <link rel="preload" as="image" href="assets/problem-accent-underline.svg" />
     <link rel="preload" as="image" href="assets/clouds.webp" />
 
-    <link rel="stylesheet" href="styles/theme.css?v=4" />
+    <link rel="stylesheet" href="styles/theme.css?v=5" />
     <link rel="stylesheet" href="styles/navbar.css?v=3" />
     <link rel="stylesheet" href="styles/onboarding.css?v=1" />
     <link rel="stylesheet" href="styles/intro.css?v=1" />
     <link rel="stylesheet" href="styles/hero.css?v=5" />
-    <link rel="stylesheet" href="styles/problem.css?v=1" />
-    <link rel="stylesheet" href="styles/profiles.css?v=9" />
-    <link rel="stylesheet" href="styles/method.css?v=2" />
-    <link rel="stylesheet" href="styles/trust.css?v=2" />
-    <link rel="stylesheet" href="styles/referrers.css?v=1" />
-    <link rel="stylesheet" href="styles/closing.css?v=1" />
-    <link rel="stylesheet" href="styles/footer.css?v=14" />
+    <link rel="stylesheet" href="styles/problem.css?v=2" />
+    <link rel="stylesheet" href="styles/profiles.css?v=10" />
+    <link rel="stylesheet" href="styles/method.css?v=3" />
+    <link rel="stylesheet" href="styles/trust.css?v=3" />
+    <link rel="stylesheet" href="styles/referrers.css?v=2" />
+    <link rel="stylesheet" href="styles/closing.css?v=2" />
+    <link rel="stylesheet" href="styles/footer.css?v=17" />
 
     <!-- GSAP + ScrollTrigger + Lenis (CDN, no build step) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=47" defer></script>
+    <script src="scripts/hero.js?v=48" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -204,6 +204,12 @@
       </div>
     </main>
 
+    <!-- Capped content frame: everything below the hero is wrapped so it freezes at
+         the 1512px design size on >=1512px screens (container-type: inline-size +
+         cqw units in the section CSS) instead of ballooning on 2K/4K. The welcome,
+         fixed navbar and hero stay OUTSIDE it (full-bleed + fixed/scroll-pinned, so
+         they must not sit inside a containment context). -->
+    <div class="page-frame">
     <!-- Problem section (Figma 17:2) — revealed as it scrolls into view.
          Shares the fixed navbar above; no navbar of its own. -->
     <section class="problem" aria-label="The problem Proxy Papers solves" data-nav-theme="dark">
@@ -526,6 +532,9 @@
         </p>
       </div>
     </section>
+    </div>
+    <!-- /.page-frame — the footer lives OUTSIDE it so its blue card stays
+         full-bleed (its own content is capped via min(vw, px)). -->
 
     <!-- Footer (Figma 251:50) — the site close, a Proxy Blue card rounded only at
          the TOP (it meets the page bottom). Same atmosphere as the onboarding

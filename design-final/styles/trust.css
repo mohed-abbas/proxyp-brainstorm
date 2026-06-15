@@ -9,7 +9,7 @@
    over it (ink links + mark, see theme.css / navbar.css + data-nav-theme).
 
    Reads tokens from theme.css. Lengths are fractions of the 1512px Figma frame
-   (1px ≈ 0.066138vw) — same convention as the other design-final sections.
+   (1px ≈ 0.066138cqw) — same convention as the other design-final sections.
 
    Port note (React/Next): a self-contained band; the reveal is a useGSAP mount
    effect (see setupTrust in hero.js).
@@ -22,7 +22,7 @@
 .trust {
   position: relative;
   width: 100%;
-  min-height: 34.5899vw; /* 523px — reserves the full band height */
+  min-height: 34.5899cqw; /* 523px — reserves the full band height */
   display: flex;
   align-items: center; /* keeps the panel centred as it grows on both axes */
   justify-content: center;
@@ -34,13 +34,13 @@
 .trust__panel {
   position: relative;
   width: 100%;
-  min-height: 34.5899vw; /* 523px — a short band, not a full screen */
+  min-height: 34.5899cqw; /* 523px — a short band, not a full screen */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline: 5.0265vw; /* 76px */
+  padding-inline: 5.0265cqw; /* 76px */
   background: var(--pp-bone);
-  border-radius: 1.3228vw; /* 20px */
+  border-radius: 1.3228cqw; /* 20px */
   overflow: hidden;
 }
 
@@ -48,9 +48,9 @@
    it never intercepts pointer events. */
 .trust__frame {
   position: absolute;
-  inset: 0.9921vw 1.1243vw; /* 15px vertical, 17px horizontal */
+  inset: 0.9921cqw 1.1243cqw; /* 15px vertical, 17px horizontal */
   border: 1px solid var(--pp-ink);
-  border-radius: 1.3228vw; /* 20px */
+  border-radius: 1.3228cqw; /* 20px */
   pointer-events: none;
 }
 
@@ -61,13 +61,13 @@
    free (no translateX to clobber). */
 .trust__eyebrow {
   position: absolute;
-  top: 2.3148vw; /* 35px */
+  top: 2.3148cqw; /* 35px */
   left: 0;
   right: 0;
   z-index: 2;
   text-align: center;
   font-weight: 500; /* Medium → falls back to Book */
-  font-size: 1.0582vw; /* 16px */
+  font-size: 1.0582cqw; /* 16px */
   letter-spacing: 0.01em; /* 0.16px */
   text-transform: uppercase;
   color: var(--pp-ink);
@@ -79,16 +79,16 @@
 .trust__content {
   position: relative;
   z-index: 1;
-  width: 45.4365vw; /* 687px */
+  width: 45.4365cqw; /* 687px */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2566vw; /* 19px */
+  gap: 1.2566cqw; /* 19px */
   text-align: center;
 }
 .trust__title {
   font-weight: 500; /* Medium → falls back to Book (see theme.css) */
-  font-size: 3.2407vw; /* 49px */
+  font-size: 3.2407cqw; /* 49px */
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--pp-ink);
@@ -99,7 +99,7 @@
 }
 .trust__body {
   font-weight: 400; /* Book */
-  font-size: 1.0582vw; /* 16px */
+  font-size: 1.0582cqw; /* 16px */
   line-height: 1.45;
   letter-spacing: 0.02em; /* 0.32px */
   color: rgba(22, 23, 24, 0.7); /* ink 70% */

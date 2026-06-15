@@ -7,7 +7,7 @@
    riffles left→right with 03 on top (Figma 58:153).
 
    Reads tokens from theme.css. Lengths are fractions of the 1512px Figma frame
-   (1px ≈ 0.066138vw), so the section is pixel-faithful at 1512 and scales
+   (1px ≈ 0.066138cqw), so the section is pixel-faithful at 1512 and scales
    proportionally — identical convention to hero.css / problem.css. Children are
    positioned against `.profiles__content`, whose origin == the Figma frame x=0.
 
@@ -29,12 +29,12 @@
      it, so the deck stays self-similar as it scales and the CTA rides up beneath it.
      Every formula reduces to the original value at native size, so tall / 16:10
      screens render pixel-identical to before. Pure CSS; no JS scale. */
-  --card-h: clamp(390px, calc(100vh - 27.13vw), 35.3175vw);
-  /* MAX = the Figma card height (35.3175vw = 534px native, node 58:154 = 325×534).
+  --card-h: clamp(390px, calc(100vh - 27.13cqw), 35.3175cqw);
+  /* MAX = the Figma card height (35.3175cqw = 534px native, node 58:154 = 325×534).
      MIN = 390px — the largest floor that still keeps the CTA in view down to a
      1366×768 laptop (its fitting height is ~397px), so cards never shrink to an
      unreadable size while the CTA stays visible on common devices. */
-  --card-w: calc(var(--card-h) * 0.608614); /* 325 / 534 → 21.4947vw native */
+  --card-w: calc(var(--card-h) * 0.608614); /* 325 / 534 → 21.4947cqw native */
   position: relative;
   width: 100%;
   min-height: 100vh;
@@ -42,10 +42,10 @@
   align-items: flex-start; /* top-anchored below the navbar (like the hero), not
                               centred — centring can't clear the nav AND leave the
                               CTA room, since the deck is tall. */
-  padding-top: 8.5vw; /* 129 — clears the navbar AND keeps the whole composition
+  padding-top: 8.5cqw; /* 129 — clears the navbar AND keeps the whole composition
                          (header → cards → CTA) inside the viewport while the
                          section is pinned, so it's all visible during the dwell. */
-  padding-bottom: 6vw; /* breathing room so the CTA never abuts the next section */
+  padding-bottom: 6cqw; /* breathing room so the CTA never abuts the next section */
   background: var(--pp-ink);
   overflow: hidden;
 }
@@ -57,18 +57,18 @@
 .profiles__content {
   position: relative;
   width: 100%;
-  height: 50.93vw; /* 770px — header top → CTA bottom (Figma 78:5 + 78:25) */
+  height: 50.93cqw; /* 770px — header top → CTA bottom (Figma 78:5 + 78:25) */
 }
 
 /* ── Editorial header ──────────────────────────────────────────────────────*/
 .profiles__title {
   position: absolute;
-  left: 5.2249vw; /* 79 — aligned to the navbar's left edge (Figma 78:7) */
+  left: 5.2249cqw; /* 79 — aligned to the navbar's left edge (Figma 78:7) */
   top: 0;
   font-weight: 500; /* Medium → falls back to Book (see theme.css) */
-  font-size: 3.2407vw; /* 49px */
+  font-size: 3.2407cqw; /* 49px */
   line-height: 1.04;
-  letter-spacing: -0.0212vw; /* -0.32px */
+  letter-spacing: -0.0212cqw; /* -0.32px */
   color: var(--pp-bone);
 }
 .profiles__title-line {
@@ -80,13 +80,13 @@
 
 .profiles__body {
   position: absolute;
-  top: 2.0172vw; /* 30.5px (Figma 78:8) */
-  right: 8.1349vw; /* 123 — right edge at abs 1389 (Figma 78:8) */
-  width: 30.0926vw; /* 455px — Figma 78:8, right-aligned */
+  top: 2.0172cqw; /* 30.5px (Figma 78:8) */
+  right: 8.1349cqw; /* 123 — right edge at abs 1389 (Figma 78:8) */
+  width: 30.0926cqw; /* 455px — Figma 78:8, right-aligned */
   font-weight: 400; /* Book */
-  font-size: 1.0582vw; /* 16px */
+  font-size: 1.0582cqw; /* 16px */
   line-height: 1.45;
-  letter-spacing: 0.0212vw; /* 0.32px */
+  letter-spacing: 0.0212cqw; /* 0.32px */
   text-align: right;
   color: rgba(247, 244, 240, 0.7);
 }
@@ -111,21 +111,21 @@
      node, so the hover-lift transform can't fight the scrubbed spread/flip
      transforms (which live on the inner -pos / -flip nodes). */
   position: absolute;
-  width: var(--card-w); /* 21.4947vw (325px) native */
-  height: var(--card-h); /* 35.3175vw (534px) native */
+  width: var(--card-w); /* 21.4947cqw (325px) native */
+  height: var(--card-h); /* 35.3175cqw (534px) native */
   perspective: 1600px; /* on the ancestor of the flipping node, never on it */
   transition: transform 0.45s var(--pp-ease-out);
 }
-/* Resolved slots (Figma 78:9): flat row, equal tops, 50px (3.31vw) gaps. The
+/* Resolved slots (Figma 78:9): flat row, equal tops, 50px (3.31cqw) gaps. The
    1075-wide card group is centred inside the 1310 frame (abs x 196.5/571.5/946.5,
    top 143). The fanned ENTRY positions are reached by GSAP via the per-card
    --dx/--dy/--rot offset on .profiles__card-pos (so this stays the no-JS state). */
 /* Slots centred on the deck via --card-w so the row stays grouped (equal 50px
    gaps) and centred as the cards scale. Each calc reduces to the original vw left
-   at native card width: 01 = 12.996vw, 02 = 37.7976vw, 03 = 62.5992vw. */
-.profiles__card--01 { left: calc(50% - var(--card-w) * 1.721536); top: 9.4577vw; z-index: 1; } /* abs 196.5 — behind */
-.profiles__card--02 { left: calc(50% - var(--card-w) * 0.567690); top: 9.4577vw; z-index: 2; } /* abs 571.5 — middle */
-.profiles__card--03 { left: calc(50% + var(--card-w) * 0.586156); top: 9.4577vw; z-index: 3; } /* abs 946.5 — on top:
+   at native card width: 01 = 12.996cqw, 02 = 37.7976cqw, 03 = 62.5992cqw. */
+.profiles__card--01 { left: calc(50% - var(--card-w) * 1.721536); top: 9.4577cqw; z-index: 1; } /* abs 196.5 — behind */
+.profiles__card--02 { left: calc(50% - var(--card-w) * 0.567690); top: 9.4577cqw; z-index: 2; } /* abs 571.5 — middle */
+.profiles__card--03 { left: calc(50% + var(--card-w) * 0.586156); top: 9.4577cqw; z-index: 3; } /* abs 946.5 — on top:
    the stack riffles left→right (01 behind, 02 over it, 03 on top), matching Figma
    58:153's paint order so 03 overlaps 02 on its right. (Spread cards don't overlap,
    so z-index only shapes the stacked entry + the flip transition.) */
@@ -158,7 +158,7 @@
   overflow: hidden;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  box-shadow: 0 2.6vw 4.6vw -1.9vw rgba(0, 0, 0, 0.55);
+  box-shadow: 0 2.6cqw 4.6cqw -1.9cqw rgba(0, 0, 0, 0.55);
   transition:
     box-shadow 0.45s var(--pp-ease-out),
     filter 0.4s var(--pp-ease-out);
@@ -223,7 +223,7 @@
   font-weight: 500; /* Medium → Book */
   font-size: calc(var(--card-h) * 0.073034); /* 39px native */
   line-height: 1.05;
-  letter-spacing: -0.0106vw;
+  letter-spacing: -0.0106cqw;
 }
 .profiles__card-desc {
   font-weight: 400; /* Book */
@@ -251,9 +251,9 @@
   position: absolute;
   left: 48.51%; /* centred on the card group (abs x ≈ 733.5), Figma 78:25 */
   /* Rides below the (possibly scaled) deck: card top + card height + 54px gap.
-     Reduces to 48.346vw (731px) at native card height. The button itself stays
+     Reduces to 48.346cqw (731px) at native card height. The button itself stays
      native vw size — only its position follows the deck. */
-  top: calc(var(--card-h) + 13.0291vw);
+  top: calc(var(--card-h) + 13.0291cqw);
   transform: translateX(-50%);
 }
 

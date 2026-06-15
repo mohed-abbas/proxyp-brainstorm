@@ -12,7 +12,7 @@
    single percentage coordinate system — port-clean and resolution-independent.
 
    Reads tokens from theme.css. Outer lengths are fractions of the 1512px Figma
-   frame (1px ≈ 0.066138vw) — same convention as the other design-final sections.
+   frame (1px ≈ 0.066138cqw) — same convention as the other design-final sections.
 
    Port note (React/Next): the five avatars are a .map() over an ADVISORS array;
    the reveal is a useGSAP mount effect (see setupReferrers in hero.js).
@@ -25,24 +25,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline: 5.0265vw; /* 76px */
+  padding-inline: 5.0265cqw; /* 76px */
   background: var(--pp-ink);
   overflow: hidden;
 }
 
 .referrers__content {
   position: relative;
-  width: 69.4444vw; /* 1050px */
+  width: 69.4444cqw; /* 1050px */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.7857vw; /* 27px */
+  gap: 1.7857cqw; /* 27px */
   text-align: center;
 }
 
 .referrers__title {
   font-weight: 500; /* Medium → Book fallback */
-  font-size: 3.2407vw; /* 49px */
+  font-size: 3.2407cqw; /* 49px */
   line-height: 1.1;
   letter-spacing: -0.02em; /* -0.98px */
   color: var(--pp-bone);
@@ -53,8 +53,8 @@
    494×494 circle box; everything inside is positioned as a % of it. */
 .referrers__orbit {
   position: relative;
-  width: 32.6720vw; /* 494px */
-  height: 19.7090vw; /* 298px */
+  width: 32.6720cqw; /* 494px */
+  height: 19.7090cqw; /* 298px */
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -155,12 +155,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.7857vw; /* 27px */
+  gap: 1.7857cqw; /* 27px */
 }
 .referrers__body {
   width: 100%;
   font-weight: 400; /* Book */
-  font-size: 1.0582vw; /* 16px */
+  font-size: 1.0582cqw; /* 16px */
   line-height: 1.45;
   letter-spacing: 0.02em; /* 0.32px */
   color: rgba(247, 244, 240, 0.7);
@@ -169,12 +169,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.6614vw 1.3228vw; /* 10px 20px */
-  border-radius: 2.9762vw; /* 45px */
+  padding: 0.6614cqw 1.3228cqw; /* 10px 20px */
+  border-radius: 2.9762cqw; /* 45px */
   background: var(--pp-blue);
   color: var(--pp-bone);
   font-weight: 500;
-  font-size: 1.0582vw; /* 16px */
+  font-size: 1.0582cqw; /* 16px */
   text-decoration: none;
   white-space: nowrap;
   transition:
@@ -182,7 +182,7 @@
     filter 0.4s var(--pp-ease-out);
 }
 .referrers__cta:hover {
-  transform: translateY(-0.1323vw); /* -2px */
+  transform: translateY(-0.1323cqw); /* -2px */
   filter: brightness(1.07);
 }
 

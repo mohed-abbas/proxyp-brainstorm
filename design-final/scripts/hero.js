@@ -289,6 +289,8 @@
                        // than a one-viewport pin, so each degree of rotation costs
                        // more wheel — the motion reads slow and deliberate, not fast.
         pin: true,
+        pinType: "transform", // survive the .page-frame container-type: a fixed-pin
+                              // would anchor to the contained frame, not the viewport
         anticipatePin: 1,
         scrub: 2.4, // heavy smoothing: the timeline trails the wheel by a longer
                     // beat and glides to rest when you stop, so the pin feels soft
@@ -424,6 +426,8 @@
                          // has room — mirrors the profiles deck's long pin
           scrub: 2.4, // heavy smoothing → consistent pace regardless of scroll force
           pin: true,
+          pinType: "transform", // survive the .page-frame container-type: a fixed-pin
+                                // would anchor to the contained frame, not the viewport
           pinSpacing: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,

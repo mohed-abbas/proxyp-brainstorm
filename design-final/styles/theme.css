@@ -99,6 +99,22 @@ svg {
   display: block;
 }
 
+/* ── Capped content frame ────────────────────────────────────────────────────
+   Wraps everything BELOW the hero. container-type makes the frame's own width the
+   basis for the section CSS's cqw units; max-width freezes that basis at the
+   1512px design width, so the contained sections stop scaling on >=1512px screens
+   and centre (the body ground shows in the side gutters). Below 1512px the frame
+   is full width, so 1cqw == 1vw and the sections scale exactly as before. The
+   welcome, fixed navbar and hero live OUTSIDE it (full-bleed + fixed/scroll-
+   pinned, so they must not sit inside a containment context). Pinned sections
+   (profiles, trust) use pinType:"transform" so the containment doesn't anchor
+   their pin to the frame instead of the viewport. */
+.page-frame {
+  max-width: 1512px;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
 /* ── Lenis smooth-scroll base (library-recommended) ──────────────────────────*/
 html.lenis,
 html.lenis body {

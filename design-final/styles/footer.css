@@ -10,14 +10,20 @@
    A BLUE surface, so the fixed navbar takes its blue theme over it
    (data-nav-theme="blue" → mark goes all-bone) before the handoff fades it out.
 
-   Lengths are fractions of the 1512px Figma frame (1px ≈ 0.066138vw) — same
-   convention as the other design-final sections. The 815px frame height maps to
-   53.9021vw, so every vw coordinate (x AND y) shares the one width-driven scale.
+   Lengths are fractions of the 1512px Figma frame (1px ≈ 0.066138vw). The 815px
+   frame height maps to 53.9021vw, so every vw coordinate (x AND y) shares the one
+   width-driven scale.
+
+   FULL-BLEED EXCEPTION: unlike the other sections, the footer sits OUTSIDE the
+   .page-frame container (see hero.html) and uses raw vw (not cqw). That keeps the
+   blue card edge-to-edge on any width — the card's BACKGROUND must always fill the
+   viewport, never freeze into a centred 1512px column with dark gutters. Its
+   CONTENT is instead bounded per-metric:
 
    SCALING: each metric is min(<vw>, <design px>). Below the 1512px design width
-   the vw wins and the footer scales DOWN with the viewport; at/above 1512px the px
-   cap wins, so the footer FREEZES at the exact Figma size and centres (the blue
-   ground fills the extra width). This bounds the layout on 2K/4K screens — without
+   the vw wins and the content scales DOWN with the viewport; at/above 1512px the px
+   cap wins, so the content FREEZES at the exact Figma size and centres within the
+   full-bleed blue ground. This bounds the type/layout on 2K/4K screens — without
    it, vw would keep growing (e.g. ~1.69× at 2560px). The atmosphere (grain/clouds)
    stays in vw so it keeps filling wide screens.
 
@@ -29,6 +35,7 @@
 .footer {
   position: relative;
   width: 100%;
+  margin-top: 1rem; /* small breathing gap above the footer card */
   min-height: min(53.9021vw, 815px); /* Figma band height, capped at 815px */
   padding-top: min(8.2011vw, 124px); /* 124px — lifts content to the Figma y=124 */
   background: var(--pp-blue);
