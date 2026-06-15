@@ -5,9 +5,14 @@
    through, and the brand P-mark sits in a glass card on the vertical axis. The
    headline sits above the lens, the positioning statement below it.
 
-   Reads tokens from theme.css. The screen is laid out inside .hero__frame — a
-   1512×789 reference box scaled to the viewport width — so every child can use
-   the Figma coordinates directly (1px ≈ 0.066138vw) and stay pixel-faithful.
+   ── Scale model (the fix) ───────────────────────────────────────────────────
+   The whole composition lives inside .hero__frame, a 1512×789 reference box that
+   stays FULL-BLEED (width: 100vw). Children size in CONTAINER units (cqw) against
+   it, so the lens + conveyor scale edge-to-edge with the viewport, while the TEXT
+   is held at its native Figma size — every text rule is min(cqw, <figma px>), so
+   the type freezes at the design width and never balloons on large screens. (1cqw
+   == 1vw here, so the layout is identical to the old vw model at/below 1512px.)
+   The navbar tracks this full-bleed lens (see navbar.css).
    ========================================================================== */
 
 .hero {
@@ -15,28 +20,26 @@
   width: 100%;
   min-height: 100vh;
   display: grid;
-  /* Top-anchored, dropped below the fixed navbar. In the Figma frame (58:5) the
-     headline lead-block sits at y=0 and the nav is a translucent layer at y=46
-     ON TOP of it — so the glass pill literally overlaps the headline's lower
-     edge and the body's top. That only reads in Figma because the pill is
-     barely-there glass; in a real browser with a hairline border it slices the
-     headline. So we give the nav its own clear band and start the composition
-     just below it, preserving every internal relationship of the hero. Taller
-     viewports letterbox on the ink ground below, leading into the next section. */
+  /* Top-anchored, dropped below the fixed navbar (Figma 58:5 layers the glass
+     pill over the headline; a hairline border would slice it, so we give the nav
+     its own clear band and start the composition just below it). Taller viewports
+     letterbox on the ink ground below, leading into the next section. */
   align-items: start;
   justify-items: center;
-  padding-top: 8vw; /* clears the navbar (ends ≈7vw) + breathing room */
+  padding-top: min(8vw, 121px); /* clears the capped navbar + breathing room */
   overflow: hidden;
   background: var(--pp-ink);
 }
 
-/* The design reference box. Width drives everything; height keeps the 1512:789
-   ratio, so the whole composition scales uniformly and the dark ground letter-
-   boxes above/below on taller viewports (seamless — the ground is ink anyway). */
+/* The design reference box + scale dial. Full-bleed (100vw) so the lens + conveyor
+   span the viewport; container-type makes the frame's width the basis for every
+   cqw below. The text rules cap themselves at their Figma px, so only the type
+   freezes on wide screens. height tracks the 1512:789 ratio. */
 .hero__frame {
   position: relative;
   width: 100vw;
-  height: 52.18vw; /* 789 / 1512 */
+  height: 52.18vw; /* 789 / 1512 of the frame width */
+  container-type: inline-size;
 }
 
 /* ── Horizon lens ────────────────────────────────────────────────────────────
@@ -44,9 +47,9 @@
 .hero-lens {
   position: absolute;
   left: 0;
-  top: 8.52vw; /* 128.8 / 1512 */
+  top: 8.52cqw; /* 128.8 / 1512 */
   width: 100%;
-  height: 39.38vw; /* 595.388 / 1512 */
+  height: 39.38cqw; /* 595.388 / 1512 */
   z-index: 1;
 }
 .hero-lens__fill {
@@ -71,56 +74,49 @@
 }
 .hero-cloud {
   position: absolute;
-  width: 108.6vw; /* 1642 / 1512 */
-  height: 108.6vw;
+  width: 108.6cqw; /* 1642 / 1512 */
+  height: 108.6cqw;
   object-fit: cover;
   mix-blend-mode: screen;
   pointer-events: none;
 }
 .hero-cloud--left {
-  left: -91.1vw;
-  top: -37.2vw;
+  left: -91.1cqw;
+  top: -37.2cqw;
 }
 .hero-cloud--right {
-  left: 75.1vw;
-  top: -33.4vw;
+  left: 75.1cqw;
+  top: -33.4cqw;
 }
 
 /* Gradient arc hairlines tracing the lens edges (bright at the centre pinch,
-   fading out toward the edges). Positions mirror Figma exactly: each full
-   ellipse (1512×533) is placed so only the curve that meets the blue shows.
-   Ellipse offsets are measured from the lens top (lens top = abs 128.8px):
-   ellipse1 (bottom) sits at abs 555 → +28.187vw; ellipse2 (top, flipped) sits
-   at abs −231 → −23.797vw. */
+   fading out toward the edges). Positions mirror Figma exactly. */
 .hero-lens__arc {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 35.252vw; /* 533 / 1512 — the ellipse's natural height */
+  height: 35.252cqw; /* 533 / 1512 — the ellipse's natural height */
   pointer-events: none;
 }
 .hero-lens__arc--top {
-  top: -23.797vw; /* (−231 − 128.8) / 1512 */
+  top: -23.797cqw; /* (−231 − 128.8) / 1512 */
   transform: scaleY(-1);
 }
 .hero-lens__arc--bottom {
-  top: 28.187vw; /* (555 − 128.8) / 1512 */
+  top: 28.187cqw; /* (555 − 128.8) / 1512 */
 }
 
 /* ── Document conveyor ───────────────────────────────────────────────────────
    A horizontal stream of document rows drifting LEFT→RIGHT through the lens
-   waist. Two synced tracks are stacked: a SKELETON layer (unstructured docs)
-   masked to the LEFT of centre, and a CONTENT layer (clear, structured docs)
-   masked to the RIGHT of centre. A row enters left as a skeleton and emerges
-   from behind the brand card already structured — the before/after Proxy Papers
-   story. The masks also fade the far ends. Each layer's crossfade sits exactly
-   at centre, hidden behind the brand card. */
+   waist. Two synced tracks: a SKELETON layer masked LEFT of centre, a CONTENT
+   layer masked RIGHT of centre — a row enters left as a skeleton and emerges
+   from behind the brand card already structured. */
 .hero-conveyor {
   position: absolute;
   left: 0;
-  top: 25.6vw; /* 387 / 1512 */
+  top: 25.6cqw; /* 387 / 1512 */
   width: 100%;
-  height: 4.48vw; /* 67.77 / 1512 */
+  height: 4.48cqw; /* 67.77 / 1512 */
   z-index: 2;
   overflow: hidden;
 }
@@ -168,7 +164,7 @@
   top: 0;
   display: flex;
   align-items: center;
-  gap: 0.73vw; /* 11px */
+  gap: 0.73cqw; /* 11px */
   height: 100%;
   will-change: transform;
 }
@@ -178,11 +174,11 @@
   flex: none;
   display: flex;
   align-items: center;
-  gap: 0.6vw;
-  width: 17.06vw; /* 258 / 1512 */
-  height: 4.46vw; /* 67.46 */
-  padding: 0 0.6vw;
-  border-radius: 0.71vw; /* 10.77px */
+  gap: 0.6cqw;
+  width: 17.06cqw; /* 258 / 1512 */
+  height: 4.46cqw; /* 67.46 */
+  padding: 0 0.6cqw;
+  border-radius: 0.71cqw; /* 10.77px */
   background: rgba(255, 255, 255, 0.18);
   border: 0.5px solid rgba(247, 244, 240, 0.3);
   backdrop-filter: blur(2px);
@@ -191,15 +187,15 @@
   flex: none;
   display: grid;
   place-items: center;
-  width: 3.15vw;
-  height: 3.2vw;
-  border-radius: 0.5vw;
+  width: 3.15cqw;
+  height: 3.2cqw;
+  border-radius: 0.5cqw;
   background: rgba(247, 244, 240, 0.1);
   color: var(--pp-bone);
 }
 .doc-row__icon svg {
-  width: 2.05vw;
-  height: 2.05vw;
+  width: 2.05cqw;
+  height: 2.05cqw;
 }
 .doc-row__main {
   flex: 1 1 auto;
@@ -208,7 +204,7 @@
 .doc-row__title {
   display: block;
   font-weight: 500;
-  font-size: 0.93vw; /* ~14px */
+  font-size: 0.93cqw; /* ~14px */
   line-height: 1.1;
   color: var(--pp-bone);
   white-space: nowrap;
@@ -217,9 +213,9 @@
 }
 .doc-row__sub {
   display: block;
-  margin-top: 0.18vw;
+  margin-top: 0.18cqw;
   font-weight: 400;
-  font-size: 0.66vw; /* ~10px */
+  font-size: 0.66cqw; /* ~10px */
   line-height: 1.1;
   color: rgba(247, 244, 240, 0.6);
   white-space: nowrap;
@@ -228,23 +224,23 @@
 }
 .doc-row__chips {
   display: flex;
-  gap: 0.6vw;
-  margin-top: 0.34vw;
+  gap: 0.6cqw;
+  margin-top: 0.34cqw;
 }
 .doc-row__chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.26vw;
+  gap: 0.26cqw;
   font-weight: 400;
-  font-size: 0.56vw; /* ~8.5px */
+  font-size: 0.56cqw; /* ~8.5px */
   line-height: 1;
   color: rgba(247, 244, 240, 0.75);
   white-space: nowrap;
 }
 .doc-row__chip::before {
   content: "";
-  width: 0.3vw;
-  height: 0.3vw;
+  width: 0.3cqw;
+  height: 0.3cqw;
   border-radius: 50%;
   background: currentColor;
   opacity: 0.85;
@@ -256,14 +252,13 @@
   flex: none;
   align-self: flex-start;
   font-weight: 400;
-  font-size: 0.62vw;
+  font-size: 0.62cqw;
   line-height: 1.1;
   color: rgba(247, 244, 240, 0.45);
   white-space: nowrap;
 }
 
-/* Skeleton variant — the unstructured "before" state: dimmer surface, a blank
-   document icon, and muted placeholder bars where the structured data will be. */
+/* Skeleton variant — the unstructured "before" state. */
 .doc-row--skeleton {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(247, 244, 240, 0.22);
@@ -279,32 +274,32 @@
 }
 .sk-bar--title {
   width: 72%;
-  height: 0.62vw;
+  height: 0.62cqw;
 }
 .sk-bar--sub {
   width: 46%;
-  height: 0.46vw;
-  margin-top: 0.36vw;
+  height: 0.46cqw;
+  margin-top: 0.36cqw;
 }
 .sk-bar--chip {
-  width: 1.7vw;
-  height: 0.42vw;
+  width: 1.7cqw;
+  height: 0.42cqw;
 }
 .sk-bar--cat {
   flex: none;
   align-self: flex-start;
-  width: 2.2vw;
-  height: 0.42vw;
+  width: 2.2cqw;
+  height: 0.42cqw;
 }
 
 /* ── Centre axis + brand card ────────────────────────────────────────────────*/
 .hero-axis {
   position: absolute;
   left: 50%;
-  top: 17.26vw; /* 261 / 1512 */
+  top: 17.26cqw; /* 261 / 1512 */
   transform: translateX(-50%);
-  width: 5.53vw; /* 83.56 */
-  height: 21.69vw; /* 328 */
+  width: 5.53cqw; /* 83.56 */
+  height: 21.69cqw; /* 328 */
   z-index: 3;
   display: flex;
   justify-content: center;
@@ -326,43 +321,45 @@
 }
 .hero-axis__card {
   position: absolute;
-  top: 7.8vw; /* 118 / 1512 */
+  top: 7.8cqw; /* 118 / 1512 */
   left: 50%;
   transform: translateX(-50%);
   display: grid;
   place-items: center;
-  width: 5.53vw; /* 83.56 */
-  height: 5.62vw; /* 85 */
-  border-radius: 0.62vw; /* 9.43px */
+  width: 5.53cqw; /* 83.56 */
+  height: 5.62cqw; /* 85 */
+  border-radius: 0.62cqw; /* 9.43px */
   background: var(--pp-bone);
   border: 0.5px solid rgba(247, 244, 240, 0.3);
-  box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1cqw 3cqw rgba(0, 0, 0, 0.35);
 }
 .hero-axis__card img {
-  width: 2.41vw; /* mark ~36.5px */
+  width: 2.41cqw; /* mark ~36.5px */
   height: auto;
 }
 
-/* ── Headline block (above the lens) ─────────────────────────────────────────*/
+/* ── Headline block (above the lens) ─────────────────────────────────────────
+   Figma 278:7 — an 845px-wide centred stack: title 61px (−1.22px), body 590px,
+   CTA row. Each text length caps at its Figma px (min(cqw,px)) so it freezes on
+   wide screens under BOTH variants. */
 .hero-lead {
   position: absolute;
   left: 50%;
   top: 3rem; /* Figma 58:6 sits at y=0 within the frame */
   transform: translateX(-50%);
-  width: 51.32vw; /* 776 */
+  width: min(55.886cqw, 845px); /* 845 — was 776; matches Figma single-line title */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.653vw; /* 25px */
+  gap: min(1.653cqw, 25px); /* 25px */
   z-index: 4;
   text-align: center;
 }
 .hero-lead__title {
   font-weight: 500;
-  font-size: 3.704vw; /* 56px */
-  line-height: 1.2; /* Figma box is 67px tall (≈56×1.2) — keeps the flex flow
-                       placing the body at y≈92 so it clears the navbar logo */
-  letter-spacing: -0.074vw; /* -1.12px */
+  font-size: min(4.0344cqw, 61px); /* 61px (was 56) */
+  line-height: 1.2; /* Figma box 73px ≈ 61×1.2 */
+  letter-spacing: max(-1.22px, -0.0807cqw); /* −1.22px, magnitude-capped */
   color: var(--pp-bone);
 }
 /* "data." — the only accent: a soft blue gradient on the turn word. */
@@ -373,29 +370,29 @@
   color: transparent;
 }
 .hero-lead__body {
-  width: 39.02vw; /* 590px */
+  width: min(39.02cqw, 590px); /* 590px */
   font-weight: 400;
-  font-size: 1.058vw; /* 16px */
+  font-size: min(1.058cqw, 16px); /* 16px */
   line-height: 1.4;
-  letter-spacing: 0.0212vw;
+  letter-spacing: min(0.0212cqw, 0.32px);
   color: rgba(247, 244, 240, 0.7);
 }
 .hero-lead__cta {
   display: flex;
   align-items: center;
-  gap: 2.645vw; /* 40px */
-  margin-top: 0.4vw;
+  gap: min(2.645cqw, 40px); /* 40px */
+  margin-top: min(0.4cqw, 6px);
 }
 .hero-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.661vw 1.323vw; /* 10px 20px */
-  border-radius: 2.976vw; /* pill */
+  padding: min(0.661cqw, 10px) min(1.323cqw, 20px); /* 10px 20px */
+  border-radius: min(2.976cqw, 45px); /* pill */
   background: var(--pp-blue);
   color: var(--pp-bone);
   font-weight: 500;
-  font-size: 1.058vw;
+  font-size: min(1.058cqw, 16px);
   text-decoration: none;
   white-space: nowrap;
   transition: transform 0.3s var(--pp-ease-out), filter 0.3s var(--pp-ease-out);
@@ -407,16 +404,16 @@
 .hero-link {
   display: inline-flex;
   flex-direction: column;
-  gap: 0.4vw;
+  gap: min(0.4cqw, 6px);
   font-weight: 500;
-  font-size: 1.058vw;
+  font-size: min(1.058cqw, 16px);
   color: rgba(247, 244, 240, 0.5);
   text-decoration: none;
   white-space: nowrap;
 }
 .hero-link::after {
   content: "";
-  width: 11.77vw; /* 178px */
+  width: min(11.77cqw, 178px); /* 178px */
   height: 1px;
   background: rgba(247, 244, 240, 0.5);
   transition: background 0.3s var(--pp-ease-out);
@@ -432,11 +429,11 @@
 .hero-statement {
   position: absolute;
   left: 50%;
-  top: 40.06vw; /* 651 / 1512 */
+  top: 40.06cqw; /* 651 / 1512 — sits on the lower lens, tracks it in both variants */
   transform: translateX(-50%);
-  width: 37.5vw; /* 567px */
+  width: min(37.5cqw, 567px); /* 567px */
   font-weight: 500;
-  font-size: 1.323vw; /* 20px */
+  font-size: min(1.323cqw, 20px); /* 20px */
   line-height: 1.35;
   color: #fff;
   text-align: center;

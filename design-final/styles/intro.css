@@ -51,6 +51,7 @@ html.js .ob-stage {
    shows it immediately (the real navbar logo, no flight). */
 html.js .pp-nav__logo {
   opacity: 0;
+  transition: opacity 0.35s var(--pp-ease-out); /* cross-fades the bone card in as the clone fades out */
 }
 html.js .pp-nav__logo.is-landed {
   opacity: 1;

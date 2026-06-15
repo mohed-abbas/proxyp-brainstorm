@@ -16,10 +16,10 @@
     <link rel="preload" as="image" href="assets/clouds.webp" />
 
     <link rel="stylesheet" href="styles/theme.css?v=5" />
-    <link rel="stylesheet" href="styles/navbar.css?v=3" />
+    <link rel="stylesheet" href="styles/navbar.css?v=5" />
     <link rel="stylesheet" href="styles/onboarding.css?v=1" />
-    <link rel="stylesheet" href="styles/intro.css?v=1" />
-    <link rel="stylesheet" href="styles/hero.css?v=5" />
+    <link rel="stylesheet" href="styles/intro.css?v=2" />
+    <link rel="stylesheet" href="styles/hero.css?v=7" />
     <link rel="stylesheet" href="styles/problem.css?v=2" />
     <link rel="stylesheet" href="styles/profiles.css?v=14" />
     <link rel="stylesheet" href="styles/method.css?v=3" />
@@ -32,7 +32,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=49" defer></script>
+    <script src="scripts/hero.js?v=50" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -101,47 +101,34 @@
       </div>
     </div>
 
-    <!-- Navbar — shared component (Figma 58:289). Mark inlined so it recolors
-         per theme (bone stem + blue blade on this dark surface). -->
+    <!-- Navbar — shared component, Figma "Closed" state (278:136). A transparent
+         bar carrying two bone-white surfaces: a rounded LOGO card on the left
+         (the curtain's flying P-mark lands here — it reads the logo's live
+         position, so the same handoff docks at this left slot) and a "Menu" pill
+         on the right (grip icon + label). The logo card is always bone, so its
+         mark is fixed ink-stem + blue-blade (no per-theme recolor needed). -->
     <nav class="pp-nav" aria-label="Primary">
-      <div class="pp-nav__inner">
-        <div class="pp-nav__group">
-          <a class="pp-nav__link" href="#">
-            <span class="pp-nav__roll">
-              <span class="pp-nav__label">Approach</span>
-              <span class="pp-nav__label" aria-hidden="true">Approach</span>
-            </span>
-          </a>
-          <a class="pp-nav__link" href="#">
-            <span class="pp-nav__roll">
-              <span class="pp-nav__label">Services</span>
-              <span class="pp-nav__label" aria-hidden="true">Services</span>
-            </span>
-          </a>
-        </div>
+      <a class="pp-nav__logo" href="#" aria-label="Proxy Papers — home">
+        <svg viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+          <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+        </svg>
+      </a>
 
-        <a class="pp-nav__logo" href="#" aria-label="Proxy Papers — home">
-          <svg viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
-            <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+      <button class="pp-nav__menu" type="button" aria-label="Open menu" aria-expanded="false">
+        <span class="pp-nav__menu-icon" aria-hidden="true">
+          <!-- lucide "grip" (Figma 278:143) — a 4-dot diamond -->
+          <svg viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="currentColor" stroke-width="1.888" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11.331" cy="4.721" r="0.944" />
+              <circle cx="17.941" cy="11.331" r="0.944" />
+              <circle cx="4.722" cy="11.331" r="0.944" />
+              <circle cx="11.331" cy="17.940" r="0.944" />
+            </g>
           </svg>
-        </a>
-
-        <div class="pp-nav__group">
-          <a class="pp-nav__link" href="#">
-            <span class="pp-nav__roll">
-              <span class="pp-nav__label">Referrers</span>
-              <span class="pp-nav__label" aria-hidden="true">Referrers</span>
-            </span>
-          </a>
-          <a class="pp-nav__link" href="#">
-            <span class="pp-nav__roll">
-              <span class="pp-nav__label">Contact</span>
-              <span class="pp-nav__label" aria-hidden="true">Contact</span>
-            </span>
-          </a>
-        </div>
-      </div>
+        </span>
+        <span class="pp-nav__menu-label">Menu</span>
+      </button>
     </nav>
 
     <main class="hero" data-nav-theme="dark">

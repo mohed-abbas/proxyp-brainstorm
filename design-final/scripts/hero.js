@@ -895,7 +895,11 @@
     // starts coincident with the lockup's mark and the lockup's own mark is hidden,
     // so the clone is the only mark on screen.
     const restMark = ob.mark.getBoundingClientRect();
-    const restNav = navLogo.getBoundingClientRect();
+    // Land on the MARK glyph inside the logo card, not the card box — the card is
+    // ~50px tall but the mark inside it is ~32px, so scaling to the card would
+    // over-size the flying mark. (Figma "Closed" navbar: logo sits in a bone card.)
+    const navMark = navLogo.querySelector("svg") || navLogo;
+    const restNav = navMark.getBoundingClientRect();
     gsap.set(fly, {
       left: restMark.left,
       top: restMark.top,
@@ -984,8 +988,11 @@
       // swap the clone for the real logo (coincident, unseen) and assemble the hero.
       if (!landed && edgeY <= navCY - navH / 2) {
         landed = true;
+        // Swap clone → real carded logo. The bone card + ink stem fade in (CSS
+        // transition on .is-landed) while the clone (bone stem) fades out, so the
+        // card materialises and the stem recolors bone→ink without a hard pop.
         navLogo.classList.add("is-landed");
-        gsap.set(fly, { autoAlpha: 0 });
+        gsap.to(fly, { autoAlpha: 0, duration: 0.3, ease: "power1.out" });
         hero.tl.play();
         hero.idle();
       }
