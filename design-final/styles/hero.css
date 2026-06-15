@@ -6,13 +6,21 @@
    headline sits above the lens, the positioning statement below it.
 
    ── Scale model (the fix) ───────────────────────────────────────────────────
-   The whole composition lives inside .hero__frame, a 1512×789 reference box that
-   stays FULL-BLEED (width: 100vw). Children size in CONTAINER units (cqw) against
-   it, so the lens + conveyor scale edge-to-edge with the viewport, while the TEXT
-   is held at its native Figma size — every text rule is min(cqw, <figma px>), so
-   the type freezes at the design width and never balloons on large screens. (1cqw
-   == 1vw here, so the layout is identical to the old vw model at/below 1512px.)
-   The navbar tracks this full-bleed lens (see navbar.css).
+   The composition lives inside .hero__frame, a 1512×789 reference box that is
+   width-CAPPED at min(100vw, 1512px) and centred. Children size in CONTAINER
+   units (cqw) against it, so above 1512px every cqw FREEZES — the whole
+   composition (headline, conveyor rows, brand card, statement) holds its native
+   Figma size, matching the design 1:1 on large screens with no vertical overgrow
+   and no bottom crop (it was the width-driven cqw height that over-scaled the
+   lens on 2K).
+
+   The only pieces that BREAK OUT to full-bleed are the backdrop layers — the lens,
+   its clouds/arcs, and the conveyor — which span 100vw (left:50% + margin-left:
+   -50vw) while keeping their FROZEN cqw height. So the blue horizon still reaches
+   the screen edges (and the navbar runs along it, see navbar.css), but at the
+   correct Figma height instead of growing taller with the viewport width.
+
+   At/below 1512px 1cqw == 1vw, so the layout is identical to the original vw model.
    ========================================================================== */
 
 .hero {
@@ -31,14 +39,16 @@
   background: var(--pp-ink);
 }
 
-/* The design reference box + scale dial. Full-bleed (100vw) so the lens + conveyor
-   span the viewport; container-type makes the frame's width the basis for every
-   cqw below. The text rules cap themselves at their Figma px, so only the type
-   freezes on wide screens. height tracks the 1512:789 ratio. */
+/* The design reference box + scale dial. Width-CAPPED + centred, so every cqw
+   below freezes above 1512px (the composition holds its Figma-native size — no
+   overgrow, no bottom crop). container-type makes the frame's width the basis for
+   every cqw. height tracks the 1512:789 ratio (min(vw,px) keeps it in step with
+   the capped width). The backdrop layers below break out of it to full-bleed. */
 .hero__frame {
   position: relative;
-  width: 100vw;
-  height: 52.18vw; /* 789 / 1512 of the frame width */
+  width: min(100vw, 1512px);
+  height: min(52.18vw, 789px); /* 789 / 1512 of the capped width */
+  margin-inline: auto;
   container-type: inline-size;
 }
 
@@ -46,10 +56,11 @@
    Blue bowtie band (full height at the edges, pinched waist at centre). */
 .hero-lens {
   position: absolute;
-  left: 0;
-  top: 8.52cqw; /* 128.8 / 1512 */
-  width: 100%;
-  height: 39.38cqw; /* 595.388 / 1512 */
+  left: 50%;
+  margin-left: -50vw; /* break out to full-bleed, centred on the frame */
+  top: 8.52cqw; /* 128.8 / 1512 — frozen above 1512 */
+  width: 100vw;
+  height: 39.38cqw; /* 595.388 / 1512 — frozen height (Figma scale, not viewport-tall) */
   z-index: 1;
 }
 .hero-lens__fill {
@@ -72,30 +83,33 @@
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }
+/* Clouds are masked to the (now full-bleed) lens, so they scale with the viewport
+   (vw) to keep covering it edge-to-edge. */
 .hero-cloud {
   position: absolute;
-  width: 108.6cqw; /* 1642 / 1512 */
-  height: 108.6cqw;
+  width: 108.6vw; /* 1642 / 1512 */
+  height: 108.6vw;
   object-fit: cover;
   mix-blend-mode: screen;
   pointer-events: none;
 }
 .hero-cloud--left {
-  left: -91.1cqw;
-  top: -37.2cqw;
+  left: -91.1vw;
+  top: -37.2vw;
 }
 .hero-cloud--right {
-  left: 75.1cqw;
-  top: -33.4cqw;
+  left: 75.1vw;
+  top: -33.4vw;
 }
 
 /* Gradient arc hairlines tracing the lens edges (bright at the centre pinch,
    fading out toward the edges). Positions mirror Figma exactly. */
 .hero-lens__arc {
   position: absolute;
-  left: 0;
-  width: 100%;
-  height: 35.252cqw; /* 533 / 1512 — the ellipse's natural height */
+  left: 50%;
+  margin-left: -50vw; /* full-bleed, tracing the widened lens */
+  width: 100vw;
+  height: 35.252cqw; /* 533 / 1512 — frozen ellipse height */
   pointer-events: none;
 }
 .hero-lens__arc--top {
@@ -113,10 +127,11 @@
    from behind the brand card already structured. */
 .hero-conveyor {
   position: absolute;
-  left: 0;
-  top: 25.6cqw; /* 387 / 1512 */
-  width: 100%;
-  height: 4.48cqw; /* 67.77 / 1512 */
+  left: 50%;
+  margin-left: -50vw; /* full-bleed — rows stream edge to edge through the lens waist */
+  top: 25.6cqw; /* 387 / 1512 — frozen */
+  width: 100vw;
+  height: 4.48cqw; /* 67.77 / 1512 — frozen */
   z-index: 2;
   overflow: hidden;
 }
