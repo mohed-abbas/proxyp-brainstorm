@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="styles/method.css?v=3" />
     <link rel="stylesheet" href="styles/trust.css?v=3" />
     <link rel="stylesheet" href="styles/referrers.css?v=2" />
-    <link rel="stylesheet" href="styles/closing.css?v=2" />
+    <link rel="stylesheet" href="styles/closing.css?v=3" />
     <link rel="stylesheet" href="styles/footer.css?v=17" />
 
     <!-- GSAP + ScrollTrigger + Lenis (CDN, no build step) -->
@@ -513,28 +513,35 @@
       </div>
     </section>
 
+    </div>
+    <!-- /.page-frame — the closing band + footer live OUTSIDE it so their
+         full-width backgrounds (bone band, blue card) stay edge-to-edge; their
+         content is held at the Figma size (closing via a centred, width-capped
+         .closing__inner; footer via min(vw, px) caps). -->
+
     <!-- Closing CTA band (Figma 58:248) — the page's final call to action.
-         LIGHT surface: the navbar flips to its light theme (data-nav-theme). -->
+         LIGHT surface: the navbar flips to its light theme (data-nav-theme).
+         The bone band is full-bleed; .closing__inner re-creates the 1512 frame
+         (centred + capped) so the corner-anchored blocks keep their positions. -->
     <section class="closing" aria-label="Request a discovery meeting" data-nav-theme="light">
-      <h2 class="closing__title">Take back control of what is yours</h2>
-      <div class="closing__action">
-        <a class="closing__link" href="#">
-          Request a discovery meeting
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14" />
-            <path d="m12 5 7 7-7 7" />
-          </svg>
-        </a>
-        <p class="closing__body">
-          The first meeting is on us. It lasts one hour. Its purpose is to
-          understand your situation, your stakes and to check together that
-          Proxy Papers fits your need.
-        </p>
+      <div class="closing__inner">
+        <h2 class="closing__title">Take back control of what is yours</h2>
+        <div class="closing__action">
+          <a class="closing__link" href="#">
+            Request a discovery meeting
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
+          <p class="closing__body">
+            The first meeting is on us. It lasts one hour. Its purpose is to
+            understand your situation, your stakes and to check together that
+            Proxy Papers fits your need.
+          </p>
+        </div>
       </div>
     </section>
-    </div>
-    <!-- /.page-frame — the footer lives OUTSIDE it so its blue card stays
-         full-bleed (its own content is capped via min(vw, px)). -->
 
     <!-- Footer (Figma 251:50) — the site close, a Proxy Blue card rounded only at
          the TOP (it meets the page bottom). Same atmosphere as the onboarding

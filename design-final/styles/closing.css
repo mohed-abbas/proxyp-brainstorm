@@ -7,9 +7,16 @@
    A LIGHT surface (like trust), so the fixed navbar flips to its light theme
    over it (data-nav-theme="light").
 
-   The two blocks are corner-anchored, so they're absolutely positioned within
-   the band (vw fractions of the 1512px Figma frame, 1px ≈ 0.066138cqw) — same
-   convention as the other design-final sections.
+   FULL-BLEED EXCEPTION (same as the footer): this band sits OUTSIDE the
+   .page-frame container (see hero.html) and uses raw vw, so the bone BACKGROUND
+   runs edge-to-edge on any width — never freezing into a centred 1512px column
+   with dark gutters. Because its two blocks are CORNER-ANCHORED (title upper-
+   left, action lower-right), the content can't just be centred like the footer's
+   group; instead .closing__inner re-creates the 1512px Figma frame (centred +
+   width-capped) and the absolute blocks anchor to it. Every metric is
+   min(<vw>, <design px>): below 1512px the vw wins and the content scales DOWN;
+   at/above 1512px the px cap wins, so the content FREEZES at the Figma size and
+   centres within the full-bleed bone ground (1px ≈ 0.066138vw).
 
    Port note (React/Next): a self-contained band; the reveal is a useGSAP mount
    effect (see setupClosing in hero.js); the link hover is pure CSS.
@@ -18,20 +25,31 @@
 .closing {
   position: relative;
   width: 100%;
-  min-height: 34.5899cqw; /* 523px — a short band */
+  min-height: min(34.5899vw, 523px); /* 523px — a short band */
+  display: flex;
+  justify-content: center; /* centre the capped inner frame on wide screens */
   background: var(--pp-bone);
-  border-radius: 1.3228cqw; /* 20px */
+  border-radius: min(1.3228vw, 20px); /* 20px */
   overflow: hidden;
+}
+
+/* Re-created 1512px frame — the positioning context for the corner-anchored
+   blocks. Capped at the design width and stretched to the band height (flex
+   align-items:stretch) so the absolute top/left coordinates resolve exactly as
+   in Figma; the bone band shows around it on >1512px screens. */
+.closing__inner {
+  position: relative;
+  width: min(100vw, 1512px);
 }
 
 /* Oversized headline, upper-left — Proxy Blue at full presence on the bone. */
 .closing__title {
   position: absolute;
-  left: 4.9603cqw; /* 75px */
-  top: 6.2169cqw; /* 94px */
-  width: 44.4444cqw; /* 672px */
+  left: min(4.9603vw, 75px); /* 75px */
+  top: min(6.2169vw, 94px); /* 94px */
+  width: min(44.4444vw, 672px); /* 672px */
   font-weight: 500; /* Medium → Book fallback */
-  font-size: 5.0265cqw; /* 76px */
+  font-size: min(5.0265vw, 76px); /* 76px */
   line-height: 1;
   letter-spacing: -0.02em; /* -1.52px */
   color: var(--pp-blue);
@@ -40,39 +58,39 @@
 /* Lower-right action block — link above, reassurance copy below, both right-set. */
 .closing__action {
   position: absolute;
-  left: 49.6032cqw; /* 750px */
-  top: 20.2381cqw; /* 306px */
-  width: 45.4365cqw; /* 687px */
+  left: min(49.6032vw, 750px); /* 750px */
+  top: min(20.2381vw, 306px); /* 306px */
+  width: min(45.4365vw, 687px); /* 687px */
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 1.455cqw; /* 22px */
+  gap: min(1.455vw, 22px); /* 22px */
 }
 .closing__link {
   display: inline-flex;
   align-items: center;
-  gap: 0.3968cqw; /* 6px */
-  padding-bottom: 0.3968cqw; /* 6px — text to underline */
+  gap: min(0.3968vw, 6px); /* 6px */
+  padding-bottom: min(0.3968vw, 6px); /* 6px — text to underline */
   border-bottom: 1px solid var(--pp-blue);
   font-weight: 500;
-  font-size: 1.0582cqw; /* 16px */
+  font-size: min(1.0582vw, 16px); /* 16px */
   color: var(--pp-blue);
   text-decoration: none;
   white-space: nowrap;
 }
 .closing__link svg {
-  width: 1.1905cqw; /* 18px */
-  height: 1.1905cqw;
+  width: min(1.1905vw, 18px); /* 18px */
+  height: min(1.1905vw, 18px);
   stroke: currentColor;
   transition: transform 0.4s var(--pp-ease-out);
 }
 .closing__link:hover svg {
-  transform: translateX(0.2646cqw); /* 4px */
+  transform: translateX(min(0.2646vw, 4px)); /* 4px */
 }
 .closing__body {
   width: 100%;
   font-weight: 400; /* Book */
-  font-size: 1.0582cqw; /* 16px */
+  font-size: min(1.0582vw, 16px); /* 16px */
   line-height: 1.45;
   letter-spacing: 0.02em; /* 0.32px */
   text-align: right;
