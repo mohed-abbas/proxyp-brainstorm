@@ -1,19 +1,24 @@
 type PpMarkProps = {
   className?: string;
+  // When provided, the mark is exposed as an image with this accessible name;
+  // otherwise it is decorative (its wrapping link/element carries the label).
+  label?: string;
 };
 
 // Proxy Papers P-mark (icon only). Stem + blade carry classes so a host can
-// recolor per theme via --pp-lockup-ink / --pp-lockup-blade (see globals.css).
-// Inlined (not an <img>) so the parts can be animated and recolored.
-export function PpMark({ className }: PpMarkProps) {
+// recolor per theme via --pp-lockup-ink / --pp-lockup-blade or its own rules.
+// Inlined (not an <img>) so the parts can be recolored and animated.
+export function PpMark({ className, label }: PpMarkProps) {
+  const a11y = label
+    ? { role: "img", "aria-label": label }
+    : { "aria-hidden": true as const };
   return (
     <svg
       className={className}
       viewBox="0 0 36.4699 54.5578"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="Proxy Papers"
+      {...a11y}
     >
       <path
         className="lk-mark__stem"

@@ -108,3 +108,68 @@ on scroll).
   dur 20s; both `sine.inOut`, `repeat: -1`, `yoyo: true`.
 - **Source ref:** `idle()` inside `buildHeroIntro`.
 - **Feasibility / constraints:** reduced motion → not started.
+
+## Navbar + Menu
+
+> These are **CSS-transition / IntersectionObserver** driven, not GSAP. React only
+> flips state (open theme); the motion lives in the CSS modules.
+
+### Navbar theme flip
+- **Where:** the fixed navbar surfaces (logo card + Menu pill) + the logo mark.
+- **User-facing description:** "as you scroll, the floating navbar recolors to suit
+  the section under it — bone pills on dark/blue sections, an ink chip on light ones."
+- **Trigger:** scroll; an IntersectionObserver with a 1px band at the navbar's
+  vertical centre picks the section crossing that line.
+- **Mechanics:** the observed section's `data-nav-theme` (`dark|blue|light`) sets a
+  `pp-theme-*` class on the nav; CSS crossfades `background-color / border-color /
+  color` over 0.5s `--pp-ease-out`. Light sections flip pills to ink + the logo stem
+  to bone (blade stays blue).
+- **Source ref:** `setupNavTheme` in `hero.js`.
+- **Implementation note:** `src/hooks/useNavTheme.ts` returns the theme string;
+  `Navbar` renders `pp-theme-${theme}` (no classList mutation, so it doesn't fight
+  React). Rebuilds the observer on resize.
+- **Feasibility / constraints:** needs `[data-nav-theme]` on every section; default
+  is `dark`.
+
+### Menu open / close (card unfold + content stagger)
+- **Where:** the menu overlay card hanging from the navbar's right edge.
+- **User-facing description:** "the Menu pill unfolds into a bone card; FR|EN, then
+  the four links rise in one by one, then the bottom row; reverses on close."
+- **Trigger:** click the Menu/Close button (or Esc / scrim click to close).
+- **Mechanics (CSS, driven by `data-state` on the menu root):** panel `clip-path`
+  `inset(1.59% 1.62% 89.38% 75.27% round 1.46%)` → `inset(0 round 1.81%)`, 0.9s open
+  / 0.7s close; scrim opacity 0→1 (0.3s); `.lang` + `.foot` fade + `translateY(8px)→0`;
+  each `.linkText` rises `translateY(108%)→0`; staggered via `transition-delay`
+  (lang 0.08s, links 0.12/0.18/0.24/0.30s, foot 0.36s).
+- **Source ref:** `menu.css` + `setupMenu` in `hero.js`.
+- **Implementation note:** `Menu.tsx` (CSS module). `Navbar` owns `open` state and
+  renders the Menu; `src/hooks/useMenu.ts` handles scroll-lock (Lenis via context),
+  focus trap across the Close button + panel, Esc, and focus restore. Scrim + link
+  clicks call `onClose`.
+- **Feasibility / constraints:** reduced motion → instant show/hide (transitions
+  off). Scroll lock uses the shared Lenis (`useLenis`), falling back to
+  `overflow: hidden`.
+
+### Menu pill morph (Menu ⇄ Close) + grip square-up
+- **Where:** the navbar Menu button while the menu is open (`.is-menu-open`).
+- **User-facing description:** "the Menu label slides up to reveal Close, the pill
+  goes dark, and the 4-dot grip rotates into a square."
+- **Mechanics:** label track `translateY(0 → -1.25em)` 0.6s (two stacked words in a
+  1.25em mask); pill background → ink, color → bone; grip svg `rotate(0 → 45deg)`
+  0.7s; the left logo card hides (`opacity 0`).
+- **Source ref:** `menu.css` (navbar-side rules) + `setupMenu`.
+- **Implementation note:** `Navbar.module.css` `.navMenuOpen` rules; the class is
+  toggled by React `open` state.
+- **Feasibility / constraints:** reduced motion → grip squares up instantly.
+
+### Menu link per-letter hover stagger
+- **Where:** each menu nav link on hover/focus.
+- **User-facing description:** "hovering a link replays the rise letter-by-letter,
+  each character offset slightly, and it turns blue."
+- **Mechanics:** link text is split into `.linkChar` spans each carrying `--i`; on
+  hover the `linkRise` keyframe (`translateY(108%)→0`, 0.5s) plays with
+  `animation-delay: calc(var(--i) * 0.03s)`.
+- **Source ref:** `menu.css` (`pp-menu-link-rise`) + the char split in `setupMenu`.
+- **Implementation note:** `Menu.tsx` `LinkChars` renders the spans at SSR with
+  inline `--i`; the keyframe lives in `Menu.module.css`.
+- **Feasibility / constraints:** gated `@media (prefers-reduced-motion: no-preference)`.

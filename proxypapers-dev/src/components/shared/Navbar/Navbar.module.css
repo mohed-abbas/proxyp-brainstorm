@@ -1,0 +1,145 @@
+/* Navbar — shared, fixed, transparent bar carrying two bone surfaces: a logo
+   card (left) and a Menu pill (right). Ported from design-final/styles/navbar.css
+   plus the navbar-side rules of menu.css (the Menu->Close morph + is-menu-open
+   states). Capped at the 1512px design size via min(vw, px). */
+
+.nav {
+  position: fixed;
+  top: min(4.2328vw, 64px);
+  left: max(5.1587vw, 15.441vw - 155.5px);
+  right: max(5.1587vw, 15.441vw - 155.5px);
+  height: min(3.3069vw, 50px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Shared bone surface for both pills. */
+.logo,
+.menuBtn {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: min(0.5291vw, 8px);
+  background: var(--pp-bone);
+  border: 0.5px solid rgba(247, 244, 240, 0.5);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 0.5px 2px rgba(22, 23, 24, 0.12);
+  transition:
+    background-color 0.5s var(--pp-ease-out),
+    border-color 0.5s var(--pp-ease-out),
+    color 0.5s var(--pp-ease-out);
+}
+
+/* Light sections: a bone pill on a bone ground would vanish, so flip to an ink
+   chip with bone content. */
+.nav:global(.pp-theme-light) .logo,
+.nav:global(.pp-theme-light) .menuBtn {
+  background: var(--pp-ink);
+  border-color: rgba(22, 23, 24, 0.2);
+  box-shadow: 0 0.5px 2px rgba(22, 23, 24, 0.18);
+}
+
+/* ── Left logo card ──────────────────────────────────────────────────────────
+   Mark is fixed ink-stem + blue-blade on the bone card (flips to bone stem on
+   the ink chip over light sections). */
+.logo {
+  width: min(3.25vw, 49.14px);
+  text-decoration: none;
+  line-height: 0;
+}
+.logo svg {
+  display: block;
+  height: min(2.114vw, 31.97px);
+  width: auto;
+}
+.logo :global(.lk-mark__stem) {
+  fill: var(--pp-ink);
+  transition: fill 0.5s var(--pp-ease-out);
+}
+.logo :global(.lk-mark__blade) {
+  fill: var(--pp-blue);
+}
+.nav:global(.pp-theme-light) .logo :global(.lk-mark__stem) {
+  fill: var(--pp-bone);
+}
+
+/* ── Right "Menu" pill ───────────────────────────────────────────────────────── */
+.menuBtn {
+  width: min(8.4656vw, 128px);
+  gap: min(0.428vw, 6.47px);
+  padding: 0;
+  font-family: var(--pp-font);
+  color: var(--pp-ink);
+  cursor: pointer;
+  transition: filter 0.3s var(--pp-ease-out);
+}
+.nav:global(.pp-theme-light) .menuBtn {
+  color: var(--pp-bone);
+}
+.menuBtn:hover {
+  filter: brightness(0.96);
+}
+.menuBtn:focus-visible {
+  outline: 2px solid var(--pp-blue);
+  outline-offset: 2px;
+}
+.menuIcon {
+  display: inline-flex;
+  width: min(1.499vw, 22.66px);
+  height: min(1.499vw, 22.66px);
+}
+.menuIcon svg {
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  transition: transform 0.7s var(--pp-ease-out);
+}
+
+/* Menu ⇄ Close label — a vertical mask holding both words; the track slides up so
+   "Menu" rises out the top while "Close" rises in from the baseline. */
+.menuLabel {
+  display: block;
+  height: 1.25em;
+  overflow: hidden;
+  font-weight: 500;
+  font-size: min(1.3228vw, 20px);
+  line-height: 1.25em;
+  letter-spacing: -0.01em;
+}
+.menuLabelTrack {
+  display: block;
+  transition: transform 0.6s var(--pp-ease-out);
+}
+.menuLabelWord {
+  display: block;
+  height: 1.25em;
+  line-height: 1.25em;
+  white-space: nowrap;
+}
+
+/* ── Open state (.is-menu-open on the nav) ───────────────────────────────────── */
+.navMenuOpen .logo {
+  opacity: 0;
+  pointer-events: none;
+}
+.navMenuOpen .menuBtn {
+  background: var(--pp-ink);
+  border-color: rgba(247, 244, 240, 0.5);
+  color: var(--pp-bone);
+}
+.navMenuOpen .menuLabelTrack {
+  transform: translateY(-1.25em);
+}
+.navMenuOpen .menuIcon svg {
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuIcon svg {
+    transition: none !important;
+  }
+}

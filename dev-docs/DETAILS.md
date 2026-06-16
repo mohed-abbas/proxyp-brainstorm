@@ -75,3 +75,39 @@ One short entry per decision, newest at the bottom.
   frame `0,121,1512,789`; lens `1512×595`; title 61px centered; brand card `84×85`
   centered at `756,542` (bone bg); statement box matching. The navbar is absent by
   design (Step 2).
+
+## Step 2 — Navbar + Menu
+
+- **One interactive unit.** `Navbar` owns the `open` state and renders the `Menu`
+  overlay, because they're coupled: the Menu pill morphs into the Close affordance,
+  the focus trap spans the button + panel, and `.is-menu-open` on the nav drives the
+  pill/grip/label. Page composition is just `<Navbar /><Hero />`.
+
+- **Theme via React state, not classList.** `useNavTheme` returns the current theme
+  string and `Navbar` renders `pp-theme-${theme}`. The source mutated the nav's
+  classList directly; in React that would be clobbered on the next render (e.g. when
+  `open` toggles), so the hook returns state instead.
+
+- **Lenis exposed via a ref context.** `LenisProvider` now provides a stable
+  `RefObject<Lenis>` (not state) through context; `useMenu` reads `.current` to
+  stop/start scroll. A first attempt used `useState` + `setState` inside the init
+  effect, which trips Next 16's `react-hooks/set-state-in-effect` lint rule — the
+  ref avoids both the lint error and an extra render. Falls back to
+  `documentElement.style.overflow` when Lenis isn't ready.
+
+- **Scrim is a real `<button>`.** The click-outside-to-close scrim is a full-bleed
+  `<button aria-label="Close menu" tabIndex={-1}>` rather than a div-with-onClick,
+  so it satisfies jsx-a11y without a disable comment. It sits outside the focus
+  trap's element list, so Tab never lands on it.
+
+- **Logo marks are inline `PpMark`, not `<img>`.** The navbar logo must recolor
+  (stem flips bone on light sections), which an isolated `<img>` SVG can't do.
+  `PpMark` gained an optional `label`: omitted → `aria-hidden` (decorative, the
+  wrapping `<a>` carries the name); provided → `role="img"` + `aria-label`.
+
+- **Parity check.** Playwright at 1512×900: navbar renders bone logo card + Menu
+  pill over the dark hero; opening the menu unfolds the bone card at panel rect
+  `889,55,554×554` — identical to the source — with FR|EN, the four links, P-mark +
+  socials, and the pill morphed to the dark Close chip. (A transient `x=874` read
+  occurred when measuring synchronously on a fresh, pre-layout load; settled value
+  is `889`.)

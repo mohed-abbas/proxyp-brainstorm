@@ -1,0 +1,256 @@
+/* Menu — open state (Figma 245:647). A rounded bone card hanging from the
+   navbar's right edge; it unfolds from the Close pill's rectangle via clip-path.
+   Ported from design-final/styles/menu.css (panel side). data-state on the menu
+   root drives the transitions; the navbar pill morph lives in Navbar.module.css. */
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear 0.7s;
+}
+.menu[data-state="open"] {
+  visibility: visible;
+  pointer-events: auto;
+  transition: visibility 0s linear 0s;
+}
+
+/* Whisper scrim — click-outside-to-close target (a full-bleed close button). */
+.scrim {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background: rgba(22, 23, 24, 0.12);
+  opacity: 0;
+  transition: opacity 0.3s var(--pp-ease-out);
+}
+.menu[data-state="open"] .scrim {
+  opacity: 1;
+}
+
+/* The card. */
+.panel {
+  position: absolute;
+  width: min(36.6376vw, 554px);
+  height: min(36.6376vw, 554px);
+  top: calc(min(4.2328vw, 64px) - min(0.5833vw, 8.82px));
+  right: calc(max(5.1587vw, 15.441vw - 155.5px) - min(0.5952vw, 9px));
+  container-type: inline-size;
+  background: var(--pp-bone);
+  border: 0.5px solid rgba(22, 23, 24, 0.08);
+  border-radius: min(1.8051cqw, 10px);
+  overflow: hidden;
+  filter: drop-shadow(0 20px 34px rgba(22, 23, 24, 0.32))
+    drop-shadow(0 3px 8px rgba(22, 23, 24, 0.22));
+  opacity: 0;
+  clip-path: inset(1.5921% 1.6245% 89.3827% 75.2708% round 1.461%);
+  transition:
+    opacity 0.2s var(--pp-ease-out) 0.45s,
+    clip-path 0.7s var(--pp-ease-out);
+}
+.menu[data-state="open"] .panel {
+  opacity: 1;
+  clip-path: inset(0% 0% 0% 0% round 1.8051%);
+  transition:
+    opacity 0.22s var(--pp-ease-out),
+    clip-path 0.9s var(--pp-ease-out);
+}
+
+/* FR | EN */
+.lang {
+  position: absolute;
+  left: min(7.9422cqw, 44px);
+  top: min(4.8736cqw, 27px);
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: min(3.6101cqw, 20px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.langCurrent {
+  color: var(--pp-ink);
+}
+.langAlt {
+  color: var(--pp-blue);
+  text-decoration: none;
+}
+.langAlt:hover,
+.langAlt:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+/* Nav links */
+.navLinks {
+  position: absolute;
+  left: min(6.8592cqw, 38px);
+  top: min(22.2022cqw, 123px);
+  width: min(56.1372cqw, 311px);
+  display: flex;
+  flex-direction: column;
+  gap: min(3.9711cqw, 22px);
+}
+.link {
+  display: block;
+  overflow: hidden;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: min(8.8448cqw, 49px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--pp-ink);
+  text-decoration: none;
+  transition: color 0.3s var(--pp-ease-out);
+}
+.link:hover,
+.link:focus-visible {
+  color: var(--pp-blue);
+  outline: none;
+}
+.linkText {
+  display: block;
+  transform: translateY(108%);
+  transition: transform 0.4s var(--pp-ease-out);
+}
+.menu[data-state="open"] .linkText {
+  transform: none;
+  transition: transform 0.6s var(--pp-ease-out);
+}
+
+/* Hover replays the baseline rise, staggered per character (--i set in markup). */
+.linkChar {
+  display: inline-block;
+}
+@keyframes linkRise {
+  from {
+    transform: translateY(108%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .link:hover .linkChar,
+  .link:focus-visible .linkChar {
+    animation: linkRise 0.5s var(--pp-ease-out) backwards;
+    animation-delay: calc(var(--i) * 0.03s);
+  }
+}
+
+/* Bottom row: P-mark (left) · socials (right). */
+.foot {
+  position: absolute;
+  left: min(6.8592cqw, 38px);
+  right: min(8.6643cqw, 48px);
+  bottom: min(5.0009cqw, 27.7px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.logo {
+  display: block;
+  width: min(4.3321cqw, 24px);
+  line-height: 0;
+}
+.logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.logo :global(.lk-mark__stem) {
+  fill: var(--pp-ink);
+}
+.logo :global(.lk-mark__blade) {
+  fill: var(--pp-blue);
+}
+.social {
+  display: flex;
+  align-items: center;
+  gap: min(1.6245cqw, 9px);
+  color: var(--pp-ink);
+}
+.socialLink {
+  display: inline-flex;
+  width: min(4.3321cqw, 24px);
+  height: min(4.3321cqw, 24px);
+  color: inherit;
+  transition:
+    color 0.3s var(--pp-ease-out),
+    transform 0.3s var(--pp-ease-out);
+}
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: var(--pp-blue);
+  outline: none;
+}
+.socialLink img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Content stagger — FR|EN, then the four links, then the foot. */
+.lang,
+.foot {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.35s var(--pp-ease-out),
+    transform 0.35s var(--pp-ease-out);
+}
+.menu[data-state="open"] .lang,
+.menu[data-state="open"] .foot {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.4s var(--pp-ease-out),
+    transform 0.5s var(--pp-ease-out);
+}
+.menu[data-state="open"] .lang {
+  transition-delay: 0.08s;
+}
+.menu[data-state="open"] .link:nth-child(1) .linkText {
+  transition-delay: 0.12s;
+}
+.menu[data-state="open"] .link:nth-child(2) .linkText {
+  transition-delay: 0.18s;
+}
+.menu[data-state="open"] .link:nth-child(3) .linkText {
+  transition-delay: 0.24s;
+}
+.menu[data-state="open"] .link:nth-child(4) .linkText {
+  transition-delay: 0.3s;
+}
+.menu[data-state="open"] .foot {
+  transition-delay: 0.36s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .panel,
+  .lang,
+  .foot,
+  .linkText {
+    transition: none !important;
+    transition-delay: 0s !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .panel {
+    width: min(92vw, 554px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    right: 4vw;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "home": { "href": "#", "label": "Proxy Papers — home" },
+  "menu": {
+    "open": "Menu",
+    "close": "Close",
+    "openLabel": "Open menu",
+    "closeLabel": "Close menu"
+  },
+  "lang": {
+    "current": "FR",
+    "alt": { "label": "EN", "href": "#" }
+  },
+  "links": [
+    { "label": "Approach", "href": "#" },
+    { "label": "Referrers", "href": "#" },
+    { "label": "Services", "href": "#" },
+    { "label": "Contact", "href": "#" }
+  ],
+  "social": [
+    { "label": "Instagram", "href": "#", "icon": "/icons/icon-instagram.svg" },
+    { "label": "X", "href": "#", "icon": "/icons/icon-x.svg" },
+    { "label": "LinkedIn", "href": "#", "icon": "/icons/icon-linkedin.svg" }
+  ]
+}

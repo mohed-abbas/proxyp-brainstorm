@@ -15,6 +15,14 @@ resolved. One short entry each, newest at the bottom.
 
 - _No source mismatches._ Geometry matches the source exactly (see DETAILS.md).
 
+## Step 2 — Navbar + Menu
+
+- **Language toggle shows FR as current on English content.** The source menu
+  renders `FR | EN` with FR as the current language and EN as the alternate link,
+  even though all the copy is English. Ported faithfully for now (in `nav.json`),
+  but this is backwards for the English build and will need revisiting when the i18n
+  layer is wired (the current locale should drive which language reads as active).
+
 ## Open / to watch
 
 - **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro
