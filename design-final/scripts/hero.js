@@ -662,6 +662,93 @@
     addEventListener("resize", build, { passive: true });
   };
 
+  // Menu (open state) — Figma 245:647. The animation lives in menu.css, driven by
+  // the panel's data-state; this controller only flips that state and handles the
+  // plumbing: the navbar pill's Menu→Close morph (.is-menu-open), the scroll lock
+  // (Lenis), focus management (move in, trap, restore), Esc + scrim-click close.
+  // Pure DOM — not gated behind GSAP/reduced motion, so the menu always works.
+  const setupMenu = () => {
+    const menu = document.querySelector(".pp-menu");
+    const panel = menu && menu.querySelector(".pp-menu__panel");
+    const btn = document.querySelector(".pp-nav__menu");
+    const nav = document.querySelector(".pp-nav");
+    const label = btn && btn.querySelector(".pp-nav__menu-label");
+    if (!menu || !panel || !btn || !nav) return;
+
+    const FOCUSABLE =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    let open = false;
+    let lastFocus = null;
+
+    const focusables = () => [btn, ...panel.querySelectorAll(FOCUSABLE)];
+
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        close();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      // Trap focus across the pill (the close affordance) + the panel.
+      const items = focusables();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    const setOpen = () => {
+      open = true;
+      lastFocus = document.activeElement;
+      menu.dataset.state = "open";
+      menu.setAttribute("aria-hidden", "false");
+      nav.classList.add("is-menu-open");
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("aria-label", "Close menu");
+      if (label) label.textContent = "Close";
+      if (window.__lenis) window.__lenis.stop();
+      else root.style.overflow = "hidden";
+      document.addEventListener("keydown", onKey);
+      // Let the panel paint before focusing the first link, so the reveal reads.
+      const first = panel.querySelector(".pp-menu__link");
+      if (first) requestAnimationFrame(() => first.focus());
+    };
+
+    const close = () => {
+      if (!open) return;
+      open = false;
+      menu.dataset.state = "closed";
+      menu.setAttribute("aria-hidden", "true");
+      nav.classList.remove("is-menu-open");
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-label", "Open menu");
+      if (label) label.textContent = "Menu";
+      if (window.__lenis) window.__lenis.start();
+      else root.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    };
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      open ? close() : setOpen();
+    });
+    menu.querySelectorAll("[data-menu-close]").forEach((el) =>
+      el.addEventListener("click", close),
+    );
+    // Selecting a destination closes the menu (links are placeholders for now).
+    panel
+      .querySelectorAll(".pp-menu__link")
+      .forEach((l) => l.addEventListener("click", close));
+  };
+
   // SVG namespace for the runtime-built clip wraps + the flying mark clone.
   const SVGNS = "http://www.w3.org/2000/svg";
 
@@ -1024,6 +1111,7 @@
   const start = () => {
     buildConveyor(); // rows exist regardless of GSAP (decorative, progressive)
     setupNavTheme(); // always on — not gated behind GSAP/reduced motion
+    setupMenu(); // open-state menu — pure DOM, works without GSAP too
 
     const gsap = window.gsap;
     if (!gsap || prefersReduced) {

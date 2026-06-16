@@ -34,7 +34,7 @@
      letterbox on the ink ground below, leading into the next section. */
   align-items: start;
   justify-items: center;
-  padding-top: min(8vw, 121px); /* clears the capped navbar + breathing room */
+  padding-top: min(8vw, 150px); /* clears the capped navbar + breathing room */
   overflow: hidden;
   background: var(--pp-ink);
 }
@@ -360,7 +360,7 @@
 .hero-lead {
   position: absolute;
   left: 50%;
-  top: 3rem; /* Figma 58:6 sits at y=0 within the frame */
+  top: 2rem; /* Figma 58:6 sits at y=0 within the frame */
   transform: translateX(-50%);
   width: min(55.886cqw, 845px); /* 845 — was 776; matches Figma single-line title */
   display: flex;

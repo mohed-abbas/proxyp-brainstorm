@@ -1,0 +1,266 @@
+/* ============================================================================
+   Menu — open state (Figma 245:647)
+
+   A rounded BONE card that hangs from the navbar's right edge. The navbar "Menu"
+   pill morphs into this card's dark "Close" affordance (see .pp-nav.is-menu-open
+   below + setupMenu in hero.js) — the pill itself is NOT re-rendered here; it
+   stays in the navbar, on top of the card, doubling as the close button.
+
+   Geometry: a square card sized min(36.64vw, 554px). It is a container-query
+   context (`container-type: inline-size`) so every inner length is min(cqw, px):
+   below 1512 it scales with the viewport, at/above 1512 it freezes at the
+   Figma-native size — the same freeze-at-1512 model the hero composition uses.
+   The card's top-right corner is anchored 8.82px / 9px off the navbar pill (the
+   exact Figma offsets), tracking the navbar's own top + inset formulas so the
+   pill keeps reading as the card's corner at 1512 / 1920 / 2K.
+
+   Port note (React/Next): self-contained <Menu open=…/> overlay. data-state
+   drives the CSS transitions; setupMenu only flips state + handles focus, Esc,
+   scrim-click, and the scroll lock.
+   ========================================================================== */
+
+.pp-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 90; /* below the navbar (z-100) so the Close pill stays on top */
+  visibility: hidden;
+  pointer-events: none;
+}
+.pp-menu[data-state="open"] {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* ── Whisper scrim — focuses the card + is the click-outside-to-close target ── */
+.pp-menu__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 23, 24, 0.12);
+  opacity: 0;
+  transition: opacity 0.3s var(--pp-ease-out);
+}
+.pp-menu[data-state="open"] .pp-menu__scrim {
+  opacity: 1;
+}
+
+/* ── The card ────────────────────────────────────────────────────────────── */
+.pp-menu__panel {
+  position: absolute;
+  width: min(36.6376vw, 554px); /* 554 / 1512 */
+  height: min(36.6376vw, 554px); /* square */
+  /* Anchor the top-right corner to the navbar pill (offset by the Figma 8.82/9). */
+  top: calc(min(4.2328vw, 64px) - min(0.5833vw, 8.82px)); /* 55.18 @1512 */
+  right: calc(max(5.1587vw, 15.441vw - 155.5px) - min(0.5952vw, 9px)); /* 69 @1512 · 132 @1920 */
+
+  container-type: inline-size;
+  background: var(--pp-bone);
+  border: 0.5px solid rgba(22, 23, 24, 0.08);
+  border-radius: min(1.8051cqw, 10px); /* 10 / 554 */
+  box-shadow: 0 24px 80px -28px rgba(22, 23, 24, 0.45),
+    0 2px 8px -4px rgba(22, 23, 24, 0.25);
+  overflow: hidden;
+
+  /* Grows from its top-right corner (attached to the pill) on open. */
+  transform-origin: top right;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.985);
+  transition: opacity 0.25s var(--pp-ease-out),
+    transform 0.25s var(--pp-ease-out);
+}
+.pp-menu[data-state="open"] .pp-menu__panel {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.45s var(--pp-ease-out),
+    transform 0.5s var(--pp-ease-out);
+}
+
+/* ── FR | EN ─────────────────────────────────────────────────────────────── */
+.pp-menu__lang {
+  position: absolute;
+  left: min(7.9422cqw, 44px); /* 44 / 554 */
+  top: min(4.8736cqw, 27px); /* 27 / 554 */
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: min(3.6101cqw, 20px); /* 20 / 554 */
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.pp-menu__lang-current {
+  color: var(--pp-ink);
+}
+.pp-menu__lang-alt {
+  color: var(--pp-blue);
+  text-decoration: none;
+}
+.pp-menu__lang-alt:hover,
+.pp-menu__lang-alt:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+/* ── Nav links ───────────────────────────────────────────────────────────── */
+.pp-menu__nav {
+  position: absolute;
+  left: min(6.8592cqw, 38px); /* 38 / 554 */
+  top: min(22.2022cqw, 123px); /* 123 / 554 */
+  width: min(56.1372cqw, 311px); /* 311 / 554 */
+  display: flex;
+  flex-direction: column;
+  gap: min(3.9711cqw, 22px); /* 22 / 554 */
+}
+.pp-menu__link {
+  display: block;
+  overflow: hidden; /* line-mask: the text rises in from the baseline */
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: min(8.8448cqw, 49px); /* 49 / 554 */
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--pp-ink);
+  text-decoration: none;
+  transition: color 0.3s var(--pp-ease-out);
+}
+.pp-menu__link:hover,
+.pp-menu__link:focus-visible {
+  color: var(--pp-blue);
+  outline: none;
+}
+.pp-menu__link-text {
+  display: block;
+  transform: translateY(108%);
+  transition: transform 0.25s var(--pp-ease-out);
+}
+.pp-menu[data-state="open"] .pp-menu__link-text {
+  transform: none;
+  transition: transform 0.6s var(--pp-ease-out);
+}
+
+/* ── Bottom row: P-mark (left) · socials (right) ─────────────────────────── */
+.pp-menu__foot {
+  position: absolute;
+  left: min(6.8592cqw, 38px); /* 38 / 554 */
+  right: min(8.6643cqw, 48px); /* (554-506) / 554 */
+  bottom: min(5.0009cqw, 27.7px); /* (554-526.3) / 554 */
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.pp-menu__logo {
+  display: block;
+  width: min(4.3321cqw, 24px); /* 24 / 554 */
+  line-height: 0;
+}
+.pp-menu__logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.pp-menu__logo .lk-mark__stem {
+  fill: var(--pp-ink);
+}
+.pp-menu__logo .lk-mark__blade {
+  fill: var(--pp-blue);
+}
+.pp-menu__social {
+  display: flex;
+  align-items: center;
+  gap: min(1.6245cqw, 9px); /* 9 / 554 */
+  color: var(--pp-ink);
+}
+.pp-menu__social-link {
+  display: inline-flex;
+  width: min(4.3321cqw, 24px); /* 24 / 554 */
+  height: min(4.3321cqw, 24px);
+  color: inherit;
+  transition: color 0.3s var(--pp-ease-out), transform 0.3s var(--pp-ease-out);
+}
+.pp-menu__social-link:hover,
+.pp-menu__social-link:focus-visible {
+  color: var(--pp-blue);
+  outline: none;
+}
+.pp-menu__social-link img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Content stagger ─────────────────────────────────────────────────────────
+   FR|EN, then the four links rise in, then the foot — quick symmetric fade-out
+   on close (the default rules carry the fast timing; the [data-state="open"]
+   rules add the slower, delayed reveal). */
+.pp-menu__lang,
+.pp-menu__foot {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s var(--pp-ease-out), transform 0.2s var(--pp-ease-out);
+}
+.pp-menu[data-state="open"] .pp-menu__lang,
+.pp-menu[data-state="open"] .pp-menu__foot {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.4s var(--pp-ease-out), transform 0.5s var(--pp-ease-out);
+}
+.pp-menu[data-state="open"] .pp-menu__lang {
+  transition-delay: 0.08s;
+}
+.pp-menu[data-state="open"] .pp-menu__link:nth-child(1) .pp-menu__link-text {
+  transition-delay: 0.12s;
+}
+.pp-menu[data-state="open"] .pp-menu__link:nth-child(2) .pp-menu__link-text {
+  transition-delay: 0.18s;
+}
+.pp-menu[data-state="open"] .pp-menu__link:nth-child(3) .pp-menu__link-text {
+  transition-delay: 0.24s;
+}
+.pp-menu[data-state="open"] .pp-menu__link:nth-child(4) .pp-menu__link-text {
+  transition-delay: 0.3s;
+}
+.pp-menu[data-state="open"] .pp-menu__foot {
+  transition-delay: 0.36s;
+}
+
+/* ── Navbar in the open state ─────────────────────────────────────────────────
+   The left logo card hides (the card carries its own P-mark at the bottom); the
+   Menu pill forces to its dark "Close" look regardless of the section theme that
+   setupNavTheme would otherwise apply. */
+/* Beats intro.css's `html.js .pp-nav__logo.is-landed { opacity: 1 }` (which is both
+   more specific and loaded later), so the left logo card reliably hides on open. */
+html.js .pp-nav.is-menu-open .pp-nav__logo {
+  opacity: 0;
+  pointer-events: none;
+}
+.pp-nav.is-menu-open .pp-nav__menu {
+  background: var(--pp-ink);
+  border-color: rgba(247, 244, 240, 0.5);
+  color: var(--pp-bone);
+}
+.pp-nav.is-menu-open .pp-nav__menu .pp-nav__menu-label {
+  /* width barely changes Menu→Close; the colour flip carries the morph */
+}
+
+/* ── Reduced motion: no rise/scale, just an instant show/hide ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .pp-menu__scrim,
+  .pp-menu__panel,
+  .pp-menu__lang,
+  .pp-menu__foot,
+  .pp-menu__link-text {
+    transition: none !important;
+    transition-delay: 0s !important;
+    transform: none !important;
+  }
+}
+
+/* ── Small screens: the card would get cramped, so let it breathe near full-width.
+   Desktop (the prototype's target) is unaffected. ─────────────────────────── */
+@media (max-width: 680px) {
+  .pp-menu__panel {
+    width: min(92vw, 554px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    right: 4vw;
+  }
+}

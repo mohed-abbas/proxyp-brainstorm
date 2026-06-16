@@ -16,10 +16,11 @@
     <link rel="preload" as="image" href="assets/clouds.webp" />
 
     <link rel="stylesheet" href="styles/theme.css?v=5" />
-    <link rel="stylesheet" href="styles/navbar.css?v=6" />
+    <link rel="stylesheet" href="styles/navbar.css?v=7" />
+    <link rel="stylesheet" href="styles/menu.css?v=2" />
     <link rel="stylesheet" href="styles/onboarding.css?v=1" />
     <link rel="stylesheet" href="styles/intro.css?v=2" />
-    <link rel="stylesheet" href="styles/hero.css?v=8" />
+    <link rel="stylesheet" href="styles/hero.css?v=9" />
     <link rel="stylesheet" href="styles/problem.css?v=2" />
     <link rel="stylesheet" href="styles/profiles.css?v=14" />
     <link rel="stylesheet" href="styles/method.css?v=3" />
@@ -32,7 +33,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=50" defer></script>
+    <script src="scripts/hero.js?v=51" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -130,6 +131,66 @@
         <span class="pp-nav__menu-label">Menu</span>
       </button>
     </nav>
+
+    <!-- Menu, open state — Figma 245:647. A rounded bone card that drops from the
+         navbar's right edge; the Menu pill above MORPHS into this card's dark
+         "Close" affordance (handled by setupMenu in hero.js + the .is-menu-open
+         state on .pp-nav). The card is a container-query context so every inner
+         size is min(cqw, nativepx) — it scales below 1512 and freezes at the
+         Figma-native size above it, exactly like the hero composition. -->
+    <div class="pp-menu" data-state="closed" aria-hidden="true">
+      <div class="pp-menu__scrim" data-menu-close></div>
+      <div
+        class="pp-menu__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+      >
+        <p class="pp-menu__lang">
+          <span class="pp-menu__lang-current">FR&nbsp;|&nbsp;</span
+          ><a class="pp-menu__lang-alt" href="#">EN</a>
+        </p>
+
+        <nav class="pp-menu__nav" aria-label="Menu principal">
+          <a class="pp-menu__link" href="#"><span class="pp-menu__link-text">Approach</span></a>
+          <a class="pp-menu__link" href="#"><span class="pp-menu__link-text">Referrers</span></a>
+          <a class="pp-menu__link" href="#"><span class="pp-menu__link-text">Services</span></a>
+          <a class="pp-menu__link" href="#"><span class="pp-menu__link-text">Contact</span></a>
+        </nav>
+
+        <div class="pp-menu__foot">
+          <a class="pp-menu__logo" href="#" aria-label="Proxy Papers — home">
+            <svg
+              viewBox="0 0 36.4699 54.5578"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                class="lk-mark__stem"
+                d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"
+              />
+              <path
+                class="lk-mark__blade"
+                d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"
+              />
+            </svg>
+          </a>
+
+          <div class="pp-menu__social">
+            <a class="pp-menu__social-link" href="#" aria-label="Instagram">
+              <img src="assets/icon-instagram.svg" alt="" />
+            </a>
+            <a class="pp-menu__social-link" href="#" aria-label="X">
+              <img src="assets/icon-x.svg" alt="" />
+            </a>
+            <a class="pp-menu__social-link" href="#" aria-label="LinkedIn">
+              <img src="assets/icon-linkedin.svg" alt="" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <main class="hero" data-nav-theme="dark">
       <div class="hero__frame">
