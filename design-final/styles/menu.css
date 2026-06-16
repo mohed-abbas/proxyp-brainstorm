@@ -149,6 +149,28 @@
   transition: transform 0.6s var(--pp-ease-out);
 }
 
+/* Hover/focus a link → it turns blue (above) and REPLAYS the on-load baseline
+   rise, but staggered letter-by-letter: each char drops into the mask and rises
+   back up, offset by its index (--i, set in setupMenu). */
+.pp-menu__link-char {
+  display: inline-block;
+}
+@keyframes pp-menu-link-rise {
+  from {
+    transform: translateY(108%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pp-menu__link:hover .pp-menu__link-char,
+  .pp-menu__link:focus-visible .pp-menu__link-char {
+    animation: pp-menu-link-rise 0.5s var(--pp-ease-out) backwards;
+    animation-delay: calc(var(--i) * 0.03s);
+  }
+}
+
 /* ── Bottom row: P-mark (left) · socials (right) ─────────────────────────── */
 .pp-menu__foot {
   position: absolute;
@@ -249,8 +271,28 @@ html.js .pp-nav.is-menu-open .pp-nav__logo {
   border-color: rgba(247, 244, 240, 0.5);
   color: var(--pp-bone);
 }
-.pp-nav.is-menu-open .pp-nav__menu .pp-nav__menu-label {
-  /* width barely changes Menu→Close; the colour flip carries the morph */
+/* Menu ⇄ Close label — a vertical mask holding both words; .is-menu-open slides
+   the track up so "Menu" rises out the top while "Close" rises in from the
+   baseline (the same on-load rise language). Reverses on close. The track is
+   aria-hidden; the button's aria-label carries the accessible name. */
+.pp-nav__menu-label {
+  display: block;
+  height: 1.25em;
+  overflow: hidden;
+  line-height: 1.25em;
+}
+.pp-nav__menu-label-track {
+  display: block;
+  transition: transform 0.6s var(--pp-ease-out);
+}
+.pp-nav__menu-label-word {
+  display: block;
+  height: 1.25em;
+  line-height: 1.25em;
+  white-space: nowrap;
+}
+.pp-nav.is-menu-open .pp-nav__menu-label-track {
+  transform: translateY(-1.25em);
 }
 /* The grip's four dots sit in a diamond; rotating 45° squares them up — the
    "open" tell. Eased both ways (base transition here so close rotates back). */

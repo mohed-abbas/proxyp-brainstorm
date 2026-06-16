@@ -672,8 +672,22 @@
     const panel = menu && menu.querySelector(".pp-menu__panel");
     const btn = document.querySelector(".pp-nav__menu");
     const nav = document.querySelector(".pp-nav");
-    const label = btn && btn.querySelector(".pp-nav__menu-label");
     if (!menu || !panel || !btn || !nav) return;
+
+    // Split each link into per-character spans so hover can stagger them (each
+    // carries its index in --i; the rise + delay live in menu.css). The whole
+    // line still rides the on-load reveal via the parent .pp-menu__link-text.
+    panel.querySelectorAll(".pp-menu__link-text").forEach((el) => {
+      const text = el.textContent;
+      el.textContent = "";
+      [...text].forEach((ch, i) => {
+        const s = document.createElement("span");
+        s.className = "pp-menu__link-char";
+        s.textContent = ch === " " ? " " : ch;
+        s.style.setProperty("--i", i);
+        el.appendChild(s);
+      });
+    });
 
     const FOCUSABLE =
       'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -711,8 +725,7 @@
       menu.setAttribute("aria-hidden", "false");
       nav.classList.add("is-menu-open");
       btn.setAttribute("aria-expanded", "true");
-      btn.setAttribute("aria-label", "Close menu");
-      if (label) label.textContent = "Close";
+      btn.setAttribute("aria-label", "Close menu"); // accessible name; label is CSS-animated + aria-hidden
       if (window.__lenis) window.__lenis.stop();
       else root.style.overflow = "hidden";
       document.addEventListener("keydown", onKey);
@@ -729,7 +742,6 @@
       nav.classList.remove("is-menu-open");
       btn.setAttribute("aria-expanded", "false");
       btn.setAttribute("aria-label", "Open menu");
-      if (label) label.textContent = "Menu";
       if (window.__lenis) window.__lenis.start();
       else root.style.overflow = "";
       document.removeEventListener("keydown", onKey);
