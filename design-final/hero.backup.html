@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxy Papers — Hero</title>
+
+    <link rel="preload" as="image" href="assets/hero-lens.webp" fetchpriority="high" />
+    <link rel="preload" as="font" type="font/woff" href="assets/fonts/ppneuemontreal-book.woff" crossorigin />
+
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+
+    <link rel="preload" as="image" href="assets/problem-accent-underline.svg" />
+    <link rel="preload" as="image" href="assets/clouds.webp" />
+
+    <link rel="stylesheet" href="styles/theme.css?v=5" />
+    <link rel="stylesheet" href="styles/navbar.css?v=7" />
+    <link rel="stylesheet" href="styles/menu.css?v=8" />
+    <link rel="stylesheet" href="styles/onboarding.css?v=1" />
+    <link rel="stylesheet" href="styles/intro.css?v=2" />
+    <link rel="stylesheet" href="styles/hero.css?v=9" />
+    <link rel="stylesheet" href="styles/problem.css?v=2" />
+    <link rel="stylesheet" href="styles/profiles.css?v=14" />
+    <link rel="stylesheet" href="styles/method.css?v=3" />
+    <link rel="stylesheet" href="styles/trust.css?v=11" />
+    <link rel="stylesheet" href="styles/referrers.css?v=4" />
+    <link rel="stylesheet" href="styles/closing.css?v=3" />
+    <link rel="stylesheet" href="styles/footer.css?v=17" />
+
+    <!-- GSAP + ScrollTrigger + Lenis (CDN, no build step) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+    <script src="scripts/hero.js?v=61" defer></script>
+  </head>
+
+  <body class="pp-theme-dark">
+    <!-- ════════════════════════════════════════════════════════════════════
+         ONBOARDING OVERLAY (welcome → hero handoff)
+         The branded entry moment, layered as a fixed overlay ABOVE the landing
+         page (see intro.css). Proxy Blue at full presence: grain depth, corner
+         clouds, watermark P, the centred all-white lockup over a hairline
+         loader. It plays first, then on scroll the lockup's P-mark flies up to
+         the navbar and this whole layer fades, revealing the hero. The lockup is
+         byte-identical to onboarding.html — the standalone stays the reference.
+         WITH JS only (no-JS lands straight on the hero — see intro.css).
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div class="ob-stage pp-theme-blue">
+      <div class="ob-grain" aria-hidden="true"></div>
+
+      <div class="ob-watermark" aria-hidden="true">
+        <img src="assets/pp-watermark.svg" alt="" />
+      </div>
+
+      <div class="ob-cloud ob-cloud--left" aria-hidden="true">
+        <img src="assets/clouds.webp" alt="" />
+      </div>
+      <div class="ob-cloud ob-cloud--top-right" aria-hidden="true">
+        <img src="assets/clouds.webp" alt="" />
+      </div>
+
+      <div class="ob-brand" role="img" aria-label="Proxy Papers">
+        <svg
+          class="pp-lockup ob-lockup"
+          viewBox="0 0 783 310"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- P-mark -->
+          <g class="lk-mark">
+            <path class="lk-mark__stem" d="M92.4791 92.2305V269.321C92.4791 273.402 89.1559 276.692 85.0887 276.692H14.8056C6.62159 276.692 0 270.088 0 261.926V190.57C0 186.662 1.5624 182.903 4.34 180.133L92.4791 92.2305Z" />
+            <path class="lk-mark__blade" d="M184.958 51.6432V169.695C184.958 177.857 178.337 184.461 170.153 184.461H92.4543V92.2305H14.8056C6.62159 92.2305 0 85.6267 0 77.4647V14.7658C0 6.6038 6.62159 0 14.8056 0H133.176C161.77 0 184.958 23.1256 184.958 51.6432Z" />
+          </g>
+
+          <!-- "Proxy" — one <path> per letter (P r o x y) -->
+          <g class="lk-word" data-word="proxy">
+            <path class="lk-glyph" d="M221.29 134.203V0H277.388C302.783 0 321.433 11.8225 321.433 39.9938C321.433 68.165 302.808 79.7897 277.388 79.7897H241.998V134.228H221.29V134.203ZM276.446 61.9322C292.07 61.9322 299.981 54.9822 299.981 39.969C299.981 24.9559 292.07 17.808 276.446 17.808H241.998V61.9075H276.446V61.9322Z" />
+            <path class="lk-glyph" d="M387.848 36.7786V54.4135C385.591 54.0425 383.905 53.8446 381.648 53.8446C364.883 53.8446 352.855 66.4092 352.855 84.6376V134.203H334.404V38.4852H352.855V56.689H353.227C358.311 44.6686 366.024 36.2345 379.019 36.2345C382.417 36.2345 385.045 36.4324 387.873 36.8034L387.848 36.7786Z" />
+            <path class="lk-glyph" d="M390.848 86.3441C390.848 56.4909 408.927 35.4676 439.035 35.4676C469.142 35.4676 486.849 56.2931 486.849 86.1462C486.849 115.999 468.77 137.023 438.861 137.023C408.952 137.023 390.873 116.37 390.873 86.3441H390.848ZM467.629 86.3441C467.629 66.2606 458.602 50.8765 439.01 50.8765C419.418 50.8765 410.019 66.2606 410.019 86.3441C410.019 106.428 419.046 121.812 439.01 121.812C458.974 121.812 467.629 106.23 467.629 86.3441Z" />
+            <path class="lk-glyph" d="M485.882 134.203L522.015 85.2062L489.081 38.4602H510.161L533.125 72.6169H533.497L556.09 38.4602H577.17L544.236 85.2062L580.741 134.203H559.091L533.125 97.5975H532.753L507.334 134.203H485.882Z" />
+            <path class="lk-glyph" d="M589.943 166.505V151.492C593.142 151.863 594.828 152.06 597.854 152.06C605.195 152.06 613.85 148.301 617.619 133.288L578.857 38.485H598.995L627.043 111.696H627.415L653.753 38.485H673.147L635.128 136.478C625.903 160.123 616.677 167.816 601.822 167.816C597.68 167.816 594.853 167.445 589.967 166.505H589.943Z" />
+          </g>
+
+          <!-- "Papers" — one <path> per letter (P a p e r s) -->
+          <g class="lk-word" data-word="papers">
+            <path class="lk-glyph" d="M221.291 276.494V142.291H277.388C302.784 142.291 321.433 154.113 321.433 182.284C321.433 210.456 302.808 222.08 277.388 222.08H241.999V276.518H221.291V276.494ZM276.446 204.223C292.07 204.223 299.981 197.273 299.981 182.26C299.981 167.247 292.07 160.099 276.446 160.099H241.999V204.198H276.446V204.223Z" />
+            <path class="lk-glyph" d="M325.923 251.711C325.923 230.317 342.117 223.936 366.024 219.434C381.078 216.614 390.303 214.735 390.303 205.361C390.303 198.411 386.162 192.598 372.051 192.598C355.286 192.598 350.227 197.867 349.284 210.629H330.461C331.404 192.227 343.456 177.783 372.819 177.783C392.585 177.783 408.383 186.044 408.383 210.827V254.753C408.383 261.703 409.325 265.265 412.896 265.265C413.467 265.265 414.037 265.265 415.153 265.067V276.321C411.954 277.063 408.755 277.434 405.729 277.434C396.503 277.434 391.618 273.872 390.477 262.989H390.105C383.905 272.932 372.968 279.14 357.344 279.14C338.149 279.14 325.923 268.06 325.923 251.736V251.711ZM390.303 239.122V225.42C387.303 228.239 379.019 230.292 369.223 232.37C352.285 235.758 345.143 240.433 345.143 250.4C345.143 259.403 350.028 264.3 361.511 264.3C378.077 264.3 390.303 255.866 390.303 239.147V239.122Z" />
+            <path class="lk-glyph" d="M522.214 228.61C522.214 260.145 503.59 279.091 479.112 279.091C464.058 279.091 454.833 272.339 449.575 264.647H449.203V309.686H430.752V180.726H449.203V191.98H449.575C454.833 185.228 464.058 177.907 479.112 177.907C503.59 177.907 522.214 197.05 522.214 228.585V228.61ZM502.821 228.61C502.821 209.837 494.166 193.316 476.086 193.316C459.52 193.316 449.352 206.82 449.352 228.61C449.352 250.4 459.52 263.904 476.086 263.904C494.166 263.904 502.821 247.383 502.821 228.61Z" />
+            <path class="lk-glyph" d="M625.904 233.507H552.124C552.496 249.46 561.92 264.3 580.916 264.3C597.855 264.3 604.452 253.418 606.138 247.036H624.961C619.877 265.438 605.766 279.313 580.544 279.313C550.065 279.313 533.127 257.721 533.127 228.437C533.127 199.153 551.206 177.758 580.544 177.758C609.883 177.758 626.102 196.902 626.102 226.557C626.102 229.179 626.102 231.998 625.904 233.507ZM606.882 219.063C606.882 204.05 596.342 192.796 579.974 192.796C564.548 192.796 553.24 203.308 552.124 219.063H606.882Z" />
+            <path class="lk-glyph" d="M695.169 179.069V196.704C692.913 196.333 691.226 196.135 688.97 196.135C672.205 196.135 660.177 208.7 660.177 226.928V276.494H641.726V180.751H660.177V198.955H660.549C665.633 186.935 673.346 178.5 686.341 178.5C689.738 178.5 692.367 178.698 695.194 179.069H695.169Z" />
+            <path class="lk-glyph" d="M698.715 244.588H717.34C718.084 255.668 724.879 264.3 742.76 264.3C758.955 264.3 763.27 257.177 763.27 250.227C763.27 238.207 750.473 236.896 738.048 234.274C721.283 230.341 702.088 225.444 702.088 205.559C702.088 189.037 715.455 177.956 738.594 177.956C764.931 177.956 777.555 192.03 778.869 208.551H760.244C758.93 201.23 754.962 192.772 738.966 192.772C726.541 192.772 721.283 197.644 721.283 204.792C721.283 214.735 732.022 215.675 745.563 218.692C763.245 222.823 782.465 227.893 782.465 249.287C782.465 267.862 768.155 279.14 742.934 279.14C713.769 279.14 699.261 264.127 698.715 244.613V244.588Z" />
+          </g>
+        </svg>
+
+        <!-- Hairline loader -->
+        <div class="ob-divider" aria-hidden="true">
+          <span class="ob-divider__track"></span>
+          <span class="ob-divider__fill"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navbar — shared component, Figma "Closed" state (278:136). A transparent
+         bar carrying two bone-white surfaces: a rounded LOGO card on the left
+         (the curtain's flying P-mark lands here — it reads the logo's live
+         position, so the same handoff docks at this left slot) and a "Menu" pill
+         on the right (grip icon + label). The logo card is always bone, so its
+         mark is fixed ink-stem + blue-blade (no per-theme recolor needed). -->
+    <nav class="pp-nav" aria-label="Primary">
+      <a class="pp-nav__logo" href="#" aria-label="Proxy Papers — home">
+        <svg viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+          <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+        </svg>
+      </a>
+
+      <button class="pp-nav__menu" type="button" aria-label="Open menu" aria-expanded="false">
+        <span class="pp-nav__menu-icon" aria-hidden="true">
+          <!-- lucide "grip" (Figma 278:143) — a 4-dot diamond -->
+          <svg viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="currentColor" stroke-width="1.888" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11.331" cy="4.721" r="0.944" />
+              <circle cx="17.941" cy="11.331" r="0.944" />
+              <circle cx="4.722" cy="11.331" r="0.944" />
+              <circle cx="11.331" cy="17.940" r="0.944" />
+            </g>
+          </svg>
+        </span>
+        <span class="pp-nav__menu-label" aria-hidden="true">
+          <span class="pp-nav__menu-label-track">
+            <span class="pp-nav__menu-label-word">Menu</span>
+            <span class="pp-nav__menu-label-word">Close</span>
+          </span>
+        </span>
+      </button>
+    </nav>
+
+    <!-- Menu, open state — Figma 245:647. A rounded bone card that drops from the
+         navbar's right edge; the Menu pill above MORPHS into this card's dark
+         "Close" affordance (handled by setupMenu in hero.js + the .is-menu-open
+         state on .pp-nav). The card is a container-query context so every inner
+         size is min(cqw, nativepx) — it scales below 1512 and freezes at the
+         Figma-native size above it, exactly like the hero composition. -->
+    <div class="pp-menu" data-state="closed" aria-hidden="true">
+      <div class="pp-menu__scrim" data-menu-close></div>
+      <div
+        class="pp-menu__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+      >
+        <p class="pp-menu__lang">
+          <span class="pp-menu__lang-current">FR&nbsp;|&nbsp;</span
+          ><a class="pp-menu__lang-alt" href="#">EN</a>
+        </p>
+
+        <nav class="pp-menu__nav" aria-label="Menu principal">
+          <a class="pp-menu__link" href="#"><span class="pp-menu__link-text">Approach</span></a>
+          <a class="pp-menu__link" href="#"><span class="pp-menu__link-text">Referrers</span></a>
+          <a class="pp-menu__link" href="#"><span class="pp-menu__link-text">Services</span></a>
+          <a class="pp-menu__link" href="#"><span class="pp-menu__link-text">Contact</span></a>
+        </nav>
+
+        <div class="pp-menu__foot">
+          <a class="pp-menu__logo" href="#" aria-label="Proxy Papers — home">
+            <svg
+              viewBox="0 0 36.4699 54.5578"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                class="lk-mark__stem"
+                d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"
+              />
+              <path
+                class="lk-mark__blade"
+                d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"
+              />
+            </svg>
+          </a>
+
+          <div class="pp-menu__social">
+            <a class="pp-menu__social-link" href="#" aria-label="Instagram">
+              <img src="assets/icon-instagram.svg" alt="" />
+            </a>
+            <a class="pp-menu__social-link" href="#" aria-label="X">
+              <img src="assets/icon-x.svg" alt="" />
+            </a>
+            <a class="pp-menu__social-link" href="#" aria-label="LinkedIn">
+              <img src="assets/icon-linkedin.svg" alt="" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="hero" data-nav-theme="dark">
+      <div class="hero__frame">
+        <!-- Horizon lens: blue bowtie + masked clouds + arc hairlines -->
+        <div class="hero-lens" aria-hidden="true">
+          <img class="hero-lens__fill" src="assets/hero-lens.webp" alt="" />
+          <div class="hero-lens__clouds">
+            <img class="hero-cloud hero-cloud--left" src="assets/clouds.webp" alt="" />
+            <img class="hero-cloud hero-cloud--right" src="assets/clouds.webp" alt="" />
+          </div>
+          <img class="hero-lens__arc hero-lens__arc--top" src="assets/hero-arc.svg" alt="" />
+          <img class="hero-lens__arc hero-lens__arc--bottom" src="assets/hero-arc.svg" alt="" />
+        </div>
+
+        <!-- Document conveyor (rows injected + duplicated by JS).
+             Two synced layers: skeletons left of centre, clear content right. -->
+        <div class="hero-conveyor" aria-hidden="true">
+          <div class="hero-conveyor__layer hero-conveyor__layer--skeleton">
+            <div class="hero-conveyor__track" data-conveyor-skeleton></div>
+          </div>
+          <div class="hero-conveyor__layer hero-conveyor__layer--content">
+            <div class="hero-conveyor__track" data-conveyor-content></div>
+          </div>
+        </div>
+
+        <!-- Centre axis + brand card -->
+        <div class="hero-axis" aria-hidden="true">
+          <span class="hero-axis__line"></span>
+          <div class="hero-axis__card">
+            <img src="assets/pp-mark.svg" alt="" />
+          </div>
+        </div>
+
+        <!-- Headline block -->
+        <header class="hero-lead">
+          <h1 class="hero-lead__title">
+            <span class="r-word"><span class="r-word__in">Private</span></span>
+            <span class="r-word"><span class="r-word__in">management</span></span>
+            <span class="r-word"><span class="r-word__in">of</span></span>
+            <span class="r-word"><span class="r-word__in">your</span></span>
+            <span class="r-word"><span class="r-word__in grad">data.</span></span>
+          </h1>
+          <p class="hero-lead__body">
+            A bespoke framework to structure, secure and maintain the documents
+            that make up your personal estate. A dedicated advisor. Sovereign
+            technology.
+          </p>
+          <div class="hero-lead__cta">
+            <a class="hero-btn" href="#">Request a discovery meeting</a>
+            <a class="hero-link" href="#">Are you a referring advisor?</a>
+          </div>
+        </header>
+
+        <!-- Positioning statement -->
+        <p class="hero-statement">
+          We are not your bank, your notary, or your advisor. We are the
+          framework that connects them.
+        </p>
+      </div>
+    </main>
+
+    <!-- Capped content frame: everything below the hero is wrapped so it freezes at
+         the 1512px design size on >=1512px screens (container-type: inline-size +
+         cqw units in the section CSS) instead of ballooning on 2K/4K. The welcome,
+         fixed navbar and hero stay OUTSIDE it (full-bleed + fixed/scroll-pinned, so
+         they must not sit inside a containment context). -->
+    <div class="page-frame">
+    <!-- Problem section (Figma 17:2) — revealed as it scrolls into view.
+         Shares the fixed navbar above; no navbar of its own. -->
+    <section class="problem" aria-label="The problem Proxy Papers solves" data-nav-theme="dark">
+      <div class="problem__content">
+        <!-- Left editorial column -->
+        <p class="problem__eyebrow">
+          <span class="problem__eyebrow-label">PROBLEM</span>
+          <span class="problem__eyebrow-rule" aria-hidden="true">
+            <img src="assets/problem-accent-underline.svg" alt="" />
+          </span>
+        </p>
+
+        <h2 class="problem__headline">Your estate is structured. Your documents often aren't.</h2>
+
+        <p class="problem__body">
+          Your advisors take care of your taxes, your investments, your
+          companies. No one really takes care of the rest: the deeds, the
+          contracts, the deadlines, the documents that move between your advisors
+          and that have to be retrieved at every meeting, every decision, every
+          transmission. That is where things get complicated.
+        </p>
+
+        <!-- VOLUME -->
+        <article class="problem-card problem-card--volume">
+          <p class="problem-card__label">VOLUME</p>
+          <p class="problem-card__copy">
+            200 to 400 essential documents to manage for a structured estate.
+          </p>
+          <div class="problem-volume-graphic" aria-hidden="true">
+            <div class="problem-graphic__inner">
+              <svg class="zigzag" viewBox="0 0 373.321 394.919" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="zigzag__path" d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158" stroke="#5A90F4" stroke-width="59" pathLength="100" />
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <!-- FRICTION -->
+        <article class="problem-card problem-card--friction">
+          <p class="problem-card__label">FRICTION</p>
+          <p class="problem-card__copy">
+            Up to 30% of the time spent with your advisors goes into retrieving
+            or forwarding information
+          </p>
+          <div class="problem-card-graphic" aria-hidden="true">
+            <div class="problem-graphic__inner">
+              <svg class="zigzag" viewBox="0 0 373.321 394.919" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="zigzag__path" d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158" stroke="#5A90F4" stroke-width="59" pathLength="100" />
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <!-- RISK -->
+        <article class="problem-card problem-card--risk">
+          <p class="problem-card__label">RISK</p>
+          <p class="problem-card__copy">
+            One person in four has already lost an important document.
+          </p>
+          <div class="problem-card-graphic" aria-hidden="true">
+            <div class="problem-graphic__inner">
+              <svg class="zigzag" viewBox="0 0 373.321 394.919" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="zigzag__path" d="M359.566 26.0968L31.1744 199.187C28.3031 200.701 29.5459 205.062 32.7836 204.834L312.456 185.178C315.545 184.961 316.898 188.997 314.302 190.685L54.123 359.866C51.4433 361.608 52.9837 365.774 56.1524 365.355L359.566 325.158" stroke="#5A90F4" stroke-width="59" pathLength="100" />
+              </svg>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+    </div>
+    <!-- /.page-frame — profiles lives OUTSIDE it so its dark ground runs
+         edge-to-edge (consistency with the other bands; no visual change since the
+         ground matches the page). Its composition stays frozen + centred at the
+         Figma 1512 via .profiles__frame (a per-section container). The frame
+         re-opens below for method. -->
+
+    <!-- Profiles section (Figma 78:3) — a scroll-SCRUBBED 3D flip. On entry the
+         deck is a fanned stack showing each card's FRONT (big number + P-mark
+         watermark). As the section scrolls through ~50% viewport, each card
+         un-tilts, spreads to a flat even slot, and flips on its Y axis to reveal
+         its BACK (number + profile name + one-line description). The motion is
+         tied to scroll position (reversible). See setupProfiles in hero.js.
+
+         Transform-layering contract (each transform on its OWN node so nothing
+         fights): .profiles__card = slot position + perspective + CSS hover-lift
+         (GSAP never touches it) → .profiles__card-pos = GSAP spread (x/y) + tilt
+         (rotation) → .profiles__card-flip = GSAP rotateY (preserve-3d) → the two
+         backface-hidden faces. CSS base is the RESOLVED back-spread, so no-JS /
+         reduced-motion lands on the informative Figma layout. The fan offset each
+         card winds back to at p=0 lives in the per-card --dx/--dy/--rot vars
+         (single source of truth, read by JS). Cards port to a .map(). -->
+    <section class="profiles" aria-label="The three support profiles" data-nav-theme="dark">
+      <!-- Centred, width-capped container: re-creates the 1512 Figma frame so the
+           composition freezes at native size on wide screens while the dark ground
+           (the <section>) runs full-bleed. container-type keeps all the deck's
+           cqw/calc formulas resolving against 1512 (frozen) above the design width. -->
+      <div class="profiles__frame">
+      <div class="profiles__content">
+        <!-- Editorial header -->
+        <h2 class="profiles__title">
+          <span class="profiles__title-line">Three support profiles.</span>
+          <span class="profiles__title-line profiles__title-line--muted">One shared framework.</span>
+        </h2>
+        <p class="profiles__body">
+          Essentiel, Signature, Exception — each profile adapts to the complexity
+          of your estate and your pace of life. The method remains the same.
+        </p>
+
+        <!-- Flat even deck (resolved state). Each card flips between a watermark
+             FRONT and a named BACK; 01 / 03 in Proxy Blue, 02 in Bone White. -->
+        <div class="profiles__deck">
+          <article class="profiles__card profiles__card--01" style="--rot: -10deg; --dx: 8.77vw; --dy: 1.59vw">
+            <div class="profiles__card-pos">
+              <div class="profiles__card-flip">
+                <div class="profiles__card-face profiles__card-face--front">
+                  <span class="profiles__card-num">01</span>
+                  <span class="profiles__card-mark"></span>
+                </div>
+                <div class="profiles__card-face profiles__card-face--back">
+                  <span class="profiles__card-num">01</span>
+                  <div class="profiles__card-meta">
+                    <span class="profiles__card-name">Essentiel</span>
+                    <span class="profiles__card-desc">Set in order. Keep current.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="profiles__card profiles__card--03" style="--rot: 10deg; --dx: -8.77vw; --dy: 1.59vw">
+            <div class="profiles__card-pos">
+              <div class="profiles__card-flip">
+                <div class="profiles__card-face profiles__card-face--front">
+                  <span class="profiles__card-num">03</span>
+                  <span class="profiles__card-mark"></span>
+                </div>
+                <div class="profiles__card-face profiles__card-face--back">
+                  <span class="profiles__card-num">03</span>
+                  <div class="profiles__card-meta">
+                    <span class="profiles__card-name">Exception</span>
+                    <span class="profiles__card-desc">A framework on its own scale.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="profiles__card profiles__card--02" style="--rot: 0deg; --dx: -2.22vw; --dy: 0vw">
+            <div class="profiles__card-pos">
+              <div class="profiles__card-flip">
+                <div class="profiles__card-face profiles__card-face--front">
+                  <span class="profiles__card-num">02</span>
+                  <span class="profiles__card-mark"></span>
+                </div>
+                <div class="profiles__card-face profiles__card-face--back">
+                  <span class="profiles__card-num">02</span>
+                  <div class="profiles__card-meta">
+                    <span class="profiles__card-name">Signature</span>
+                    <span class="profiles__card-desc">A living framework. For an active estate.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Resolved-state CTA (Figma 78:25), revealed once the deck has flipped. -->
+        <a class="profiles__cta hero-btn" href="#services">Explore the services</a>
+      </div>
+      </div>
+    </section>
+
+    <!-- /.page-frame re-opens for method (still capped inside the 1512 frame). -->
+    <div class="page-frame">
+
+    <!-- The Method section (Figma 58:170) — the brand's full-presence moment:
+         a full Proxy Blue panel. Revealed as it scrolls into view; shares the
+         fixed navbar + the single Lenis/ScrollTrigger above. The five rows port
+         to a .map() over a STEPS array (see method.css). -->
+    <section class="method" aria-label="The five-step method" data-nav-theme="blue">
+      <div class="method__content">
+        <!-- Editorial header -->
+        <header class="method__head">
+          <h2 class="method__title">
+            <span class="method__title-seg">Five steps,</span>
+            <span class="method__title-seg method__title-seg--muted">one single contact.</span>
+          </h2>
+          <p class="method__lede">
+            The same dedicated advisor stays with you from the first meeting to
+            the annual review. No rotating teams, no subcontracting.
+          </p>
+        </header>
+
+        <!-- The five locked method steps -->
+        <ol class="method__steps">
+          <li class="method__step">
+            <span class="method__step-num">01</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Onboarding</h3>
+              <p class="method__step-desc">Collection, sorting, classification, backup on the Papers Box.</p>
+            </div>
+          </li>
+          <li class="method__step">
+            <span class="method__step-num">02</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Organization</h3>
+              <p class="method__step-desc">Folder setup, deadline alerts, secure sharing with your advisors.</p>
+            </div>
+          </li>
+          <li class="method__step">
+            <span class="method__step-num">03</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Follow-up</h3>
+              <p class="method__step-desc">Regular updates, periodic on-site interventions.</p>
+            </div>
+          </li>
+          <li class="method__step">
+            <span class="method__step-num">04</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Support</h3>
+              <p class="method__step-desc">Secure transmission of the items needed for your projects and procedures.</p>
+            </div>
+          </li>
+          <li class="method__step">
+            <span class="method__step-num">05</span>
+            <div class="method__step-row">
+              <h3 class="method__step-name">Management</h3>
+              <p class="method__step-desc">Real-time visibility, periodic report, decision support.</p>
+            </div>
+          </li>
+        </ol>
+
+        <!-- Footer link -->
+        <a class="method__link" href="#">
+          See our full approach
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </section>
+    </div>
+    <!-- /.page-frame — every band below lives OUTSIDE it so its background runs
+         edge-to-edge on wide screens (no centred 1512px column with dark gutters);
+         each band's content is held at the Figma size via min(vw, px) caps (and,
+         where corner-anchored, a centred .closing__inner). -->
+
+    <!-- Trust section (Figma 58:219) — the reassurance band. First LIGHT surface:
+         the fixed navbar flips to its light theme over it (data-nav-theme). -->
+    <section class="trust" aria-label="Sovereign infrastructure and data protection" data-nav-theme="light">
+      <!-- Inner bone panel = the animated "window". It opens from a small centred
+           card on the dark ground to the full band (both axes), Vooban-style. The
+           outer .trust reserves the full height so nothing below it reflows. -->
+      <div class="trust__panel">
+        <span class="trust__frame" aria-hidden="true"></span>
+        <!-- Eyebrow from the collapsed initial state (Figma 58:684). Intro-only:
+             shown while the band is the narrow card, fades out as it expands. -->
+        <p class="trust__eyebrow" aria-hidden="true">Sovereignty &amp; trust</p>
+        <!-- Certifications marquee — a persistent infinite bar (Figma 77:959
+             compact / 77:1355 expanded). It rides the bottom of the collapsed
+             card (small) and grows + rises into the open band (large, below the
+             title/body) on expand, while the track scrolls continuously. ONE
+             authored set lives here; setupCertsMarquee (hero.js) clones it until
+             the track always overflows the viewport, then loops by exactly one
+             set's width — so the scroll stays seamless and infinite for ANY
+             number of certs and ANY screen width. The whole bar is aria-hidden
+             (the certs are restated in the body copy). -->
+        <div class="trust__certs" aria-hidden="true">
+          <div class="trust__certs-track">
+            <span class="trust__cert">GDPR compliance</span>
+            <span class="trust__cert">AI Act compliance</span>
+            <span class="trust__cert">NF 203 CCFN digital vault</span>
+            <span class="trust__cert">Trusted third party for tax purposes</span>
+            <span class="trust__cert">Password manager</span>
+          </div>
+        </div>
+        <div class="trust__content">
+          <h2 class="trust__title">
+            <span class="trust__title-line">Sovereign infrastructure.</span>
+            <span class="trust__title-line">Protected data.</span>
+          </h2>
+          <p class="trust__body">
+            Your documents are hosted in France, on an independent infrastructure.
+            Our tools comply with the GDPR and the AI Act, and are certified NF 203
+            CCFN digital vaults. Proxy Papers is recognised as a trusted third party
+            for tax purposes.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Referrers section (Figma 68:813) — the prescripteur block. Dark ground;
+         an orbital diagram of advisor avatars around the P-mark. The orbit is
+         decorative (aria-hidden); the five avatars port to a .map() over an
+         ADVISORS array (see referrers.css / setupReferrers in hero.js). -->
+    <section class="referrers" aria-label="For advisors who refer high-net-worth clients" data-nav-theme="dark">
+      <div class="referrers__content">
+        <h2 class="referrers__title">You advise high-net-worth clients?</h2>
+
+        <div class="referrers__orbit" aria-hidden="true">
+          <div class="referrers__field">
+            <svg class="referrers__rings" viewBox="0 0 494 494" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle class="referrers__ring--inner" cx="247" cy="247" r="116" />
+              <circle class="referrers__ring--middle" cx="247" cy="247" r="185" />
+              <circle class="referrers__ring--outer" cx="247" cy="247" r="246" />
+            </svg>
+
+            <!-- Avatars are grouped per orbit so each ring revolves as one unit
+                 (see startOrbit in hero.js): inner ring (1–2) and middle ring
+                 (3–5) spin in opposite directions; the img inside each counter-
+                 rotates so faces stay upright. -->
+            <div class="referrers__orbit-layer referrers__orbit-layer--inner">
+              <span class="referrers__avatar referrers__avatar--1"><img src="assets/referrers/advisor-1.png" alt="" /></span>
+              <span class="referrers__avatar referrers__avatar--2"><img src="assets/referrers/advisor-2.png" alt="" /></span>
+            </div>
+            <div class="referrers__orbit-layer referrers__orbit-layer--middle">
+              <span class="referrers__avatar referrers__avatar--3"><img src="assets/referrers/advisor-3.png" alt="" /></span>
+              <span class="referrers__avatar referrers__avatar--4"><img src="assets/referrers/advisor-4.png" alt="" /></span>
+              <span class="referrers__avatar referrers__avatar--5"><img src="assets/referrers/advisor-5.png" alt="" /></span>
+            </div>
+
+            <span class="referrers__mark">
+              <svg viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+                <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="referrers__foot">
+          <p class="referrers__body">
+            Notaries, accountants, attorneys, wealth managers, family offices:
+            Proxy Papers handles the private information layer of your clients so
+            you can focus on advisory work that actually matters. Peer referral or
+            formal business introduction: we adapt to your professional framework.
+          </p>
+          <a class="referrers__cta" href="#">Enter the referrers area</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing CTA band (Figma 58:248) — the page's final call to action.
+         LIGHT surface: the navbar flips to its light theme (data-nav-theme).
+         The bone band is full-bleed; .closing__inner re-creates the 1512 frame
+         (centred + capped) so the corner-anchored blocks keep their positions. -->
+    <section class="closing" aria-label="Request a discovery meeting" data-nav-theme="light">
+      <div class="closing__inner">
+        <h2 class="closing__title">Take back control of what is yours</h2>
+        <div class="closing__action">
+          <a class="closing__link" href="#">
+            Request a discovery meeting
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
+          <p class="closing__body">
+            The first meeting is on us. It lasts one hour. Its purpose is to
+            understand your situation, your stakes and to check together that
+            Proxy Papers fits your need.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer (Figma 251:50) — the site close, a Proxy Blue card rounded only at
+         the TOP (it meets the page bottom). Same atmosphere as the onboarding
+         canvas (grain @10% + the clouds image bled from top + bottom-left). The
+         content is one centred group, bottom-aligned: a left brand column (big
+         bone P-mark over the copyright) beside two link columns, each split off
+         by a hairline divider and stacking a top nav group over a bottom
+         social/legal group. A BLUE surface, so the navbar takes its blue theme
+         over it (mark goes all-bone) before the handoff fades it out (see
+         setupFooter + setupNavHandoff in hero.js). -->
+    <footer class="footer" data-nav-theme="blue">
+      <!-- Atmosphere — grain tile + two cloud overlays (reused onboarding assets). -->
+      <div class="footer__grain" aria-hidden="true"></div>
+      <div class="footer__cloud footer__cloud--top" aria-hidden="true">
+        <img src="assets/clouds.webp" alt="" />
+      </div>
+      <div class="footer__cloud footer__cloud--left" aria-hidden="true">
+        <img src="assets/clouds.webp" alt="" />
+      </div>
+
+      <!-- Centred content group (top:124, bottom-aligned). -->
+      <div class="footer__content">
+        <!-- Left brand column — big bone P-mark over the copyright. -->
+        <div class="footer__brand">
+          <div class="footer__mark" aria-hidden="true">
+            <svg class="footer__mark-svg" viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+              <path d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+            </svg>
+          </div>
+          <p class="footer__legal">All Rights Reserved © Proxy Papers 2026.</p>
+        </div>
+
+        <!-- Right group — two divider + link-column units, spread apart. -->
+        <div class="footer__cols">
+          <!-- Column 1 — top: primary nav (Approach active) · bottom: social. -->
+          <div class="footer__unit">
+            <span class="footer__rule" aria-hidden="true"></span>
+            <nav class="footer__col footer__col--1" aria-label="Footer">
+              <ul class="footer__group">
+                <li><a class="footer__link is-active" href="#">Approach</a></li>
+                <li><a class="footer__link" href="#">Referrers</a></li>
+                <li><a class="footer__link" href="#">Contact</a></li>
+                <li><a class="footer__link" href="#">Services</a></li>
+              </ul>
+              <ul class="footer__group">
+                <li><a class="footer__link" href="#">Facebook</a></li>
+                <li><a class="footer__link" href="#">Instagram</a></li>
+                <li><a class="footer__link" href="#">Twitter</a></li>
+                <li><a class="footer__link" href="#">LinkedIn</a></li>
+              </ul>
+            </nav>
+          </div>
+
+          <!-- Column 2 — top: about (About active) · bottom: legal/policy. -->
+          <div class="footer__unit">
+            <span class="footer__rule" aria-hidden="true"></span>
+            <nav class="footer__col footer__col--2" aria-label="Resources">
+              <ul class="footer__group">
+                <li><a class="footer__link is-active" href="#">About</a></li>
+                <li><a class="footer__link" href="#">Sovereignty and Security</a></li>
+                <li><a class="footer__link" href="#">News</a></li>
+              </ul>
+              <ul class="footer__group">
+                <li><a class="footer__link" href="#">Terms of Sale</a></li>
+                <li><a class="footer__link" href="#">Privacy Policy</a></li>
+                <li><a class="footer__link" href="#">Legal Notice</a></li>
+                <li><a class="footer__link" href="#">Cookies Policy</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
