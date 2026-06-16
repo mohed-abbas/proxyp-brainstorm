@@ -393,3 +393,26 @@ on scroll).
   layer) live on separate nodes, so transforms never conflict.
 - **Feasibility / constraints:** reduced motion → not started (hook returns early).
   Long linear durations keep it calm; decorative (`aria-hidden`), no pointer events.
+
+## Closing
+
+### Closing reveal (oversized headline → link → reassurance copy)
+- **Where:** the Closing CTA band — Proxy Blue headline (upper-left), the
+  "Request a discovery meeting" link + reassurance copy (lower-right).
+- **User-facing description:** "the big closing headline rises word-by-word as you
+  reach it, then the meeting link and the line under it settle in."
+- **Trigger:** scroll-trigger, `start: "top 78%"`, `once: true` (fires once).
+- **Mechanics:** timeline defaults `power3.out`, `force3D`. Park: title + body
+  words `yPercent 120`; link `autoAlpha 0, y 16`. Steps:
+  - title words: `yPercent 0`, dur 0.75, stagger 0.07, @0.
+  - link: `autoAlpha 1, y 0`, dur 0.6, @0.45.
+  - body words: `yPercent 0`, dur 0.7, stagger 0.016, @0.55.
+- **Source ref:** `setupClosing` in `hero.js`; `closing.css`.
+- **Implementation note:** `src/lib/animations/useClosing.ts`. Settled-by-default
+  (no `.js`-hide). Title + body are `<SplitText>`; the link is a plain anchor with
+  an inline arrow SVG whose hover nudge (`translateX`) is pure CSS. Full-bleed
+  (outside `.page-frame`); `.inner` re-creates the 1512px frame so the corner-
+  anchored blocks (title upper-left, action lower-right) resolve their absolute
+  positions. `data-nav-theme="light"` flips the navbar to its light surface.
+- **Feasibility / constraints:** reduced motion → hook returns early; the settled
+  band renders (headline + link + copy in place).

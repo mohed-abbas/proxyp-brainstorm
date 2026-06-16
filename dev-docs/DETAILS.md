@@ -296,3 +296,22 @@ One short entry per decision, newest at the bottom.
 - **Parity check.** Playwright at 1512×900 vs source: layout/typography/radar
   geometry match; reveal timing + the counter-rotating perpetual orbit match;
   `data-nav-theme="dark"` keeps the navbar dark over the band.
+
+## Step 8 — Closing
+
+- **Full-bleed bone band with a re-created 1512 frame.** Like Trust/Referrers the
+  band runs edge-to-edge (raw vw, outside `.page-frame`); `.inner` is a
+  `min(100vw, 1512px)` positioning context so the two CORNER-anchored blocks
+  (headline absolute upper-left, action absolute lower-right) land on their Figma
+  coordinates and freeze at/above 1512px. Band has `border-radius: min(1.3228vw,20px)`.
+
+- **Plain underline link, not `.pp-btn`.** The CTA here is a Proxy-Blue text link
+  with a bottom border + inline arrow (pure-CSS hover nudge), matching the Method
+  link pattern — distinct from the pill buttons elsewhere, so it stays section-local.
+
+- **`data-nav-theme="light"`.** Second light band after Trust; the navbar flips to
+  its light (ink) surface over it.
+
+- **Parity check.** Playwright at 1512×900 vs source: corner-anchored layout,
+  oversized blue headline, right-set link + copy, and the word-by-word reveal all
+  match; navbar flips light over the band.

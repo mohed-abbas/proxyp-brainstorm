@@ -1,0 +1,81 @@
+/* Closing — "Take back control of what is yours" (Figma 58:248). The page's
+   final CTA: a short Bone White band with an oversized Proxy Blue headline
+   (upper-left) and, lower-right, the "Request a discovery meeting" link over a
+   line of reassurance copy. LIGHT surface (navbar flips light). Full-bleed
+   (outside .page-frame, raw vw); .inner re-creates the 1512px frame so the
+   corner-anchored blocks resolve their absolute positions. */
+
+.closing {
+  position: relative;
+  width: 100%;
+  min-height: min(34.5899vw, 523px);
+  display: flex;
+  justify-content: center;
+  background: var(--pp-bone);
+  border-radius: min(1.3228vw, 20px);
+  overflow: hidden;
+}
+
+.inner {
+  position: relative;
+  width: min(100vw, 1512px);
+}
+
+.title {
+  position: absolute;
+  left: min(4.9603vw, 75px);
+  top: min(6.2169vw, 94px);
+  width: min(44.4444vw, 672px);
+  font-weight: 500;
+  font-size: min(5.0265vw, 76px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--pp-blue);
+}
+
+.action {
+  position: absolute;
+  left: min(49.6032vw, 750px);
+  top: min(20.2381vw, 306px);
+  width: min(45.4365vw, 687px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: min(1.455vw, 22px);
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: min(0.3968vw, 6px);
+  padding-bottom: min(0.3968vw, 6px);
+  border-bottom: 1px solid var(--pp-blue);
+  font-weight: 500;
+  font-size: min(1.0582vw, 16px);
+  color: var(--pp-blue);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.link svg {
+  width: min(1.1905vw, 18px);
+  height: min(1.1905vw, 18px);
+  stroke: currentColor;
+  transition: transform 0.4s var(--pp-ease-out);
+}
+.link:hover svg {
+  transform: translateX(min(0.2646vw, 4px));
+}
+.body {
+  width: 100%;
+  font-weight: 400;
+  font-size: min(1.0582vw, 16px);
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  text-align: right;
+  color: rgba(22, 23, 24, 0.7);
+}
+
+/* Per-word reveal mask padding (house style). */
+.closing :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}

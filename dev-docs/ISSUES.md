@@ -67,6 +67,13 @@ resolved. One short entry each, newest at the bottom.
   release + nav light-flip can finally be exercised — re-verify during the next
   full-scroll parity pass.
 
+## Step 8 — Closing
+
+- _No source mismatches._ Corner-anchored geometry (re-created 1512 frame inside a
+  full-bleed bone band) and the once-on-enter word reveal match the source exactly
+  (see DETAILS.md). The CTA is a plain blue underline link (like Method's), not a
+  pill — kept section-local.
+
 ## Open / to watch
 
 - **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro
