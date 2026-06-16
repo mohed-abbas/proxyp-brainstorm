@@ -358,6 +358,59 @@
       .to(link, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.0);
   };
 
+  // Certifications marquee — make the infinite scroll robust for ANY number of
+  // certs and ANY viewport width. The HTML authors ONE set; we clone it until the
+  // track always overflows the viewport, then loop by exactly one set's width.
+  // (The old approach hard-coded two sets and looped by -50%, which only stays
+  // gap-free while a single set is wider than the screen — too few certs or a
+  // wide display would expose empty space.) font-size is constant, and setupTrust
+  // scales the PARENT .trust__certs (never the track), so offsetWidth/offsetLeft
+  // here are pure layout, untouched by that transform. The exact shift is read
+  // from layout positions (set 2's first item vs set 1's), so the reset is
+  // seam-free even with sub-pixel rounding. Runs independent of GSAP; skipped
+  // under reduced motion (CSS also stops the animation there).
+  const CERTS_SPEED = 52; // px/s at full size — matches the prior 40s feel
+  const setupCertsMarquee = () => {
+    const track = document.querySelector(".trust__certs-track");
+    if (!track || prefersReduced) return;
+    const unit = Array.from(track.children); // the one authored set
+    if (!unit.length) return;
+
+    const build = () => {
+      // Lay down a single set, gauge its advance to pick a copy count.
+      track.replaceChildren(...unit.map((el) => el.cloneNode(true)));
+      const approx = Array.from(track.children).reduce(
+        (w, el) => w + el.offsetWidth + parseFloat(getComputedStyle(el).marginRight),
+        0,
+      );
+      if (!approx) return;
+      // Enough whole sets to cover the viewport plus one spare, so content never
+      // runs out before the loop resets. Always ≥ 2 so we can measure the period.
+      const copies = Math.max(2, Math.ceil(window.innerWidth / approx) + 1);
+      for (let i = 1; i < copies; i++) {
+        unit.forEach((el) => track.appendChild(el.cloneNode(true)));
+      }
+      // Exact repeat period = where set 2 begins relative to set 1 (layout px).
+      const kids = Array.from(track.children);
+      const period = kids[unit.length].offsetLeft - kids[0].offsetLeft;
+      track.style.setProperty("--marquee-shift", period + "px");
+      track.style.setProperty("--marquee-duration", period / CERTS_SPEED + "s");
+    };
+
+    const refit = () => {
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    };
+    refit();
+    // Re-measure on resize: font-size is min(vw, 49px), so the set width — and
+    // the number of copies needed — change with the viewport.
+    let raf = 0;
+    window.addEventListener("resize", () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(build);
+    });
+  };
+
   // The trust band EXPANDS as it scrolls into view (ScrollTrigger). It opens
   // from the collapsed initial card (Figma 58:684) — a narrow 440px panel with a
   // "Sovereignty & trust" eyebrow up top and the dimmed title sitting low and
@@ -406,15 +459,19 @@
     gsap.set(panel, { width: cap(29.1005, 440) }); // 440px — height stays the full band
     gsap.set(frame, { autoAlpha: 0 }); // no frame in the collapsed card (Figma)
     gsap.set(eyebrow, { autoAlpha: 1, y: 0 });
-    // Certs marquee "from" state (Figma 77:959): smaller font (18.2 vs 49) and
-    // dropped to the card bottom. yPercent:-50 keeps it centred on its top line
-    // while y adds the ~93px drop; both undo to the expanded place on open. The
-    // inner track keeps marquee-ing throughout (CSS).
+    // Certs marquee "from" state (Figma 77:959): scaled down (18.2/49) and
+    // dropped to the card bottom. We size it with a transform scale — NOT a
+    // font-size tween — so the track's pixel width stays FIXED and the marquee's
+    // loop never gets re-measured mid-open (that re-measuring, of a width that
+    // changed every frame, was the stutter). yPercent:-50 keeps it centred on its
+    // line while y adds the ~93px drop; both undo to the expanded place on open.
+    // The inner track keeps marquee-ing throughout (CSS).
     gsap.set(certs, {
       autoAlpha: 1,
       yPercent: -50,
       y: cap(6.1508, 93),
-      fontSize: cap(1.2037, 18.2) + "px",
+      scale: 18.2 / 49, // compact size as a pure transform (no font-size relayout)
+      transformOrigin: "50% 50%",
     });
     // Compact card (Figma 77:959) has an EMPTY centre — the title is pushed fully
     // below the card edge (clipped by the panel's overflow) so it doesn't clash
@@ -458,11 +515,11 @@
       .to(panel, { width: "100%", duration: 1.5, ease: "power2.inOut" }, 0) // width-only open (Figma)
       .to(content, { y: 0, duration: 1.5, ease: "power2.inOut" }, 0)
       .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.45 }, 0)
-      // The certs marquee grows (font 18.2 → 49) and rises into the open band,
+      // The certs marquee scales up (0.371 → 1) and rises into the open band,
       // tracking the panel open (same duration/ease as the width + content rise).
       .to(
         certs,
-        { y: 0, fontSize: cap(3.2407, 49) + "px", duration: 1.5, ease: "power2.inOut" },
+        { y: 0, scale: 1, duration: 1.5, ease: "power2.inOut" },
         0
       )
       .to(frame, { autoAlpha: 1, duration: 0.6 }, 0.4) // hairline frame fades in as it opens
@@ -1149,6 +1206,7 @@
     buildConveyor(); // rows exist regardless of GSAP (decorative, progressive)
     setupNavTheme(); // always on — not gated behind GSAP/reduced motion
     setupMenu(); // open-state menu — pure DOM, works without GSAP too
+    setupCertsMarquee(); // robust infinite certs scroll — independent of GSAP
 
     const gsap = window.gsap;
     if (!gsap || prefersReduced) {

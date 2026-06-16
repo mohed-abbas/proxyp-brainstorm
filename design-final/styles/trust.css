@@ -87,12 +87,14 @@
 /* Certifications marquee — a persistent infinite bar (Figma 77:959 compact /
    77:1355 expanded). Absolutely positioned, full-width so the track scrolls
    edge-to-edge (clipped by the panel), and vertically centred on its band line
-   via top + translateY so font-size (height) changes don't shift the centre.
-   It STAYS in both states: small + low in the collapsed card, then GSAP grows
-   its font and rises it into the open band. So CSS holds the settled (expanded)
-   49px size and position; JS drives the collapsed "from" state (like the rest of
-   the band). Everything inside is em-based off this font-size — the compact and
-   expanded specs share the exact same ratios, so it's a pure scale. */
+   via top + translateY so scaling doesn't shift the centre.
+   It STAYS in both states: small + low in the collapsed card, then GSAP scales
+   it up and rises it into the open band. font-size is CONSTANT (the settled
+   49px); the compact size is a pure transform: scale() driven by JS — NOT a
+   font-size tween. Keeping font-size fixed keeps the track's pixel width fixed,
+   so the marquee's translateX(-50%) loop stays a constant distance and never
+   re-measures (no stutter) while the band opens. Everything inside is em-based
+   off this font-size, so the strip stays internally proportional at any scale. */
 .trust__certs {
   position: absolute;
   left: 0;
@@ -100,7 +102,7 @@
   top: min(25.9259vw, 392px); /* settled vertical centre (374.68 + 35/2 of 523) */
   transform: translateY(-50%);
   z-index: 2;
-  font-size: min(3.2407vw, 49px); /* expanded 49px; all metrics below are em */
+  font-size: min(3.2407vw, 49px); /* constant; compact state is a transform scale */
 }
 .js .trust__certs {
   visibility: hidden; /* JS sets the collapsed "from" state, then reveals it */
@@ -113,7 +115,11 @@
   flex-wrap: nowrap;
   width: max-content;
   align-items: center;
-  animation: trust-marquee 40s linear infinite;
+  /* Shift + duration are set by setupCertsMarquee (hero.js) from the measured
+     one-set width, so the loop is seamless for any cert count / screen width.
+     Defaults render a STATIC strip if JS never runs (a half-set -50% loop would
+     jump now that the HTML authors a single set). */
+  animation: trust-marquee var(--marquee-duration, 40s) linear infinite;
 }
 .trust__cert {
   display: flex;
@@ -121,7 +127,7 @@
   flex-shrink: 0;
   gap: 0.3061em; /* 15px @49 / 5.571px @18.2 — label → its dot */
   margin-right: 0.2449em; /* 12px @49 / 4.457px @18.2 — gap to the next item */
-  font-weight: 500; /* Medium → falls back to Book */
+  font-weight: 600; /* SemiBold → falls back to nearest available weight */
   font-size: 1em;
   line-height: 1;
   letter-spacing: -0.03em; /* -1.47px @49 / -0.546px @18.2 */
@@ -142,7 +148,7 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(calc(-1 * var(--marquee-shift, 0px)));
   }
 }
 @media (prefers-reduced-motion: reduce) {
