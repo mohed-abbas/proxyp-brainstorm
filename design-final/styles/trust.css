@@ -84,12 +84,82 @@
   opacity: 0;
 }
 
+/* Certifications marquee — a persistent infinite bar (Figma 77:959 compact /
+   77:1355 expanded). Absolutely positioned, full-width so the track scrolls
+   edge-to-edge (clipped by the panel), and vertically centred on its band line
+   via top + translateY so font-size (height) changes don't shift the centre.
+   It STAYS in both states: small + low in the collapsed card, then GSAP grows
+   its font and rises it into the open band. So CSS holds the settled (expanded)
+   49px size and position; JS drives the collapsed "from" state (like the rest of
+   the band). Everything inside is em-based off this font-size — the compact and
+   expanded specs share the exact same ratios, so it's a pure scale. */
+.trust__certs {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: min(25.9259vw, 392px); /* settled vertical centre (374.68 + 35/2 of 523) */
+  transform: translateY(-50%);
+  z-index: 2;
+  font-size: min(3.2407vw, 49px); /* expanded 49px; all metrics below are em */
+}
+.js .trust__certs {
+  visibility: hidden; /* JS sets the collapsed "from" state, then reveals it */
+}
+/* The scrolling track — two identical sets so translateX(-50%) loops seamlessly.
+   Each item carries its trailing gap as margin (not a flex gap) so the two sets
+   tile exactly and the half-shift equals one whole set. */
+.trust__certs-track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  align-items: center;
+  animation: trust-marquee 40s linear infinite;
+}
+.trust__cert {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.3061em; /* 15px @49 / 5.571px @18.2 — label → its dot */
+  margin-right: 0.2449em; /* 12px @49 / 4.457px @18.2 — gap to the next item */
+  font-weight: 500; /* Medium → falls back to Book */
+  font-size: 1em;
+  line-height: 1;
+  letter-spacing: -0.03em; /* -1.47px @49 / -0.546px @18.2 */
+  color: var(--pp-ink);
+  white-space: nowrap;
+}
+/* Proxy-Blue separator dot after each item (Figma Ellipse 20, #5A90F4). */
+.trust__cert::after {
+  content: "";
+  flex-shrink: 0;
+  width: 0.2041em; /* 10px @49 / 3.714px @18.2 */
+  height: 0.2041em;
+  border-radius: 50%;
+  background: var(--pp-blue);
+}
+@keyframes trust-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trust__certs-track {
+    animation: none;
+  }
+}
+
 /* Centred copy block — above the frame. Width-capped so the copy stays at the
    Figma measure while the panel around it grows. */
 .trust__content {
   position: relative;
   z-index: 1;
   width: min(45.4365vw, 687px); /* 687px */
+  /* Lift the title/body block above band centre (flex math: half the margin) so
+     the certs marquee sits 68px below it — the Figma 77:1355 stack. */
+  margin-bottom: min(6.8545vw, 103.64px); /* shifts the block up ~51.8px */
   display: flex;
   flex-direction: column;
   align-items: center;

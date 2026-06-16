@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="styles/problem.css?v=2" />
     <link rel="stylesheet" href="styles/profiles.css?v=14" />
     <link rel="stylesheet" href="styles/method.css?v=3" />
-    <link rel="stylesheet" href="styles/trust.css?v=5" />
+    <link rel="stylesheet" href="styles/trust.css?v=7" />
     <link rel="stylesheet" href="styles/referrers.css?v=4" />
     <link rel="stylesheet" href="styles/closing.css?v=3" />
     <link rel="stylesheet" href="styles/footer.css?v=17" />
@@ -33,7 +33,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-    <script src="scripts/hero.js?v=53" defer></script>
+    <script src="scripts/hero.js?v=57" defer></script>
   </head>
 
   <body class="pp-theme-dark">
@@ -520,6 +520,26 @@
         <!-- Eyebrow from the collapsed initial state (Figma 58:684). Intro-only:
              shown while the band is the narrow card, fades out as it expands. -->
         <p class="trust__eyebrow" aria-hidden="true">Sovereignty &amp; trust</p>
+        <!-- Certifications marquee — a persistent infinite bar (Figma 77:959
+             compact / 77:1355 expanded). It rides the bottom of the collapsed
+             card (small) and grows + rises into the open band (large, below the
+             title/body) on expand, while the track scrolls continuously. Two
+             identical sets give a seamless loop (-50% = one whole set); the
+             duplicate is decorative (the whole bar is aria-hidden). -->
+        <div class="trust__certs" aria-hidden="true">
+          <div class="trust__certs-track">
+            <span class="trust__cert">GDPR compliance</span>
+            <span class="trust__cert">AI Act compliance</span>
+            <span class="trust__cert">NF 203 CCFN digital vault</span>
+            <span class="trust__cert">Trusted third party for tax purposes</span>
+            <span class="trust__cert">Password manager</span>
+            <span class="trust__cert">GDPR compliance</span>
+            <span class="trust__cert">AI Act compliance</span>
+            <span class="trust__cert">NF 203 CCFN digital vault</span>
+            <span class="trust__cert">Trusted third party for tax purposes</span>
+            <span class="trust__cert">Password manager</span>
+          </div>
+        </div>
         <div class="trust__content">
           <h2 class="trust__title">
             <span class="trust__title-line">Sovereign infrastructure.</span>

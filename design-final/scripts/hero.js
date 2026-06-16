@@ -372,6 +372,7 @@
     const panel = section.querySelector(".trust__panel");
     const frame = section.querySelector(".trust__frame");
     const eyebrow = section.querySelector(".trust__eyebrow");
+    const certs = section.querySelector(".trust__certs");
     const content = section.querySelector(".trust__content");
     const title = section.querySelector(".trust__title");
     const titleLines = gsap.utils.toArray(".trust__title-line", section);
@@ -379,31 +380,48 @@
     const body = section.querySelector(".trust__body");
     const bodyWords = splitWords(body);
 
-    gsap.set(content, { visibility: "visible" });
+    gsap.set([content, certs], { visibility: "visible" });
 
-    // No ScrollTrigger / reduced motion → render the settled full band as-is.
+    // No ScrollTrigger / reduced motion → render the settled full band as-is
+    // (certs marquee already sits in its expanded place via CSS).
     if (!ST) {
       gsap.set(bodyWords, { yPercent: 0 });
       return;
     }
 
-    // Collapsed initial state — the Figma "from" card (node 58:684): a 440×520
+    // Collapsed initial state — the Figma "from" card (node 77:959): a 440×520
     // PORTRAIT card (so the open is width-only — Figma's collapsed height already
-    // matches the full band). Per Figma: the eyebrow tag sits up top, the big
-    // title sits LOW and bleeds off the card edges (clipped by the panel's
-    // overflow), and there is NO inset frame yet (the hairline belongs to the full
-    // band, so it fades in as the card opens). "Protected data." + the body stay
-    // hidden until the open. y is pushed in px (GSAP treats vw on transforms as px),
-    // so convert against the live viewport.
-    // Cap design distances at the Figma px (min(vw, px)) so the collapsed card
-    // and its bleeding title stay Figma-accurate on >1512px screens, matching the
-    // CSS caps now that the panel opens full-bleed.
+    // matches the full band). Per Figma: the eyebrow tag sits up top, a certs strip
+    // rides the bottom (bleeding wider than the card), and the CENTRE IS EMPTY — the
+    // title is pushed fully below the card edge (clipped by the panel's overflow)
+    // and there is NO inset frame yet (the hairline belongs to the full band, so it
+    // fades in as the card opens). "Protected data." + the body stay hidden until
+    // the open. y is pushed in px (GSAP treats vw on transforms as px), so convert
+    // against the live viewport.
+    // Cap design distances at the Figma px (min(vw, px)) so the collapsed card stays
+    // Figma-accurate on >1512px screens, matching the CSS caps now that the panel
+    // opens full-bleed.
     const vwToPx = (vw) => (vw / 100) * window.innerWidth;
     const cap = (vw, px) => Math.min(vwToPx(vw), px);
     gsap.set(panel, { width: cap(29.1005, 440) }); // 440px — height stays the full band
     gsap.set(frame, { autoAlpha: 0 }); // no frame in the collapsed card (Figma)
     gsap.set(eyebrow, { autoAlpha: 1, y: 0 });
-    gsap.set(content, { y: cap(18, 272) }); // title sits low, bleeding off the edges
+    // Certs marquee "from" state (Figma 77:959): smaller font (18.2 vs 49) and
+    // dropped to the card bottom. yPercent:-50 keeps it centred on its top line
+    // while y adds the ~93px drop; both undo to the expanded place on open. The
+    // inner track keeps marquee-ing throughout (CSS).
+    gsap.set(certs, {
+      autoAlpha: 1,
+      yPercent: -50,
+      y: cap(6.1508, 93),
+      fontSize: cap(1.2037, 18.2) + "px",
+    });
+    // Compact card (Figma 77:959) has an EMPTY centre — the title is pushed fully
+    // below the card edge (clipped by the panel's overflow) so it doesn't clash
+    // with the certs strip; it rises into the open band on expand. (Larger than
+    // before — the settled title block now sits higher to make room for the
+    // marquee below it, so it starts further down to clear the card.)
+    gsap.set(content, { y: cap(28.5714, 432) });
     gsap.set(title, { color: "rgba(22, 23, 24, 0.6)" });
     gsap.set(line2, { autoAlpha: 0, yPercent: 40 });
     gsap.set(bodyWords, { yPercent: 120 });
@@ -440,6 +458,13 @@
       .to(panel, { width: "100%", duration: 1.5, ease: "power2.inOut" }, 0) // width-only open (Figma)
       .to(content, { y: 0, duration: 1.5, ease: "power2.inOut" }, 0)
       .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.45 }, 0)
+      // The certs marquee grows (font 18.2 → 49) and rises into the open band,
+      // tracking the panel open (same duration/ease as the width + content rise).
+      .to(
+        certs,
+        { y: 0, fontSize: cap(3.2407, 49) + "px", duration: 1.5, ease: "power2.inOut" },
+        0
+      )
       .to(frame, { autoAlpha: 1, duration: 0.6 }, 0.4) // hairline frame fades in as it opens
       .to(line2, { autoAlpha: 1, yPercent: 0, duration: 0.6 }, 0.5)
       .to(title, { color: "rgb(22, 23, 24)", duration: 0.7 }, 0.6)
