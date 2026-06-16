@@ -32,18 +32,20 @@ export function Trust({ content = trustContent }: { content?: TrustContent }) {
           {content.eyebrow}
         </p>
 
-        <div className={s.certs} aria-hidden="true">
-          <div className={s.certsTrack}>
-            {content.certs.map((cert, i) => (
-              <span key={i} className={s.cert}>
-                <span className={s.certLabel}>
-                  <span className={s.certMain}>{cert}</span>
-                  <span className={s.certClone} aria-hidden="true">
-                    {cert}
+        <div className={s.certsViewport} aria-hidden="true">
+          <div className={s.certs}>
+            <div className={s.certsTrack}>
+              {content.certs.map((cert, i) => (
+                <span key={i} className={s.cert}>
+                  <span className={s.certLabel}>
+                    <span className={s.certMain}>{cert}</span>
+                    <span className={s.certClone} aria-hidden="true">
+                      {cert}
+                    </span>
                   </span>
                 </span>
-              </span>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 

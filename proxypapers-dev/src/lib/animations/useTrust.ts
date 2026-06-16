@@ -97,7 +97,11 @@ export function useTrust(scope: RefObject<HTMLElement | null>, s: Styles) {
         yPercent: -50,
         y: cap(6.1508, 93),
         scale: 18.2 / 49,
-        transformOrigin: "50% 50%",
+        // Left x-origin keeps the first cert flush with the panel's left edge
+        // while the compact scale runs, so the marquee never flashes a bone gap
+        // on the left at a loop wrap. At scale 1 the origin is irrelevant, so the
+        // expanded end-state is unchanged.
+        transformOrigin: "0% 50%",
       });
       gsap.set(content, { y: cap(28.5714, 432) });
       gsap.set(title, { color: "rgba(22, 23, 24, 0.6)" });
