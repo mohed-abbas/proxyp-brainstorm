@@ -57,7 +57,7 @@ export function Hero() {
           <SplitText as="h1" className={s.leadTitle} words={titleWords} />
           <p className={s.leadBody}>{heroContent.body}</p>
           <div className={s.leadCta}>
-            <a className={s.btn} href={heroContent.cta.primary.href}>
+            <a className="pp-btn" href={heroContent.cta.primary.href}>
               {heroContent.cta.primary.label}
             </a>
             <a className={s.link} href={heroContent.cta.secondary.href}>

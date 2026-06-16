@@ -1,0 +1,217 @@
+/* Profiles section (Figma 58:149). Full-bleed dark ground, left/right editorial
+   header, and a fanned deck of three 3D-flip cards — 01 Essentiel + 03 Exception
+   in Proxy Blue, 02 Signature in Bone. Lengths are fractions of the 1512px frame.
+
+   Motion contract: each transform on its OWN node so nothing fights —
+   .card = slot + perspective + hover (GSAP never touches it) → .cardPos = GSAP
+   spread (x/y) + tilt (rotation) → .cardFlip = GSAP rotateY → backface-hidden
+   faces. CSS base is the RESOLVED back-spread, so no-JS / reduced motion lands on
+   the informative layout; GSAP winds the cards into the fan and plays forward. */
+
+.profiles {
+  --card-h: clamp(420px, calc(100vh - 22.5cqw), 35.3175cqw);
+  --card-w: calc(var(--card-h) * 0.692884);
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: min(8.5vw, 129px);
+  padding-bottom: min(6vw, 91px);
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+/* Per-section container re-creating the 1512px Figma frame: capped width +
+   container-type so descendant cqw/calc resolve against 1512 (frozen above the
+   design width) while the dark ground runs full-bleed. */
+.frame {
+  position: relative;
+  width: min(100vw, 1512px);
+  container-type: inline-size;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  height: 50.93cqw;
+}
+
+/* ── Editorial header ──────────────────────────────────────────────────────*/
+.title {
+  position: absolute;
+  left: 5.2249cqw;
+  top: 0;
+  font-weight: 500;
+  font-size: 3.2407cqw;
+  line-height: 1.04;
+  letter-spacing: -0.0212cqw;
+  color: var(--pp-bone);
+}
+.titleLine {
+  display: block;
+}
+.titleLineMuted {
+  color: rgba(247, 244, 240, 0.6);
+}
+
+.body {
+  position: absolute;
+  top: 2.6455cqw;
+  right: 5.0265cqw;
+  width: 39.0212cqw;
+  font-weight: 400;
+  font-size: 1.0582cqw;
+  line-height: 1.45;
+  letter-spacing: 0.0212cqw;
+  text-align: right;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* ── Card deck ─────────────────────────────────────────────────────────────*/
+.deck {
+  position: absolute;
+  inset: 0;
+}
+
+.card {
+  position: absolute;
+  width: var(--card-w);
+  height: var(--card-h);
+  perspective: 1600px;
+  transition: transform 0.45s var(--pp-ease-out);
+}
+/* Resolved slots: flat row, equal tops, 50px gaps; the group centred on the deck
+   via --card-w. Each calc reduces to the native vw left at native card width. */
+.card[data-profile="01"] {
+  left: calc(50% - var(--card-w) * 1.721536);
+  top: 13.889cqw;
+  z-index: 1;
+}
+.card[data-profile="02"] {
+  left: calc(50% - var(--card-w) * 0.56769);
+  top: 13.889cqw;
+  z-index: 2;
+}
+.card[data-profile="03"] {
+  left: calc(50% + var(--card-w) * 0.586156);
+  top: 13.889cqw;
+  z-index: 3;
+}
+
+.cardPos {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.cardFlip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+}
+
+.cardFace {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--card-h) * 0.037453);
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  box-shadow: 0 2.6cqw 4.6cqw -1.9cqw rgba(0, 0, 0, 0.55);
+  transition:
+    box-shadow 0.45s var(--pp-ease-out),
+    filter 0.4s var(--pp-ease-out);
+}
+.cardFaceBack {
+  transform: rotateY(180deg);
+}
+.card[data-profile="01"] .cardFace,
+.card[data-profile="03"] .cardFace {
+  background: var(--pp-blue);
+}
+.card[data-profile="02"] .cardFace {
+  background: var(--pp-bone);
+}
+
+/* Giant number, bleeding off the top edge (clipped by the card). */
+.cardNum {
+  position: absolute;
+  top: calc(var(--card-h) * -0.050562);
+  left: 36%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: calc(var(--card-h) * 0.357678);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--card-tint);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Giant P-mark watermark, bottom-left, masked so it recolors to the card tint. */
+.cardMark {
+  position: absolute;
+  left: 5.3%;
+  top: 65.5%;
+  width: 44.5%;
+  aspect-ratio: 144.674 / 216.424;
+  background: var(--card-tint);
+  -webkit-mask: url(/icons/pp-watermark.svg) no-repeat center / contain;
+  mask: url(/icons/pp-watermark.svg) no-repeat center / contain;
+  pointer-events: none;
+}
+
+/* Per-card tint (number + watermark): a lighter shade of the card's colour. */
+.card[data-profile="01"],
+.card[data-profile="03"] {
+  --card-tint: #6ea1ff;
+}
+.card[data-profile="02"] {
+  --card-tint: #dfddda;
+}
+
+/* ── Back face content (number + name + description) ─────────────────────────*/
+.cardMeta {
+  position: absolute;
+  left: calc(var(--card-w) * 0.061538);
+  top: calc(var(--card-h) * 0.778652);
+  width: calc(var(--card-w) * 0.532308);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--card-h) * 0.014981);
+}
+.cardName {
+  font-weight: 500;
+  font-size: calc(var(--card-h) * 0.073034);
+  line-height: 1.05;
+  letter-spacing: -0.0106cqw;
+}
+.cardDesc {
+  font-weight: 400;
+  font-size: calc(var(--card-h) * 0.029963);
+  line-height: 1.35;
+}
+.card[data-profile="01"] .cardFaceBack,
+.card[data-profile="03"] .cardFaceBack {
+  color: var(--pp-bone);
+}
+.card[data-profile="02"] .cardFaceBack {
+  color: #161718;
+}
+
+/* ── Reveal masks (per-word, house style) ──────────────────────────────────*/
+.profiles :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+
+/* ── CTA — pill under the deck, centred. .pp-btn carries the visual. ─────────*/
+.cta {
+  position: absolute;
+  left: 48.51%;
+  top: calc(var(--card-h) + 17.4604cqw);
+  transform: translateX(-50%);
+}

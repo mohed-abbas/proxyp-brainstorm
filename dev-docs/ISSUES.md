@@ -31,6 +31,15 @@ resolved. One short entry each, newest at the bottom.
   the zigzag paths against `volumePath` needs a cast (`volumePath as Element | null`)
   — purely a typing concern, no runtime effect.
 
+## Step 4 — Profiles
+
+- _No source mismatches._ Fan-entry and resolved transforms match the source
+  exactly at both ends of the scrub (see DETAILS.md). Worth watching as more pinned
+  sections land: each pinned section's `useGSAP` calls `ScrollTrigger.refresh()`;
+  with multiple pins + Lenis, confirm pin push-follow stays correct once Method
+  (also pinned) is added — a single coordinated refresh may read cleaner than
+  per-hook refreshes.
+
 ## Open / to watch
 
 - **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro

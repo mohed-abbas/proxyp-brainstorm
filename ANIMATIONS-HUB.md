@@ -217,3 +217,49 @@ on scroll).
   load-in moment only).
 - **Feasibility / constraints:** reduced motion → no listeners (hook returns early),
   so the small zigzags stay drawn (the readable settled state).
+
+## Profiles
+
+### Profiles header reveal (title + body word-by-word)
+- **Where:** the Profiles editorial header (two title lines + right-aligned body).
+- **User-facing description:** "the two-line title and the supporting copy rise in
+  word-by-word as the section enters."
+- **Trigger:** scroll, `start: top 72%`, `once: true` (plays once, not scrubbed —
+  separate from the deck's pinned trigger).
+- **Mechanics:** words parked `yPercent 120`; title words `yPercent 120→0` dur 0.7
+  stagger 0.06 @0; body words same dur 0.7 stagger 0.018 @0.35. `ease power3.out`.
+- **Source ref:** trigger A in `setupProfiles` (`hero.js`).
+- **Implementation note:** `src/lib/animations/useProfiles.ts`. Title is two
+  `<SplitText>` lines inside the `h2`; words queried by `.title .r-word__in` /
+  `.body .r-word__in`.
+
+### Profiles deck flip (pinned, scrubbed 3D card flip with dwell)
+- **Where:** the three-card deck + the CTA beneath it.
+- **User-facing description:** "the section locks in place; the fanned stack of
+  cards (showing big numbers) un-tilts, spreads into an even row, and each card
+  flips on its vertical axis to reveal its named back, centre card first; the CTA
+  fades up and the flipped deck holds still for a beat before the section releases."
+- **Trigger:** scroll, the section PINS (`start: top top`, `end: +=160%`, `pin: true`,
+  `pinType: "transform"`, `anticipatePin: 1`, `scrub: 2.4`). The pin DISTANCE sets
+  the pace (slow + deliberate); scrub 2.4 only softens how it tracks/settles.
+- **Mechanics** (parked at fanned FRONT, then):
+  - `.cardPos` (spread + tilt): `x/y → 0, rotation → 0`, dur 1.2, stagger 0.15,
+    `power1.inOut`, @0. Parked values are the per-card `--dx/--dy` (vw→px) + `--rot`.
+  - `.cardFlip` (rotateY): `0 → 180`, dur 1.4, stagger 0.15, `power1.inOut`, @0.3.
+  - CTA: `autoAlpha 0→1, y 16→0`, dur 0.5, `power2.out`, @1.6.
+  - dwell: empty `to({}, { duration: 0.9 })` tail holds the flipped deck.
+  - Card order is centre-first: `["02","01","03"]`.
+- **Transform layering:** `.card` (slot + perspective, GSAP never touches) →
+  `.cardPos` (preserve-3d, spread/tilt) → `.cardFlip` (preserve-3d, rotateY) →
+  two `backface-hidden` faces. CSS base is the resolved flat back-spread (180°), so
+  no-JS / reduced motion lands there.
+- **Source ref:** trigger B in `setupProfiles` (`hero.js`); `profiles.css`.
+- **Implementation note:** `useProfiles.ts`. GSAP 3 doesn't resolve vw on x/y, so
+  the `--dx/--dy` offsets are converted to px against the live viewport and scaled
+  by the deck's live shrink factor (`deckScale`). Cards selected by
+  `[data-profile="…"]`. `pinType: "transform"` is kept from the source (survives a
+  `container-type` ancestor). Profiles is composed OUTSIDE `.page-frame`.
+- **Feasibility / constraints:** reduced motion → hook returns early; the section
+  shows the resolved flat back-spread (names + CTA visible). The CTA can fall below
+  the fold by design on tall decks. The deck (only) scales down on short viewports
+  via CSS `--card-h`; the fan offsets follow via `deckScale`.

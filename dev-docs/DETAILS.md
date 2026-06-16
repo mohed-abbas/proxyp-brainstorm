@@ -152,3 +152,43 @@ One short entry per decision, newest at the bottom.
   `1099.9,204.5,…×239.6`, RISK `…,469.8,…×226.7` — all identical to the source.
   Zigzag states match (VOLUME `dashoffset 0`, small cards `100`); hover on FRICTION
   drives `100→0` and back to `100` on leave. Screenshots are pixel-identical.
+
+## Step 4 — Profiles
+
+- **Shared button promoted to a global `.pp-btn`.** The CTA reuses the hero's pill
+  button. Rather than duplicate it, the button moved out of `Hero.module.css` into a
+  global `.pp-btn` primitive in `globals.css` (alongside `.r-word`, `.page-frame`,
+  `.pp-lockup`). Hero's CTA now uses `className="pp-btn"`; Profiles' CTA uses
+  `${s.cta} pp-btn` (`.cta` only positions it). Moving the rule between stylesheets
+  doesn't change `cqw` resolution (it depends on the element's container ancestors,
+  not the rule's origin), so the hero button is unchanged — verified identical.
+
+- **Composed OUTSIDE `.page-frame`.** Like the source, Profiles is full-bleed; its
+  own `.frame` (`width: min(100vw,1512px)` + `container-type`) re-creates the 1512
+  basis so the deck's `cqw`/`calc` freeze at native size above the design width.
+
+- **Cards identified by `data-profile` (not modifier classes).** Module classes are
+  hashed, so the per-card colour/position rules key off `[data-profile="01|02|03"]`
+  and the GSAP hook selects the same way. Card render order is `01,02,03`; stacking
+  is set by explicit `z-index` (the source's DOM riffle order is irrelevant once
+  z-index is explicit).
+
+- **Fan offsets are design constants in the component, content is JSON.** The
+  per-card `--rot/--dx/--dy` fan-entry vars live in a `FAN` map in `Profiles.tsx`
+  (presentational), while `num/name/desc` + title/body/CTA copy live in
+  `profiles.json`. The hook reads the rendered `--dx/--dy` via `getComputedStyle`,
+  converts vw→px against the live viewport, and scales by the deck's live shrink
+  factor (GSAP 3 doesn't resolve vw on `x/y`).
+
+- **Front face needs no modifier class.** The source's `--front` face carries no
+  styles (the base `.cardFace` + the pre-rotated `--back` are enough), so the port
+  drops it — the front is just `.cardFace`.
+
+- **Parity check.** Playwright at 1512×900: entry state (at pin start) has cards
+  fanned — 01 `rotate(-10°)`, 02 flat with `−37.8px` x-shift, 03 `rotate(+10°)`, all
+  flips at identity (fronts showing). Scrubbed to the pin end, all `.cardPos` resolve
+  to identity (flat row), all `.cardFlip` to `rotateY(180°)` (backs: Essentiel /
+  Signature / Exception), CTA opacity 1 — transforms identical to the source at both
+  ends. Entry and resolved screenshots are pixel-identical (incl. the nav logo
+  overlapping the title, which matches the source). Both CTAs render the shared
+  `.pp-btn` (blue pill, ~45px radius).

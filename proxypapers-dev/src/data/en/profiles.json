@@ -1,0 +1,27 @@
+{
+  "title": {
+    "lines": ["Three support profiles.", "One shared framework."]
+  },
+  "body": "Essentiel, Signature, Exception — each profile adapts to the complexity of your estate and your pace of life. The method remains the same.",
+  "cta": { "label": "Explore the services", "href": "#services" },
+  "cards": [
+    {
+      "id": "01",
+      "num": "01",
+      "name": "Essentiel",
+      "desc": "Set in order. Keep current."
+    },
+    {
+      "id": "02",
+      "num": "02",
+      "name": "Signature",
+      "desc": "A living framework. For an active estate."
+    },
+    {
+      "id": "03",
+      "num": "03",
+      "name": "Exception",
+      "desc": "A framework on its own scale."
+    }
+  ]
+}

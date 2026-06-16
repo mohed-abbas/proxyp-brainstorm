@@ -354,26 +354,6 @@
   gap: min(2.645cqw, 40px);
   margin-top: min(0.4cqw, 6px);
 }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: min(0.661cqw, 10px) min(1.323cqw, 20px);
-  border-radius: min(2.976cqw, 45px);
-  background: var(--pp-blue);
-  color: var(--pp-bone);
-  font-weight: 500;
-  font-size: min(1.058cqw, 16px);
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    transform 0.3s var(--pp-ease-out),
-    filter 0.3s var(--pp-ease-out);
-}
-.btn:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.08);
-}
 .link {
   display: inline-flex;
   flex-direction: column;

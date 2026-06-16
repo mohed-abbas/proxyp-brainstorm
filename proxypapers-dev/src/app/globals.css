@@ -123,6 +123,28 @@ html.lenis body {
   will-change: transform;
 }
 
+/* Shared pill button (hero CTA, profiles CTA, …) — one definition, blue ground. */
+.pp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: min(0.661cqw, 10px) min(1.323cqw, 20px);
+  border-radius: min(2.976cqw, 45px);
+  background: var(--pp-blue);
+  color: var(--pp-bone);
+  font-weight: 500;
+  font-size: min(1.058cqw, 16px);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform 0.3s var(--pp-ease-out),
+    filter 0.3s var(--pp-ease-out);
+}
+.pp-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
 /* Accessibility — opting out of motion resolves to the settled state. */
 @media (prefers-reduced-motion: reduce) {
   *,
