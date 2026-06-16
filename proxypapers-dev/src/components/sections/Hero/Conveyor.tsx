@@ -28,7 +28,10 @@ function DocRow({ doc }: { doc: Doc }) {
         <FileIcon />
       </span>
       <span className={s.docRowMain}>
-        <span className={s.docRowTitle}>{doc.title}</span>
+        <span className={s.docRowHead}>
+          <span className={s.docRowTitle}>{doc.title}</span>
+          <span className={s.docRowCat}>{doc.cat}</span>
+        </span>
         <span className={s.docRowSub}>{doc.sub}</span>
         <span className={s.docRowChips}>
           {doc.chips.map((c, i) => (
@@ -41,7 +44,6 @@ function DocRow({ doc }: { doc: Doc }) {
           ))}
         </span>
       </span>
-      <span className={s.docRowCat}>{doc.cat}</span>
     </article>
   );
 }
@@ -53,14 +55,16 @@ function SkeletonRow() {
         <FileIcon />
       </span>
       <span className={s.docRowMain}>
-        <span className={`${s.skBar} ${s.skBarTitle}`} />
+        <span className={s.docRowHead}>
+          <span className={`${s.skBar} ${s.skBarTitle}`} />
+          <span className={`${s.skBar} ${s.skBarCat}`} />
+        </span>
         <span className={`${s.skBar} ${s.skBarSub}`} />
         <span className={s.docRowChips}>
           <span className={`${s.skBar} ${s.skBarChip}`} />
           <span className={`${s.skBar} ${s.skBarChip}`} />
         </span>
       </span>
-      <span className={`${s.skBar} ${s.skBarCat}`} />
     </article>
   );
 }

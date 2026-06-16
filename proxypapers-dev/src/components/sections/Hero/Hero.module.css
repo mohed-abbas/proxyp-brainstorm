@@ -175,7 +175,17 @@
   flex: 1 1 auto;
   min-width: 0;
 }
+/* Title + category share one line so they sit on a common baseline; the title
+   flexes/ellipsises while the category holds its width at the right edge. */
+.docRowHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6cqw;
+}
 .docRowTitle {
+  flex: 1 1 auto;
+  min-width: 0;
   display: block;
   font-weight: 500;
   font-size: 0.93cqw;
@@ -224,7 +234,6 @@
 }
 .docRowCat {
   flex: none;
-  align-self: flex-start;
   font-weight: 400;
   font-size: 0.62cqw;
   line-height: 1.1;
@@ -261,7 +270,6 @@
 }
 .skBarCat {
   flex: none;
-  align-self: flex-start;
   width: 2.2cqw;
   height: 0.42cqw;
 }
