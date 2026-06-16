@@ -286,3 +286,62 @@ on scroll).
   render shows everything in place. The link's arrow nudge on hover is pure CSS
   (`.link:hover svg { translateX }`), not GSAP. `data-nav-theme="blue"` flips the
   navbar to its blue surface over this panel (see Navbar theme flip).
+
+## Trust (shared)
+
+### Trust expand (pinned, scrubbed panel open + word-by-word body)
+- **Where:** the Trust reassurance band (the bone panel + its contents).
+- **User-facing description:** "the section locks centred as a small portrait card
+  (eyebrow on top, a tiny certs strip along the bottom, empty middle); as you
+  scroll it opens sideways to a full-width band — the hairline frame fades in, the
+  eyebrow lifts away, the certs strip scales up and rises, the title rises to
+  centre and darkens from grey to ink, and the body settles in word-by-word — then
+  holds open for a beat before releasing."
+- **Trigger:** scroll, the band PINS centred (`start: center center`,
+  `end: +=120%`, `pin: true`, `pinType: "transform"`, `pinSpacing: true`,
+  `anticipatePin: 1`, `scrub: 2.4`, `invalidateOnRefresh: true`). Heavy scrub over a
+  generous pin distance → consistent glide regardless of scroll force.
+- **Mechanics** (parked collapsed, then, `ease: power2.inOut` on the openers):
+  - panel: `width cap(29.1vw,440) → 100%`, dur 1.5, @0 (width-only open).
+  - content: `y cap(28.57vw,432) → 0`, dur 1.5, @0 (title block rises from below).
+  - eyebrow: `autoAlpha 1→0, y → -1.1vw`, dur 0.45, @0.
+  - certs (the PARENT, not the track): `scale 18.2/49 → 1, y cap(6.15vw,93) → 0`
+    (keeps `yPercent:-50`), dur 1.5, @0.
+  - frame: `autoAlpha 0→1`, dur 0.6, @0.4.
+  - title line 2: `autoAlpha 0→1, yPercent 40→0`, dur 0.6, @0.5.
+  - title colour: `rgba(22,23,24,0.6) → rgb(22,23,24)`, dur 0.7, @0.6.
+  - body: `autoAlpha 0→1` @0.85; body words `yPercent 120→0` dur 0.5 stagger 0.008 @0.9.
+  - dwell: `.to(panel, { duration: 0.6 })` tail holds the open band.
+- **Source ref:** `setupTrust` in `hero.js`; `trust.css`.
+- **Implementation note:** `src/lib/animations/useTrust.ts`. vw distances are
+  converted to px (`cap(vw,px) = min(vw→px, px)`) because GSAP treats vw on
+  transforms as px. Title is plain `<span>` lines (only the body is `<SplitText>`).
+  Composed OUTSIDE `.page-frame` (full-bleed exception) so it opens to the viewport
+  width. `data-nav-theme="light"` flips the navbar to its light (ink) surface.
+- **Feasibility / constraints:** reduced motion → hook returns early; the settled
+  full band renders (static single-set strip). Pin release + nav light-flip need
+  scroll runway below Trust (sections after it) to be observed.
+
+### Certifications marquee (persistent infinite, clone-to-fill)
+- **Where:** the certs strip inside the Trust panel (present in both states).
+- **User-facing description:** "a strip of certifications scrolls left forever,
+  seamlessly, with a blue dot between each."
+- **Trigger:** perpetual (CSS keyframes), built on mount; runs through both states.
+- **Mechanics:** the markup authors ONE cert set; the hook clones it to
+  `max(2, ceil(viewport / setWidth) + 1)` copies, measures the exact one-set period
+  from layout (`children[unit].offsetLeft - children[0].offsetLeft`), and sets
+  `--marquee-shift` (px) + `--marquee-duration` (`shift / 52 px·s⁻¹`). The CSS
+  `@keyframes trust-marquee` translates the track `0 → -shift`, `linear infinite`.
+  font-size is CONSTANT (49px); the compact state is a transform `scale` on the
+  PARENT `.certs`, never the track, so the track's pixel width is fixed and the
+  loop never re-measures mid-open. Rebuilds on resize (rAF-debounced); waits for
+  `document.fonts.ready` first.
+- **Source ref:** `setupCertsMarquee` in `hero.js`; `trust.css` (`@keyframes
+  trust-marquee`).
+- **Implementation note:** built inside `useTrust` (same section). The hook clones
+  DOM nodes off the one authored set (`cloneNode`) — safe because the component
+  never re-renders. The keyframe lives in `Trust.module.css` (CSS-modules scopes
+  the name + its reference together). Resize listener cleaned up on revert.
+- **Feasibility / constraints:** reduced motion → not built (hook returns early) and
+  CSS `@media (prefers-reduced-motion: reduce)` also stops the animation; the strip
+  renders static. Seamless for any cert count / screen width.

@@ -220,3 +220,46 @@ One short entry per decision, newest at the bottom.
   `1256.8,1065.7,164.9×25.9`; panel `rgb(90,144,244)` + `19.8px` radius. Screenshots
   pixel-identical; the `data-nav-theme="blue"` flip is handled by the existing nav
   observer.
+
+## Step 6 — Trust (shared/reusable)
+
+- **Lives under `components/shared/Trust`, content-prop driven.** Trust takes an
+  optional `content: TrustContent` prop (eyebrow / certs / title lines / body),
+  defaulting to `data/en/trust.json`, so other pages can reuse the band with their
+  own copy. Composed OUTSIDE `.page-frame` (full-bleed exception) so the panel opens
+  to the full viewport width.
+
+- **One hook does both animations.** `useTrust` ports `setupTrust` (the pinned
+  scrubbed expand) AND `setupCertsMarquee` (the clone-to-fill infinite strip),
+  because both target the same section. Reduced motion returns early before either.
+
+- **Marquee is CSS keyframes, not GSAP.** The hook only clones the authored cert set
+  to fill the viewport and sets two custom props (`--marquee-shift`,
+  `--marquee-duration`); the loop itself is a CSS `@keyframes` on the track. GSAP
+  scales/raises the PARENT `.certs` during the open — never the track — so the
+  track's pixel width is fixed and the loop never re-measures mid-open (the source's
+  hard-won fix for the open-time stutter). The keyframe name is scoped by CSS
+  modules along with its reference, so it resolves within the module.
+
+- **Cloning React-rendered nodes is safe here.** `useTrust` captures the one
+  authored set from the live DOM and `cloneNode`s it (matching the source exactly).
+  Safe because the Trust component has no state and its parent never re-renders, so
+  React never reconciles the cloned children away.
+
+- **vw→px conversion for the collapsed offsets.** GSAP treats vw on transforms as
+  px, so the collapsed card's `y`/`width` distances use `cap(vw,px) = min(vw→px,px)`
+  against the live viewport (mirrors the CSS `min(vw,px)` caps, keeping the collapsed
+  card Figma-accurate above 1512px).
+
+- **Title lines are plain spans.** Only the body uses `<SplitText>` (per-word);
+  the two title lines are plain `<span>`s — the timeline fades/rises line 2 and
+  tweens the title colour, but doesn't split the title into words (matches source).
+
+- **Parity check.** Playwright at 1512×900: collapsed (pin start) panel `440px`,
+  eyebrow top, certs strip low + scaled, empty centre, no frame — pixel-identical to
+  source. Scrubbed open: panel `1497px` (full viewport), frame opacity 1, body
+  opacity 1, title `rgb(22,23,24)`, marquee scaled up with blue dots — content
+  pixel-identical. `--marquee-shift` measured (`2656px` at 1512, 2 copies). The open
+  band's vertical position + nav light-flip can't be exercised yet because Trust is
+  currently the last section (no scroll runway past the pin); both will match the
+  source once Referrers/Closing/Footer are composed below it (see ISSUES.md).

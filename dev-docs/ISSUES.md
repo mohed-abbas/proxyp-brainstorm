@@ -47,6 +47,16 @@ resolved. One short entry each, newest at the bottom.
   pinned (it's a plain `once` reveal), so the multi-pin refresh concern doesn't
   apply here — revisit only if a later section adds a second pin.
 
+## Step 6 — Trust (shared/reusable)
+
+- **Pin release + nav light-flip not yet observable (no runway).** Trust is
+  currently the LAST section composed, so there is no scrollable content past its
+  pin; the band can't scroll up to release, and its `data-nav-theme="light"` band
+  never crosses the navbar centre, so the nav light (ink-pill) flip can't be
+  triggered in isolation. The collapsed and open states themselves are verified
+  pixel-identical. **Re-verify the release + nav light-flip once Steps 7–9
+  (Referrers / Closing / Footer) are composed below Trust.**
+
 ## Open / to watch
 
 - **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro

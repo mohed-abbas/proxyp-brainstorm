@@ -1,0 +1,12 @@
+{
+  "eyebrow": "Sovereignty & trust",
+  "certs": [
+    "GDPR compliance",
+    "AI Act compliance",
+    "NF 203 CCFN digital vault",
+    "Trusted third party for tax purposes",
+    "Password manager"
+  ],
+  "title": { "lines": ["Sovereign infrastructure.", "Protected data."] },
+  "body": "Your documents are hosted in France, on an independent infrastructure. Our tools comply with the GDPR and the AI Act, and are certified NF 203 CCFN digital vaults. Proxy Papers is recognised as a trusted third party for tax purposes."
+}
