@@ -1,0 +1,11 @@
+<!-- Proxy Papers P-mark (icon only). Stem + blade are classed so a host can
+     recolor per theme; self-contained defaults (ink stem, Proxy Blue blade) keep
+     it correct as a plain <img> on a light surface. -->
+<svg viewBox="0 0 36.4699 54.5578" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Proxy Papers">
+  <style>
+    .lk-mark__stem { fill: var(--pp-lockup-ink, #161718); }
+    .lk-mark__blade { fill: var(--pp-lockup-blade, #5a90f4); }
+  </style>
+  <path class="lk-mark__stem" d="M18.2349 18.1859V53.1045C18.2349 53.9092 17.5797 54.5578 16.7777 54.5578H2.91935C1.30564 54.5578 0 53.2557 0 51.6463V37.5764C0 36.8059 0.308072 36.0646 0.855756 35.5184L18.2349 18.1859Z"/>
+  <path class="lk-mark__blade" d="M36.4699 10.183V33.4604C36.4699 35.0697 35.1643 36.3719 33.5505 36.3719H18.2301V18.1859H2.91935C1.30564 18.1859 0 16.8838 0 15.2744V2.91151C0 1.30213 1.30564 0 2.91935 0H26.2595C31.8977 0 36.4699 4.5599 36.4699 10.183Z"/>
+</svg>

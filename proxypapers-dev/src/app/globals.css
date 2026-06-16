@@ -1,0 +1,135 @@
+/* Proxy Papers — global theme.
+   Ported from design-final/styles/theme.css: brand tokens, reset, theme
+   contexts, the capped content frame, Lenis base, shared lockup + reveal
+   primitives. Component styles live in their own *.module.css. No Tailwind. */
+
+:root {
+  /* Brand palette — three restrained roles. */
+  --pp-blue: #5a90f4;
+  --pp-ink: #161718;
+  --pp-bone: #f7f4f0;
+
+  /* Type — the family name comes from next/font/local (see src/lib/fonts.ts). */
+  --pp-font:
+    var(--font-pp-neue-montreal), "Neue Haas Grotesk", "Inter", system-ui,
+    sans-serif;
+
+  /* Lockup theming hooks — flip per theme context below. */
+  --pp-lockup-ink: var(--pp-bone);
+  --pp-lockup-blade: var(--pp-blue);
+
+  /* Navbar foreground — links + hairline, flipped per theme. */
+  --pp-nav-fg: var(--pp-bone);
+  --pp-nav-hairline: rgba(247, 244, 240, 0.5);
+
+  /* Motion — the house curve (expo-out). */
+  --pp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Theme contexts — set one on a wrapper to fix its ground + lockup tone. */
+.pp-theme-blue {
+  --pp-ground: var(--pp-blue);
+  --pp-lockup-ink: var(--pp-bone);
+  --pp-lockup-blade: var(--pp-bone);
+}
+.pp-theme-dark {
+  --pp-ground: var(--pp-ink);
+  --pp-lockup-ink: var(--pp-bone);
+  --pp-lockup-blade: var(--pp-blue);
+}
+.pp-theme-light {
+  --pp-ground: var(--pp-bone);
+  --pp-lockup-ink: var(--pp-ink);
+  --pp-lockup-blade: var(--pp-blue);
+  --pp-nav-fg: var(--pp-ink);
+  --pp-nav-hairline: rgba(22, 23, 24, 0.18);
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--pp-ground, var(--pp-bone));
+  color: var(--pp-bone);
+  font-family: var(--pp-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  display: block;
+}
+
+/* Capped content frame — wraps everything below the hero. container-type makes
+   the frame's width the basis for the sections' cqw units; max-width freezes
+   that basis at the 1512px design width. */
+.page-frame {
+  max-width: 1512px;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+/* Lenis smooth-scroll base (library-recommended). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Shared lockup — parts read the theme hooks, never hard-coded colour. */
+.pp-lockup {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.pp-lockup .lk-mark__stem,
+.pp-lockup .lk-word {
+  fill: var(--pp-lockup-ink);
+}
+.pp-lockup .lk-mark__blade {
+  fill: var(--pp-lockup-blade);
+}
+
+/* Per-word/letter reveal masks — a glyph wrapped in .r-word clips to its box;
+   the inner span rises in from below. */
+.r-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+.r-word__in {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Accessibility — opting out of motion resolves to the settled state. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

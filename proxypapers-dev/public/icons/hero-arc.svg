@@ -1,0 +1,13 @@
+<!-- Horizon arc hairline — the gradient stroke that traces one curved edge of the
+     blue lens. Used twice: once for the top edge, once flipped for the bottom.
+     White fades to transparent away from the bright edge. preserveAspectRatio
+     none lets it stretch to the lens box. -->
+<svg preserveAspectRatio="none" viewBox="0 0 1512 533" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path d="M756 1C964.681 1 1153.56 30.8187 1290.24 78.999C1358.58 103.091 1413.82 131.755 1451.95 163.534C1490.09 195.318 1511 230.118 1511 266.5C1511 302.882 1490.09 337.682 1451.95 369.466C1413.82 401.245 1358.58 429.909 1290.24 454.001C1153.56 502.181 964.681 532 756 532C547.319 532 358.436 502.181 221.76 454.001C153.417 429.909 98.1814 401.245 60.0508 369.466C21.9144 337.682 1 302.882 1 266.5C1 230.118 21.9144 195.318 60.0508 163.534C98.1814 131.755 153.417 103.091 221.76 78.999C358.436 30.8187 547.319 1 756 1Z" stroke="url(#arc-fade)" stroke-width="2"/>
+  <defs>
+    <linearGradient id="arc-fade" x1="756" y1="0" x2="756" y2="242" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>

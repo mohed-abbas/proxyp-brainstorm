@@ -83,3 +83,26 @@ Three more sites the client flagged. Each is a *technique* reference, not a bran
 ## Homepage job (from the brief)
 
 Traffic is overwhelmingly **referral** from trusted advisors, so the homepage **confirms a positive expectation rather than selling from zero**. Within the first screen it must make clear, by negation, what Proxy Papers is *not* (not a CGP, not a lawyer, not a bank, not a storage tool) as well as what it is. Success = quality of bookings + prescripteur (referrer) adoption + the site replacing the opening sales pitch — not traffic or SEO. Certifications that must appear credibly somewhere: RGPD, NF203 coffre-fort, EU AI Act, tiers de confiance fiscal, sovereign hosting (Infomaniak, France-only).
+
+## Production build — `proxypapers-dev/` (Next.js port)
+
+The production site is being built in `proxypapers-dev/` by porting `design-final/`
+(the source of truth) section by section. The full rules and approach live in
+`PROMPT.md`; the plan and dev notes live in `dev-docs/` (`PORT-PLAN.md`,
+`DETAILS.md`, `ISSUES.md`) and `ANIMATIONS-HUB.md`. Key conventions:
+
+- **`proxypapers-dev/` is NOT the Next.js you know.** It is Next.js 16 (App Router,
+  React 19), which has breaking changes vs. older versions. **Read the relevant
+  guide in `proxypapers-dev/node_modules/next/dist/docs/` before writing app code**
+  (see `proxypapers-dev/AGENTS.md`). Leave `AGENTS.md` and `proxypapers-dev/CLAUDE.md`
+  untouched.
+- **No TailwindCSS.** Styling is CSS Modules per component + global tokens in
+  `src/app/globals.css` (ported from `design-final/styles/theme.css`).
+- **Animations** use `gsap` + `ScrollTrigger` + `lenis` via `@gsap/react` `useGSAP`
+  and a root `LenisProvider`, and must match the source exactly. Every animation is
+  catalogued in `ANIMATIONS-HUB.md`.
+- **Content** is externalized as i18n-ready JSON in `proxypapers-dev/src/data/en/`
+  (English first). `proxypapers-dev/` stays code-only; meta/dev docs live at the
+  repo root.
+- **Before each commit:** `npm run build` + `npm run lint` must pass. Commit locally
+  per section; push only when asked. **No AI/Claude mention in commit messages.**
