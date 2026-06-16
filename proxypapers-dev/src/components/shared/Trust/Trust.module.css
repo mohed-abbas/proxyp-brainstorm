@@ -57,6 +57,35 @@
   opacity: 0;
 }
 
+/* Non-scaled clipping window around the marquee. Carries the horizontal fade so
+   the certs dissolve into the bone panel at both edges instead of hard-clipping
+   at the rounded corners. Sits in stable panel coordinates (the scaled .certs
+   lives inside it), so the mask edges never move with the compact-state scale.
+   Only contains the certs, so the fade never touches the hairline frame. */
+.certsViewport {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 min(5.0265vw, 76px),
+    #000 calc(100% - min(5.0265vw, 76px)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 min(5.0265vw, 76px),
+    #000 calc(100% - min(5.0265vw, 76px)),
+    transparent 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
 /* Certifications marquee — persistent infinite bar. Absolutely positioned,
    full-width (clipped by the panel), vertically centred via top + translateY.
    font-size is CONSTANT (the settled 49px); the compact state is a transform
@@ -68,7 +97,6 @@
   width: 100%;
   top: min(25.9259vw, 392px);
   transform: translateY(-50%);
-  z-index: 2;
   font-size: min(3.2407vw, 49px);
 }
 /* The scrolling track. --marquee-shift / --marquee-duration are set by the hook
@@ -85,6 +113,7 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  pointer-events: auto;
   gap: 0.3061em;
   margin-right: 0.2449em;
   font-weight: 600;
