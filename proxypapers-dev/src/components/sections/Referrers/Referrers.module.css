@@ -1,0 +1,174 @@
+/* Referrers — "You advise high-net-worth clients?" (Figma 68:813).
+   Full-bleed dark band (sits OUTSIDE .page-frame, raw vw). A centred column:
+   title, an orbital "radar" diagram (P-mark in a glassy chip at centre, three
+   concentric rings, five advisor avatars on the inner/middle orbits), body, CTA.
+   The orbit is one 494×494 coordinate field clipped to the top so rings, mark
+   and avatars share a single % coordinate system. */
+
+.referrers {
+  position: relative;
+  width: 100%;
+  min-height: min(100vh, 800px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: min(5.0265vw, 76px);
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  width: min(69.4444vw, 1050px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: min(1.7857vw, 27px);
+  text-align: center;
+}
+
+.title {
+  font-weight: 500;
+  font-size: min(3.2407vw, 49px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--pp-bone);
+}
+
+/* ── Orbital diagram ──────────────────────────────────────────────────────── */
+.orbit {
+  position: relative;
+  width: min(32.672vw, 593px);
+  height: min(19.709vw, 358px);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 60%);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent 60%);
+}
+.rings circle {
+  fill: none;
+  stroke: rgba(247, 244, 240, 0.28);
+  stroke-width: 1;
+}
+.rings .ringOuter {
+  stroke: rgba(247, 244, 240, 0.32);
+  stroke-dasharray: 3 7;
+  stroke-linecap: round;
+}
+
+/* Centre chip — glassy circle holding the inlined P-mark (themed via tokens). */
+.mark {
+  position: absolute;
+  left: 39.879%;
+  top: 39.676%;
+  width: 20.243%;
+  aspect-ratio: 100 / 101.724;
+  border-radius: 50%;
+  background: linear-gradient(
+    to bottom,
+    rgba(247, 244, 240, 0.06),
+    rgba(247, 244, 240, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.mark svg {
+  height: 46%;
+  width: auto;
+}
+.mark :global(.lk-mark__stem) {
+  fill: var(--pp-lockup-ink);
+}
+.mark :global(.lk-mark__blade) {
+  fill: var(--pp-lockup-blade);
+}
+
+/* Orbit layers — each fills the field (so % avatar positions are unchanged) and
+   carries one ring's avatars. GSAP spins these around the field centre. */
+.orbitLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+/* Advisor avatars — 37px circles on the orbits (positions are % of the field). */
+.avatar {
+  position: absolute;
+  width: 7.49%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.avatar[data-avatar="1"] { left: 29.149%; top: 30.162%; }
+.avatar[data-avatar="2"] { left: 63.765%; top: 30.162%; }
+.avatar[data-avatar="3"] { left: 46.154%; top: 8.704%; }
+.avatar[data-avatar="4"] { left: 8.704%; top: 44.939%; }
+.avatar[data-avatar="5"] { left: 83.603%; top: 44.939%; }
+
+/* ── Body + CTA ──────────────────────────────────────────────────────────── */
+.foot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: min(1.7857vw, 27px);
+}
+.body {
+  width: 100%;
+  font-weight: 400;
+  font-size: min(1.0582vw, 16px);
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: rgba(247, 244, 240, 0.7);
+}
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: min(0.6614vw, 10px) min(1.3228vw, 20px);
+  border-radius: min(2.9762vw, 45px);
+  background: var(--pp-blue);
+  color: var(--pp-bone);
+  font-weight: 500;
+  font-size: min(1.0582vw, 16px);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform 0.4s var(--pp-ease-out),
+    filter 0.4s var(--pp-ease-out);
+}
+.cta:hover {
+  transform: translateY(max(-2px, -0.1323vw));
+  filter: brightness(1.07);
+}
+
+/* Per-word reveal mask padding (house style). */
+.referrers :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}

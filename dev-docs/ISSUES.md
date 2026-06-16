@@ -57,6 +57,16 @@ resolved. One short entry each, newest at the bottom.
   pixel-identical. **Re-verify the release + nav light-flip once Steps 7–9
   (Referrers / Closing / Footer) are composed below Trust.**
 
+## Step 7 — Referrers
+
+- _No source mismatches._ Geometry (one 494×494 % field), reveal timing, and the
+  perpetual counter-rotating orbit match the source exactly (see DETAILS.md). Note:
+  the section's CTA was deliberately NOT folded into the shared `.pp-btn` — it is
+  full-bleed `vw`-based with a different hover/transition, so a local `.cta` keeps it
+  faithful (DETAILS.md). Now that Referrers sits below Trust, the deferred Trust pin
+  release + nav light-flip can finally be exercised — re-verify during the next
+  full-scroll parity pass.
+
 ## Open / to watch
 
 - **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro

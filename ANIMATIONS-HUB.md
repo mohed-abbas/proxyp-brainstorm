@@ -345,3 +345,51 @@ on scroll).
 - **Feasibility / constraints:** reduced motion → not built (hook returns early) and
   CSS `@media (prefers-reduced-motion: reduce)` also stops the animation; the strip
   renders static. Seamless for any cert count / screen width.
+
+## Referrers
+
+### Referrers reveal (title → radar assembles → avatars stagger → body/CTA)
+- **Where:** the Referrers band — title, orbital radar (rings + centre P-mark +
+  five advisor avatars), body, blue pill CTA.
+- **User-facing description:** "the radar diagram builds itself as you scroll to
+  it — rings fade in, the mark pops, the advisor faces appear one by one — then it
+  keeps slowly spinning."
+- **Trigger:** scroll-trigger, `start: "top 70%"`, `once: true` (fires once, not
+  scrubbed). `onComplete` starts the perpetual orbit (below).
+- **Mechanics:** timeline defaults `power3.out`, `force3D`. Park: title+body words
+  `yPercent 120`; rings `autoAlpha 0, scale 0.85`; `[mark, ...avatars]` `autoAlpha
+  0, scale 0`; cta `autoAlpha 0, y 16` (all `transformOrigin: 50% 50%`). Steps:
+  - title words: `yPercent 0`, dur 0.7, stagger 0.05, @0.
+  - rings: `autoAlpha 1, scale 1`, dur 0.9, `power2.out`, @0.25.
+  - mark: `autoAlpha 1, scale 1`, dur 0.6, `back.out(1.6)`, @0.4.
+  - avatars: `autoAlpha 1, scale 1`, dur 0.55, `back.out(1.7)`, stagger 0.09, @0.5.
+  - body words: `yPercent 0`, dur 0.7, stagger 0.014, @0.7.
+  - cta: `autoAlpha 1, y 0`, dur 0.6, @1.0.
+- **Source ref:** `setupReferrers` in `hero.js`; `referrers.css`.
+- **Implementation note:** `src/lib/animations/useReferrers.ts`. Settled-by-default
+  (no `.js`-hide); the hook arms the parked state then reveals. Title + body are
+  `<SplitText>`; avatars are a `.map()` over `referrers.json` advisors (grouped into
+  inner/middle orbit layers via `data-ring`; positions via `data-avatar` selectors).
+  Composed OUTSIDE `.page-frame` (full-bleed, raw vw). `data-nav-theme="dark"`.
+- **Feasibility / constraints:** reduced motion → hook returns early; the settled
+  radar renders static (rings/mark/avatars visible, orbit not spinning).
+
+### Referrers perpetual orbit (counter-rotating rings, upright faces)
+- **Where:** the radar inside Referrers, after the reveal completes.
+- **User-facing description:** "the radar keeps drifting — inner ring one way,
+  middle ring the other, the dashed outer ring slowly turning; the faces always
+  stay upright."
+- **Trigger:** perpetual (`repeat: -1`, `ease: "none"`), kicked off by the reveal
+  timeline's `onComplete`.
+- **Mechanics:** inner orbit layer `rotation 360`, dur 42 (CW); its imgs
+  `rotation -360`, dur 42 (counter-rotate → upright). Middle layer `rotation -360`,
+  dur 52 (CCW); its imgs `rotation 360`, dur 52. Outer dashed ring `rotation 360`,
+  dur 68, `svgOrigin: "247 247"` (the 494×494 field centre). Layers use
+  `transformOrigin: 50% 50%`; the centre mark holds still.
+- **Source ref:** `startOrbit` inside `setupReferrers` in `hero.js`.
+- **Implementation note:** layers selected via `[data-ring="inner|middle"]`, the
+  outer ring via its module class; img counter-rotation targets `layer.querySelectorAll("img")`.
+  Avatar reveal (scale on the `.avatar` span) and orbit rotation (on the parent
+  layer) live on separate nodes, so transforms never conflict.
+- **Feasibility / constraints:** reduced motion → not started (hook returns early).
+  Long linear durations keep it calm; decorative (`aria-hidden`), no pointer events.

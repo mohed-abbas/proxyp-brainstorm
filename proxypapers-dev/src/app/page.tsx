@@ -4,6 +4,7 @@ import { Problem } from "@/components/sections/Problem";
 import { Profiles } from "@/components/sections/Profiles";
 import { Method } from "@/components/sections/Method";
 import { Trust } from "@/components/shared/Trust";
+import { Referrers } from "@/components/sections/Referrers";
 
 // Landing page. Sections are composed here as they are ported. Profiles sits
 // OUTSIDE .page-frame (full-bleed dark ground); the frame re-opens for Method
@@ -21,6 +22,7 @@ export default function Home() {
         <Method />
       </div>
       <Trust />
+      <Referrers />
     </>
   );
 }

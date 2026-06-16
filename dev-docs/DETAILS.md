@@ -263,3 +263,36 @@ One short entry per decision, newest at the bottom.
   band's vertical position + nav light-flip can't be exercised yet because Trust is
   currently the last section (no scroll runway past the pin); both will match the
   source once Referrers/Closing/Footer are composed below it (see ISSUES.md).
+
+## Step 7 — Referrers
+
+- **Full-bleed, raw vw (outside `.page-frame`).** Like Trust/Profiles, the dark
+  band runs edge-to-edge; the centred column + radar keep Figma size via
+  `min(vw, px)` caps and scale down below 1512px. Height capped `min(100vh, 800px)`.
+
+- **One 494×494 coordinate field.** Rings, centre mark and the five avatars all
+  position as a % of a single absolutely-placed field (clipped to the top ~298/358),
+  so the diagram is resolution-independent and ports 1:1 from the source.
+
+- **Avatars are a `.map()` with data-attribute hooks.** `referrers.json` carries the
+  five advisors (id + ring + img); the component renders two orbit layers
+  (`data-ring="inner|middle"`) and the per-avatar positions live in the module as
+  `.avatar[data-avatar="N"]` selectors (module classes are hashed, so geometry is
+  keyed off stable data-attributes — same approach as Profiles' `data-profile`).
+
+- **CTA kept section-local (not `.pp-btn`).** The shared `.pp-btn` primitive is
+  `cqw`-based with a `translateY(-1px)/brightness(1.08)` hover; the Referrers CTA is
+  full-bleed `vw`-based with `translateY(max(-2px,-0.1323vw))/brightness(1.07)` and a
+  0.4s transition. To match the source exactly it stays a local `.cta` class.
+
+- **Centre mark reuses `<PpMark>`.** The glassy chip wraps the shared inlined P-mark;
+  `:global(.lk-mark__stem/blade)` recolour it via `--pp-lockup-ink/blade` (dark
+  theme → bone stem, blue blade).
+
+- **Orbit transforms don't conflict.** The reveal scales the `.avatar` span; the
+  perpetual spin rotates the parent orbit layer; the upright-face counter-rotation
+  is on the inner `<img>`. Three separate nodes → no transform clobbering.
+
+- **Parity check.** Playwright at 1512×900 vs source: layout/typography/radar
+  geometry match; reveal timing + the counter-rotating perpetual orbit match;
+  `data-nav-theme="dark"` keeps the navbar dark over the band.
