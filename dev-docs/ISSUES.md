@@ -74,6 +74,31 @@ resolved. One short entry each, newest at the bottom.
   (see DETAILS.md). The CTA is a plain blue underline link (like Method's), not a
   pill — kept section-local.
 
+## Step 9 — Footer (shared) + nav handoff
+
+- **Nav handoff fired ~2400px too early (FIXED).** The handoff scrub completed while
+  the footer was still ~2.4 screens below the fold — the navbar vanished around the
+  Trust pin. Root cause: `useNavHandoff` lives in `<Navbar>`, which mounts BEFORE the
+  pinned sections (Profiles/Trust), so the trigger was created before their pin-
+  spacing existed. Worse, it never self-corrected: during `ScrollTrigger.refresh()`,
+  triggers refresh in start-position order, and the handoff's stale start sorted it
+  BETWEEN the two pins, so it re-measured the document before both pin-spacers had
+  been applied — perpetuating the error (offset == Profiles + Trust pin spacing,
+  ~2400px). The footer REVEAL trigger (born in `<Footer>`, after the pins) measured
+  correctly, which isolated the cause. Verified live: a freshly-created probe trigger
+  computed the correct start (7623) where the live handoff was stuck at 5214.
+  **Fix:** `refreshPriority: -1` (+ `invalidateOnRefresh: true`) on the handoff so it
+  refreshes LAST, after every pin has applied its spacing, resolving start/end against
+  the full document height. Post-fix sweep: opacity 1 at footer-top 75%, 0.5 at 45%,
+  0 at 15% — exactly the intended window. Watch item for Step 10: the onboarding pins
+  /scroll-lock may shift document height again; re-confirm the handoff window then.
+
+- Layout (full-bleed blue card, capped content) and the reveal cascade match the
+  source exactly (see DETAILS.md). The handoff hook targets the `<footer>` tag
+  (stable) rather than a hashed module class. With the footer composed, the Closing
+  band's `data-nav-theme="light"` flip and the Trust pin release now have full
+  runway — confirmed during this pass.
+
 ## Open / to watch
 
 - **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro

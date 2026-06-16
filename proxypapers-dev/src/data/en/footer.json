@@ -1,0 +1,40 @@
+{
+  "legal": "All Rights Reserved © Proxy Papers 2026.",
+  "columns": [
+    {
+      "id": "1",
+      "ariaLabel": "Footer",
+      "groups": [
+        [
+          { "label": "Approach", "href": "#", "active": true },
+          { "label": "Referrers", "href": "#" },
+          { "label": "Contact", "href": "#" },
+          { "label": "Services", "href": "#" }
+        ],
+        [
+          { "label": "Facebook", "href": "#" },
+          { "label": "Instagram", "href": "#" },
+          { "label": "Twitter", "href": "#" },
+          { "label": "LinkedIn", "href": "#" }
+        ]
+      ]
+    },
+    {
+      "id": "2",
+      "ariaLabel": "Resources",
+      "groups": [
+        [
+          { "label": "About", "href": "#", "active": true },
+          { "label": "Sovereignty and Security", "href": "#" },
+          { "label": "News", "href": "#" }
+        ],
+        [
+          { "label": "Terms of Sale", "href": "#" },
+          { "label": "Privacy Policy", "href": "#" },
+          { "label": "Legal Notice", "href": "#" },
+          { "label": "Cookies Policy", "href": "#" }
+        ]
+      ]
+    }
+  ]
+}

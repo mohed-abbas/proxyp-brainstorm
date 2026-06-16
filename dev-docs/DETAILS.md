@@ -315,3 +315,36 @@ One short entry per decision, newest at the bottom.
 - **Parity check.** Playwright at 1512×900 vs source: corner-anchored layout,
   oversized blue headline, right-set link + copy, and the word-by-word reveal all
   match; navbar flips light over the band.
+
+## Step 9 — Footer (shared) + nav handoff
+
+- **Full-bleed blue card, content capped per-metric.** Like the other below-hero
+  bands the card runs edge-to-edge (raw vw, outside `.page-frame`); each content
+  metric is `min(vw, px)` so the layout freezes at Figma size at/above 1512px while
+  the atmosphere (grain + clouds) stays vw to keep filling wide screens. Rounded top
+  corners only (`min(1.3228vw,20px) … 0 0`); `margin-top: 1rem` breathing gap.
+
+- **P-mark reuses `<PpMark>`, recoloured all-bone.** The footer mark fills BOTH
+  paths bone (not the themed stem/blade split), so the module overrides
+  `:global(.lk-mark__stem/blade) { fill: var(--pp-bone) }` on `.markSvg`.
+
+- **Columns + links are `.map()`s.** `footer.json` carries the two columns (id +
+  aria-label + two link groups each); `data-col` drives the per-column width
+  (88px vs 218px). The active link gets `.linkActive` (underline).
+
+- **Nav handoff is a separate hook on the Navbar.** `useNavHandoff(navRef)` runs a
+  scrubbed `autoAlpha` fade of the nav tied to the `<footer>` scroll position
+  (`top 75%` → `top 15%`). The trigger is the stable `<footer>` tag (module classes
+  are hashed). NOT gated on reduced motion — it's scroll-position driven and
+  prevents the fixed nav from overlapping the footer's own nav (matches source).
+  Carries `refreshPriority: -1` so it refreshes AFTER the pinned sections
+  (Profiles/Trust): the Navbar mounts before them, so without this the trigger
+  resolves its start/end against a pre-pin (too short) document and fires ~2400px
+  early. See ISSUES.md (Step 9) for the full diagnosis.
+
+- **`data-nav-theme="blue"`.** Over the footer the navbar takes its blue theme
+  (mark all-bone) right up until the handoff fades it out.
+
+- **Parity check.** Playwright at 1512×900 vs source: brand column, copyright,
+  divider + column layout, link sizing/active underline, atmosphere, and the
+  reveal cascade match; the nav pill fades out as the footer fills the screen.

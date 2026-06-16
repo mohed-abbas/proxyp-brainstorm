@@ -6,6 +6,7 @@ import { Method } from "@/components/sections/Method";
 import { Trust } from "@/components/shared/Trust";
 import { Referrers } from "@/components/sections/Referrers";
 import { Closing } from "@/components/sections/Closing";
+import { Footer } from "@/components/shared/Footer";
 
 // Landing page. Sections are composed here as they are ported. Profiles sits
 // OUTSIDE .page-frame (full-bleed dark ground); the frame re-opens for Method
@@ -25,6 +26,7 @@ export default function Home() {
       <Trust />
       <Referrers />
       <Closing />
+      <Footer />
     </>
   );
 }

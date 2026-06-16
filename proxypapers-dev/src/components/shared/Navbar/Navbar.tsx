@@ -7,6 +7,7 @@ import { PpMark } from "@/components/shared/PpMark";
 import { Menu } from "@/components/shared/Menu";
 import { useNavTheme } from "@/hooks/useNavTheme";
 import { useMenu } from "@/hooks/useMenu";
+import { useNavHandoff } from "@/lib/animations/useNavHandoff";
 
 export function Navbar() {
   const navRef = useRef<HTMLElement>(null);
@@ -17,6 +18,7 @@ export function Navbar() {
 
   const theme = useNavTheme(navRef);
   useMenu({ open, onClose: close, btnRef, panelRef });
+  useNavHandoff(navRef);
 
   return (
     <>

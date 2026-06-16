@@ -1,0 +1,205 @@
+/* Footer — the site close (Figma 251:50). A Proxy Blue card rounded only at the
+   TOP (flush at the page bottom), reprising the onboarding canvas: grain @10% +
+   the clouds image bled from the top and bottom-left. One centred, bottom-aligned
+   group: a left brand column (big bone P-mark over the copyright) beside two link
+   columns, each preceded by a hairline divider. BLUE surface (navbar takes its
+   blue theme). Full-bleed (outside .page-frame, raw vw); content capped per-metric
+   via min(vw, px) so it freezes at Figma size at/above 1512px. */
+
+.footer {
+  position: relative;
+  width: 100%;
+  margin-top: 1rem;
+  min-height: min(53.9021vw, 815px);
+  padding-top: min(8.2011vw, 124px);
+  background: var(--pp-blue);
+  border-radius: min(1.3228vw, 20px) min(1.3228vw, 20px) 0 0;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--pp-bone);
+}
+
+/* ── Atmosphere — reused onboarding assets ─────────────────────────────────── */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: url("/images/grain.webp");
+  background-repeat: repeat;
+  background-size: min(25.1323vw, 380px) min(25.1323vw, 380px);
+}
+
+.cloud {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: screen;
+}
+.cloud img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cloudTop {
+  left: 25.1323vw;
+  top: -81.6138vw;
+  width: 108.598vw;
+  height: 108.598vw;
+}
+.cloudLeft {
+  left: -82.5398vw;
+  top: -24.029vw;
+  width: 108.598vw;
+  height: 108.598vw;
+}
+
+/* ── Centred content group — bottom-aligned ────────────────────────────────── */
+.content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: min(12.3016vw, 186px);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: min(12.3016vw, 186px);
+  width: min(19.3122vw, 292px);
+}
+.mark {
+  width: min(14.6101vw, 220.904px);
+  height: min(21.6906vw, 327.962px);
+  display: flex;
+  align-items: center;
+}
+.markSvg {
+  height: 100%;
+  width: auto;
+}
+.markSvg :global(.lk-mark__stem),
+.markSvg :global(.lk-mark__blade) {
+  fill: var(--pp-bone);
+}
+.legal {
+  font-weight: 500;
+  font-size: min(1.0582vw, 16px);
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+
+/* ── Right group — two divider + column units spread apart ─────────────────── */
+.cols {
+  width: min(45.172vw, 683px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.unit {
+  display: flex;
+  align-items: center;
+  gap: min(2.1825vw, 33px);
+}
+
+.rule {
+  flex-shrink: 0;
+  width: 1px;
+  height: min(41.5366vw, 628px);
+  background: rgba(247, 244, 240, 0.28);
+  transform-origin: top center;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: min(41.5366vw, 628px);
+}
+.col[data-col="1"] {
+  width: min(5.8201vw, 88px);
+}
+.col[data-col="2"] {
+  width: min(14.418vw, 218px);
+}
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: min(0.6614vw, 10px);
+  list-style: none;
+}
+
+.link {
+  display: inline-block;
+  font-weight: 500;
+  font-size: min(1.3228vw, 20px);
+  line-height: 1.2;
+  letter-spacing: 0.005em;
+  color: var(--pp-bone);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.4s var(--pp-ease-out);
+}
+.link:hover,
+.link:focus-visible {
+  opacity: 0.6;
+  outline: none;
+}
+.linkActive {
+  text-decoration: underline;
+  text-underline-offset: min(0.2vw, 3px);
+  text-decoration-thickness: 1px;
+}
+
+/* ── Mobile — stack everything ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .footer {
+    min-height: auto;
+    padding: 56px 24px 32px;
+    border-radius: 16px 16px 0 0;
+  }
+  .content {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 40px;
+  }
+  .brand {
+    width: auto;
+    gap: 28px;
+  }
+  .mark {
+    width: 88px;
+    height: auto;
+  }
+  .legal {
+    font-size: 13px;
+  }
+  .cols {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 36px;
+  }
+  .rule {
+    display: none;
+  }
+  .col {
+    height: auto;
+    width: auto;
+    justify-content: flex-start;
+    gap: 28px;
+  }
+  .group {
+    gap: 8px;
+  }
+  .link {
+    font-size: 16px;
+  }
+}

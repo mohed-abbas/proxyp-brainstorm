@@ -416,3 +416,46 @@ on scroll).
   positions. `data-nav-theme="light"` flips the navbar to its light surface.
 - **Feasibility / constraints:** reduced motion → hook returns early; the settled
   band renders (headline + link + copy in place).
+
+## Footer (shared)
+
+### Footer reveal (dividers draw → mark lifts → links cascade → copyright)
+- **Where:** the blue footer card — hairline dividers, big bone P-mark + copyright,
+  two columns of links.
+- **User-facing description:** "as the footer scrolls up, the thin divider lines
+  draw downward, the big logo fades and lifts, the link columns rise in a cascade,
+  then the copyright line settles."
+- **Trigger:** scroll-trigger, `start: "top 82%"`, `once: true`.
+- **Mechanics:** timeline defaults `power3.out`, `force3D`. Park: mark `autoAlpha
+  0, yPercent 12`; rules `autoAlpha 0, scaleY 0` (origin top centre); links
+  `autoAlpha 0, yPercent 70`; legal `autoAlpha 0, yPercent 85`. Steps:
+  - rules: `autoAlpha 1, scaleY 1`, dur 0.9, `power2.out`, stagger 0.08, @0.
+  - mark: `autoAlpha 1, yPercent 0`, dur 0.9, `power2.out`, @0.15.
+  - links: `autoAlpha 1, yPercent 0`, dur 0.7, stagger 0.05, @0.3.
+  - legal: `autoAlpha 1, yPercent 0`, dur 0.6, @0.7.
+- **Source ref:** `setupFooter` in `hero.js`; `footer.css`.
+- **Implementation note:** `src/lib/animations/useFooter.ts`. Settled-by-default
+  (no `.js`-hide); `yPercent` (element-relative) keeps the lift resolution-
+  independent. Columns + their link lists are `.map()`s over `footer.json`; the
+  P-mark reuses `<PpMark>` recoloured all-bone. Atmosphere (grain + two cloud
+  overlays, reused onboarding assets) always renders. Full-bleed (outside
+  `.page-frame`, raw vw). `data-nav-theme="blue"`.
+- **Feasibility / constraints:** reduced motion → hook returns early; the settled
+  footer renders (everything in place, atmosphere shown).
+
+### Navbar handoff (pill fades out into the footer)
+- **Where:** the fixed navbar, as the footer scrolls in.
+- **User-facing description:** "the floating nav pill fades away as the footer
+  takes over the screen, and fades back in when you scroll up."
+- **Trigger:** scrubbed ScrollTrigger tied to the footer's scroll position
+  (`start: "top 75%"`, `end: "top 15%"`, `scrub: true`).
+- **Mechanics:** `gsap.to(nav, { autoAlpha: 0, ease: "none" })` scrubbed across the
+  range. Opacity only — never touches the bar's theme (`useNavTheme`) or the logo
+  state.
+- **Source ref:** `setupNavHandoff` in `hero.js`.
+- **Implementation note:** `src/lib/animations/useNavHandoff.ts`, called from
+  `<Navbar>` with the nav ref; the trigger element is the `<footer>` (stable tag
+  selector). NOT gated on reduced motion (scroll-position driven, matches source);
+  without it two navs would overlap at the page bottom.
+- **Feasibility / constraints:** depends on the footer being present in the DOM;
+  the hook no-ops until it is.
