@@ -80,13 +80,15 @@
   height: 108.6vw;
 }
 
-/* (4) Brand block — centred column: lockup over the hairline loader. */
+/* (4) Brand block — centred column: the P-mark over the hairline loader. The
+   wordmark is omitted here, so the column is sized to the standalone mark (it was
+   ~351px when it carried "Proxy Papers"); the loader keeps its 66.6% proportion. */
 .ob-brand {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(232px, 23.23vw, 360px); /* 351.186 / 1512 */
+  width: clamp(96px, 9.3vw, 140px); /* standalone P-mark width */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,7 +105,9 @@
    the intro plays. The Figma still shows it mid-fill; here it animates 0→100%. */
 .ob-divider {
   position: relative;
-  width: 66.6%; /* 234 / 351.186 */
+  /* Original loader width (234px @1512), kept absolute so it doesn't shrink with
+     the now-narrower mark column — it stays wider than the mark, centred under it. */
+  width: clamp(154px, 15.47vw, 240px);
   height: 3px;
   margin-top: clamp(26px, 2.94vw, 46px); /* 44.5px gap below the lockup */
 }
