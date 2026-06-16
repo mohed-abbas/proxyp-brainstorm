@@ -348,3 +348,55 @@ One short entry per decision, newest at the bottom.
 - **Parity check.** Playwright at 1512×900 vs source: brand column, copyright,
   divider + column layout, link sizing/active underline, atmosphere, and the
   reveal cascade match; the nav pill fades out as the footer fills the screen.
+
+## Step 10 — Onboarding overlay + curtain handoff (capstone)
+
+- **One controller, three components.** The source merges onboarding → hero in a
+  single IIFE (`setupOnboardingIntro` + `buildHeroIntro` + `runCurtain` + the asset
+  gate). The port keeps the same single coordinator (`useOnboarding`, called from
+  `<Onboarding>`) but the hero intro it plays is built in `<Hero>`. The paused hero
+  timeline + idle starter are shared via a tiny `IntroProvider` (imperative
+  `registerHero`/`getHero` over an internal ref — not a mutable context value, which
+  the React-compiler lint forbids). Effect order is irrelevant: the curtain reads
+  the handles on its async asset gate, by which point `<Hero>` has registered them.
+
+- **Onboarding CSS lives in `globals.css`, not a module.** `onboarding.css` +
+  `intro.css` are ported verbatim under their original global class names
+  (`.ob-stage`, `.ob-cloud--*`, `.pp-nav-fly`, …). The overlay is one-off page
+  furniture the controller queries directly; module-hashing those classes would
+  break the queries for no benefit. Asset URLs rebased to `/images/*`.
+
+- **`js` flag set pre-paint (inline script).** An inline `<script>` adds
+  `documentElement.classList.add("js")` as the first body child (matches the
+  source's head script), so `html.js .ob-stage { position:fixed; … }` applies from
+  first paint and the hero never flashes before the overlay covers it. `<html>`
+  carries `suppressHydrationWarning` so React leaves the script-added class alone.
+  The controller removes `js` under reduced motion to land on the settled hero.
+
+- **Settled-by-default still holds.** No-JS / reduced motion: the overlay is
+  `display:none`, the hero card + navbar logo show (the `html.js [data-*]` arming
+  doesn't apply), scroll is unlocked, and Lenis runs normally. With JS the overlay
+  covers the hero, scroll is CSS-locked (`html.js:not(.pp-ready)`) AND Lenis is
+  `.stop()`ed by `LenisProvider`, released on `.pp-ready`.
+
+- **Cross-component elements reached by reference, not selector.** `useGSAP` runs
+  the body inside a `gsap.context` scoped to the `.ob-stage`, which scopes selector
+  TEXT to that element. The hero card + navbar logo live outside it, so they're
+  resolved with `document.querySelector` and animated by element reference. (This
+  was the one real bug found in verification — see ISSUES.md.)
+
+- **Hooks for cross-module elements.** `data-axis-card` on the hero's lens card and
+  `data-nav-logo` on the navbar logo give the controller stable selectors (module
+  classes are hashed); `globals.css` arms both hidden via `html.js [data-…]` and the
+  curtain reveals them. The hero card reveal was removed from `useHeroIntro` (the
+  curtain owns it now); the cloud idle drift moved into a stored `idle()` the curtain
+  starts (was auto-run on build).
+
+- **Parity check.** Playwright at 1512×900 vs source: the welcome screen (blue
+  ground, grain, corner clouds, watermark P, centred bone mark, loader) is pixel-
+  identical; the settled hero matches exactly — card rect 714/500/84/85, card-img
+  738/515/36/55, nav-logo 78/64/49/50, `pp-ready` set, overlay `autoAlpha 0`, fly
+  faded, card opacity 1. Scroll releases (doc 9235px scrollable). Narrow width
+  (390): the overlay scales as drawn. Nav-handoff window re-confirmed post-Step-10
+  (deferred watch item): nav opacity 1 → 0.53 → 0 across scrollY 7745 → 8000 → 8285,
+  i.e. at the footer, not early.

@@ -99,18 +99,36 @@ resolved. One short entry each, newest at the bottom.
   band's `data-nav-theme="light"` flip and the Trust pin release now have full
   runway — confirmed during this pass.
 
+## Step 10 — Onboarding overlay + curtain handoff
+
+- **Curtain card reveal hit nothing — selector scoped to the overlay (FIXED).** The
+  hero's lens card stayed invisible (`opacity 0`) after the curtain, so the settled
+  hero had no centre mark. Cause: `useGSAP` runs the callback inside a `gsap.context`
+  scoped to the `.ob-stage`, and `gsap.context` scopes selector TEXT to its element —
+  so `gsap.to("[data-axis-card]", …)` searched inside the overlay (where the card
+  doesn't exist) and matched nothing. Fix: resolve the card (and its mark) with
+  `document.querySelector` once and animate them by element reference. Verified: card
+  opacity 1, the bone card + recoloured mark sit at the lens centre, matching source.
+
+- **Resolved both Step 9 watch-items.** (1) The hero intro is now a PAUSED timeline
+  built in `useHeroIntro`, shared via `IntroProvider`, and played by the curtain at
+  `SETTLE_AT`; the port-only card reveal was removed from `useHeroIntro` (the curtain
+  owns it) and the cloud idle drift moved into a stored `idle()` the curtain starts.
+  (2) Scroll-lock is real now: `LenisProvider` `.stop()`s while `js && !reduced` and
+  the curtain's `release()` `.start()`s it on `.pp-ready`, alongside the CSS lock.
+
+- **Nav-handoff window re-confirmed (deferred Step 9 watch item).** The onboarding
+  overlay is `position:fixed`, so it adds no scroll height; the handoff still fades
+  at the footer (nav opacity 1 → 0.53 → 0 across scrollY 7745 → 8000 → 8285). No
+  regression from the new document composition.
+
+- Layout + the assemble/curtain choreography match the source exactly (see
+  DETAILS.md). Onboarding/intro CSS is ported into `globals.css` under the original
+  global class names (the controller queries them); the `js` flag is set pre-paint by
+  an inline script to avoid a hero flash.
+
 ## Open / to watch
 
-- **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro
-  is a paused timeline played by the onboarding curtain, and the brand card is
-  revealed as the onboarding mark settles into it. The port currently auto-plays
-  the intro on mount and reveals the card itself. When the onboarding/curtain is
-  ported, move the trigger to the curtain and drop the port-only card reveal in
-  `useHeroIntro`.
-- **Onboarding scroll-lock.** The source locks scroll (Lenis stopped) during the
-  welcome→hero handoff and releases it on ready. `LenisProvider` currently runs
-  Lenis unconditionally; scroll-lock control must be added when the onboarding
-  section (Step 10) is ported.
 - **GSAP/Lenis version drift.** Port uses newer majors/minors than the source CDN
   pins. Watch for any easing/ScrollTrigger behavior differences during per-section
   Playwright parity checks.

@@ -31,6 +31,7 @@ export function Navbar() {
           className={s.logo}
           href={navContent.home.href}
           aria-label={navContent.home.label}
+          data-nav-logo
         >
           <PpMark />
         </a>

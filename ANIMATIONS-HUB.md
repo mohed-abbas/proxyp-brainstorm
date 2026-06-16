@@ -459,3 +459,63 @@ on scroll).
   without it two navs would overlap at the page bottom.
 - **Feasibility / constraints:** depends on the footer being present in the DOM;
   the hook no-ops until it is.
+
+### Onboarding assemble (the welcome intro)
+- **Where:** the fixed blue `.ob-stage` overlay (welcome screen), on load.
+- **User-facing description:** "the blue welcome screen breathes in — clouds drift
+  in from the corners, the watermark P fades up, the P-mark slides up into place,
+  and the hairline loader fills."
+- **Trigger:** plays once on load, gated behind an asset gate (fonts + key images
+  decode, or a 1.4s timeout) so it doesn't start on a half-loaded screen. The page
+  is scroll-locked until the handoff that follows resolves.
+- **Mechanics (paused timeline, `power3.out` default):**
+  - watermark: `opacity 0.2`, dur 1.6, `power2.out`, @0.
+  - cloud-left: `opacity 0→1, xPercent -6→0`, dur 1.8, `power2.out`, @0.
+  - cloud-top-right: `opacity 0→1, yPercent -5→0`, dur 1.8, `power2.out`, @0.1.
+  - mark halves (stem, blade): each clipped to its own baseline + parked below,
+    then `y → 0`, dur 0.7, stagger 0.14, @0.35.
+  - loader fill: `width 0%→100%`, dur 1.7, `none`, @0.35.
+  - (the welcome lockup omits the wordmark, so there are no glyph reveals here.)
+- **Source ref:** `setupOnboardingIntro` in `hero.js`; `onboarding.css`.
+- **Implementation note:** `src/lib/animations/useOnboarding.ts` (combined with the
+  curtain below). The clip wraps are built at runtime (SVG `<clipPath>` rects on
+  each path's bbox baseline) exactly as the source does. Armed-hidden states live
+  in `globals.css` (`html.js .ob-*`).
+- **Feasibility / constraints:** reduced motion / no-JS → the controller removes
+  the `js` class; the overlay is `display:none` and the page lands on the settled
+  hero (no welcome).
+
+### Curtain handoff (welcome → hero)
+- **Where:** spans the `.ob-stage` overlay, the flying P-mark clone, the hero, and
+  the navbar logo; auto-plays once the welcome assemble resolves.
+- **User-facing description:** "the loader fades, a curtain wipes the blue away from
+  the bottom up to reveal the dark hero, the held P-mark eases down into the hero's
+  lens card (its blade turning blue, stem turning ink) as the hero assembles around
+  it, and the navbar logo appears."
+- **Trigger:** auto-played on the welcome timeline's `onComplete` (no scroll). On
+  completion it releases the scroll lock (`.pp-ready`), starts Lenis, and refreshes
+  ScrollTrigger.
+- **Mechanics (one timeline):**
+  - loader: `autoAlpha 0`, dur 0.5, `power1.out`, @0.
+  - curtain wipe: a proxy `{e:0→1}`, dur 2.0, `power1.inOut`, @0.55 — `onUpdate`
+    clip-wipes the overlay (`inset(0 0 e% 0)`) and parallaxes the corner clouds
+    (`-4·e/-7·e` yPercent at different rates) with a faint scale-in; the navbar
+    logo gets `.is-landed` once `e ≥ 0.9`.
+  - hero assemble: the hero's paused intro timeline + idle drift are played at
+    `SETTLE_AT` (= 0.55 + 2.0·0.62 ≈ 1.79).
+  - mark settle: the fly clone `x→settleX (~0), y→settleY (~+116), scale→card size`,
+    dur 1.1, `power2.inOut`, @`SETTLE_AT`; `onUpdate` recolours bone→blue (blade) /
+    bone→ink (stem) across `this.progress()`.
+  - land: the real carded mark fades in (`opacity 1`, dur 0.3) and the clone fades
+    out (`autoAlpha 0`, dur 0.3) coincident, @`SETTLE_AT + 1.1 − 0.05`.
+- **Source ref:** `runCurtain` in `hero.js`; `intro.css`.
+- **Implementation note:** `src/lib/animations/useOnboarding.ts`. The fly is a
+  runtime `<svg>` clone of the mark appended to `<body>` (z 250, above the overlay).
+  The hero intro timeline + idle are shared from `<Hero>` via the `IntroProvider`
+  (`registerHero`/`getHero`), since the curtain lives in `<Onboarding>`. The hero
+  card and navbar logo are reached by element reference (NOT selector strings —
+  `useGSAP`'s scope would confine selector text to the overlay). Lenis is stopped by
+  `LenisProvider` while locked and started here on release.
+- **Feasibility / constraints:** depends on the hero card + navbar logo being laid
+  out (they're armed-hidden via opacity but keep layout, so their rects are exact);
+  reduced motion skips the whole handoff (settled hero).

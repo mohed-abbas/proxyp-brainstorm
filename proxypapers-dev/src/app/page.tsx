@@ -1,3 +1,4 @@
+import { Onboarding } from "@/components/shared/Onboarding";
 import { Navbar } from "@/components/shared/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { Problem } from "@/components/sections/Problem";
@@ -14,6 +15,7 @@ import { Footer } from "@/components/shared/Footer";
 export default function Home() {
   return (
     <>
+      <Onboarding />
       <Navbar />
       <Hero />
       <div className="page-frame">

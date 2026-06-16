@@ -145,6 +145,168 @@ html.lenis body {
   filter: brightness(1.08);
 }
 
+/* ════════════════════════════════════════════════════════════════════════════
+   Onboarding overlay + intro handoff — ported from styles/onboarding.css and
+   styles/intro.css. The welcome screen layers as a FIXED overlay above the hero
+   and the curtain wipe hands off to it on load. Global class names (the intro
+   controller queries them directly); this is one-off page furniture. Lengths are
+   a fraction of the 1512×982 Figma frame, so the composition scales as drawn.
+   Settled / no-JS / reduced motion: the overlay is hidden and the hero shows. */
+.ob-stage {
+  display: none;
+}
+html.js .ob-stage {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--pp-blue);
+  isolation: isolate;
+  will-change: clip-path;
+}
+
+.ob-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: url("/images/grain.webp");
+  background-repeat: repeat;
+  background-size: 380px 380px;
+}
+
+.ob-watermark {
+  position: absolute;
+  top: -5.7vh;
+  right: -13.77vw;
+  height: 115.05vh;
+  aspect-ratio: 755.212 / 1129.77;
+  z-index: 2;
+  color: #404243;
+  opacity: 0.2;
+  pointer-events: none;
+}
+.ob-watermark img {
+  width: 100%;
+  height: 100%;
+}
+
+.ob-cloud {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: screen;
+}
+.ob-cloud img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ob-cloud--left {
+  left: -82.67vw;
+  top: -22.6vh;
+  width: 108.6vw;
+  height: 108.6vw;
+}
+.ob-cloud--top-right {
+  left: 65vw;
+  top: -98.8vh;
+  width: 108.6vw;
+  height: 108.6vw;
+}
+
+.ob-brand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(96px, 9.3vw, 140px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 4;
+}
+.ob-lockup {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.ob-divider {
+  position: relative;
+  width: clamp(154px, 15.47vw, 240px);
+  height: 3px;
+  margin-top: clamp(26px, 2.94vw, 46px);
+}
+.ob-divider__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 1px;
+  height: 1px;
+  background: rgba(247, 244, 240, 0.5);
+}
+.ob-divider__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--pp-bone);
+  border-radius: 999px;
+}
+
+/* Armed (welcome start) states — only with JS; the intro plays from here to the
+   resolved state above. Without JS these never apply, so the page is settled. */
+html.js .ob-cloud {
+  opacity: 0;
+}
+html.js .ob-watermark {
+  opacity: 0;
+}
+html.js .ob-divider__fill {
+  width: 0;
+}
+html.js .ob-lockup .lk-mark {
+  opacity: 0;
+}
+
+/* The flying P-mark clone — a standalone svg lifted ABOVE the overlay so the
+   rising curtain never clips it; it settles into the hero's lens card. */
+.pp-nav-fly {
+  position: fixed;
+  z-index: 250;
+  pointer-events: none;
+  overflow: visible;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* The navbar logo and the hero's lens card are armed-hidden with JS and revealed
+   by the curtain landing; no-JS / reduced motion shows them settled. */
+html.js [data-nav-logo] {
+  opacity: 0;
+  transition: opacity 0.35s var(--pp-ease-out);
+}
+html.js [data-nav-logo].is-landed {
+  opacity: 1;
+}
+html.js [data-axis-card] {
+  opacity: 0;
+}
+
+/* Scroll lock while the welcome assembles; released when JS adds .pp-ready. */
+html.js:not(.pp-ready),
+html.js:not(.pp-ready) body {
+  overflow: hidden;
+  height: 100%;
+}
+
 /* Accessibility — opting out of motion resolves to the settled state. */
 @media (prefers-reduced-motion: reduce) {
   *,

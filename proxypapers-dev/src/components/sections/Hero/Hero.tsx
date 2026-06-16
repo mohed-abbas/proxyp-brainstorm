@@ -47,7 +47,7 @@ export function Hero() {
         {/* Centre axis + brand card */}
         <div className={s.axis} aria-hidden="true">
           <span className={s.axisLine} />
-          <div className={s.axisCard}>
+          <div className={s.axisCard} data-axis-card>
             <img src="/icons/pp-mark.svg" alt="" />
           </div>
         </div>

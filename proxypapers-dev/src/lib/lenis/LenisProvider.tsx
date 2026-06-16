@@ -37,6 +37,14 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     gsap.ticker.lagSmoothing(0);
     lenisRef.current = instance;
 
+    // Stop until the onboarding curtain releases (matches the source). The welcome
+    // assembles on a clock with scroll locked; the intro controller calls .start()
+    // on ready. Reduced motion / no-JS never locks, so leave Lenis running.
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (document.documentElement.classList.contains("js") && !reduced) {
+      instance.stop();
+    }
+
     return () => {
       gsap.ticker.remove(raf);
       instance.destroy();

@@ -1,18 +1,19 @@
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import { useIntro } from "@/lib/intro/IntroProvider";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
 
-// Hero intro — ported from buildHeroIntro() in design-final/scripts/hero.js.
-// The section renders settled by default (SSR / reduced motion), so this hook
-// arms the hidden state and plays the reveal on mount.
-//
-// In the source the timeline is paused and the onboarding curtain plays it (and
-// reveals the brand card as the mark settles into it). Until the onboarding is
-// ported, the hero plays on mount and reveals the card itself; that trigger
-// moves to the curtain handoff in the onboarding step.
+// Hero intro — ported from buildHeroIntro() in design-final/scripts/hero.js. The
+// section renders settled by default (SSR / reduced motion); this hook arms the
+// hidden state and builds the reveal PAUSED. The onboarding curtain plays it (and
+// reveals the brand card as the welcome mark settles into it) — so the card is NOT
+// touched here; it's armed-hidden in CSS (html.js [data-axis-card]) and revealed
+// by the curtain. The timeline + idle starter are shared via the intro store.
 export function useHeroIntro(scope: RefObject<HTMLElement | null>, s: Styles) {
+  const intro = useIntro();
+
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -25,15 +26,13 @@ export function useHeroIntro(scope: RefObject<HTMLElement | null>, s: Styles) {
         scaleY: 0.9,
         transformOrigin: "50% 50%",
       });
-      gsap.set([q(`.${s.conveyor}`), q(`.${s.axis}`), q(`.${s.axisCard}`)], {
-        opacity: 0,
-      });
+      gsap.set([q(`.${s.conveyor}`), q(`.${s.axis}`)], { opacity: 0 });
       gsap.set([q(`.${s.leadBody}`), q(`.${s.leadCta}`)], { opacity: 0, y: 16 });
       gsap.set(q(`.${s.statement}`), { opacity: 0, y: 16 });
       gsap.set(words, { yPercent: 110 });
       gsap.set(q(`.${s.axisLine}`), { scaleY: 0, transformOrigin: "50% 50%" });
 
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
 
       tl.to(
         q(`.${s.lens}`),
@@ -53,13 +52,9 @@ export function useHeroIntro(scope: RefObject<HTMLElement | null>, s: Styles) {
       )
         .set(q(`.${s.axis}`), { opacity: 1 }, 0.7)
         .to(q(`.${s.conveyor}`), { opacity: 1, duration: 0.9 }, 0.9);
-      tl.to(
-        q(`.${s.axisCard}`),
-        { opacity: 1, duration: 0.4, ease: "power1.out" },
-        0.95,
-      );
       tl.to(q(`.${s.statement}`), { opacity: 1, y: 0, duration: 0.8 }, 1.2);
 
+      // Endless conveyor drift, started once the intro resolves.
       const tracks = q(`.${s.track}`);
       tl.eventCallback("onComplete", () => {
         gsap.fromTo(
@@ -69,20 +64,25 @@ export function useHeroIntro(scope: RefObject<HTMLElement | null>, s: Styles) {
         );
       });
 
-      gsap.to(q(`.${s.cloudLeft}`), {
-        xPercent: 3,
-        duration: 18,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-      gsap.to(q(`.${s.cloudRight}`), {
-        xPercent: -3,
-        duration: 20,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
+      // Continuous cloud drift inside the lens — started by the curtain (hero.idle).
+      const idle = () => {
+        gsap.to(q(`.${s.cloudLeft}`), {
+          xPercent: 3,
+          duration: 18,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+        gsap.to(q(`.${s.cloudRight}`), {
+          xPercent: -3,
+          duration: 20,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+      };
+
+      intro?.registerHero(tl, idle);
     },
     { scope },
   );
