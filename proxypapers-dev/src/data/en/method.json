@@ -1,0 +1,32 @@
+{
+  "title": { "segs": ["Five steps,", "one single contact."] },
+  "lede": "The same dedicated advisor stays with you from the first meeting to the annual review. No rotating teams, no subcontracting.",
+  "steps": [
+    {
+      "num": "01",
+      "name": "Onboarding",
+      "desc": "Collection, sorting, classification, backup on the Papers Box."
+    },
+    {
+      "num": "02",
+      "name": "Organization",
+      "desc": "Folder setup, deadline alerts, secure sharing with your advisors."
+    },
+    {
+      "num": "03",
+      "name": "Follow-up",
+      "desc": "Regular updates, periodic on-site interventions."
+    },
+    {
+      "num": "04",
+      "name": "Support",
+      "desc": "Secure transmission of the items needed for your projects and procedures."
+    },
+    {
+      "num": "05",
+      "name": "Management",
+      "desc": "Real-time visibility, periodic report, decision support."
+    }
+  ],
+  "link": { "label": "See our full approach", "href": "#" }
+}

@@ -263,3 +263,26 @@ on scroll).
   shows the resolved flat back-spread (names + CTA visible). The CTA can fall below
   the fold by design on tall decks. The deck (only) scales down on short viewports
   via CSS `--card-h`; the fan offsets follow via `deckScale`.
+
+## Method
+
+### Method reveal (header + five steps + link, once on enter)
+- **Where:** the Method blue panel (header, the five step rows, the footer link).
+- **User-facing description:** "as the blue panel enters, the two-clause title and
+  the lede rise in word-by-word, the five numbered step rows settle up one after
+  another top-to-bottom, and the 'See our full approach' link fades in last."
+- **Trigger:** scroll, `start: top 72%`, `once: true` (plays once; not scrubbed,
+  not pinned).
+- **Mechanics** (timeline, `ease: power3.out`):
+  - title words (`.r-word__in`): `yPercent 120→0`, dur 0.7, stagger 0.06, @0.
+  - lede words: `yPercent 120→0`, dur 0.7, stagger 0.018, @0.3.
+  - steps: `autoAlpha 0→1, y 30→0`, dur 0.7, stagger 0.1, @0.45.
+  - link: `autoAlpha 0→1, y 16→0`, dur 0.6, @1.0.
+- **Source ref:** `setupMethod` in `hero.js`; `method.css`.
+- **Implementation note:** `src/lib/animations/useMethod.ts` (`useGSAP`, scoped).
+  Title is two inline `<SplitText>` segments (second muted) inside the `h2`, with a
+  literal space between them. Steps are a `.map()` over `method.json`.
+- **Feasibility / constraints:** reduced motion → hook returns early; the settled
+  render shows everything in place. The link's arrow nudge on hover is pure CSS
+  (`.link:hover svg { translateX }`), not GSAP. `data-nav-theme="blue"` flips the
+  navbar to its blue surface over this panel (see Navbar theme flip).

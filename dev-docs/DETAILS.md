@@ -192,3 +192,31 @@ One short entry per decision, newest at the bottom.
   ends. Entry and resolved screenshots are pixel-identical (incl. the nav logo
   overlapping the title, which matches the source). Both CTAs render the shared
   `.pp-btn` (blue pill, ~45px radius).
+
+## Step 5 — Method
+
+- **Composed in the re-opened `.page-frame`.** The source closes the frame after
+  Profiles and re-opens it for Method, so `page.tsx` wraps `<Method />` in a second
+  `<div className="page-frame">`. The blue panel is capped inside the 1512 column
+  (its 20px corners round against the page ground at the seams).
+
+- **Straightforward port — no pin, no scrub, no hover-draw.** Method is the simplest
+  section: a `once: true` scroll reveal (header words → step rows → link), built with
+  plain flexbox (mirrors the Figma auto-layout). The only hover is the footer link's
+  arrow nudge, which is pure CSS — the hook never touches it.
+
+- **Two-clause inline title.** The title is two `<SplitText as="span">` segments
+  ("Five steps," + muted "one single contact.") flowing inline on one line, with a
+  literal `{" "}` between them so the clauses keep their space (the source relied on
+  collapsed HTML whitespace between the two spans).
+
+- **`text-box: trim-both` kept as-authored.** The giant step name uses the source's
+  `text-box: trim-both cap alphabetic` (Chrome cap-to-baseline trim); ported
+  verbatim — progressive enhancement, harmless where unsupported.
+
+- **Parity check.** Playwright at 1512×900 (section-relative rects) is byte-for-byte
+  identical to the source: title `75.2,138,630.7×50.9`, lede `837.6,140.5,584.1×45.9`,
+  step 01 `75.2,307.8,1346.5×115.2`, step 05 `75.2,831.8,…`, link
+  `1256.8,1065.7,164.9×25.9`; panel `rgb(90,144,244)` + `19.8px` radius. Screenshots
+  pixel-identical; the `data-nav-theme="blue"` flip is handled by the existing nav
+  observer.

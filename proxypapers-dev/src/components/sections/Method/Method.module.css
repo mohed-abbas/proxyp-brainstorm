@@ -1,0 +1,130 @@
+/* The Method (Figma 58:170) — the brand's full-presence moment: a full-bleed
+   Proxy Blue panel (20px radius) with a left/right editorial header above a
+   numbered list of the five locked steps, closed by a bottom-right link. Clean
+   vertical flexbox flow (mirrors the Figma auto-layout); copy is Bone White at
+   varied opacity on the blue ground. Lengths are fractions of the 1512px frame. */
+
+.method {
+  position: relative;
+  width: 100%;
+  min-height: 82.1429cqw;
+  display: flex;
+  align-items: center;
+  padding-inline: 5.0265cqw;
+  background: var(--pp-blue);
+  border-radius: 1.3228cqw;
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7.9365cqw;
+}
+
+/* ── Editorial header ──────────────────────────────────────────────────────*/
+.head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--pp-bone);
+}
+.title {
+  width: 42.1296cqw;
+  font-weight: 500;
+  font-size: 3.2407cqw;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.titleSeg {
+  display: inline;
+}
+.titleSegMuted {
+  color: rgba(247, 244, 240, 0.6);
+}
+.lede {
+  width: 39.0212cqw;
+  font-weight: 400;
+  font-size: 1.0582cqw;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  text-align: right;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* ── Step list — five rows on a 136px pitch; each closed by a hairline rule ──*/
+.steps {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.0582cqw;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8598cqw;
+  padding-bottom: 1.5212cqw;
+  border-bottom: 1px solid rgba(247, 244, 240, 0.28);
+}
+.stepNum {
+  font-weight: 400;
+  font-size: 1.6534cqw;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: rgba(247, 244, 240, 0.6);
+}
+.stepRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+.stepName {
+  font-weight: 500;
+  font-size: 5.0265cqw;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--pp-bone);
+  text-box: trim-both cap alphabetic;
+}
+.stepDesc {
+  font-weight: 400;
+  font-size: 1.0582cqw;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: rgba(247, 244, 240, 0.6);
+}
+
+/* ── Footer link — bottom-right, underlined, arrow nudges on hover ───────────*/
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3968cqw;
+  padding-bottom: 0.3968cqw;
+  border-bottom: 1px solid var(--pp-bone);
+  font-weight: 500;
+  font-size: 1.0582cqw;
+  color: var(--pp-bone);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.link svg {
+  width: 1.1905cqw;
+  height: 1.1905cqw;
+  stroke: currentColor;
+  transition: transform 0.4s var(--pp-ease-out);
+}
+.link:hover svg {
+  transform: translateX(0.2646cqw);
+}
+
+/* ── Reveal masks (per-word, house style) ──────────────────────────────────*/
+.method :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}

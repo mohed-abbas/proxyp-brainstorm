@@ -40,6 +40,13 @@ resolved. One short entry each, newest at the bottom.
   (also pinned) is added — a single coordinated refresh may read cleaner than
   per-hook refreshes.
 
+## Step 5 — Method
+
+- _No source mismatches._ Geometry byte-for-byte identical to the source (see
+  DETAILS.md). Note on the earlier Profiles watch item: Method turned out NOT to be
+  pinned (it's a plain `once` reveal), so the multi-pin refresh concern doesn't
+  apply here — revisit only if a later section adds a second pin.
+
 ## Open / to watch
 
 - **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro
