@@ -111,3 +111,44 @@ One short entry per decision, newest at the bottom.
   socials, and the pill morphed to the dark Close chip. (A transient `x=874` read
   occurred when measuring synchronously on a fresh, pre-layout load; settled value
   is `889`.)
+
+## Step 3 — Problem
+
+- **Lives inside `.page-frame`.** The source opens a `.page-frame` wrapper just
+  before the Problem section (and re-opens it later for Method), so `page.tsx`
+  composes `<Problem />` inside a `<div className="page-frame">`. That gives the
+  section its `cqw` basis (capped at 1512px). Profiles/Method below will sit
+  outside the frame as in the source.
+
+- **Zigzag is a shared `<Zigzag>` SVG component.** The blue zigzag path is byte-
+  identical in all three cards, so it's one component rendered three times. The
+  path carries `pathLength="100"` so the draw normalises across the differing card
+  sizes (a single `strokeDashoffset 100→0` works for all).
+
+- **Settled-by-default zigzag.** The module renders `.zigzagPath` with
+  `stroke-dashoffset: 0` (drawn) — the correct no-JS / reduced-motion state (matches
+  the source's `html:not(.js)` fallback). The `useProblem` hook then arms the live
+  state: VOLUME starts undrawn and draws on the scroll reveal; the small cards rest
+  invisible (`100`) and draw on hover.
+
+- **VOLUME vs small cards.** VOLUME's zigzag is a load-in moment only (draws once on
+  the reveal, no hover). FRICTION + RISK have no reveal-draw; they trace on hover and
+  erase on leave. The hook splits the paths on identity (`!== volumePath`).
+
+- **Hover listeners cleaned up via the `useGSAP` callback's return.** The two
+  `mouseenter`/`mouseleave` handlers per small card are plain DOM listeners (not GSAP
+  objects), so they're collected in a teardown array and removed in the cleanup
+  function returned from the `useGSAP` callback (gsap.context honours it).
+
+- **Word subsets re-queried by module-class descendant selectors.** After parking
+  all `.r-word__in`, the timeline targets `.eyebrow .r-word__in`,
+  `.headline .r-word__in`, `.body .r-word__in` (hashed module classes compose into
+  descendant selectors via `gsap.utils.selector`), reproducing the source's separate
+  `splitWords` calls and their distinct staggers.
+
+- **Parity check.** Playwright at 1512×900 (section-relative rects): eyebrow
+  `79.2,203.5,659.3×16.8`, headline `…,243.1,…×92.8`, body `…,358.9,545.5×118.8`,
+  underline rule `79.2,220.3,74.3×9.8`, VOLUME `758.3,204.5,321.7×492`, FRICTION
+  `1099.9,204.5,…×239.6`, RISK `…,469.8,…×226.7` — all identical to the source.
+  Zigzag states match (VOLUME `dashoffset 0`, small cards `100`); hover on FRICTION
+  drives `100→0` and back to `100` on leave. Screenshots are pixel-identical.

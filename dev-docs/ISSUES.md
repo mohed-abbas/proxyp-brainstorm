@@ -23,6 +23,14 @@ resolved. One short entry each, newest at the bottom.
   but this is backwards for the English build and will need revisiting when the i18n
   layer is wired (the current locale should drive which language reads as active).
 
+## Step 3 — Problem
+
+- _No source mismatches._ Geometry and zigzag states match the source exactly (see
+  DETAILS.md). One TypeScript wrinkle worth noting: `gsap.utils.selector` returns a
+  union of `HTMLElement` types, which doesn't overlap `SVGPathElement`, so filtering
+  the zigzag paths against `volumePath` needs a cast (`volumePath as Element | null`)
+  — purely a typing concern, no runtime effect.
+
 ## Open / to watch
 
 - **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro

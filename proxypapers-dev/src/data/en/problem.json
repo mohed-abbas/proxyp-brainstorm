@@ -1,0 +1,22 @@
+{
+  "eyebrow": "PROBLEM",
+  "headline": "Your estate is structured. Your documents often aren't.",
+  "body": "Your advisors take care of your taxes, your investments, your companies. No one really takes care of the rest: the deeds, the contracts, the deadlines, the documents that move between your advisors and that have to be retrieved at every meeting, every decision, every transmission. That is where things get complicated.",
+  "cards": [
+    {
+      "id": "volume",
+      "label": "VOLUME",
+      "copy": "200 to 400 essential documents to manage for a structured estate."
+    },
+    {
+      "id": "friction",
+      "label": "FRICTION",
+      "copy": "Up to 30% of the time spent with your advisors goes into retrieving or forwarding information"
+    },
+    {
+      "id": "risk",
+      "label": "RISK",
+      "copy": "One person in four has already lost an important document."
+    }
+  ]
+}

@@ -173,3 +173,47 @@ on scroll).
 - **Implementation note:** `Menu.tsx` `LinkChars` renders the spans at SSR with
   inline `--i`; the keyframe lives in `Menu.module.css`.
 - **Feasibility / constraints:** gated `@media (prefers-reduced-motion: no-preference)`.
+
+## Problem
+
+### Problem reveal (column rises + cards settle + VOLUME zigzag draws)
+- **Where:** the Problem section (inside `.page-frame`), as it scrolls into view.
+- **User-facing description:** "as the section enters, the PROBLEM eyebrow and its
+  blue hand-drawn underline appear, the headline and body rise in word-by-word, the
+  three data cards settle up from below, and the big blue zigzag in the VOLUME card
+  traces itself in."
+- **Trigger:** scroll-linked (scrubbed), NOT on load — the visitor is still on the
+  hero at load. ScrollTrigger `start: top 85%`, `end: top 60%` (short entry window),
+  `scrub: 3` (soft catch-up tail), `invalidateOnRefresh: true`.
+- **Mechanics** (timeline, defaults `ease: power3.out`, `force3D`):
+  - eyebrow words (`.r-word__in`): `yPercent 120→0`, dur 0.6, @0.
+  - underline rule: `autoAlpha 0→1, scaleX 0→1`, dur 0.7, @0.1 (origin left center,
+    held at `rotation: 0.33`).
+  - headline words: `yPercent 120→0`, dur 0.7, stagger 0.06, @0.25.
+  - body words: `yPercent 120→0`, dur 0.7, stagger 0.018, @0.7.
+  - cards: `autoAlpha 0→1, y 28→0`, dur 0.8, stagger 0.14, @0.95.
+  - VOLUME zigzag path: `strokeDashoffset 100→0`, dur 1.2, `power2.inOut`, @0.95
+    (rests DRAWN; no hover).
+- **Source ref:** `setupProblem` + `REVEAL_ST` in `hero.js`; `problem.css`.
+- **Implementation note:** `src/lib/animations/useProblem.ts` (`useGSAP`, scoped to
+  the section ref). Section renders settled by default; the hook arms the parked
+  state with `gsap.set` (words `yPercent 120`, rule hidden, cards `autoAlpha 0`,
+  paths `strokeDasharray 100`). Word subsets are re-queried by module-class
+  descendant selectors (`.eyebrow .r-word__in`, etc.).
+- **Feasibility / constraints:** reduced motion → hook returns early; settled render
+  leaves everything readable with all zigzags drawn (`stroke-dashoffset: 0` default
+  in the module). `pathLength=100` normalises the draw across the three card sizes.
+
+### Problem card zigzag hover-draw (FRICTION + RISK)
+- **Where:** the two smaller Problem cards (FRICTION top-right, RISK bottom-right).
+- **User-facing description:** "the small cards' blue zigzag is hidden until you
+  hover the card, when it traces itself in; it erases when you leave."
+- **Trigger:** hover (`mouseenter` / `mouseleave`) on the card.
+- **Mechanics:** the path rests at `strokeDashoffset 100` (invisible); enter tweens
+  it to 0, leave back to 100 — dur 0.9, `power2.inOut`, `overwrite: true`.
+- **Source ref:** the `smallPaths.forEach` listener block in `setupProblem`.
+- **Implementation note:** listeners are attached inside `useProblem`'s `useGSAP`
+  callback and removed via the returned cleanup. VOLUME is excluded (its draw is the
+  load-in moment only).
+- **Feasibility / constraints:** reduced motion → no listeners (hook returns early),
+  so the small zigzags stay drawn (the readable settled state).

@@ -1,0 +1,186 @@
+/* Problem section (Figma 17:2). Full-bleed dark ground: a left editorial column
+   (eyebrow + hand-drawn underline, headline, body) and three hairline data cards
+   on the right — VOLUME (tall, blue zigzag), FRICTION, RISK. Lengths are
+   fractions of the 1512px frame so it stays pixel-faithful at 1512 and scales
+   proportionally. Children are positioned against `.content`. */
+
+.problem {
+  --pp-hairline: #313131;
+
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-inline: 5.291cqw 5.0265cqw;
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  height: 32.937cqw;
+}
+
+/* ── Left editorial column ─────────────────────────────────────────────────*/
+.eyebrow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44.048cqw;
+  font-weight: 500;
+  font-size: 0.9259cqw;
+  line-height: normal;
+  letter-spacing: 0.0926cqw;
+  color: #fff;
+}
+.eyebrowRule {
+  position: absolute;
+  left: 0.0033cqw;
+  top: 1.1243cqw;
+  width: 4.9636cqw;
+  height: 0.6237cqw;
+  transform: rotate(0.33deg);
+}
+.eyebrowRule img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.headline {
+  position: absolute;
+  left: 0;
+  top: 2.6455cqw;
+  width: 44.048cqw;
+  font-weight: 500;
+  font-size: 2.5794cqw;
+  line-height: normal;
+  letter-spacing: -0.0258cqw;
+  color: var(--pp-bone);
+}
+
+.body {
+  position: absolute;
+  left: 0;
+  top: 10.384cqw;
+  width: 36.442cqw;
+  font-weight: 400;
+  font-size: 1.0582cqw;
+  line-height: 1.5;
+  letter-spacing: 0.0106cqw;
+  color: var(--pp-bone);
+}
+
+/* ── Data cards ─────────────────────────────────────────────────────────────*/
+.card {
+  position: absolute;
+  border: 0.5px solid var(--pp-hairline);
+  overflow: hidden;
+}
+.cardLabel {
+  position: absolute;
+  top: 1.1574cqw;
+  font-weight: 400;
+  font-size: 0.7937cqw;
+  line-height: 1.5;
+  letter-spacing: 0.0794cqw;
+  color: #fff;
+  white-space: nowrap;
+  z-index: 1;
+}
+.cardCopy {
+  position: absolute;
+  top: 3.5384cqw;
+  width: 15.873cqw;
+  font-weight: 500;
+  font-size: 1.0582cqw;
+  line-height: 1.5;
+  letter-spacing: 0.0106cqw;
+  color: #fff;
+  z-index: 1;
+}
+
+/* VOLUME — tall left card carrying the blue zigzag graphic */
+.cardVolume {
+  left: 45.37cqw;
+  top: 0.0661cqw;
+  width: 21.495cqw;
+  height: 32.87cqw;
+}
+.cardVolume .cardLabel,
+.cardVolume .cardCopy {
+  left: 1.2235cqw;
+}
+.volumeGraphic {
+  position: absolute;
+  left: -0.0331cqw;
+  top: 6.0516cqw;
+  width: 22.553cqw;
+  height: 22.553cqw;
+}
+.graphicInner {
+  position: absolute;
+  inset: -7.65% -4.03% -8.16% -5.44%;
+}
+.graphicInner svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* The smaller zigzag echoed in FRICTION and RISK. */
+.cardGraphic {
+  position: absolute;
+  top: 2.6455cqw;
+  right: -3.4392cqw;
+  width: 11.5079cqw;
+  height: 11.5079cqw;
+  z-index: 0;
+}
+
+/* FRICTION — top-right card */
+.cardFriction {
+  left: 68.196cqw;
+  top: 0.0661cqw;
+  width: 21.495cqw;
+  height: 16.005cqw;
+}
+/* RISK — bottom-right card */
+.cardRisk {
+  left: 68.196cqw;
+  top: 17.791cqw;
+  width: 21.495cqw;
+  height: 15.146cqw;
+}
+.cardFriction .cardLabel,
+.cardFriction .cardCopy,
+.cardRisk .cardLabel,
+.cardRisk .cardCopy {
+  left: 1.0251cqw;
+}
+.cardRisk .cardLabel {
+  top: 1.2897cqw;
+}
+.cardRisk .cardCopy {
+  top: 3.6707cqw;
+}
+
+/* ── Reveal masks ───────────────────────────────────────────────────────────
+   Extend the global .r-word with padding + negative margin so the clip never
+   crops an ascender/descender (scoped to .problem). */
+.problem :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+
+/* ── Hover "draw" interaction ───────────────────────────────────────────────
+   Each card's zigzag rests with dasharray normalised to 100 (pathLength=100).
+   Default render is DRAWN (settled / no-JS / reduced motion); the GSAP hook arms
+   the hidden state and wires hover for the small cards. */
+.zigzagPath {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+}
