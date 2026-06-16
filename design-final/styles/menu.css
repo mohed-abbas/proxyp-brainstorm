@@ -25,10 +25,15 @@
   z-index: 90; /* below the navbar (z-100) so the Close pill stays on top */
   visibility: hidden;
   pointer-events: none;
+  /* Stay visible through the close so the card can collapse back into the pill
+     (the reverse of the open) before it's hidden. Delay must cover the longest
+     close transition (clip-path 0.7s below). */
+  transition: visibility 0s linear 0.7s;
 }
 .pp-menu[data-state="open"] {
   visibility: visible;
   pointer-events: auto;
+  transition: visibility 0s linear 0s;
 }
 
 /* ── Whisper scrim — focuses the card + is the click-outside-to-close target ── */
@@ -56,22 +61,29 @@
   background: var(--pp-bone);
   border: 0.5px solid rgba(22, 23, 24, 0.08);
   border-radius: min(1.8051cqw, 10px); /* 10 / 554 */
-  box-shadow: 0 24px 80px -28px rgba(22, 23, 24, 0.45),
-    0 2px 8px -4px rgba(22, 23, 24, 0.25);
   overflow: hidden;
+  /* drop-shadow (not box-shadow) so the shadow tracks the clip-path while the
+     card unfolds — box-shadow would be clipped away by clip-path. */
+  filter: drop-shadow(0 20px 34px rgba(22, 23, 24, 0.32))
+    drop-shadow(0 3px 8px rgba(22, 23, 24, 0.22));
 
-  /* Grows from its top-right corner (attached to the pill) on open. */
-  transform-origin: top right;
+  /* Expand from the pill: the bone surface unfolds from the Close pill's exact
+     rectangle (top 8.82 / right 9 / 128×50 within the 554 card) out to the full
+     card. Because the pill (z-100) sits over this region, the card reads as
+     growing out from under the button. A quick opacity lead-in avoids any edge
+     flicker on the first frame. */
   opacity: 0;
-  transform: translateY(-6px) scale(0.985);
-  transition: opacity 0.25s var(--pp-ease-out),
-    transform 0.25s var(--pp-ease-out);
+  clip-path: inset(1.5921% 1.6245% 89.3827% 75.2708% round 1.461%);
+  /* Close (reverse): collapse the clip back into the pill over 0.7s; hold the
+     card opaque, only fading the last 0.2s as it tucks behind the pill. */
+  transition: opacity 0.2s var(--pp-ease-out) 0.45s,
+    clip-path 0.7s var(--pp-ease-out);
 }
 .pp-menu[data-state="open"] .pp-menu__panel {
   opacity: 1;
-  transform: none;
-  transition: opacity 0.45s var(--pp-ease-out),
-    transform 0.5s var(--pp-ease-out);
+  clip-path: inset(0% 0% 0% 0% round 1.8051%);
+  transition: opacity 0.22s var(--pp-ease-out),
+    clip-path 0.9s var(--pp-ease-out);
 }
 
 /* ── FR | EN ─────────────────────────────────────────────────────────────── */
@@ -130,7 +142,7 @@
 .pp-menu__link-text {
   display: block;
   transform: translateY(108%);
-  transition: transform 0.25s var(--pp-ease-out);
+  transition: transform 0.4s var(--pp-ease-out); /* close: links drop back into the mask */
 }
 .pp-menu[data-state="open"] .pp-menu__link-text {
   transform: none;
@@ -195,7 +207,7 @@
 .pp-menu__foot {
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.2s var(--pp-ease-out), transform 0.2s var(--pp-ease-out);
+  transition: opacity 0.35s var(--pp-ease-out), transform 0.35s var(--pp-ease-out);
 }
 .pp-menu[data-state="open"] .pp-menu__lang,
 .pp-menu[data-state="open"] .pp-menu__foot {
@@ -240,6 +252,15 @@ html.js .pp-nav.is-menu-open .pp-nav__logo {
 .pp-nav.is-menu-open .pp-nav__menu .pp-nav__menu-label {
   /* width barely changes Menu→Close; the colour flip carries the morph */
 }
+/* The grip's four dots sit in a diamond; rotating 45° squares them up — the
+   "open" tell. Eased both ways (base transition here so close rotates back). */
+.pp-nav__menu-icon svg {
+  transform-origin: center;
+  transition: transform 0.7s var(--pp-ease-out);
+}
+.pp-nav.is-menu-open .pp-nav__menu-icon svg {
+  transform: rotate(45deg);
+}
 
 /* ── Reduced motion: no rise/scale, just an instant show/hide ─────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -251,6 +272,11 @@ html.js .pp-nav.is-menu-open .pp-nav__logo {
     transition: none !important;
     transition-delay: 0s !important;
     transform: none !important;
+  }
+  /* The grip still squares up — just instantly (don't force transform: none, or
+     it wouldn't rotate at all). */
+  .pp-nav__menu-icon svg {
+    transition: none !important;
   }
 }
 
