@@ -28,6 +28,7 @@
 .trust {
   position: relative;
   width: 100%;
+  margin-top: 1rem;
   min-height: min(34.5899vw, 523px); /* 523px — reserves the full band height */
   display: flex;
   align-items: center; /* keeps the panel centred as it grows on both axes */
