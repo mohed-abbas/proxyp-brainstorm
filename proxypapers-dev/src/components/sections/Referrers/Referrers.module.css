@@ -147,9 +147,11 @@
   color: rgba(247, 244, 240, 0.7);
 }
 .cta {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   padding: min(0.6614vw, 10px) min(1.3228vw, 20px);
   border-radius: min(2.9762vw, 45px);
   background: var(--pp-blue);
@@ -159,12 +161,51 @@
   text-decoration: none;
   white-space: nowrap;
   transition:
-    transform 0.4s var(--pp-ease-out),
-    filter 0.4s var(--pp-ease-out);
+    background-color 0.4s var(--pp-ease-out),
+    transform 0.4s var(--pp-ease-out);
 }
-.cta:hover {
+.cta:hover,
+.cta:focus-visible {
+  background-color: var(--pp-bone);
   transform: translateY(max(-2px, -0.1323vw));
-  filter: brightness(1.07);
+}
+
+/* Inverted hover roll — pill fills bone, label rolls up to a Proxy-Blue copy
+   (same mechanic as the shared .pp-btn; kept local since this CTA is full-bleed). */
+.ctaRoll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  margin-block: -0.12em;
+}
+.ctaMain,
+.ctaClone {
+  display: block;
+  padding: 0.12em 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ctaMain {
+  color: var(--pp-bone);
+}
+.ctaClone {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  color: var(--pp-blue);
+}
+.cta:hover .ctaMain,
+.cta:hover .ctaClone,
+.cta:focus-visible .ctaMain,
+.cta:focus-visible .ctaClone {
+  transform: translateY(-100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta,
+  .ctaMain,
+  .ctaClone {
+    transition: none;
+  }
 }
 
 /* Per-word reveal mask padding (house style). */

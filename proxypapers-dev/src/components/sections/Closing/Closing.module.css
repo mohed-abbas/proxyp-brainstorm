@@ -64,6 +64,54 @@
 .link:hover svg {
   transform: translateX(min(0.2646vw, 4px));
 }
+
+/* Hover roll — label rests ink and rolls up to a Proxy-Blue copy (same mechanic as
+   the Trust certs / menu links). The blue underline + arrow stay (the link keeps
+   color:var(--pp-blue); only the label resets to ink). */
+.linkRoll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  margin-block: -0.12em;
+}
+.linkMain,
+.linkClone {
+  display: block;
+  padding: 0.12em 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.linkMain {
+  color: var(--pp-ink);
+}
+.linkClone {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  color: var(--pp-blue);
+}
+.link:hover .linkMain,
+.link:hover .linkClone,
+.link:focus-visible .linkMain,
+.link:focus-visible .linkClone {
+  transform: translateY(-100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .linkMain,
+  .linkClone {
+    transition: none;
+  }
+  .link:hover .linkMain,
+  .link:hover .linkClone,
+  .link:focus-visible .linkMain,
+  .link:focus-visible .linkClone {
+    transform: none;
+  }
+  .link:hover .linkMain,
+  .link:focus-visible .linkMain {
+    color: var(--pp-blue);
+  }
+}
 .body {
   width: 100%;
   font-weight: 400;

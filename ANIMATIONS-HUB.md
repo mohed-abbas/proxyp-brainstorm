@@ -379,6 +379,38 @@ on scroll).
   reduce)` disables the transition and the hover transform (no roll). Works on every
   marquee clone; marquee keeps scrolling during hover (matches the reference).
 
+### CTA / link hover roll (site-wide, two variants)
+- **Where:** the page's CTAs and links — filled pills (Hero `Request a discovery
+  meeting`, Profiles `Explore the services`, Referrers `Enter the referrers area`) and
+  text links (Hero `Are you a referring advisor?`, Closing `Request a discovery
+  meeting` + arrow). Extends the cert/nav roll language to every call-to-action.
+- **User-facing description:**
+  - Pills: "hover a button and it fills white while the label rolls up and turns blue."
+  - Text links: "hover a link and the word rolls up and swaps to a blue copy."
+- **Trigger:** hover / focus-visible (CSS).
+- **Mechanics:** the shared masked roll — two stacked copies (`__main` + `__clone`,
+  each `padding:0.12em 0`) in an `overflow:hidden` mask with `margin-block:-0.12em`;
+  on hover both `translateY(-100%)`, `0.5s cubic-bezier(0.16,1,0.3,1)`; clone is
+  `--pp-blue`.
+  - **Filled pills (inverted roll):** the pill also transitions `background-color`
+    `--pp-blue → --pp-bone` (`0.4s`); main copy is bone, clone blue → ends bone pill +
+    blue label. Keeps the subtle `translateY(-1px)` lift; the brightness filter is gone.
+  - **Text links (roll to blue):** no background; Hero secondary main = faded bone,
+    its `::after` underline goes blue on hover; Closing main = `--pp-ink` (the link
+    keeps `color:--pp-blue` so its underline + arrow stay blue), arrow keeps its nudge.
+- **Source ref:** same mechanic as the Trust certs / menu links (adapted from
+  apechain.com); not in design-final.
+- **Implementation note:** pills go through a shared `PpButton`
+  (`components/shared/PpButton`) that renders the masked label; the invert + roll live
+  on global `.pp-btn` / `.pp-btn__*` in `globals.css`. Profiles wraps `PpButton` in its
+  positioning `div.cta` so the pill's hover `translateY` doesn't clobber the wrapper's
+  centering `translateX(-50%)`. Referrers keeps a local copy (`.cta` / `.ctaRoll/
+  .ctaMain/.ctaClone`) since that CTA is deliberately not `.pp-btn` (full-bleed). Text
+  links use module-scoped `.linkRoll/.linkMain/.linkClone`.
+- **Feasibility / constraints:** reduced motion → pills invert/roll instantly
+  (`transition:none`, valid end state); text links disable the roll and fall back to a
+  plain colour swap to blue. Descender headroom via the same padding/negative-margin.
+
 ## Referrers
 
 ### Referrers reveal (title → radar assembles → avatars stagger → body/CTA)

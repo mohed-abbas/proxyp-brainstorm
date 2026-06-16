@@ -25,7 +25,12 @@ export function Closing() {
         />
         <div className={s.action}>
           <a className={s.link} href={closing.link.href}>
-            {closing.link.label}
+            <span className={s.linkRoll}>
+              <span className={s.linkMain}>{closing.link.label}</span>
+              <span className={s.linkClone} aria-hidden="true">
+                {closing.link.label}
+              </span>
+            </span>
             <svg
               viewBox="0 0 24 24"
               fill="none"

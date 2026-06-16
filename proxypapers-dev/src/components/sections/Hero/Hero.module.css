@@ -371,11 +371,54 @@
   background: rgba(247, 244, 240, 0.5);
   transition: background 0.3s var(--pp-ease-out);
 }
-.link:hover {
-  color: rgba(247, 244, 240, 0.8);
-}
 .link:hover::after {
-  background: rgba(247, 244, 240, 0.8);
+  background: var(--pp-blue);
+}
+
+/* Hover roll-to-blue — same mechanic as the Trust certs / menu links. */
+.linkRoll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  margin-block: -0.12em;
+}
+.linkMain,
+.linkClone {
+  display: block;
+  padding: 0.12em 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.linkMain {
+  color: rgba(247, 244, 240, 0.5);
+}
+.linkClone {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  color: var(--pp-blue);
+}
+.link:hover .linkMain,
+.link:hover .linkClone,
+.link:focus-visible .linkMain,
+.link:focus-visible .linkClone {
+  transform: translateY(-100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .linkMain,
+  .linkClone {
+    transition: none;
+  }
+  .link:hover .linkMain,
+  .link:hover .linkClone,
+  .link:focus-visible .linkMain,
+  .link:focus-visible .linkClone {
+    transform: none;
+  }
+  .link:hover .linkMain,
+  .link:focus-visible .linkMain {
+    color: var(--pp-blue);
+  }
 }
 
 /* ── Positioning statement (below the lens) ──────────────────────────────────── */

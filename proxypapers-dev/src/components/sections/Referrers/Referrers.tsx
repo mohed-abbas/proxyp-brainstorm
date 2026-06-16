@@ -72,7 +72,12 @@ export function Referrers() {
             words={referrers.body.split(" ")}
           />
           <a className={s.cta} href={referrers.cta.href}>
-            {referrers.cta.label}
+            <span className={s.ctaRoll}>
+              <span className={s.ctaMain}>{referrers.cta.label}</span>
+              <span className={s.ctaClone} aria-hidden="true">
+                {referrers.cta.label}
+              </span>
+            </span>
           </a>
         </div>
       </div>

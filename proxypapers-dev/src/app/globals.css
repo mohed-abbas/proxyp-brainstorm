@@ -123,11 +123,15 @@ html.lenis body {
   will-change: transform;
 }
 
-/* Shared pill button (hero CTA, profiles CTA, …) — one definition, blue ground. */
+/* Shared pill button (hero CTA, profiles CTA, …) — one definition, blue ground.
+   On hover the pill fills bone and the label rolls up, swapping to a Proxy-Blue copy
+   (the inverted form of the Trust/menu roll-to-blue). overflow:hidden masks the roll. */
 .pp-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   padding: min(0.661cqw, 10px) min(1.323cqw, 20px);
   border-radius: min(2.976cqw, 45px);
   background: var(--pp-blue);
@@ -137,12 +141,48 @@ html.lenis body {
   text-decoration: none;
   white-space: nowrap;
   transition:
-    transform 0.3s var(--pp-ease-out),
-    filter 0.3s var(--pp-ease-out);
+    background-color 0.4s var(--pp-ease-out),
+    transform 0.3s var(--pp-ease-out);
 }
-.pp-btn:hover {
+.pp-btn:hover,
+.pp-btn:focus-visible {
+  background-color: var(--pp-bone);
   transform: translateY(-1px);
-  filter: brightness(1.08);
+}
+.pp-btn__roll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  margin-block: -0.12em;
+}
+.pp-btn__main,
+.pp-btn__clone {
+  display: block;
+  padding: 0.12em 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pp-btn__main {
+  color: var(--pp-bone);
+}
+.pp-btn__clone {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  color: var(--pp-blue);
+}
+.pp-btn:hover .pp-btn__main,
+.pp-btn:hover .pp-btn__clone,
+.pp-btn:focus-visible .pp-btn__main,
+.pp-btn:focus-visible .pp-btn__clone {
+  transform: translateY(-100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pp-btn,
+  .pp-btn__main,
+  .pp-btn__clone {
+    transition: none;
+  }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════

@@ -429,3 +429,31 @@ One short entry per decision, newest at the bottom.
   (390): the overlay scales as drawn. Nav-handoff window re-confirmed post-Step-10
   (deferred watch item): nav opacity 1 → 0.53 → 0 across scrollY 7745 → 8000 → 8285,
   i.e. at the footer, not early.
+
+## Post-port — site-wide CTA / link hover roll
+
+- **One hover language across all CTAs/links.** The masked roll-to-blue (shipped on
+  Trust certs + menu links) was extended to every call-to-action. Two variants share
+  the same mechanic (two padded copies in an `overflow:hidden` mask, clone at
+  `top:100%`, both `translateY(-100%)` on hover, `0.5s` expo-out):
+  - **Filled pills** (Hero / Profiles / Referrers) → **inverted roll**: the pill also
+    transitions `background-color` blue→bone while the label rolls bone→Proxy-Blue. The
+    bone label is invisible "to blue" on a blue ground, so per the user the pill fills
+    bone and the label reveals blue — a real reveal, not a no-op. Dropped the old
+    `brightness()` filter; kept the `translateY(-1px)` lift.
+  - **Text links** → roll to blue: Hero secondary (faded-bone → blue, underline goes
+    blue); Closing (defaulted main to `--pp-ink` so it rolls ink→blue — the link keeps
+    `color:--pp-blue` so its underline + arrow stay blue; arrow keeps its nudge).
+- **Shared `PpButton`.** Pills now render via `components/shared/PpButton`, which wraps
+  the label in the `.pp-btn__main/__clone` structure; the invert + roll live on global
+  `.pp-btn`/`.pp-btn__*` in `globals.css`. Hero and Profiles use it. **Referrers keeps a
+  local copy** (`.cta` + `.ctaRoll/.ctaMain/.ctaClone`) because that CTA is deliberately
+  not `.pp-btn` (full-bleed vw-based — see ISSUES.md Step 7).
+- **Profiles centering vs the lift.** Profiles' `.cta` centers with
+  `transform: translateX(-50%)`, which `.pp-btn:hover`'s `translateY(-1px)` would
+  clobber (a horizontal jump). Fixed by wrapping `PpButton` in the positioning
+  `div.cta` so the two transforms live on different elements. Verified: CTA centre x is
+  stable on hover (726 → 726).
+- **Verified (Playwright 1512×900).** All five: pill backgrounds compute to
+  `rgb(247,244,240)` on hover, labels roll `translateY(-100%)`, clones `rgb(90,144,244)`;
+  Closing rests ink with blue underline+arrow and rolls to blue. Build + lint clean.
