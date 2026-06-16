@@ -972,7 +972,10 @@
       { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 },
       0.6,
     );
-    // Axis line draws, brand card pops, conveyor fades up.
+    // Axis line draws + conveyor fades up. The brand CARD is NOT popped here — the
+    // onboarding mark settles INTO it (see runCurtain), so the card reveals itself at
+    // the landing. (Revealing .hero-axis shows the line; the card stays armed-hidden
+    // via html.js .hero-axis__card { opacity:0 } until the landing fades it in.)
     tl.fromTo(
       ".hero-axis__line",
       { scaleY: 0, transformOrigin: "50% 50%" },
@@ -980,12 +983,6 @@
       0.7,
     )
       .set(".hero-axis", { opacity: 1 }, 0.7)
-      .fromTo(
-        ".hero-axis__card",
-        { opacity: 0, scale: 0.6 },
-        { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.7)" },
-        1.0,
-      )
       .to(".hero-conveyor", { opacity: 1, duration: 0.9 }, 0.9);
     // Statement settles in last.
     tl.fromTo(
@@ -1020,16 +1017,14 @@
   // ── The curtain handoff (welcome → hero), auto-played ───────────────────────
   // Once the welcome resolves it plays itself — no scroll. Beat 1: the loader fades
   // away. Beat 2: a curtain rises from the bottom, revealing the dark hero — the blue
-  // overlay is clip-wiped away from the bottom up, so its rising top edge is the
-  // curtain. The curtain rises in ONE fluent, uninterrupted motion — it never pauses. The
-  // P-mark reacts to the APPROACHING edge: it rests until the edge climbs to within 2rem of
-  // its base, then eases up and into the navbar over the rest of the rise (riding a
-  // smootherstep, so it lifts off from rest with no jump and softens into the dock, all
-  // while the curtain keeps moving past it at full speed), shrinking to navbar size, its
-  // blade flipping bone→blue as it crosses onto the dark. The wordmark fades + lifts over
-  // the curtain's climb, gone by the time the mark lifts off. When the mark docks the real
-  // navbar logo swaps in for the clone (coincident, unseen), the hero assembles, and only
-  // then is the scroll lock released.
+  // overlay is clip-wiped away from the bottom up, so its rising top edge is the curtain.
+  // It rises in ONE fluent, uninterrupted motion. The P-mark does NOT fly to the navbar;
+  // it STAYS centred (held in place) through the wipe. Beat 3: once the hero ground is
+  // revealed, the held mark eases DOWN a little and shrinks into the hero's lens-centre
+  // card (.hero-axis__card) — its blade flipping bone→blue and stem bone→ink — while the
+  // hero assembles around it; the real carded mark fades in and the clone dissolves into
+  // it (coincident, unseen). The navbar's own logo appears as the edge clears the top.
+  // The scroll lock releases once it all settles.
   const runCurtain = (gsap, ob, hero, lenis) => {
     const obStage = document.querySelector(".ob-stage");
     const navLogo = document.querySelector(".pp-nav__logo");
@@ -1042,10 +1037,12 @@
       if (window.ScrollTrigger) window.ScrollTrigger.refresh();
     };
 
-    // No overlay / mark to fly → just reveal the hero and release.
+    // No overlay / mark to fly → just reveal the hero and release. The lens card is
+    // armed-hidden (its self-pop was removed), so reveal it here too.
     if (!ob || !obStage || !navLogo) {
       if (obStage) gsap.set(obStage, { autoAlpha: 0, pointerEvents: "none" });
       if (navLogo) navLogo.classList.add("is-landed");
+      gsap.set(".hero-axis__card", { opacity: 1 });
       hero.tl.play();
       hero.idle();
       release();
@@ -1054,6 +1051,7 @@
 
     const BONE = "#f7f4f0";
     const BLUE = "#5a90f4";
+    const INK = "#161718"; // lockup ink — the settled stem colour (pp-mark.svg)
 
     // The flying mark — a standalone svg holding clones of just the stem + blade,
     // lifted ABOVE the overlay (z 250) so the rising curtain never clips it: it rides
@@ -1076,11 +1074,6 @@
     // starts coincident with the lockup's mark and the lockup's own mark is hidden,
     // so the clone is the only mark on screen.
     const restMark = ob.mark.getBoundingClientRect();
-    // Land on the MARK glyph inside the logo card, not the card box — the card is
-    // ~50px tall but the mark inside it is ~32px, so scaling to the card would
-    // over-size the flying mark. (Figma "Closed" navbar: logo sits in a bone card.)
-    const navMark = navLogo.querySelector("svg") || navLogo;
-    const restNav = navMark.getBoundingClientRect();
     gsap.set(fly, {
       left: restMark.left,
       top: restMark.top,
@@ -1094,93 +1087,59 @@
     gsap.set([flyStem, flyBlade], { fill: BONE }); // welcome look — all bone on blue
     gsap.set(ob.mark, { opacity: 0 }); // the clone stands in for it
 
-    // Geometry for the ride. The curtain edge's screen-Y as a function of coverage
-    // e∈[0,1] (0 = at the bottom, 1 = at the top) is vh·(1−e). The mark latches when
-    // that edge reaches its centre (eLatch) and is fully in the navbar when the edge
-    // reaches the navbar centre (eNav); between, its centre IS the edge.
-    const vh = window.innerHeight;
+    // The landing target — the brand mark INSIDE the hero's lens-centre card
+    // (.hero-axis__card img holds pp-mark.svg). It's armed-hidden but laid out, so its
+    // rect is exact. The mark no longer flies to the navbar; it holds its x-centre and
+    // eases DOWN into this card, shrinking to its size — "stays in place, settles in".
+    const lensMark =
+      document.querySelector(".hero-axis__card img") ||
+      document.querySelector(".hero-axis__card");
+    const restLens = lensMark.getBoundingClientRect();
     const markCX = restMark.left + restMark.width / 2;
     const markCY = restMark.top + restMark.height / 2;
-    const navCX = restNav.left + restNav.width / 2;
-    const navCY = restNav.top + restNav.height / 2;
-    const navScale = restNav.height / restMark.height;
-    // The mark reacts to the APPROACHING curtain rather than waiting for exact contact: it
-    // begins easing up once the edge is GAP_TRIG below its base, and a hard floor (BASE_GAP)
-    // guarantees the rising edge never comes closer than that to the mark's base — if the
-    // curtain climbs too near, it pushes the mark ahead, so they never touch. eLatch = where
-    // the easing begins; eNav = edge at the navbar centre.
-    const rem = parseFloat(getComputedStyle(root).fontSize || "16");
-    const GAP_TRIG = 5 * rem; // the mark begins easing up once the edge is this far below its base
-    // (early enough that it's already moving near edge-speed before the curtain closes in,
-    // so the cushion below holds without the mark ever snapping into motion)
-    const BASE_GAP = 3 * rem; // hard floor — the edge is NEVER allowed within this of the mark's base
-    const restH = restMark.height;
-    const navH = restNav.height;
-    const markBottom = markCY + restH / 2;
-    const eLatch = gsap.utils.clamp(0, 1, 1 - (markBottom + GAP_TRIG) / vh);
-    const eNav = gsap.utils.clamp(0, 1, 1 - navCY / vh);
-    // Smootherstep — zero slope at BOTH ends. The mark's travel rides this, so it eases off
-    // its rest and softens into the dock WITHOUT the curtain ever having to slow down: the
-    // curtain stays one fluent motion; only the mark's own progress is eased.
-    const sstep = (x) => x * x * x * (x * (x * 6 - 15) + 10);
+    const lensCX = restLens.left + restLens.width / 2;
+    const lensCY = restLens.top + restLens.height / 2;
+    const settleX = lensCX - markCX; // ≈ 0 — stays horizontally centred
+    const settleY = lensCY - markCY; // ≈ +116 — a small downward settle
+    const settleScale = restLens.height / restMark.height; // shrink to the card mark
 
-    // The wordmark fades + lifts as the curtain climbs toward the mark, gone by the time
-    // the mark lifts off — a smooth dissolve in step with the rise, never a hard clip.
-    const wordGroups = ob.lockup.querySelectorAll("[data-word]");
-    const lockRect = ob.lockup.getBoundingClientRect();
-    const toUnits = 783 / (lockRect.width || 351); // screen px → lockup user units
-    const TEXT_LIFT = 44; // px the wordmark rises as it dissolves (it moves along too)
+    // Recolor the clone across the settle so it MATCHES pp-mark.svg (ink stem, blue
+    // blade) the instant it's swapped for the real carded mark — bone→ink/blue, no pop.
+    const recolor = (p) => {
+      gsap.set(flyBlade, { fill: gsap.utils.interpolate(BONE, BLUE, p) });
+      gsap.set(flyStem, { fill: gsap.utils.interpolate(BONE, INK, p) });
+    };
 
-    let landed = false;
-    const applyCurtain = (e) => {
-      // The curtain — wipe the blue overlay away from the bottom up. Its rising top edge:
-      const edgeY = vh * (1 - e);
+    // The curtain wipe (blue overlay clipped away bottom→top) + the navbar logo reveal
+    // as the rising edge clears the top strip. The mark is HELD here (clone untouched),
+    // but the corner CLOUDS drift up-and-outward at DIFFERENT rates as the curtain lifts
+    // (parallax → depth) with a faint push-in, so the world reads as receding/parting
+    // rather than sitting frozen while the blue is pulled away. Restrained on purpose.
+    const cloudL = document.querySelector(".ob-cloud--left"); // background — slower
+    const cloudTR = document.querySelector(".ob-cloud--top-right"); // foreground — faster
+    let navShown = false;
+    const onCurtain = (e) => {
       gsap.set(obStage, { clipPath: `inset(0px 0px ${(e * 100).toFixed(3)}% 0px)` });
-
-      // The mark eases up along a smootherstep (smooth lift-off from rest — no jump — even
-      // as the curtain sweeps past at full speed). BUT it is ALSO never allowed within
-      // BASE_GAP of the rising edge: if the curtain climbs close, it pushes the mark ahead
-      // so a constant cushion stays between the edge and the mark's base — the curtain never
-      // touches the mark. The position is whichever sits higher (smaller Y).
-      const f = gsap.utils.clamp(0, 1, (e - eLatch) / (eNav - eLatch));
-      const mEase = sstep(f);
-      const cyEase = markCY + (navCY - markCY) * mEase; // the mark's own eased schedule
-      const hEase = restH + (navH - restH) * mEase; // its height at this progress
-      const cyGap = edgeY - BASE_GAP - hEase / 2; // highest its centre may sit and keep the cushion
-      const cy = gsap.utils.clamp(navCY, markCY, Math.min(cyEase, cyGap));
-      // Scale + horizontal drift follow the ACTUAL vertical progress, so they stay in step.
-      const p = gsap.utils.clamp(0, 1, (markCY - cy) / (markCY - navCY));
-      gsap.set(fly, {
-        x: (navCX - markCX) * p,
-        y: cy - markCY,
-        scale: 1 + (navScale - 1) * p,
-      });
-
-      // The wordmark fades + lifts over the curtain's CLIMB to the mark, fully gone by
-      // the time the mark lifts off (eLatch), so the mark leaves a clean ground.
-      const tg = gsap.utils.clamp(0, 1, e / eLatch);
-      gsap.set(wordGroups, { autoAlpha: 1 - tg, y: -TEXT_LIFT * toUnits * tg });
-
-      // Blade flips bone→blue over the back half of the ride as the mark crosses onto the dark.
-      const bf = gsap.utils.clamp(0, 1, (p - 0.5) / 0.5);
-      gsap.set(flyBlade, { fill: gsap.utils.interpolate(BONE, BLUE, bf) });
-
-      // Once the rising edge has cleared the mark's docked spot, the navbar is revealed:
-      // swap the clone for the real logo (coincident, unseen) and assemble the hero.
-      if (!landed && edgeY <= navCY - navH / 2) {
-        landed = true;
-        // Swap clone → real carded logo. The bone card + ink stem fade in (CSS
-        // transition on .is-landed) while the clone (bone stem) fades out, so the
-        // card materialises and the stem recolors bone→ink without a hard pop.
-        navLogo.classList.add("is-landed");
-        gsap.to(fly, { autoAlpha: 0, duration: 0.3, ease: "power1.out" });
-        hero.tl.play();
-        hero.idle();
+      // e is already eased (the curtain tween), so the parallax inherits that easing.
+      if (cloudL)
+        gsap.set(cloudL, { yPercent: -4 * e, xPercent: -2.5 * e, scale: 1 + 0.04 * e });
+      if (cloudTR)
+        gsap.set(cloudTR, { yPercent: -7 * e, xPercent: 3.5 * e, scale: 1 + 0.07 * e });
+      if (!navShown && e >= 0.9) {
+        navShown = true;
+        navLogo.classList.add("is-landed"); // corner logo appears with the hero
       }
     };
 
     const proxy = { e: 0 };
     gsap.set(obStage, { clipPath: "inset(0px 0px 0px 0px)" });
+
+    const CURTAIN_AT = 0.55;
+    const CURTAIN_DUR = 2.0;
+    // Hold the mark through most of the wipe, then settle it as the hero ground is
+    // revealed (overlapping the curtain's tail so it reads as one fluent motion).
+    const SETTLE_AT = CURTAIN_AT + CURTAIN_DUR * 0.62;
+    const SETTLE_DUR = 1.1;
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -1191,13 +1150,39 @@
     // Beat 1 — the loader, its job done, fades away.
     tl.to(divider, { autoAlpha: 0, duration: 0.5, ease: "power1.out" }, 0);
     // Beat 2 — the curtain rises in ONE fluent, uninterrupted motion from the bottom to
-    // the top (it never slows or pauses mid-rise). The mark and wordmark respond to it via
-    // their own eased mappings in applyCurtain, so the curtain stays continuous throughout.
+    // the top, revealing the dark hero. The mark stays put (held at its centre).
     tl.to(
       proxy,
-      { e: 1, duration: 2.0, ease: "power1.inOut", onUpdate: () => applyCurtain(proxy.e) },
-      0.55,
+      { e: 1, duration: CURTAIN_DUR, ease: "power1.inOut", onUpdate: () => onCurtain(proxy.e) },
+      CURTAIN_AT,
     );
+    // Beat 3 — once the hero ground is revealed, assemble the hero AND ease the held
+    // mark down into the lens card, its blade flipping bone→blue and stem bone→ink as it
+    // shrinks. Started together so the descent rides the hero coming up around it.
+    tl.add(() => {
+      hero.tl.play();
+      hero.idle();
+    }, SETTLE_AT);
+    tl.to(
+      fly,
+      {
+        x: settleX,
+        y: settleY,
+        scale: settleScale,
+        duration: SETTLE_DUR,
+        ease: "power2.inOut",
+        onUpdate: function () {
+          recolor(this.progress());
+        },
+      },
+      SETTLE_AT,
+    );
+    // Land — fade the real carded mark in (bone card materialises) and dissolve the
+    // clone into it, coincident and recolored, so the swap is unseen.
+    tl.add(() => {
+      gsap.to(".hero-axis__card", { opacity: 1, duration: 0.3, ease: "power1.out" });
+      gsap.to(fly, { autoAlpha: 0, duration: 0.3, ease: "power1.out" });
+    }, SETTLE_AT + SETTLE_DUR - 0.05);
 
     window.__curtain = tl;
   };
