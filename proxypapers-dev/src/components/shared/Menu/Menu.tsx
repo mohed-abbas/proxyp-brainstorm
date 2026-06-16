@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, type RefObject } from "react";
+import { type RefObject } from "react";
 import s from "./Menu.module.css";
 import { PpMark } from "@/components/shared/PpMark";
 
@@ -9,24 +9,6 @@ type NavContent = {
   links: { label: string; href: string }[];
   social: { label: string; href: string; icon: string }[];
 };
-
-// Each character carries its index (--i) for the per-letter hover stagger
-// (the rise keyframe + delay live in Menu.module.css).
-function LinkChars({ text }: { text: string }) {
-  return (
-    <>
-      {[...text].map((ch, i) => (
-        <span
-          key={i}
-          className={s.linkChar}
-          style={{ "--i": i } as CSSProperties}
-        >
-          {ch === " " ? " " : ch}
-        </span>
-      ))}
-    </>
-  );
-}
 
 type MenuProps = {
   open: boolean;
@@ -67,7 +49,10 @@ export function Menu({ open, onClose, panelRef, content }: MenuProps) {
           {content.links.map((l) => (
             <a key={l.label} className={s.link} href={l.href} onClick={onClose}>
               <span className={s.linkText}>
-                <LinkChars text={l.label} />
+                <span className={s.linkMain}>{l.label}</span>
+                <span className={s.linkClone} aria-hidden="true">
+                  {l.label}
+                </span>
               </span>
             </a>
           ))}

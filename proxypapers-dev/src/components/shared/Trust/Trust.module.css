@@ -103,6 +103,38 @@
   border-radius: 50%;
   background: var(--pp-blue);
 }
+/* Hover roll-to-blue (adapted from apechain.com SectionDiscoverApps). The label is
+   a clipped window holding two stacked copies; on hover both slide up one line so
+   the ink word exits the top while a Proxy-Blue clone rises from below to replace
+   it. Driven by CSS so it applies to every marquee clone (cloneNode) for free.
+   The vertical padding (with matching negative margin) keeps descenders out of the
+   clip, like the house .r-word masks. */
+.certLabel {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  margin: -0.12em 0;
+}
+.certMain,
+.certClone {
+  display: block;
+  /* padding lives on the copies (not the mask) so each is one padded line tall:
+     clone parks exactly one copy-height below and the -100% roll lands it pixel-
+     aligned with where main sat, while the padding keeps descenders out of the clip */
+  padding: 0.12em 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.certClone {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  color: var(--pp-blue);
+}
+.cert:hover .certMain,
+.cert:hover .certClone {
+  transform: translateY(-100%);
+}
 @keyframes trust-marquee {
   from {
     transform: translateX(0);
@@ -114,6 +146,14 @@
 @media (prefers-reduced-motion: reduce) {
   .certsTrack {
     animation: none;
+  }
+  .certMain,
+  .certClone {
+    transition: none;
+  }
+  .cert:hover .certMain,
+  .cert:hover .certClone {
+    transform: none;
   }
 }
 

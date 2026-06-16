@@ -162,17 +162,25 @@ on scroll).
   toggled by React `open` state.
 - **Feasibility / constraints:** reduced motion → grip squares up instantly.
 
-### Menu link per-letter hover stagger
+### Menu link hover roll-to-blue (masked text swap)
 - **Where:** each menu nav link on hover/focus.
-- **User-facing description:** "hovering a link replays the rise letter-by-letter,
-  each character offset slightly, and it turns blue."
-- **Mechanics:** link text is split into `.linkChar` spans each carrying `--i`; on
-  hover the `linkRise` keyframe (`translateY(108%)→0`, 0.5s) plays with
-  `animation-delay: calc(var(--i) * 0.03s)`.
-- **Source ref:** `menu.css` (`pp-menu-link-rise`) + the char split in `setupMenu`.
-- **Implementation note:** `Menu.tsx` `LinkChars` renders the spans at SSR with
-  inline `--i`; the keyframe lives in `Menu.module.css`.
-- **Feasibility / constraints:** gated `@media (prefers-reduced-motion: no-preference)`.
+- **User-facing description:** "hovering a link rolls the word up and swaps it to a
+  blue copy of itself" — the ink word slides out the top while a Proxy-Blue duplicate
+  rises from below; reverses on leave. (Replaced the earlier per-letter rise so the
+  nav matches the Trust certs.)
+- **Trigger:** hover / focus-visible (CSS).
+- **Mechanics:** each link holds two stacked copies inside its `overflow:hidden`
+  mask — `.linkMain` (ink) + `.linkClone` (`absolute; top:100%`, `--pp-blue`); on
+  hover both `transform: translateY(-100%)`, `0.5s cubic-bezier(0.16,1,0.3,1)`. The
+  copies sit inside `.linkText` (the menu-open reveal layer), which is
+  `position:relative` so the clone stays parented through the open transform flip.
+- **Source ref:** shares the Trust cert mechanic (adapted from apechain.com
+  `SectionDiscoverApps`); not in design-final.
+- **Implementation note:** `Menu.tsx` renders `.linkMain` + `.linkClone`; CSS in
+  `Menu.module.css`. The menu-open block rise (`.linkText` `108%→0`) is unchanged and
+  independent of the hover roll (different elements, different axes of state).
+- **Feasibility / constraints:** reduced motion → roll disabled, falls back to a
+  plain colour swap to blue so hover still reads.
 
 ## Problem
 
@@ -345,6 +353,31 @@ on scroll).
 - **Feasibility / constraints:** reduced motion → not built (hook returns early) and
   CSS `@media (prefers-reduced-motion: reduce)` also stops the animation; the strip
   renders static. Seamless for any cert count / screen width.
+
+### Cert hover roll-to-blue (per-cert masked text swap)
+- **Where:** each cert label in the Trust marquee (both states; reads in the
+  expanded band).
+- **User-facing description:** "hover a certification and it rolls up and swaps to a
+  blue copy of itself" — the ink word slides out the top while a Proxy-Blue duplicate
+  rises from below to replace it; reverses on mouse-out.
+- **Trigger:** hover (CSS `:hover`).
+- **Mechanics:** each cert holds two stacked copies in a `position:relative;
+  overflow:hidden` mask (`.certLabel`): `.certMain` (ink, `--pp-ink`) and `.certClone`
+  (`absolute; top:100%`, `--pp-blue`). Both copies carry `padding:0.12em 0` so each is
+  one padded line tall — the clone parks exactly one copy-height below and a shared
+  `transform: translateY(-100%)` lands it pixel-aligned where main sat. Transition
+  `0.5s cubic-bezier(0.16,1,0.3,1)` (expo-out). The mask's `-0.12em` block margin
+  keeps the strip's vertical rhythm unchanged. The `.cert::after` blue dot is static.
+- **Source ref:** adapted from apechain.com `SectionDiscoverApps` category labels
+  (NOT in design-final — a new addition). Brand: blue used sparingly, as an accent on
+  interaction.
+- **Implementation note:** pure CSS in `Trust.module.css` + a two-copy structure in
+  `Trust.tsx`. CSS (not GSAP) on purpose: `useTrust`'s marquee `cloneNode(true)`
+  copies the markup but not JS listeners, so a class-based `:hover` is the only thing
+  that covers every cloned cert for free, with no rebinding on rebuild/resize.
+- **Feasibility / constraints:** reduced motion → `@media (prefers-reduced-motion:
+  reduce)` disables the transition and the hover transform (no roll). Works on every
+  marquee clone; marquee keeps scrolling during hover (matches the reference).
 
 ## Referrers
 

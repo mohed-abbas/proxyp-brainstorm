@@ -36,7 +36,12 @@ export function Trust({ content = trustContent }: { content?: TrustContent }) {
           <div className={s.certsTrack}>
             {content.certs.map((cert, i) => (
               <span key={i} className={s.cert}>
-                {cert}
+                <span className={s.certLabel}>
+                  <span className={s.certMain}>{cert}</span>
+                  <span className={s.certClone} aria-hidden="true">
+                    {cert}
+                  </span>
+                </span>
               </span>
             ))}
           </div>

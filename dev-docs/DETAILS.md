@@ -105,6 +105,22 @@ One short entry per decision, newest at the bottom.
   `PpMark` gained an optional `label`: omitted → `aria-hidden` (decorative, the
   wrapping `<a>` carries the name); provided → `role="img"` + `aria-label`.
 
+- **Nav link hover roll-to-blue (post-port change).** The original per-letter rise
+  hover (`.linkChar` split + `linkRise` keyframe staggered by `--i`) was replaced with
+  the same two-copy roll-to-blue used on the Trust certs, so both share one hover
+  language. Each link now renders `.linkMain` (ink) + `.linkClone` (blue, `top:100%`)
+  inside `.linkText`; on hover both `translateY(-100%)`. `.linkText` (the menu-open
+  block-rise layer) gained `position:relative` so the absolute clone stays parented to
+  it even when the open state sets `transform:none` (which would otherwise drop the
+  transform-created containing block). The menu-open reveal itself is unchanged. CSS,
+  not GSAP, for the same reason as the certs (no per-node listeners to lose) and for
+  parity with that effect. `LinkChars` and the `linkRise` keyframe were removed.
+  Descender headroom: the copies carry `padding:0.12em 0` and `.link` a matching
+  `margin-block:-0.12em`, so the roll travels one *padded* line (clearing the "p"
+  tails in "Approach" that a bare `-100%` left peeking at the mask top) while each
+  link's text position and the column rhythm stay pixel-identical to the source
+  (verified: text tops 123/196/269/342 in-panel).
+
 - **Parity check.** Playwright at 1512×900: navbar renders bone logo card + Menu
   pill over the dark hero; opening the menu unfolds the bone card at panel rect
   `889,55,554×554` — identical to the source — with FR|EN, the four links, P-mark +
@@ -263,6 +279,19 @@ One short entry per decision, newest at the bottom.
   band's vertical position + nav light-flip can't be exercised yet because Trust is
   currently the last section (no scroll runway past the pin); both will match the
   source once Referrers/Closing/Footer are composed below it (see ISSUES.md).
+
+- **Cert hover roll-to-blue (post-port addition).** Each cert is wrapped in a
+  masked two-copy element (`.certLabel > .certMain` ink + `.certClone` blue at
+  `top:100%`); on `:hover` both `translateY(-100%)` so the ink word rolls out the top
+  and a Proxy-Blue duplicate rolls up to replace it. Adapted from apechain.com's
+  `SectionDiscoverApps` (not in design-final). **Driven by CSS, not GSAP, on
+  purpose:** the marquee `cloneNode(true)`s cert nodes, which would drop per-node JS
+  listeners, so a class-based `:hover` is the only approach that covers every clone
+  for free (no rebinding on rebuild/resize). The descender buffer (`padding:0.12em 0`)
+  lives on the copies, not the mask, so each copy is one padded line tall and the
+  `-100%` roll lands the clone pixel-aligned with where main sat (verified:
+  copy-height 61, clone parked at +61, hover lands at mask-top offset 0). Reduced
+  motion disables the transition + hover transform.
 
 ## Step 7 — Referrers
 

@@ -102,6 +102,10 @@
 .link {
   display: block;
   overflow: hidden;
+  /* negative block margin offsets the copies' padding (below) so the mask gains
+     descender headroom — the roll fully clears the "p" tails — while each link's
+     text position and the column rhythm stay pixel-identical to the source */
+  margin-block: -0.12em;
   font-family: var(--pp-font);
   font-weight: 500;
   font-size: min(8.8448cqw, 49px);
@@ -109,15 +113,16 @@
   letter-spacing: -0.03em;
   color: var(--pp-ink);
   text-decoration: none;
-  transition: color 0.3s var(--pp-ease-out);
 }
-.link:hover,
 .link:focus-visible {
-  color: var(--pp-blue);
   outline: none;
 }
+/* The menu-open reveal layer (rises as a block when the panel unfolds). Made the
+   positioning context so the absolute clone stays parented here in both transform
+   states (open sets transform:none, which would otherwise drop the containing block). */
 .linkText {
   display: block;
+  position: relative;
   transform: translateY(108%);
   transition: transform 0.4s var(--pp-ease-out);
 }
@@ -126,24 +131,33 @@
   transition: transform 0.6s var(--pp-ease-out);
 }
 
-/* Hover replays the baseline rise, staggered per character (--i set in markup). */
-.linkChar {
-  display: inline-block;
+/* Hover roll-to-blue — same mechanic as the Trust certs: two stacked copies in the
+   masked link; on hover the ink word rolls out the top while a Proxy-Blue copy rolls
+   up from below to replace it. The clone parks one line down (top:100%) and both ride
+   the same -100% so the swap lands pixel-aligned. */
+.linkMain,
+.linkClone {
+  display: block;
+  /* padded so each copy is one line plus descender headroom; the clone parks one
+     padded-line down and both ride -100%, so the swap stays pixel-aligned */
+  padding: 0.12em 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-@keyframes linkRise {
-  from {
-    transform: translateY(108%);
-  }
-  to {
-    transform: translateY(0);
-  }
+.linkMain {
+  color: var(--pp-ink);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .link:hover .linkChar,
-  .link:focus-visible .linkChar {
-    animation: linkRise 0.5s var(--pp-ease-out) backwards;
-    animation-delay: calc(var(--i) * 0.03s);
-  }
+.linkClone {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  color: var(--pp-blue);
+}
+.link:hover .linkMain,
+.link:hover .linkClone,
+.link:focus-visible .linkMain,
+.link:focus-visible .linkClone {
+  transform: translateY(-100%);
 }
 
 /* Bottom row: P-mark (left) · socials (right). */
@@ -243,6 +257,21 @@
     transition: none !important;
     transition-delay: 0s !important;
     transform: none !important;
+  }
+  /* No roll — fall back to a plain colour swap so hover still reads. */
+  .linkMain,
+  .linkClone {
+    transition: none;
+  }
+  .link:hover .linkMain,
+  .link:hover .linkClone,
+  .link:focus-visible .linkMain,
+  .link:focus-visible .linkClone {
+    transform: none;
+  }
+  .link:hover .linkMain,
+  .link:focus-visible .linkMain {
+    color: var(--pp-blue);
   }
 }
 
