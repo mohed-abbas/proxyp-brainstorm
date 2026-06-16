@@ -1,0 +1,22 @@
+{
+  "title": {
+    "lead": ["Private", "management", "of", "your"],
+    "accent": "data."
+  },
+  "body": "A bespoke framework to structure, secure and maintain the documents that make up your personal estate. A dedicated advisor. Sovereign technology.",
+  "cta": {
+    "primary": { "label": "Request a discovery meeting", "href": "#" },
+    "secondary": { "label": "Are you a referring advisor?", "href": "#" }
+  },
+  "statement": "We are not your bank, your notary, or your advisor. We are the framework that connects them.",
+  "documents": [
+    { "cat": "Real Estate", "title": "Deed of sale", "sub": "Primary residence", "chips": [{ "t": "Up to date" }, { "t": "Shared" }] },
+    { "cat": "Tax", "title": "Property tax notice", "sub": "2026 assessment", "chips": [{ "t": "Due", "due": true }, { "t": "30 days", "due": true }] },
+    { "cat": "Real Estate", "title": "Rental lease", "sub": "Investment property", "chips": [{ "t": "Renews" }, { "t": "60 days" }] },
+    { "cat": "Legal", "title": "Shareholders' agreement", "sub": "Holding company", "chips": [{ "t": "Up to date" }, { "t": "Private" }] },
+    { "cat": "Estate", "title": "Will & testament", "sub": "Notarized", "chips": [{ "t": "Up to date" }, { "t": "Sealed" }] },
+    { "cat": "Insurance", "title": "Life insurance policy", "sub": "Beneficiary clause", "chips": [{ "t": "Renews" }, { "t": "Annual" }] },
+    { "cat": "Banking", "title": "Mandate of protection", "sub": "Future protection", "chips": [{ "t": "Up to date" }, { "t": "Shared" }] },
+    { "cat": "Tax", "title": "Wealth tax return", "sub": "IFI · 2025", "chips": [{ "t": "Filed" }, { "t": "Archived" }] }
+  ]
+}

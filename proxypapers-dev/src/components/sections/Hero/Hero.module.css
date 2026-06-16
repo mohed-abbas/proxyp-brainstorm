@@ -1,0 +1,414 @@
+/* Hero — Chinese-Black canvas split by a Proxy-Blue horizon lens. Ported from
+   design-final/styles/hero.css. Scale model: the composition lives in .frame,
+   a 1512x789 reference box capped at min(100vw, 1512px); children size in cqw so
+   they freeze above 1512px. Backdrop layers (lens, clouds, arcs, conveyor) break
+   out to full-bleed (100vw) while keeping the frozen cqw height. */
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  padding-top: min(8vw, 150px);
+  overflow: hidden;
+  background: var(--pp-ink);
+}
+
+.frame {
+  position: relative;
+  width: min(100vw, 1512px);
+  height: min(52.18vw, 789px);
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+/* ── Horizon lens ──────────────────────────────────────────────────────────── */
+.lens {
+  position: absolute;
+  left: 50%;
+  margin-left: -50vw;
+  top: 8.52cqw;
+  width: 100vw;
+  height: 39.38cqw;
+  z-index: 1;
+}
+.lensFill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.lensClouds {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: url("/images/hero-lens.webp");
+  mask-image: url("/images/hero-lens.webp");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.cloud {
+  position: absolute;
+  width: 108.6vw;
+  height: 108.6vw;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.cloudLeft {
+  left: -91.1vw;
+  top: -37.2vw;
+}
+.cloudRight {
+  left: 75.1vw;
+  top: -33.4vw;
+}
+
+.arc {
+  position: absolute;
+  left: 50%;
+  margin-left: -50vw;
+  width: 100vw;
+  height: 35.252cqw;
+  pointer-events: none;
+}
+.arcTop {
+  top: -23.797cqw;
+  transform: scaleY(-1);
+}
+.arcBottom {
+  top: 28.187cqw;
+}
+
+/* ── Document conveyor ───────────────────────────────────────────────────────── */
+.conveyor {
+  position: absolute;
+  left: 50%;
+  margin-left: -50vw;
+  top: 25.6cqw;
+  width: 100vw;
+  height: 4.48cqw;
+  z-index: 2;
+  overflow: hidden;
+}
+.layer {
+  position: absolute;
+  inset: 0;
+}
+.layerSkeleton {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 14%,
+    #000 49%,
+    transparent 51%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 14%,
+    #000 49%,
+    transparent 51%
+  );
+}
+.layerContent {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 49%,
+    #000 51%,
+    #000 86%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 49%,
+    #000 51%,
+    #000 86%,
+    transparent 100%
+  );
+}
+.track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.73cqw;
+  height: 100%;
+  will-change: transform;
+}
+
+/* One document row */
+.docRow {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6cqw;
+  width: 17.06cqw;
+  height: 4.46cqw;
+  padding: 0 0.6cqw;
+  border-radius: 0.71cqw;
+  background: rgba(255, 255, 255, 0.18);
+  border: 0.5px solid rgba(247, 244, 240, 0.3);
+  backdrop-filter: blur(2px);
+}
+.docRowIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3.15cqw;
+  height: 3.2cqw;
+  border-radius: 0.5cqw;
+  background: rgba(247, 244, 240, 0.1);
+  color: var(--pp-bone);
+}
+.docRowIcon svg {
+  width: 2.05cqw;
+  height: 2.05cqw;
+}
+.docRowMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.docRowTitle {
+  display: block;
+  font-weight: 500;
+  font-size: 0.93cqw;
+  line-height: 1.1;
+  color: var(--pp-bone);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.docRowSub {
+  display: block;
+  margin-top: 0.18cqw;
+  font-weight: 400;
+  font-size: 0.66cqw;
+  line-height: 1.1;
+  color: rgba(247, 244, 240, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.docRowChips {
+  display: flex;
+  gap: 0.6cqw;
+  margin-top: 0.34cqw;
+}
+.docRowChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.26cqw;
+  font-weight: 400;
+  font-size: 0.56cqw;
+  line-height: 1;
+  color: rgba(247, 244, 240, 0.75);
+  white-space: nowrap;
+}
+.docRowChip::before {
+  content: "";
+  width: 0.3cqw;
+  height: 0.3cqw;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.85;
+}
+.docRowChipDue {
+  color: #ffd27a;
+}
+.docRowCat {
+  flex: none;
+  align-self: flex-start;
+  font-weight: 400;
+  font-size: 0.62cqw;
+  line-height: 1.1;
+  color: rgba(247, 244, 240, 0.45);
+  white-space: nowrap;
+}
+
+/* Skeleton variant */
+.docRowSkeleton {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(247, 244, 240, 0.22);
+}
+.docRowSkeleton .docRowIcon {
+  color: rgba(247, 244, 240, 0.45);
+  background: rgba(247, 244, 240, 0.1);
+}
+.skBar {
+  display: block;
+  border-radius: 999px;
+  background: rgba(247, 244, 240, 0.32);
+}
+.skBarTitle {
+  width: 72%;
+  height: 0.62cqw;
+}
+.skBarSub {
+  width: 46%;
+  height: 0.46cqw;
+  margin-top: 0.36cqw;
+}
+.skBarChip {
+  width: 1.7cqw;
+  height: 0.42cqw;
+}
+.skBarCat {
+  flex: none;
+  align-self: flex-start;
+  width: 2.2cqw;
+  height: 0.42cqw;
+}
+
+/* ── Centre axis + brand card ────────────────────────────────────────────────── */
+.axis {
+  position: absolute;
+  left: 50%;
+  top: 17.26cqw;
+  transform: translateX(-50%);
+  width: 5.53cqw;
+  height: 21.69cqw;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+}
+.axisLine {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.9) 50%,
+    transparent
+  );
+}
+.axisCard {
+  position: absolute;
+  top: 7.8cqw;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 5.53cqw;
+  height: 5.62cqw;
+  border-radius: 0.62cqw;
+  background: var(--pp-bone);
+  border: 0.5px solid rgba(247, 244, 240, 0.3);
+  box-shadow: 0 1cqw 3cqw rgba(0, 0, 0, 0.35);
+}
+.axisCard img {
+  width: 2.41cqw;
+  height: auto;
+}
+
+/* ── Headline block (above the lens) ─────────────────────────────────────────── */
+.lead {
+  position: absolute;
+  left: 50%;
+  top: 2rem;
+  transform: translateX(-50%);
+  width: min(55.886cqw, 845px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: min(1.653cqw, 25px);
+  z-index: 4;
+  text-align: center;
+}
+.leadTitle {
+  font-weight: 500;
+  font-size: min(4.0344cqw, 61px);
+  line-height: 1.2;
+  letter-spacing: max(-1.22px, -0.0807cqw);
+  color: var(--pp-bone);
+}
+/* "data." — the only accent: a soft blue gradient on the turn word. */
+.grad {
+  background: linear-gradient(90deg, #e2ecff, var(--pp-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.leadBody {
+  width: min(39.02cqw, 590px);
+  font-weight: 400;
+  font-size: min(1.058cqw, 16px);
+  line-height: 1.4;
+  letter-spacing: min(0.0212cqw, 0.32px);
+  color: rgba(247, 244, 240, 0.7);
+}
+.leadCta {
+  display: flex;
+  align-items: center;
+  gap: min(2.645cqw, 40px);
+  margin-top: min(0.4cqw, 6px);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: min(0.661cqw, 10px) min(1.323cqw, 20px);
+  border-radius: min(2.976cqw, 45px);
+  background: var(--pp-blue);
+  color: var(--pp-bone);
+  font-weight: 500;
+  font-size: min(1.058cqw, 16px);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform 0.3s var(--pp-ease-out),
+    filter 0.3s var(--pp-ease-out);
+}
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+.link {
+  display: inline-flex;
+  flex-direction: column;
+  gap: min(0.4cqw, 6px);
+  font-weight: 500;
+  font-size: min(1.058cqw, 16px);
+  color: rgba(247, 244, 240, 0.5);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.link::after {
+  content: "";
+  width: min(11.77cqw, 178px);
+  height: 1px;
+  background: rgba(247, 244, 240, 0.5);
+  transition: background 0.3s var(--pp-ease-out);
+}
+.link:hover {
+  color: rgba(247, 244, 240, 0.8);
+}
+.link:hover::after {
+  background: rgba(247, 244, 240, 0.8);
+}
+
+/* ── Positioning statement (below the lens) ──────────────────────────────────── */
+.statement {
+  position: absolute;
+  left: 50%;
+  top: 40.06cqw;
+  transform: translateX(-50%);
+  width: min(37.5cqw, 567px);
+  font-weight: 500;
+  font-size: min(1.323cqw, 20px);
+  line-height: 1.35;
+  color: #fff;
+  text-align: center;
+  z-index: 4;
+}

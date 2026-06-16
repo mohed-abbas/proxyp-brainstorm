@@ -11,8 +11,18 @@ resolved. One short entry each, newest at the bottom.
 - _No issues._ Foundation builds and lints clean. Nothing from the source needed
   correcting yet.
 
+## Step 1 — Hero
+
+- _No source mismatches._ Geometry matches the source exactly (see DETAILS.md).
+
 ## Open / to watch
 
+- **Hero intro trigger + card reveal (Step 10 handoff).** The source's hero intro
+  is a paused timeline played by the onboarding curtain, and the brand card is
+  revealed as the onboarding mark settles into it. The port currently auto-plays
+  the intro on mount and reveals the card itself. When the onboarding/curtain is
+  ported, move the trigger to the curtain and drop the port-only card reveal in
+  `useHeroIntro`.
 - **Onboarding scroll-lock.** The source locks scroll (Lenis stopped) during the
   welcome→hero handoff and releases it on ready. `LenisProvider` currently runs
   Lenis unconditionally; scroll-lock control must be added when the onboarding

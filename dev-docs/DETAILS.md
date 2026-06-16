@@ -39,3 +39,39 @@ One short entry per decision, newest at the bottom.
 
 - **Content is English.** The current `design-final` copy is already English, so
   `src/data/en/*.json` maps directly from the source.
+
+## Step 1 — Hero
+
+- **CSS Modules use camelCase class names.** The source uses kebab BEM
+  (`.hero-lens`); the module renames them (`.lens`, `.docRow`, …) so JS can read
+  `styles.lens` cleanly and GSAP can target `gsap.utils.selector(scope)` + the
+  hashed module class. Styles are a faithful copy of `hero.css`; only the class
+  *names* changed. The shared reveal primitive (`.r-word` / `.r-word__in`) stays
+  global so timelines can select it across sections.
+
+- **Armed states moved from CSS to GSAP.** The source hides the lens / conveyor /
+  card / statement / words via `html.js .hero-* { opacity: 0 }`. The port renders
+  the *settled* state by default (correct for SSR / no-JS / reduced motion) and the
+  `useGSAP` hook arms the hidden state with `gsap.set` before playing. `useGSAP`
+  runs in a layout effect, so arming happens before paint — no flash.
+
+- **The brand-card mark stays an `<img>`, not the inline `PpMark`.** In the source
+  the card loads `pp-mark.svg` via `<img>`, which is isolated: the page's theme CSS
+  vars don't reach it, so its stem stays ink and blade stays blue even though the
+  page is in the dark theme (where `--pp-lockup-ink` is bone). Inlining the SVG
+  would inherit the dark theme and turn the stem bone (invisible on the bone card).
+  So the card uses `<img src="/icons/pp-mark.svg">`. `PpMark` (inline) is reserved
+  for the navbar / onboarding where the parts must be recolored/animated.
+
+- **Hero intro plays on mount (for now).** See ISSUES.md — the source triggers it
+  from the onboarding curtain. The port auto-plays and reveals the card itself
+  until Step 10 reclaims that.
+
+- **`<img>` lint rule disabled.** `@next/next/no-img-element` is off project-wide:
+  the lens / clouds / arcs are CSS-masked and vw/cqw-scaled, where `next/image`'s
+  wrapper + optimization interfere with the mask and object-fit scale model.
+
+- **Parity check.** Playwright geometry at 1512×900 matches the source exactly:
+  frame `0,121,1512,789`; lens `1512×595`; title 61px centered; brand card `84×85`
+  centered at `756,542` (bone bg); statement box matching. The navbar is absent by
+  design (Step 2).
