@@ -463,6 +463,11 @@ html.js .hero-conveyor,
 html.js .hero-axis {
   opacity: 0;
 }
+/* The brand card is revealed by the landing mark (runCurtain), not the hero intro —
+   keep it hidden independently so revealing .hero-axis (its line) doesn't show it. */
+html.js .hero-axis__card {
+  opacity: 0;
+}
 html.js .hero-statement {
   opacity: 0;
 }
