@@ -9,9 +9,9 @@ import { Referrers } from "@/components/sections/Referrers";
 import { Closing } from "@/components/sections/Closing";
 import { Footer } from "@/components/shared/Footer";
 
-// Landing page. Sections are composed here as they are ported. Profiles sits
-// OUTSIDE .page-frame (full-bleed dark ground); the frame re-opens for Method
-// (capped inside the 1512 column), matching the source.
+// Landing page. Sections are composed here as they are ported. Problem sits inside
+// .page-frame (capped 1512 column); Profiles and Method are full-bleed exceptions
+// (their bands fill the viewport while content stays capped at 1512 internally).
 export default function Home() {
   return (
     <>
@@ -22,9 +22,7 @@ export default function Home() {
         <Problem />
       </div>
       <Profiles />
-      <div className="page-frame">
-        <Method />
-      </div>
+      <Method />
       <Trust />
       <Referrers />
       <Closing />

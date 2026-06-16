@@ -457,3 +457,29 @@ One short entry per decision, newest at the bottom.
 - **Verified (Playwright 1512×900).** All five: pill backgrounds compute to
   `rgb(247,244,240)` on hover, labels roll `translateY(-100%)`, clones `rgb(90,144,244)`;
   Closing rests ink with blue underline+arrow and rolls to blue. Build + lint clean.
+
+- **Method link → motion-only roll.** The Method `See our full approach` link lives on
+  the full-presence Proxy-Blue panel with a bone label, so a roll "to blue" would be
+  blue-on-blue (invisible) and the panel can't invert like a contained pill. It gets the
+  same masked roll but bone→bone (the clone inherits the link's `--pp-bone`) — the
+  gesture stays consistent next to the arrow nudge, with no color change. Verified: both
+  copies `rgb(247,244,240)`, label rolls `-100%`, arrow nudges.
+
+- **Method band goes full-bleed above 1512px (content stays capped).** Method was
+  pulled out of its `.page-frame` wrapper (now composed directly, like Trust/Profiles).
+  The blue band (`.method`) is `width:100%` (fills the viewport) with `min(vw,px)` for
+  its own lengths (radius); an inner `.frame` (`max-width:1512px; container-type:
+  inline-size`) provides the `cqw` basis, and the panel's `min-height` + `padding-inline`
+  moved onto `.content` (a descendant of the container, so they resolve against the
+  ≤1512 frame). Result: past 1512px the band keeps widening while every `cqw`-driven
+  size/position freezes at the 1512 Figma basis; the content stays centered (the old
+  `.page-frame` centred the 1512 column too, so its position is unchanged). Below 1512
+  it's byte-identical to before (frame = viewport). Note the cqw-self-reference rule:
+  `container-type` lives on `.frame` but the cqw lengths it sizes (min-height, padding)
+  sit on `.content` — an element can't size itself in its own container units. Because
+  `min-height` moved onto `.content`, the old `.method { align-items:center }` no longer
+  centres it (the content now *is* the band height), so `.content` needs
+  `justify-content:center` to stay vertically centred — without it the block tops-out
+  with all the slack at the bottom (caught in review; spacing now 138px top / 138px
+  bottom). Verified: at 1920 band 1905px / frame 1512 / `stepName` 76px / radius 20px;
+  at 1280 band 1265 / `stepName` 63.6px (scales) / radius 16.9px.

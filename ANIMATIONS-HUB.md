@@ -383,7 +383,8 @@ on scroll).
 - **Where:** the page's CTAs and links — filled pills (Hero `Request a discovery
   meeting`, Profiles `Explore the services`, Referrers `Enter the referrers area`) and
   text links (Hero `Are you a referring advisor?`, Closing `Request a discovery
-  meeting` + arrow). Extends the cert/nav roll language to every call-to-action.
+  meeting` + arrow, Method `See our full approach` + arrow). Extends the cert/nav roll
+  language to every call-to-action.
 - **User-facing description:**
   - Pills: "hover a button and it fills white while the label rolls up and turns blue."
   - Text links: "hover a link and the word rolls up and swaps to a blue copy."
@@ -398,6 +399,9 @@ on scroll).
   - **Text links (roll to blue):** no background; Hero secondary main = faded bone,
     its `::after` underline goes blue on hover; Closing main = `--pp-ink` (the link
     keeps `color:--pp-blue` so its underline + arrow stay blue), arrow keeps its nudge.
+  - **Method link (motion-only roll):** the link sits on the full-presence blue panel
+    with a bone label, so there's no further accent to reveal — the roll is bone→bone
+    (clone inherits the link's bone), keeping the gesture + arrow nudge.
 - **Source ref:** same mechanic as the Trust certs / menu links (adapted from
   apechain.com); not in design-final.
 - **Implementation note:** pills go through a shared `PpButton`

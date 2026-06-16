@@ -4,23 +4,36 @@
    vertical flexbox flow (mirrors the Figma auto-layout); copy is Bone White at
    varied opacity on the blue ground. Lengths are fractions of the 1512px frame. */
 
+/* Full-bleed exception: above 1512px the blue band fills the viewport width while
+   the content stays capped at the 1512 frame (type + positioning freeze, true to
+   Figma). The inner .frame carries container-type (the cqw basis), capped at 1512px;
+   the .method band sits outside any container, so its own lengths use min(vw, px). */
 .method {
   position: relative;
   width: 100%;
-  min-height: 82.1429cqw;
+  display: flex;
+  justify-content: center;
+  background: var(--pp-blue);
+  border-radius: min(1.3228vw, 20px);
+  overflow: hidden;
+}
+
+.frame {
+  width: 100%;
+  max-width: 1512px;
+  container-type: inline-size;
   display: flex;
   align-items: center;
-  padding-inline: 5.0265cqw;
-  background: var(--pp-blue);
-  border-radius: 1.3228cqw;
-  overflow: hidden;
 }
 
 .content {
   position: relative;
   width: 100%;
+  min-height: 82.1429cqw;
+  padding-inline: 5.0265cqw;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-end;
   gap: 7.9365cqw;
 }
@@ -121,6 +134,47 @@
 }
 .link:hover svg {
   transform: translateX(0.2646cqw);
+}
+
+/* Hover roll — same masked mechanic as the other CTAs/links. On this full-presence
+   blue panel the label is already bone (Proxy Blue is the ground), so there's no
+   further accent to reveal: the roll is motion-only (bone → bone), keeping the gesture
+   consistent alongside the arrow nudge. */
+.linkRoll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  margin-block: -0.12em;
+}
+.linkMain,
+.linkClone {
+  display: block;
+  padding: 0.12em 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.linkClone {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+}
+.link:hover .linkMain,
+.link:hover .linkClone,
+.link:focus-visible .linkMain,
+.link:focus-visible .linkClone {
+  transform: translateY(-100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .linkMain,
+  .linkClone {
+    transition: none;
+  }
+  .link:hover .linkMain,
+  .link:hover .linkClone,
+  .link:focus-visible .linkMain,
+  .link:focus-visible .linkClone {
+    transform: none;
+  }
 }
 
 /* ── Reveal masks (per-word, house style) ──────────────────────────────────*/
