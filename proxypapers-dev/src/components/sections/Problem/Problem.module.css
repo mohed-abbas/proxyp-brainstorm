@@ -12,7 +12,7 @@
   min-height: min(100vh, 800px);
   display: flex;
   align-items: center;
-  padding-inline: 5.291cqw 5.0265cqw;
+  padding-inline: calc(80px * var(--pp-scale)) calc(76px * var(--pp-scale));
   background: var(--pp-ink);
   overflow: hidden;
 }
@@ -20,7 +20,7 @@
 .content {
   position: relative;
   width: 100%;
-  height: 32.937cqw;
+  height: calc(498.01px * var(--pp-scale));
 }
 
 /* ── Left editorial column ─────────────────────────────────────────────────*/
@@ -28,19 +28,19 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 44.048cqw;
+  width: calc(666.01px * var(--pp-scale));
   font-weight: 500;
-  font-size: 0.9259cqw;
+  font-size: calc(14px * var(--pp-scale));
   line-height: normal;
-  letter-spacing: 0.0926cqw;
+  letter-spacing: calc(1.4px * var(--pp-scale));
   color: #fff;
 }
 .eyebrowRule {
   position: absolute;
-  left: 0.0033cqw;
-  top: 1.1243cqw;
-  width: 4.9636cqw;
-  height: 0.6237cqw;
+  left: calc(0.05px * var(--pp-scale));
+  top: calc(17px * var(--pp-scale));
+  width: calc(75.05px * var(--pp-scale));
+  height: calc(9.43px * var(--pp-scale));
   transform: rotate(0.33deg);
 }
 .eyebrowRule img {
@@ -52,24 +52,24 @@
 .headline {
   position: absolute;
   left: 0;
-  top: 2.6455cqw;
-  width: 44.048cqw;
+  top: calc(40px * var(--pp-scale));
+  width: calc(666.01px * var(--pp-scale));
   font-weight: 500;
-  font-size: 2.5794cqw;
+  font-size: calc(39px * var(--pp-scale));
   line-height: normal;
-  letter-spacing: -0.0258cqw;
+  letter-spacing: calc(-0.39px * var(--pp-scale));
   color: var(--pp-bone);
 }
 
 .body {
   position: absolute;
   left: 0;
-  top: 10.384cqw;
-  width: 36.442cqw;
+  top: calc(157.01px * var(--pp-scale));
+  width: calc(551px * var(--pp-scale));
   font-weight: 400;
-  font-size: 1.0582cqw;
+  font-size: calc(16px * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: 0.0106cqw;
+  letter-spacing: calc(0.16px * var(--pp-scale));
   color: var(--pp-bone);
 }
 
@@ -81,44 +81,44 @@
 }
 .cardLabel {
   position: absolute;
-  top: 1.1574cqw;
+  top: calc(17.5px * var(--pp-scale));
   font-weight: 400;
-  font-size: 0.7937cqw;
+  font-size: calc(12px * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: 0.0794cqw;
+  letter-spacing: calc(1.2px * var(--pp-scale));
   color: #fff;
   white-space: nowrap;
   z-index: 1;
 }
 .cardCopy {
   position: absolute;
-  top: 3.5384cqw;
-  width: 15.873cqw;
+  top: calc(53.5px * var(--pp-scale));
+  width: calc(240px * var(--pp-scale));
   font-weight: 500;
-  font-size: 1.0582cqw;
+  font-size: calc(16px * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: 0.0106cqw;
+  letter-spacing: calc(0.16px * var(--pp-scale));
   color: #fff;
   z-index: 1;
 }
 
 /* VOLUME — tall left card carrying the blue zigzag graphic */
 .cardVolume {
-  left: 45.37cqw;
-  top: 0.0661cqw;
-  width: 21.495cqw;
-  height: 32.87cqw;
+  left: calc(685.99px * var(--pp-scale));
+  top: calc(1px * var(--pp-scale));
+  width: calc(325px * var(--pp-scale));
+  height: calc(496.99px * var(--pp-scale));
 }
 .cardVolume .cardLabel,
 .cardVolume .cardCopy {
-  left: 1.2235cqw;
+  left: calc(18.5px * var(--pp-scale));
 }
 .volumeGraphic {
   position: absolute;
-  left: -0.0331cqw;
-  top: 6.0516cqw;
-  width: 22.553cqw;
-  height: 22.553cqw;
+  left: calc(-0.5px * var(--pp-scale));
+  top: calc(91.5px * var(--pp-scale));
+  width: calc(341px * var(--pp-scale));
+  height: calc(341px * var(--pp-scale));
 }
 .graphicInner {
   position: absolute;
@@ -134,38 +134,38 @@
 /* The smaller zigzag echoed in FRICTION and RISK. */
 .cardGraphic {
   position: absolute;
-  top: 2.6455cqw;
-  right: -3.4392cqw;
-  width: 11.5079cqw;
-  height: 11.5079cqw;
+  top: calc(40px * var(--pp-scale));
+  right: calc(-52px * var(--pp-scale));
+  width: calc(174px * var(--pp-scale));
+  height: calc(174px * var(--pp-scale));
   z-index: 0;
 }
 
 /* FRICTION — top-right card */
 .cardFriction {
-  left: 68.196cqw;
-  top: 0.0661cqw;
-  width: 21.495cqw;
-  height: 16.005cqw;
+  left: calc(1031.12px * var(--pp-scale));
+  top: calc(1px * var(--pp-scale));
+  width: calc(325px * var(--pp-scale));
+  height: calc(242px * var(--pp-scale));
 }
 /* RISK — bottom-right card */
 .cardRisk {
-  left: 68.196cqw;
-  top: 17.791cqw;
-  width: 21.495cqw;
-  height: 15.146cqw;
+  left: calc(1031.12px * var(--pp-scale));
+  top: calc(269px * var(--pp-scale));
+  width: calc(325px * var(--pp-scale));
+  height: calc(229.01px * var(--pp-scale));
 }
 .cardFriction .cardLabel,
 .cardFriction .cardCopy,
 .cardRisk .cardLabel,
 .cardRisk .cardCopy {
-  left: 1.0251cqw;
+  left: calc(15.5px * var(--pp-scale));
 }
 .cardRisk .cardLabel {
-  top: 1.2897cqw;
+  top: calc(19.5px * var(--pp-scale));
 }
 .cardRisk .cardCopy {
-  top: 3.6707cqw;
+  top: calc(55.5px * var(--pp-scale));
 }
 
 /* ── Reveal masks ───────────────────────────────────────────────────────────

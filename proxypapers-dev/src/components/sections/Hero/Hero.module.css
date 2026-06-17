@@ -1,8 +1,8 @@
 /* Hero — Chinese-Black canvas split by a Proxy-Blue horizon lens. Ported from
    design-final/styles/hero.css. Scale model: the composition lives in .frame,
-   a 1512x789 reference box capped at min(100vw, 1512px); children size in cqw so
-   they freeze above 1512px. Backdrop layers (lens, clouds, arcs, conveyor) break
-   out to full-bleed (100vw) while keeping the frozen cqw height. */
+   a 1512x789 reference box capped at min(100vw, 1512px); children size in literal
+   px * var(--pp-scale) so they freeze above 1512px. Backdrop layers (lens, clouds,
+   arcs, conveyor) break out to full-bleed (100vw). */
 
 .hero {
   position: relative;
@@ -18,9 +18,8 @@
 .frame {
   position: relative;
   width: min(100vw, 1512px);
-  height: min(52.18vw, 789px);
+  height: calc(789px * var(--pp-scale));
   margin-inline: auto;
-  container-type: inline-size;
 }
 
 /* ── Horizon lens ──────────────────────────────────────────────────────────── */
@@ -28,9 +27,9 @@
   position: absolute;
   left: 50%;
   margin-left: -50vw;
-  top: 8.52cqw;
+  top: calc(128.82px * var(--pp-scale));
   width: 100vw;
-  height: 39.38cqw;
+  height: calc(595.43px * var(--pp-scale));
   z-index: 1;
 }
 .lensFill {
@@ -73,15 +72,15 @@
   left: 50%;
   margin-left: -50vw;
   width: 100vw;
-  height: 35.252cqw;
+  height: calc(533.01px * var(--pp-scale));
   pointer-events: none;
 }
 .arcTop {
-  top: -23.797cqw;
+  top: calc(-359.81px * var(--pp-scale));
   transform: scaleY(-1);
 }
 .arcBottom {
-  top: 28.187cqw;
+  top: calc(426.19px * var(--pp-scale));
 }
 
 /* ── Document conveyor ───────────────────────────────────────────────────────── */
@@ -89,9 +88,9 @@
   position: absolute;
   left: 50%;
   margin-left: -50vw;
-  top: 25.6cqw;
+  top: calc(387.07px * var(--pp-scale));
   width: 100vw;
-  height: 4.48cqw;
+  height: calc(67.74px * var(--pp-scale));
   z-index: 2;
   overflow: hidden;
 }
@@ -137,7 +136,7 @@
   top: 0;
   display: flex;
   align-items: center;
-  gap: 0.73cqw;
+  gap: calc(11.04px * var(--pp-scale));
   height: 100%;
   will-change: transform;
 }
@@ -147,11 +146,11 @@
   flex: none;
   display: flex;
   align-items: center;
-  gap: 0.6cqw;
-  width: 17.06cqw;
-  height: 4.46cqw;
-  padding: 0 0.6cqw;
-  border-radius: 0.71cqw;
+  gap: calc(9.07px * var(--pp-scale));
+  width: calc(257.95px * var(--pp-scale));
+  height: calc(67.44px * var(--pp-scale));
+  padding: 0 calc(9.07px * var(--pp-scale));
+  border-radius: calc(10.74px * var(--pp-scale));
   background: rgba(255, 255, 255, 0.18);
   border: 0.5px solid rgba(247, 244, 240, 0.3);
   backdrop-filter: blur(2px);
@@ -160,15 +159,15 @@
   flex: none;
   display: grid;
   place-items: center;
-  width: 3.15cqw;
-  height: 3.2cqw;
-  border-radius: 0.5cqw;
+  width: calc(47.63px * var(--pp-scale));
+  height: calc(48.38px * var(--pp-scale));
+  border-radius: calc(7.56px * var(--pp-scale));
   background: rgba(247, 244, 240, 0.1);
   color: var(--pp-bone);
 }
 .docRowIcon svg {
-  width: 2.05cqw;
-  height: 2.05cqw;
+  width: calc(31px * var(--pp-scale));
+  height: calc(31px * var(--pp-scale));
 }
 .docRowMain {
   flex: 1 1 auto;
@@ -180,14 +179,14 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.6cqw;
+  gap: calc(9.07px * var(--pp-scale));
 }
 .docRowTitle {
   flex: 1 1 auto;
   min-width: 0;
   display: block;
   font-weight: 500;
-  font-size: 0.93cqw;
+  font-size: calc(14.06px * var(--pp-scale));
   line-height: 1.1;
   color: var(--pp-bone);
   white-space: nowrap;
@@ -196,9 +195,9 @@
 }
 .docRowSub {
   display: block;
-  margin-top: 0.18cqw;
+  margin-top: calc(2.72px * var(--pp-scale));
   font-weight: 400;
-  font-size: 0.66cqw;
+  font-size: calc(9.98px * var(--pp-scale));
   line-height: 1.1;
   color: rgba(247, 244, 240, 0.6);
   white-space: nowrap;
@@ -207,23 +206,23 @@
 }
 .docRowChips {
   display: flex;
-  gap: 0.6cqw;
-  margin-top: 0.34cqw;
+  gap: calc(9.07px * var(--pp-scale));
+  margin-top: calc(5.14px * var(--pp-scale));
 }
 .docRowChip {
   display: inline-flex;
   align-items: center;
-  gap: 0.26cqw;
+  gap: calc(3.93px * var(--pp-scale));
   font-weight: 400;
-  font-size: 0.56cqw;
+  font-size: calc(8.47px * var(--pp-scale));
   line-height: 1;
   color: rgba(247, 244, 240, 0.75);
   white-space: nowrap;
 }
 .docRowChip::before {
   content: "";
-  width: 0.3cqw;
-  height: 0.3cqw;
+  width: calc(4.54px * var(--pp-scale));
+  height: calc(4.54px * var(--pp-scale));
   border-radius: 50%;
   background: currentColor;
   opacity: 0.85;
@@ -234,7 +233,7 @@
 .docRowCat {
   flex: none;
   font-weight: 400;
-  font-size: 0.62cqw;
+  font-size: calc(9.37px * var(--pp-scale));
   line-height: 1.1;
   color: rgba(247, 244, 240, 0.45);
   white-space: nowrap;
@@ -256,31 +255,31 @@
 }
 .skBarTitle {
   width: 72%;
-  height: 0.62cqw;
+  height: calc(9.37px * var(--pp-scale));
 }
 .skBarSub {
   width: 46%;
-  height: 0.46cqw;
-  margin-top: 0.36cqw;
+  height: calc(6.96px * var(--pp-scale));
+  margin-top: calc(5.44px * var(--pp-scale));
 }
 .skBarChip {
-  width: 1.7cqw;
-  height: 0.42cqw;
+  width: calc(25.7px * var(--pp-scale));
+  height: calc(6.35px * var(--pp-scale));
 }
 .skBarCat {
   flex: none;
-  width: 2.2cqw;
-  height: 0.42cqw;
+  width: calc(33.26px * var(--pp-scale));
+  height: calc(6.35px * var(--pp-scale));
 }
 
 /* ── Centre axis + brand card ────────────────────────────────────────────────── */
 .axis {
   position: absolute;
   left: 50%;
-  top: 17.26cqw;
+  top: calc(260.97px * var(--pp-scale));
   transform: translateX(-50%);
-  width: 5.53cqw;
-  height: 21.69cqw;
+  width: calc(83.61px * var(--pp-scale));
+  height: calc(327.95px * var(--pp-scale));
   z-index: 3;
   display: flex;
   justify-content: center;
@@ -302,20 +301,20 @@
 }
 .axisCard {
   position: absolute;
-  top: 7.8cqw;
+  top: calc(117.94px * var(--pp-scale));
   left: 50%;
   transform: translateX(-50%);
   display: grid;
   place-items: center;
-  width: 5.53cqw;
-  height: 5.62cqw;
-  border-radius: 0.62cqw;
+  width: calc(83.61px * var(--pp-scale));
+  height: calc(84.97px * var(--pp-scale));
+  border-radius: calc(9.37px * var(--pp-scale));
   background: var(--pp-bone);
   border: 0.5px solid rgba(247, 244, 240, 0.3);
-  box-shadow: 0 1cqw 3cqw rgba(0, 0, 0, 0.35);
+  box-shadow: 0 calc(15.12px * var(--pp-scale)) calc(45.36px * var(--pp-scale)) rgba(0, 0, 0, 0.35);
 }
 .axisCard img {
-  width: 2.41cqw;
+  width: calc(36.44px * var(--pp-scale));
   height: auto;
 }
 
@@ -325,19 +324,19 @@
   left: 50%;
   top: 2rem;
   transform: translateX(-50%);
-  width: min(55.886cqw, 845px);
+  width: calc(845px * var(--pp-scale));
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: min(1.653cqw, 25px);
+  gap: calc(25px * var(--pp-scale));
   z-index: 4;
   text-align: center;
 }
 .leadTitle {
   font-weight: 500;
-  font-size: min(4.0344cqw, 61px);
+  font-size: calc(61px * var(--pp-scale));
   line-height: 1.2;
-  letter-spacing: max(-1.22px, -0.0807cqw);
+  letter-spacing: calc(-1.22px * var(--pp-scale));
   color: var(--pp-bone);
 }
 /* "data." — the only accent: a soft blue gradient on the turn word. */
@@ -348,32 +347,32 @@
   color: transparent;
 }
 .leadBody {
-  width: min(39.02cqw, 590px);
+  width: calc(590px * var(--pp-scale));
   font-weight: 400;
-  font-size: min(1.058cqw, 16px);
+  font-size: calc(16px * var(--pp-scale));
   line-height: 1.4;
-  letter-spacing: min(0.0212cqw, 0.32px);
+  letter-spacing: calc(0.32px * var(--pp-scale));
   color: rgba(247, 244, 240, 0.7);
 }
 .leadCta {
   display: flex;
   align-items: center;
-  gap: min(2.645cqw, 40px);
-  margin-top: min(0.4cqw, 6px);
+  gap: calc(40px * var(--pp-scale));
+  margin-top: calc(6px * var(--pp-scale));
 }
 .link {
   display: inline-flex;
   flex-direction: column;
-  gap: min(0.4cqw, 6px);
+  gap: calc(6px * var(--pp-scale));
   font-weight: 500;
-  font-size: min(1.058cqw, 16px);
+  font-size: calc(16px * var(--pp-scale));
   color: rgba(247, 244, 240, 0.5);
   text-decoration: none;
   white-space: nowrap;
 }
 .link::after {
   content: "";
-  width: min(11.77cqw, 178px);
+  width: calc(178px * var(--pp-scale));
   height: 1px;
   background: rgba(247, 244, 240, 0.5);
   transition: background 0.3s var(--pp-ease-out);
@@ -432,11 +431,11 @@
 .statement {
   position: absolute;
   left: 50%;
-  top: 40.06cqw;
+  top: calc(605.71px * var(--pp-scale));
   transform: translateX(-50%);
-  width: min(37.5cqw, 567px);
+  width: calc(567px * var(--pp-scale));
   font-weight: 500;
-  font-size: min(1.323cqw, 20px);
+  font-size: calc(20px * var(--pp-scale));
   line-height: 1.35;
   color: #fff;
   text-align: center;
