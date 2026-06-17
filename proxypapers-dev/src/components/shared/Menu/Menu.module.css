@@ -38,14 +38,13 @@
 /* The card. */
 .panel {
   position: absolute;
-  width: min(36.6376vw, 554px);
-  height: min(36.6376vw, 554px);
-  top: calc(min(4.2328vw, 64px) - min(0.5833vw, 8.82px));
-  right: calc(max(5.1587vw, 15.441vw - 155.5px) - min(0.5952vw, 9px));
-  container-type: inline-size;
+  width: calc(554px * var(--pp-scale));
+  height: calc(554px * var(--pp-scale));
+  top: calc(55.18px * var(--pp-scale));
+  right: calc(var(--pp-nav-inset) - 9px * var(--pp-scale));
   background: var(--pp-bone);
   border: 0.5px solid rgba(22, 23, 24, 0.08);
-  border-radius: min(1.8051cqw, 10px);
+  border-radius: calc(10px * var(--pp-scale));
   overflow: hidden;
   filter: drop-shadow(0 20px 34px rgba(22, 23, 24, 0.32))
     drop-shadow(0 3px 8px rgba(22, 23, 24, 0.22));
@@ -66,12 +65,12 @@
 /* FR | EN */
 .lang {
   position: absolute;
-  left: min(7.9422cqw, 44px);
-  top: min(4.8736cqw, 27px);
+  left: calc(44px * var(--pp-scale));
+  top: calc(27px * var(--pp-scale));
   margin: 0;
   font-family: var(--pp-font);
   font-weight: 500;
-  font-size: min(3.6101cqw, 20px);
+  font-size: calc(20px * var(--pp-scale));
   line-height: 1;
   letter-spacing: -0.03em;
   white-space: nowrap;
@@ -92,12 +91,12 @@
 /* Nav links */
 .navLinks {
   position: absolute;
-  left: min(6.8592cqw, 38px);
-  top: min(22.2022cqw, 123px);
-  width: min(56.1372cqw, 311px);
+  left: calc(38px * var(--pp-scale));
+  top: calc(123px * var(--pp-scale));
+  width: calc(311px * var(--pp-scale));
   display: flex;
   flex-direction: column;
-  gap: min(3.9711cqw, 22px);
+  gap: calc(22px * var(--pp-scale));
 }
 .link {
   display: block;
@@ -108,7 +107,7 @@
   margin-block: -0.12em;
   font-family: var(--pp-font);
   font-weight: 500;
-  font-size: min(8.8448cqw, 49px);
+  font-size: calc(49px * var(--pp-scale));
   line-height: 1.04;
   letter-spacing: -0.03em;
   color: var(--pp-ink);
@@ -163,16 +162,16 @@
 /* Bottom row: P-mark (left) · socials (right). */
 .foot {
   position: absolute;
-  left: min(6.8592cqw, 38px);
-  right: min(8.6643cqw, 48px);
-  bottom: min(5.0009cqw, 27.7px);
+  left: calc(38px * var(--pp-scale));
+  right: calc(48px * var(--pp-scale));
+  bottom: calc(27.7px * var(--pp-scale));
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
 }
 .logo {
   display: block;
-  width: min(4.3321cqw, 24px);
+  width: calc(24px * var(--pp-scale));
   line-height: 0;
 }
 .logo svg {
@@ -189,13 +188,13 @@
 .social {
   display: flex;
   align-items: center;
-  gap: min(1.6245cqw, 9px);
+  gap: calc(9px * var(--pp-scale));
   color: var(--pp-ink);
 }
 .socialLink {
   display: inline-flex;
-  width: min(4.3321cqw, 24px);
-  height: min(4.3321cqw, 24px);
+  width: calc(24px * var(--pp-scale));
+  height: calc(24px * var(--pp-scale));
   color: inherit;
   transition:
     color 0.3s var(--pp-ease-out),

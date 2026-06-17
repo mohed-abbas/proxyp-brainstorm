@@ -1,14 +1,15 @@
 /* Navbar — shared, fixed, transparent bar carrying two bone surfaces: a logo
    card (left) and a Menu pill (right). Ported from design-final/styles/navbar.css
    plus the navbar-side rules of menu.css (the Menu->Close morph + is-menu-open
-   states). Capped at the 1512px design size via min(vw, px). */
+   states). Sized via literal Figma px * var(--pp-scale); the bespoke side inset
+   is hoisted to var(--pp-nav-inset) in globals.css. */
 
 .nav {
   position: fixed;
-  top: min(4.2328vw, 64px);
-  left: max(5.1587vw, 15.441vw - 155.5px);
-  right: max(5.1587vw, 15.441vw - 155.5px);
-  height: min(3.3069vw, 50px);
+  top: calc(64px * var(--pp-scale));
+  left: var(--pp-nav-inset);
+  right: var(--pp-nav-inset);
+  height: calc(50px * var(--pp-scale));
   z-index: 100;
   display: flex;
   align-items: center;
@@ -22,7 +23,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: min(0.5291vw, 8px);
+  border-radius: calc(8px * var(--pp-scale));
   background: var(--pp-bone);
   border: 0.5px solid rgba(247, 244, 240, 0.5);
   -webkit-backdrop-filter: blur(3px);
@@ -47,13 +48,13 @@
    Mark is fixed ink-stem + blue-blade on the bone card (flips to bone stem on
    the ink chip over light sections). */
 .logo {
-  width: min(3.25vw, 49.14px);
+  width: calc(49.14px * var(--pp-scale));
   text-decoration: none;
   line-height: 0;
 }
 .logo svg {
   display: block;
-  height: min(2.114vw, 31.97px);
+  height: calc(31.97px * var(--pp-scale));
   width: auto;
 }
 .logo :global(.lk-mark__stem) {
@@ -69,8 +70,8 @@
 
 /* ── Right "Menu" pill ───────────────────────────────────────────────────────── */
 .menuBtn {
-  width: min(8.4656vw, 128px);
-  gap: min(0.428vw, 6.47px);
+  width: calc(128px * var(--pp-scale));
+  gap: calc(6.47px * var(--pp-scale));
   padding: 0;
   font-family: var(--pp-font);
   color: var(--pp-ink);
@@ -93,8 +94,8 @@
 }
 .menuIcon {
   display: inline-flex;
-  width: min(1.499vw, 22.66px);
-  height: min(1.499vw, 22.66px);
+  width: calc(22.66px * var(--pp-scale));
+  height: calc(22.66px * var(--pp-scale));
 }
 .menuIcon svg {
   width: 100%;
@@ -110,7 +111,7 @@
   height: 1.25em;
   overflow: hidden;
   font-weight: 500;
-  font-size: min(1.3228vw, 20px);
+  font-size: calc(20px * var(--pp-scale));
   line-height: 1.25em;
   letter-spacing: -0.01em;
 }
