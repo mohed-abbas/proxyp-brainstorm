@@ -276,13 +276,9 @@
     height: auto;
     aspect-ratio: 1;
   }
-  /* Small-card accent zigzag → a contained bottom-right corner accent. */
+  /* Small-card accent zigzag → dropped on compact: it's a decorative desktop
+     flourish only, and the cards read cleaner without it. */
   .problem .cardGraphic {
-    top: auto;
-    right: 0;
-    bottom: 0;
-    width: clamp(90px, 26vw, 140px);
-    height: auto;
-    aspect-ratio: 1;
+    display: none;
   }
 }
