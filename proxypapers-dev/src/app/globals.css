@@ -24,6 +24,22 @@
 
   /* Motion — the house curve (expo-out). */
   --pp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Responsive scale ──────────────────────────────────────────────────────
+     The design is a fixed 1512px Figma artboard. Every width / position / type
+     value is written as the LITERAL Figma px multiplied by --pp-scale:
+       width: calc(64px * var(--pp-scale));
+     --pp-scale is 1.0 at ≥1512 (content freezes, backgrounds bleed) and shrinks
+     proportionally below — one source of truth for the design width, so a port
+     is "type the px the inspector shows". Theme-independent. Opt a value out of
+     scaling by writing a plain px (borders, hairlines, fixed UI). A future
+     mobile phase adds a floor + reflow here, in this one token. */
+  --pp-scale: min(100vw / 1512, 1);
+
+  /* Bespoke navbar side inset — a deliberately non-linear margin that widens
+     faster than the artboard above 1512 (so the bar never spans edge-to-edge on
+     huge screens). NOT a simple scale; shared by Navbar + the Menu panel anchor. */
+  --pp-nav-inset: max(5.1587vw, 15.441vw - 155.5px);
 }
 
 /* Theme contexts — set one on a wrapper to fix its ground + lockup tone. */
@@ -72,13 +88,12 @@ svg {
   display: block;
 }
 
-/* Capped content frame — wraps everything below the hero. container-type makes
-   the frame's width the basis for the sections' cqw units; max-width freezes
-   that basis at the 1512px design width. */
+/* Capped content frame — wraps everything below the hero, centred and frozen at
+   the 1512px design width. Sections size off literal px * var(--pp-scale), so no
+   container-query basis is needed here. */
 .page-frame {
   max-width: 1512px;
   margin-inline: auto;
-  container-type: inline-size;
 }
 
 /* Lenis smooth-scroll base (library-recommended). */
@@ -132,12 +147,12 @@ html.lenis body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: min(0.661cqw, 10px) min(1.323cqw, 20px);
-  border-radius: min(2.976cqw, 45px);
+  padding: calc(10px * var(--pp-scale)) calc(20px * var(--pp-scale));
+  border-radius: calc(45px * var(--pp-scale));
   background: var(--pp-blue);
   color: var(--pp-bone);
   font-weight: 500;
-  font-size: min(1.058cqw, 16px);
+  font-size: calc(16px * var(--pp-scale));
   text-decoration: none;
   white-space: nowrap;
   transition:
