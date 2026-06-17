@@ -9,7 +9,7 @@
    the informative layout; GSAP winds the cards into the fan and plays forward. */
 
 .profiles {
-  --card-h: clamp(420px, calc(100vh - calc(340.2px * var(--pp-scale))), calc(534px * var(--pp-scale)));
+  --card-h: clamp(420px, calc(100vh - calc(340.2 * var(--pp-scale))), calc(534 * var(--pp-scale)));
   --card-w: calc(var(--card-h) * 0.692884);
   position: relative;
   width: 100%;
@@ -17,8 +17,8 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: calc(129px * var(--pp-scale));
-  padding-bottom: calc(91px * var(--pp-scale));
+  padding-top: calc(129 * var(--pp-scale));
+  padding-bottom: calc(91 * var(--pp-scale));
   background: var(--pp-ink);
   overflow: hidden;
 }
@@ -34,18 +34,18 @@
 .content {
   position: relative;
   width: 100%;
-  height: calc(770.06px * var(--pp-scale));
+  height: calc(770.06 * var(--pp-scale));
 }
 
 /* ── Editorial header ──────────────────────────────────────────────────────*/
 .title {
   position: absolute;
-  left: calc(79px * var(--pp-scale));
+  left: calc(79 * var(--pp-scale));
   top: 0;
   font-weight: 500;
-  font-size: calc(49px * var(--pp-scale));
+  font-size: calc(49 * var(--pp-scale));
   line-height: 1.04;
-  letter-spacing: calc(-0.32px * var(--pp-scale));
+  letter-spacing: calc(-0.32 * var(--pp-scale));
   color: var(--pp-bone);
 }
 .titleLine {
@@ -57,13 +57,13 @@
 
 .body {
   position: absolute;
-  top: calc(40px * var(--pp-scale));
-  right: calc(76px * var(--pp-scale));
-  width: calc(590px * var(--pp-scale));
+  top: calc(40 * var(--pp-scale));
+  right: calc(76 * var(--pp-scale));
+  width: calc(590 * var(--pp-scale));
   font-weight: 400;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.45;
-  letter-spacing: calc(0.32px * var(--pp-scale));
+  letter-spacing: calc(0.32 * var(--pp-scale));
   text-align: right;
   color: rgba(247, 244, 240, 0.7);
 }
@@ -85,17 +85,17 @@
    via --card-w. Each calc reduces to the native vw left at native card width. */
 .card[data-profile="01"] {
   left: calc(50% - var(--card-w) * 1.721536);
-  top: calc(210px * var(--pp-scale));
+  top: calc(210 * var(--pp-scale));
   z-index: 1;
 }
 .card[data-profile="02"] {
   left: calc(50% - var(--card-w) * 0.56769);
-  top: calc(210px * var(--pp-scale));
+  top: calc(210 * var(--pp-scale));
   z-index: 2;
 }
 .card[data-profile="03"] {
   left: calc(50% + var(--card-w) * 0.586156);
-  top: calc(210px * var(--pp-scale));
+  top: calc(210 * var(--pp-scale));
   z-index: 3;
 }
 
@@ -118,7 +118,7 @@
   overflow: hidden;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  box-shadow: 0 calc(39.31px * var(--pp-scale)) calc(69.55px * var(--pp-scale)) calc(-28.73px * var(--pp-scale)) rgba(0, 0, 0, 0.55);
+  box-shadow: 0 calc(39.31 * var(--pp-scale)) calc(69.55 * var(--pp-scale)) calc(-28.73 * var(--pp-scale)) rgba(0, 0, 0, 0.55);
   transition:
     box-shadow 0.45s var(--pp-ease-out),
     filter 0.4s var(--pp-ease-out);
@@ -186,7 +186,7 @@
   font-weight: 500;
   font-size: calc(var(--card-h) * 0.073034);
   line-height: 1.05;
-  letter-spacing: calc(-0.16px * var(--pp-scale));
+  letter-spacing: calc(-0.16 * var(--pp-scale));
 }
 .cardDesc {
   font-weight: 400;
@@ -211,6 +211,6 @@
 .cta {
   position: absolute;
   left: 48.51%;
-  top: calc(var(--card-h) + calc(264px * var(--pp-scale)));
+  top: calc(var(--card-h) + calc(264 * var(--pp-scale)));
   transform: translateX(-50%);
 }

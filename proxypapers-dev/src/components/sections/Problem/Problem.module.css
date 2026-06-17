@@ -12,7 +12,7 @@
   min-height: min(100vh, 800px);
   display: flex;
   align-items: center;
-  padding-inline: calc(80px * var(--pp-scale)) calc(76px * var(--pp-scale));
+  padding-inline: calc(80 * var(--pp-scale)) calc(76 * var(--pp-scale));
   background: var(--pp-ink);
   overflow: hidden;
 }
@@ -20,7 +20,7 @@
 .content {
   position: relative;
   width: 100%;
-  height: calc(498.01px * var(--pp-scale));
+  height: calc(498.01 * var(--pp-scale));
 }
 
 /* ── Left editorial column ─────────────────────────────────────────────────*/
@@ -28,19 +28,19 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: calc(666.01px * var(--pp-scale));
+  width: calc(666.01 * var(--pp-scale));
   font-weight: 500;
-  font-size: calc(14px * var(--pp-scale));
+  font-size: calc(14 * var(--pp-scale));
   line-height: normal;
-  letter-spacing: calc(1.4px * var(--pp-scale));
+  letter-spacing: calc(1.4 * var(--pp-scale));
   color: #fff;
 }
 .eyebrowRule {
   position: absolute;
-  left: calc(0.05px * var(--pp-scale));
-  top: calc(17px * var(--pp-scale));
-  width: calc(75.05px * var(--pp-scale));
-  height: calc(9.43px * var(--pp-scale));
+  left: calc(0.05 * var(--pp-scale));
+  top: calc(17 * var(--pp-scale));
+  width: calc(75.05 * var(--pp-scale));
+  height: calc(9.43 * var(--pp-scale));
   transform: rotate(0.33deg);
 }
 .eyebrowRule img {
@@ -52,24 +52,24 @@
 .headline {
   position: absolute;
   left: 0;
-  top: calc(40px * var(--pp-scale));
-  width: calc(666.01px * var(--pp-scale));
+  top: calc(40 * var(--pp-scale));
+  width: calc(666.01 * var(--pp-scale));
   font-weight: 500;
-  font-size: calc(39px * var(--pp-scale));
+  font-size: calc(39 * var(--pp-scale));
   line-height: normal;
-  letter-spacing: calc(-0.39px * var(--pp-scale));
+  letter-spacing: calc(-0.39 * var(--pp-scale));
   color: var(--pp-bone);
 }
 
 .body {
   position: absolute;
   left: 0;
-  top: calc(157.01px * var(--pp-scale));
-  width: calc(551px * var(--pp-scale));
+  top: calc(157.01 * var(--pp-scale));
+  width: calc(551 * var(--pp-scale));
   font-weight: 400;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: calc(0.16px * var(--pp-scale));
+  letter-spacing: calc(0.16 * var(--pp-scale));
   color: var(--pp-bone);
 }
 
@@ -81,44 +81,44 @@
 }
 .cardLabel {
   position: absolute;
-  top: calc(17.5px * var(--pp-scale));
+  top: calc(17.5 * var(--pp-scale));
   font-weight: 400;
-  font-size: calc(12px * var(--pp-scale));
+  font-size: calc(12 * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: calc(1.2px * var(--pp-scale));
+  letter-spacing: calc(1.2 * var(--pp-scale));
   color: #fff;
   white-space: nowrap;
   z-index: 1;
 }
 .cardCopy {
   position: absolute;
-  top: calc(53.5px * var(--pp-scale));
-  width: calc(240px * var(--pp-scale));
+  top: calc(53.5 * var(--pp-scale));
+  width: calc(240 * var(--pp-scale));
   font-weight: 500;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: calc(0.16px * var(--pp-scale));
+  letter-spacing: calc(0.16 * var(--pp-scale));
   color: #fff;
   z-index: 1;
 }
 
 /* VOLUME — tall left card carrying the blue zigzag graphic */
 .cardVolume {
-  left: calc(685.99px * var(--pp-scale));
-  top: calc(1px * var(--pp-scale));
-  width: calc(325px * var(--pp-scale));
-  height: calc(496.99px * var(--pp-scale));
+  left: calc(685.99 * var(--pp-scale));
+  top: calc(1 * var(--pp-scale));
+  width: calc(325 * var(--pp-scale));
+  height: calc(496.99 * var(--pp-scale));
 }
 .cardVolume .cardLabel,
 .cardVolume .cardCopy {
-  left: calc(18.5px * var(--pp-scale));
+  left: calc(18.5 * var(--pp-scale));
 }
 .volumeGraphic {
   position: absolute;
-  left: calc(-0.5px * var(--pp-scale));
-  top: calc(91.5px * var(--pp-scale));
-  width: calc(341px * var(--pp-scale));
-  height: calc(341px * var(--pp-scale));
+  left: calc(-0.5 * var(--pp-scale));
+  top: calc(91.5 * var(--pp-scale));
+  width: calc(341 * var(--pp-scale));
+  height: calc(341 * var(--pp-scale));
 }
 .graphicInner {
   position: absolute;
@@ -134,38 +134,38 @@
 /* The smaller zigzag echoed in FRICTION and RISK. */
 .cardGraphic {
   position: absolute;
-  top: calc(40px * var(--pp-scale));
-  right: calc(-52px * var(--pp-scale));
-  width: calc(174px * var(--pp-scale));
-  height: calc(174px * var(--pp-scale));
+  top: calc(40 * var(--pp-scale));
+  right: calc(-52 * var(--pp-scale));
+  width: calc(174 * var(--pp-scale));
+  height: calc(174 * var(--pp-scale));
   z-index: 0;
 }
 
 /* FRICTION — top-right card */
 .cardFriction {
-  left: calc(1031.12px * var(--pp-scale));
-  top: calc(1px * var(--pp-scale));
-  width: calc(325px * var(--pp-scale));
-  height: calc(242px * var(--pp-scale));
+  left: calc(1031.12 * var(--pp-scale));
+  top: calc(1 * var(--pp-scale));
+  width: calc(325 * var(--pp-scale));
+  height: calc(242 * var(--pp-scale));
 }
 /* RISK — bottom-right card */
 .cardRisk {
-  left: calc(1031.12px * var(--pp-scale));
-  top: calc(269px * var(--pp-scale));
-  width: calc(325px * var(--pp-scale));
-  height: calc(229.01px * var(--pp-scale));
+  left: calc(1031.12 * var(--pp-scale));
+  top: calc(269 * var(--pp-scale));
+  width: calc(325 * var(--pp-scale));
+  height: calc(229.01 * var(--pp-scale));
 }
 .cardFriction .cardLabel,
 .cardFriction .cardCopy,
 .cardRisk .cardLabel,
 .cardRisk .cardCopy {
-  left: calc(15.5px * var(--pp-scale));
+  left: calc(15.5 * var(--pp-scale));
 }
 .cardRisk .cardLabel {
-  top: calc(19.5px * var(--pp-scale));
+  top: calc(19.5 * var(--pp-scale));
 }
 .cardRisk .cardCopy {
-  top: calc(55.5px * var(--pp-scale));
+  top: calc(55.5 * var(--pp-scale));
 }
 
 /* ── Reveal masks ───────────────────────────────────────────────────────────

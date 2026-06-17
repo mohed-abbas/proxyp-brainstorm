@@ -26,15 +26,17 @@
   --pp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ── Responsive scale ──────────────────────────────────────────────────────
-     The design is a fixed 1512px Figma artboard. Every width / position / type
-     value is written as the LITERAL Figma px multiplied by --pp-scale:
-       width: calc(64px * var(--pp-scale));
-     --pp-scale is 1.0 at ≥1512 (content freezes, backgrounds bleed) and shrinks
-     proportionally below — one source of truth for the design width, so a port
-     is "type the px the inspector shows". Theme-independent. Opt a value out of
-     scaling by writing a plain px (borders, hairlines, fixed UI). A future
-     mobile phase adds a floor + reflow here, in this one token. */
-  --pp-scale: min(100vw / 1512, 1);
+     The design is a fixed 1512px Figma artboard. --pp-scale is the rendered
+     LENGTH of one design pixel: 1px at ≥1512 (content freezes, backgrounds
+     bleed), shrinking proportionally below. Size anything by multiplying the
+     bare Figma px number the inspector shows — note: NO px unit on the number:
+       width: calc(64 * var(--pp-scale));
+     One source of truth for the design width; a port is "type the number".
+     (A unitless viewport ratio isn't expressible in CSS, so the scale carries
+     the px and the multiplier is unitless.) Theme-independent. Opt out by
+     writing a plain px unit (borders, hairlines, fixed UI). A future mobile
+     phase adds a floor + reflow here, in this one token. */
+  --pp-scale: min(100vw / 1512, 1px);
 
   /* Bespoke navbar side inset — a deliberately non-linear margin that widens
      faster than the artboard above 1512 (so the bar never spans edge-to-edge on
@@ -147,12 +149,12 @@ html.lenis body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: calc(10px * var(--pp-scale)) calc(20px * var(--pp-scale));
-  border-radius: calc(45px * var(--pp-scale));
+  padding: calc(10 * var(--pp-scale)) calc(20 * var(--pp-scale));
+  border-radius: calc(45 * var(--pp-scale));
   background: var(--pp-blue);
   color: var(--pp-bone);
   font-weight: 500;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   text-decoration: none;
   white-space: nowrap;
   transition:

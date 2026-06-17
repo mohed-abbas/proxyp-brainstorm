@@ -15,7 +15,7 @@
   display: flex;
   justify-content: center;
   background: var(--pp-blue);
-  border-radius: calc(20px * var(--pp-scale));
+  border-radius: calc(20 * var(--pp-scale));
   overflow: hidden;
 }
 
@@ -29,13 +29,13 @@
 .content {
   position: relative;
   width: 100%;
-  min-height: calc(1242px * var(--pp-scale));
-  padding-inline: calc(76px * var(--pp-scale));
+  min-height: calc(1242 * var(--pp-scale));
+  padding-inline: calc(76 * var(--pp-scale));
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  gap: calc(120px * var(--pp-scale));
+  gap: calc(120 * var(--pp-scale));
 }
 
 /* ── Editorial header ──────────────────────────────────────────────────────*/
@@ -47,9 +47,9 @@
   color: var(--pp-bone);
 }
 .title {
-  width: calc(637px * var(--pp-scale));
+  width: calc(637 * var(--pp-scale));
   font-weight: 500;
-  font-size: calc(49px * var(--pp-scale));
+  font-size: calc(49 * var(--pp-scale));
   line-height: 1.05;
   letter-spacing: -0.01em;
 }
@@ -60,9 +60,9 @@
   color: rgba(247, 244, 240, 0.6);
 }
 .lede {
-  width: calc(590px * var(--pp-scale));
+  width: calc(590 * var(--pp-scale));
   font-weight: 400;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.45;
   letter-spacing: 0.02em;
   text-align: right;
@@ -75,18 +75,18 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: calc(16px * var(--pp-scale));
+  gap: calc(16 * var(--pp-scale));
 }
 .step {
   display: flex;
   flex-direction: column;
-  gap: calc(13px * var(--pp-scale));
-  padding-bottom: calc(23px * var(--pp-scale));
+  gap: calc(13 * var(--pp-scale));
+  padding-bottom: calc(23 * var(--pp-scale));
   border-bottom: 1px solid rgba(247, 244, 240, 0.28);
 }
 .stepNum {
   font-weight: 400;
-  font-size: calc(25px * var(--pp-scale));
+  font-size: calc(25 * var(--pp-scale));
   line-height: 1;
   letter-spacing: -0.03em;
   color: rgba(247, 244, 240, 0.6);
@@ -99,7 +99,7 @@
 }
 .stepName {
   font-weight: 500;
-  font-size: calc(76px * var(--pp-scale));
+  font-size: calc(76 * var(--pp-scale));
   line-height: 0.9;
   letter-spacing: -0.03em;
   color: var(--pp-bone);
@@ -107,7 +107,7 @@
 }
 .stepDesc {
   font-weight: 400;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1;
   letter-spacing: -0.03em;
   color: rgba(247, 244, 240, 0.6);
@@ -117,23 +117,23 @@
 .link {
   display: inline-flex;
   align-items: center;
-  gap: calc(6px * var(--pp-scale));
-  padding-bottom: calc(6px * var(--pp-scale));
+  gap: calc(6 * var(--pp-scale));
+  padding-bottom: calc(6 * var(--pp-scale));
   border-bottom: 1px solid var(--pp-bone);
   font-weight: 500;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   color: var(--pp-bone);
   text-decoration: none;
   white-space: nowrap;
 }
 .link svg {
-  width: calc(18px * var(--pp-scale));
-  height: calc(18px * var(--pp-scale));
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
   stroke: currentColor;
   transition: transform 0.4s var(--pp-ease-out);
 }
 .link:hover svg {
-  transform: translateX(calc(4px * var(--pp-scale)));
+  transform: translateX(calc(4 * var(--pp-scale)));
 }
 
 /* Hover roll — same masked mechanic as the other CTAs/links. On this full-presence

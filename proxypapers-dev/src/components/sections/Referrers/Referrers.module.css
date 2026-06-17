@@ -12,24 +12,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline: calc(76px * var(--pp-scale));
+  padding-inline: calc(76 * var(--pp-scale));
   background: var(--pp-ink);
   overflow: hidden;
 }
 
 .content {
   position: relative;
-  width: calc(1050px * var(--pp-scale));
+  width: calc(1050 * var(--pp-scale));
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(27px * var(--pp-scale));
+  gap: calc(27 * var(--pp-scale));
   text-align: center;
 }
 
 .title {
   font-weight: 500;
-  font-size: calc(49px * var(--pp-scale));
+  font-size: calc(49 * var(--pp-scale));
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--pp-bone);
@@ -38,8 +38,8 @@
 /* ── Orbital diagram ──────────────────────────────────────────────────────── */
 .orbit {
   position: relative;
-  width: calc(593px * var(--pp-scale));
-  height: calc(358px * var(--pp-scale));
+  width: calc(593 * var(--pp-scale));
+  height: calc(358 * var(--pp-scale));
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -136,12 +136,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(27px * var(--pp-scale));
+  gap: calc(27 * var(--pp-scale));
 }
 .body {
   width: 100%;
   font-weight: 400;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.45;
   letter-spacing: 0.02em;
   color: rgba(247, 244, 240, 0.7);
@@ -152,12 +152,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: calc(10px * var(--pp-scale)) calc(20px * var(--pp-scale));
-  border-radius: calc(45px * var(--pp-scale));
+  padding: calc(10 * var(--pp-scale)) calc(20 * var(--pp-scale));
+  border-radius: calc(45 * var(--pp-scale));
   background: var(--pp-blue);
   color: var(--pp-bone);
   font-weight: 500;
-  font-size: calc(16px * var(--pp-scale));
+  font-size: calc(16 * var(--pp-scale));
   text-decoration: none;
   white-space: nowrap;
   transition:
@@ -167,7 +167,7 @@
 .cta:hover,
 .cta:focus-visible {
   background-color: var(--pp-bone);
-  transform: translateY(calc(-2px * var(--pp-scale)));
+  transform: translateY(calc(-2 * var(--pp-scale)));
 }
 
 /* Inverted hover roll — pill fills bone, label rolls up to a Proxy-Blue copy
