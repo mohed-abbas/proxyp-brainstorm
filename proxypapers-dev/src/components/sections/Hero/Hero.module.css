@@ -22,6 +22,17 @@
   margin-inline: auto;
 }
 
+/* Backdrop group. On desktop it generates no box (display:contents), so the
+   lens/conveyor/axis keep resolving against .frame exactly as before. The mobile
+   band (<1024) turns it into a real, full-bleed, cropped flow element. */
+.stage {
+  display: contents;
+}
+/* Grain only paints on the mobile band. */
+.grain {
+  display: none;
+}
+
 /* ── Horizon lens ──────────────────────────────────────────────────────────── */
 .lens {
   position: absolute;
@@ -443,18 +454,19 @@
 }
 
 /* ── Tablet + mobile (<1024): the layered coordinate composition reflows to a
-   centred column — headline → statement — over the full-bleed blue horizon lens as
-   a backdrop. The document conveyor, centre axis card and horizon arcs don't read
-   once stacked, so they're dropped (a dark canvas carrying one strong element, our
-   Naked City north star). The intro reveal is unchanged (it just animates the
-   hidden layers invisibly). ──────────────────────────────────────────────────── */
+   centred column — lead → BAND → statement. The lens + conveyor + axis card are NOT
+   dropped: they're grouped into `.stage`, a full-bleed band carrying the CENTRAL
+   SLICE of the desktop composition (the curved "eclipse" cropped to the viewport,
+   conveyor running through, brand card dead-centre as the onboarding logo's landing
+   target). Text reflows centred above/below it. The hero grows naturally (safe
+   center) so the band is never clipped. ──────────────────────────────────────── */
 @media (max-width: 1023px) {
   .hero {
     min-height: 100svh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: safe center;
     padding: calc(var(--pp-tap) + 64px) var(--pp-gutter) var(--pp-stack);
   }
   .frame {
@@ -467,7 +479,10 @@
     align-items: center;
     gap: var(--pp-stack);
   }
+
+  /* Flow order: lead → band → statement. */
   .lead {
+    order: 1;
     position: relative;
     z-index: 4;
     left: auto;
@@ -475,6 +490,17 @@
     transform: none;
     width: 100%;
     gap: clamp(16px, 4vw, 25px);
+  }
+  .statement {
+    order: 3;
+    position: relative;
+    z-index: 4;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    max-width: 40ch;
+    font-size: var(--pp-fs-lead);
   }
   .leadTitle {
     font-size: var(--pp-fs-display);
@@ -498,27 +524,75 @@
   .link::after {
     width: 160px;
   }
-  .statement {
+
+  /* ── The band. `--pp-scale: 1px` renders the layers at native (desktop) px; the
+     lens keeps its desktop 1512×595 geometry (the arcs are its children, so they
+     stay aligned to the eye), and we simply CENTRE it in a shorter, full-bleed band
+     and clip — showing the eye's full-blue middle with the curve at the edges. ── */
+  .stage {
+    --pp-scale: 1px;
+    order: 2;
+    display: block;
     position: relative;
-    z-index: 4;
-    left: auto;
-    top: auto;
-    transform: none;
-    width: 100%;
-    max-width: 40ch;
-    font-size: var(--pp-fs-lead);
+    /* 100vw flex item, centred on the (viewport-centred) frame by the parent's
+       align-items:center → true full-bleed without a left/transform offset. */
+    width: 100vw;
+    /* Tall enough to reveal the lens's arc hairlines (~±136px from centre) at the
+       band's top/bottom edges — the "eclipse" curve. */
+    height: clamp(280px, 74vw, 336px);
+    overflow: hidden;
   }
-  /* Lens → full-bleed horizon glow anchored to the lower hero, behind the content. */
+
+  /* Lens (eye) at desktop size, centred both axes. */
   .lens {
-    top: auto;
-    bottom: 0;
-    height: clamp(260px, 46vh, 460px);
-    z-index: 0;
+    top: 50%;
+    bottom: auto;
+    left: 50%;
+    margin-left: 0;
+    transform: translate(-50%, -50%);
+    width: calc(1512 * var(--pp-scale));
+    height: calc(595.43 * var(--pp-scale));
+    z-index: 1;
   }
-  /* Desktop-only flourishes that don't read once the hero is stacked. */
-  .arc,
-  .conveyor,
+  /* Arcs span the full eye width so their curves trace the lens edges. */
+  .arc {
+    left: 0;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Grain over the blue, beneath the conveyor rows. */
+  .grain {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.1;
+    background-image: url("/images/grain.webp");
+    background-repeat: repeat;
+    background-size: 380px 380px;
+  }
+
+  /* Conveyor: 100vw so its centre mask (skeleton left / data right) sits under the
+     centred card; vertically centred in the band. */
+  .conveyor {
+    display: block;
+    top: 50%;
+    left: 0;
+    margin-left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    z-index: 3;
+  }
+
+  /* Axis line + brand card, centred. The 327px line crops to short segments above/
+     below the card; the card is the onboarding logo's landing target. */
   .axis {
-    display: none;
+    display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
   }
 }
