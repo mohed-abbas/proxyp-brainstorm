@@ -148,3 +148,37 @@
     transition: none !important;
   }
 }
+
+/* ── Tablet + mobile (<1024): leave the artboard scale for fixed, readable sizes
+   with ≥44px touch targets; align the bar to the page gutter. ─────────────────── */
+@media (max-width: 1023px) {
+  .nav {
+    top: 24px;
+    left: var(--pp-gutter);
+    right: var(--pp-gutter);
+    height: var(--pp-tap);
+  }
+  .logo,
+  .menuBtn {
+    border-radius: 8px;
+  }
+  .logo {
+    width: var(--pp-tap);
+  }
+  .logo svg {
+    height: 22px;
+  }
+  .menuBtn {
+    width: auto;
+    min-width: var(--pp-tap);
+    padding: 0 16px;
+    gap: 7px;
+  }
+  .menuIcon {
+    width: 20px;
+    height: 20px;
+  }
+  .menuLabel {
+    font-size: 16px;
+  }
+}

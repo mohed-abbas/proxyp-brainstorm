@@ -274,11 +274,81 @@
   }
 }
 
-@media (max-width: 680px) {
+/* ── Tablet + mobile (<1024): a flow card anchored under the navbar that fades +
+   slides in (the pill clip-path unfold stops reading once the panel detaches from
+   the bar), with readable fluid link type. ───────────────────────────────────── */
+@media (max-width: 1023px) {
   .panel {
-    width: min(92vw, 554px);
+    top: calc(24px + var(--pp-tap) + 10px);
+    right: var(--pp-gutter);
+    left: auto;
+    width: min(420px, calc(100vw - 2 * var(--pp-gutter)));
     height: auto;
-    aspect-ratio: 1 / 1;
-    right: 4vw;
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 28px 24px;
+    border-radius: 14px;
+    clip-path: none;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    transform-origin: top right;
+    transition:
+      opacity 0.35s var(--pp-ease-out),
+      transform 0.5s var(--pp-ease-out);
+  }
+  .menu[data-state="open"] .panel {
+    clip-path: none;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.4s var(--pp-ease-out),
+      transform 0.55s var(--pp-ease-out);
+  }
+
+  /* Children flow in the column instead of the absolute artboard coordinates. */
+  .lang,
+  .navLinks,
+  .foot {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+  .lang {
+    font-size: var(--pp-fs-lead);
+    margin-bottom: 22px;
+  }
+  .navLinks {
+    gap: 6px;
+    margin-bottom: 26px;
+  }
+  .link {
+    font-size: clamp(30px, 6vw, 40px);
+  }
+  .foot {
+    margin-top: 24px;
+  }
+  .logo {
+    width: 24px;
+  }
+  .social {
+    gap: 10px;
+  }
+  .socialLink {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .panel {
+    left: var(--pp-gutter);
+    right: var(--pp-gutter);
+    width: auto;
+    max-width: none;
+    padding: 24px;
+  }
+  .link {
+    font-size: clamp(32px, 8.5vw, 44px);
   }
 }
