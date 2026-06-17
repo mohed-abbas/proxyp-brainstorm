@@ -37,25 +37,7 @@ export function useProfiles(scope: RefObject<HTMLElement | null>, s: Styles) {
       const flips = cards.map((c) => c.querySelector(`.${s.cardFlip}`));
       const cta = q(`.${s.cta}`);
 
-      // GSAP 3 doesn't resolve vw on x/y, so convert the authored vw offsets to px
-      // against the live viewport, scaled by the deck's live shrink factor.
-      const vwToPx = (v: string) => {
-        v = (v || "").trim();
-        if (v.endsWith("vw")) return (parseFloat(v) * window.innerWidth) / 100;
-        return parseFloat(v) || 0;
-      };
-      const fan = cards.map((c) => {
-        const cs = getComputedStyle(c);
-        const nativeW = (NATIVE_CARD_VW * window.innerWidth) / 100;
-        const deckScale = (parseFloat(cs.width) || nativeW) / nativeW;
-        return {
-          dx: vwToPx(cs.getPropertyValue("--dx")) * deckScale,
-          dy: vwToPx(cs.getPropertyValue("--dy")) * deckScale,
-          rot: parseFloat(cs.getPropertyValue("--rot")) || 0,
-        };
-      });
-
-      // ── A. Header once-reveal ──────────────────────────────────────────────
+      // ── A. Header once-reveal (both layouts) ───────────────────────────────
       gsap.set(allWords, { yPercent: 120 });
       gsap
         .timeline({
@@ -65,40 +47,80 @@ export function useProfiles(scope: RefObject<HTMLElement | null>, s: Styles) {
         .to(titleWords, { yPercent: 0, duration: 0.7, stagger: 0.06 }, 0.0)
         .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.018 }, 0.35);
 
-      // ── B. Deck + CTA — pinned, scrubbed flip with a reading dwell ─────────
-      // Park at the fanned FRONT: wind back from the CSS base (flat back-spread).
-      pos.forEach((p, i) =>
-        gsap.set(p, { x: fan[i].dx, y: fan[i].dy, rotation: fan[i].rot, force3D: true }),
-      );
-      gsap.set(flips, { rotationY: 0, force3D: true });
-      gsap.set(cta, { autoAlpha: 0, y: 16 });
+      // ── B. Deck + CTA — choreographed per breakpoint via matchMedia ────────
+      const mm = gsap.matchMedia();
 
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "+=160%",
-            pin: true,
-            pinType: "transform",
-            anticipatePin: 1,
-            scrub: 2.4,
-          },
-        })
-        .to(
-          pos,
-          { x: 0, y: 0, rotation: 0, duration: 1.2, stagger: 0.15, ease: "power1.inOut", force3D: true },
-          0,
-        )
-        .to(
-          flips,
-          { rotationY: 180, duration: 1.4, stagger: 0.15, ease: "power1.inOut", force3D: true },
-          0.3,
-        )
-        .to(cta, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.6)
-        .to({}, { duration: 0.9 });
+      // Desktop ≥1024: the fanned deck PINS, then a scrubbed timeline winds each
+      // card out of the FRONT stack (un-tilt, spread, flip to BACK) with a dwell.
+      mm.add("(min-width: 1024px)", () => {
+        // GSAP 3 doesn't resolve vw on x/y, so convert the authored vw offsets to
+        // px against the live viewport, scaled by the deck's live shrink factor.
+        const vwToPx = (v: string) => {
+          v = (v || "").trim();
+          if (v.endsWith("vw")) return (parseFloat(v) * window.innerWidth) / 100;
+          return parseFloat(v) || 0;
+        };
+        const fan = cards.map((c) => {
+          const cs = getComputedStyle(c);
+          const nativeW = (NATIVE_CARD_VW * window.innerWidth) / 100;
+          const deckScale = (parseFloat(cs.width) || nativeW) / nativeW;
+          return {
+            dx: vwToPx(cs.getPropertyValue("--dx")) * deckScale,
+            dy: vwToPx(cs.getPropertyValue("--dy")) * deckScale,
+            rot: parseFloat(cs.getPropertyValue("--rot")) || 0,
+          };
+        });
 
-      ScrollTrigger.refresh();
+        // Park at the fanned FRONT: wind back from the CSS base (flat back-spread).
+        pos.forEach((p, i) =>
+          gsap.set(p, { x: fan[i].dx, y: fan[i].dy, rotation: fan[i].rot, force3D: true }),
+        );
+        gsap.set(flips, { rotationY: 0, force3D: true });
+        gsap.set(cta, { autoAlpha: 0, y: 16 });
+
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: "+=160%",
+              pin: true,
+              pinType: "transform",
+              anticipatePin: 1,
+              scrub: 2.4,
+            },
+          })
+          .to(
+            pos,
+            { x: 0, y: 0, rotation: 0, duration: 1.2, stagger: 0.15, ease: "power1.inOut", force3D: true },
+            0,
+          )
+          .to(
+            flips,
+            { rotationY: 180, duration: 1.4, stagger: 0.15, ease: "power1.inOut", force3D: true },
+            0.3,
+          )
+          .to(cta, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.6)
+          .to({}, { duration: 0.9 });
+
+        ScrollTrigger.refresh();
+      });
+
+      // Tablet + mobile <1024: the deck is a vertical stack resting on its info
+      // face (CSS base). No pin — a light per-card rise-in keeps it lively, and the
+      // CTA sits in flow. (cardPos/flip stay at their CSS base; we only move the
+      // .card articles, so the 3D faces are untouched.)
+      mm.add("(max-width: 1023px)", () => {
+        gsap.set(cta, { autoAlpha: 1, y: 0 });
+        gsap.from(cards, {
+          autoAlpha: 0,
+          y: 28,
+          duration: 0.7,
+          stagger: 0.12,
+          ease: "power3.out",
+          scrollTrigger: { trigger: section, start: "top 78%", once: true },
+        });
+      });
     },
     { scope },
   );

@@ -214,3 +214,68 @@
   top: calc(var(--card-h) + calc(264 * var(--pp-scale)));
   transform: translateX(-50%);
 }
+
+/* ── Tablet + mobile (<1024): the fanned 3D deck reflows to a vertical stack of
+   the three cards resting on their info face (the CSS base already shows the back
+   spread). Card size becomes width-driven; the desktop pin/scrub flip is gated off
+   in useProfiles and a light per-card rise-in plays instead. ──────────────────── */
+@media (max-width: 1023px) {
+  .profiles {
+    --card-h: clamp(440px, 128vw, 600px);
+    min-height: 0;
+    align-items: stretch;
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .frame {
+    width: 100%;
+  }
+  .content {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: clamp(18px, 4vw, 28px);
+  }
+  .title {
+    position: static;
+    left: auto;
+    font-size: var(--pp-fs-h2);
+  }
+  .body {
+    position: static;
+    top: auto;
+    right: auto;
+    width: auto;
+    text-align: left;
+    font-size: var(--pp-fs-body);
+  }
+  .deck {
+    position: static;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(20px, 5vw, 32px);
+    margin-top: clamp(8px, 3vw, 20px);
+  }
+  .card,
+  .card[data-profile="01"],
+  .card[data-profile="02"],
+  .card[data-profile="03"] {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    max-width: var(--card-w);
+    height: var(--card-h);
+    margin: 0 auto;
+  }
+  .cta {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin: clamp(20px, 6vw, 36px) auto 0;
+  }
+}
