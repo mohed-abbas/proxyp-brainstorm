@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ppNeueMontreal } from "@/lib/fonts";
 import { LenisProvider } from "@/lib/lenis/LenisProvider";
 import { IntroProvider } from "@/lib/intro/IntroProvider";
@@ -14,6 +14,16 @@ const JS_FLAG = 'document.documentElement.classList.add("js")';
 export const metadata: Metadata = {
   title: site.title,
   description: site.description,
+};
+
+// Explicit viewport so mobile renders at device width and the dark ground
+// extends under notches/safe areas (viewport-fit: cover). themeColor matches the
+// Chinese-Black ground so mobile browser chrome stays on-brand.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#161718",
 };
 
 export default function RootLayout({

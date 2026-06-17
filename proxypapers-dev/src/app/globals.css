@@ -42,6 +42,32 @@
      faster than the artboard above 1512 (so the bar never spans edge-to-edge on
      huge screens). NOT a simple scale; shared by Navbar + the Menu panel anchor. */
   --pp-nav-inset: max(5.1587vw, 15.441vw - 155.5px);
+
+  /* ── Responsive layout model ────────────────────────────────────────────────
+     Breakpoints (desktop-first; @media needs literal px, so these are documented,
+     not consumed as variables):
+       ≥1024px  — DESKTOP: the 1512 artboard via --pp-scale (above).
+       768–1023 — TABLET:  bespoke reflow layout (@media max-width:1023px).
+       <768px   — MOBILE:  bespoke reflow layout (@media max-width:767px).
+     Below 1024 sections STOP riding --pp-scale (it would shrink type to nothing)
+     and size off the fluid tokens below, which carry readable minimums. New pages
+     should reuse these rather than re-deriving per-section values. */
+
+  /* Fluid type ramp — clamp(min, vw-preferred, desktop-cap). Used in the tablet +
+     mobile bands so type scales smoothly between breakpoints but never goes tiny. */
+  --pp-fs-display: clamp(40px, 7.5vw, 76px); /* oversized headline (Hero, Closing) */
+  --pp-fs-h2: clamp(28px, 5.2vw, 49px); /* section titles */
+  --pp-fs-h3: clamp(22px, 3.6vw, 32px); /* step name, card name */
+  --pp-fs-lead: clamp(17px, 2.4vw, 20px); /* lede, large links */
+  --pp-fs-body: clamp(15px, 1.9vw, 17px); /* body copy */
+  --pp-fs-small: clamp(12px, 1.5vw, 14px); /* eyebrow, legal, chips */
+
+  /* Fluid spacing — page side gutter + vertical rhythm for reflowed layouts. */
+  --pp-gutter: clamp(20px, 6vw, 48px);
+  --pp-stack: clamp(28px, 7vw, 72px);
+
+  /* Minimum comfortable touch target (navbar pill, menu controls below 1024). */
+  --pp-tap: 44px;
 }
 
 /* Theme contexts — set one on a wrapper to fix its ground + lockup tone. */
