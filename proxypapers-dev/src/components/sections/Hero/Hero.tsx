@@ -47,10 +47,6 @@ export function Hero() {
             />
           </div>
 
-          {/* Grain — only painted on the mobile/tablet band (reuses the onboarding
-              grain texture); display:none on desktop. */}
-          <div className={s.grain} aria-hidden="true" />
-
           <Conveyor documents={heroContent.documents} />
 
           {/* Centre axis + brand card */}

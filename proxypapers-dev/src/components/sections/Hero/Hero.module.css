@@ -28,10 +28,6 @@
 .stage {
   display: contents;
 }
-/* Grain only paints on the mobile band. */
-.grain {
-  display: none;
-}
 
 /* ── Horizon lens ──────────────────────────────────────────────────────────── */
 .lens {
@@ -559,19 +555,6 @@
     left: 0;
     margin-left: 0;
     width: 100%;
-  }
-
-  /* Grain over the blue, beneath the conveyor rows. */
-  .grain {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    opacity: 0.1;
-    background-image: url("/images/grain.webp");
-    background-repeat: repeat;
-    background-size: 380px 380px;
   }
 
   /* Conveyor: 100vw so its centre mask (skeleton left / data right) sits under the
