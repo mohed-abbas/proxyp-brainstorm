@@ -227,6 +227,15 @@ html.lenis body {
     transition: none;
   }
 }
+/* Below 1024 the shared pill leaves the artboard scale for fixed, readable,
+   tappable sizing (used by the Hero + Profiles CTAs). */
+@media (max-width: 1023px) {
+  .pp-btn {
+    padding: 13px 24px;
+    border-radius: 999px;
+    font-size: var(--pp-fs-body);
+  }
+}
 
 /* ════════════════════════════════════════════════════════════════════════════
    Onboarding overlay + intro handoff — ported from styles/onboarding.css and
