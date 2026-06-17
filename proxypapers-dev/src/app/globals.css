@@ -24,6 +24,50 @@
 
   /* Motion — the house curve (expo-out). */
   --pp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Responsive scale ──────────────────────────────────────────────────────
+     The design is a fixed 1512px Figma artboard. --pp-scale is the rendered
+     LENGTH of one design pixel: 1px at ≥1512 (content freezes, backgrounds
+     bleed), shrinking proportionally below. Size anything by multiplying the
+     bare Figma px number the inspector shows — note: NO px unit on the number:
+       width: calc(64 * var(--pp-scale));
+     One source of truth for the design width; a port is "type the number".
+     (A unitless viewport ratio isn't expressible in CSS, so the scale carries
+     the px and the multiplier is unitless.) Theme-independent. Opt out by
+     writing a plain px unit (borders, hairlines, fixed UI). A future mobile
+     phase adds a floor + reflow here, in this one token. */
+  --pp-scale: min(100vw / 1512, 1px);
+
+  /* Bespoke navbar side inset — a deliberately non-linear margin that widens
+     faster than the artboard above 1512 (so the bar never spans edge-to-edge on
+     huge screens). NOT a simple scale; shared by Navbar + the Menu panel anchor. */
+  --pp-nav-inset: max(5.1587vw, 15.441vw - 155.5px);
+
+  /* ── Responsive layout model ────────────────────────────────────────────────
+     Breakpoints (desktop-first; @media needs literal px, so these are documented,
+     not consumed as variables):
+       ≥1024px  — DESKTOP: the 1512 artboard via --pp-scale (above).
+       768–1023 — TABLET:  bespoke reflow layout (@media max-width:1023px).
+       <768px   — MOBILE:  bespoke reflow layout (@media max-width:767px).
+     Below 1024 sections STOP riding --pp-scale (it would shrink type to nothing)
+     and size off the fluid tokens below, which carry readable minimums. New pages
+     should reuse these rather than re-deriving per-section values. */
+
+  /* Fluid type ramp — clamp(min, vw-preferred, desktop-cap). Used in the tablet +
+     mobile bands so type scales smoothly between breakpoints but never goes tiny. */
+  --pp-fs-display: clamp(40px, 7.5vw, 76px); /* oversized headline (Hero, Closing) */
+  --pp-fs-h2: clamp(28px, 5.2vw, 49px); /* section titles */
+  --pp-fs-h3: clamp(22px, 3.6vw, 32px); /* step name, card name */
+  --pp-fs-lead: clamp(17px, 2.4vw, 20px); /* lede, large links */
+  --pp-fs-body: clamp(15px, 1.9vw, 17px); /* body copy */
+  --pp-fs-small: clamp(12px, 1.5vw, 14px); /* eyebrow, legal, chips */
+
+  /* Fluid spacing — page side gutter + vertical rhythm for reflowed layouts. */
+  --pp-gutter: clamp(20px, 6vw, 48px);
+  --pp-stack: clamp(28px, 7vw, 72px);
+
+  /* Minimum comfortable touch target (navbar pill, menu controls below 1024). */
+  --pp-tap: 44px;
 }
 
 /* Theme contexts — set one on a wrapper to fix its ground + lockup tone. */
@@ -72,13 +116,12 @@ svg {
   display: block;
 }
 
-/* Capped content frame — wraps everything below the hero. container-type makes
-   the frame's width the basis for the sections' cqw units; max-width freezes
-   that basis at the 1512px design width. */
+/* Capped content frame — wraps everything below the hero, centred and frozen at
+   the 1512px design width. Sections size off literal px * var(--pp-scale), so no
+   container-query basis is needed here. */
 .page-frame {
   max-width: 1512px;
   margin-inline: auto;
-  container-type: inline-size;
 }
 
 /* Lenis smooth-scroll base (library-recommended). */
@@ -132,12 +175,12 @@ html.lenis body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: min(0.661cqw, 10px) min(1.323cqw, 20px);
-  border-radius: min(2.976cqw, 45px);
+  padding: calc(10 * var(--pp-scale)) calc(20 * var(--pp-scale));
+  border-radius: calc(45 * var(--pp-scale));
   background: var(--pp-blue);
   color: var(--pp-bone);
   font-weight: 500;
-  font-size: min(1.058cqw, 16px);
+  font-size: calc(16 * var(--pp-scale));
   text-decoration: none;
   white-space: nowrap;
   transition:
@@ -182,6 +225,15 @@ html.lenis body {
   .pp-btn__main,
   .pp-btn__clone {
     transition: none;
+  }
+}
+/* Below 1024 the shared pill leaves the artboard scale for fixed, readable,
+   tappable sizing (used by the Hero + Profiles CTAs). */
+@media (max-width: 1023px) {
+  .pp-btn {
+    padding: 13px 24px;
+    border-radius: 999px;
+    font-size: var(--pp-fs-body);
   }
 }
 
@@ -258,6 +310,26 @@ html.js .ob-stage {
   top: -98.8vh;
   width: 108.6vw;
   height: 108.6vw;
+}
+
+/* Tablet + mobile (<1024): the desktop vh anchors push the top-right cloud entirely
+   above a portrait viewport (only the left cloud's corner shows), leaving the
+   welcome lopsided. Re-pin the pair to opposite corners — one feathering in from the
+   TOP-LEFT, one from the BOTTOM-RIGHT — so the diagonal reads on a tall screen. Size
+   stays 108.6vw; each is offset by ~half so a single quadrant fills its corner. */
+@media (max-width: 1023px) {
+  .ob-cloud--left {
+    left: -50vw;
+    top: -55vw;
+    right: auto;
+    bottom: auto;
+  }
+  .ob-cloud--top-right {
+    left: auto;
+    top: auto;
+    right: -50vw;
+    bottom: -55vw;
+  }
 }
 
 .ob-brand {

@@ -54,6 +54,16 @@ export function useHeroIntro(scope: RefObject<HTMLElement | null>, s: Styles) {
         .to(q(`.${s.conveyor}`), { opacity: 1, duration: 0.9 }, 0.9);
       tl.to(q(`.${s.statement}`), { opacity: 1, y: 0, duration: 0.8 }, 1.2);
 
+      // Drop the inline transforms GSAP leaves at rest on the two elements whose
+      // CSS transform differs by breakpoint — the lens (reveal scaleY) and the
+      // statement (reveal y, which preserves the desktop translateX(-50%)). Once
+      // the reveal is done their rest state is identity/centre, so clearing the
+      // inline transform is visually seamless but lets the responsive CSS
+      // (mobile translate vs desktop) govern. Without this, the stale desktop
+      // transform shadows the mobile @media rule on a live resize and the hero
+      // only reflows after a refresh.
+      tl.set([q(`.${s.lens}`), q(`.${s.statement}`)], { clearProps: "transform" });
+
       // Endless conveyor drift, started once the intro resolves.
       const tracks = q(`.${s.track}`);
       tl.eventCallback("onComplete", () => {

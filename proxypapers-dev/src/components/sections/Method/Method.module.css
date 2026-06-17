@@ -6,8 +6,8 @@
 
 /* Full-bleed exception: above 1512px the blue band fills the viewport width while
    the content stays capped at the 1512 frame (type + positioning freeze, true to
-   Figma). The inner .frame carries container-type (the cqw basis), capped at 1512px;
-   the .method band sits outside any container, so its own lengths use min(vw, px). */
+   Figma). The inner .frame caps the content column at 1512px; every length is a
+   literal Figma px * var(--pp-scale). */
 .method {
   position: relative;
   width: 100%;
@@ -15,14 +15,13 @@
   display: flex;
   justify-content: center;
   background: var(--pp-blue);
-  border-radius: min(1.3228vw, 20px);
+  border-radius: calc(20 * var(--pp-scale));
   overflow: hidden;
 }
 
 .frame {
   width: 100%;
   max-width: 1512px;
-  container-type: inline-size;
   display: flex;
   align-items: center;
 }
@@ -30,13 +29,13 @@
 .content {
   position: relative;
   width: 100%;
-  min-height: 82.1429cqw;
-  padding-inline: 5.0265cqw;
+  min-height: calc(1242 * var(--pp-scale));
+  padding-inline: calc(76 * var(--pp-scale));
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  gap: 7.9365cqw;
+  gap: calc(120 * var(--pp-scale));
 }
 
 /* ── Editorial header ──────────────────────────────────────────────────────*/
@@ -48,9 +47,9 @@
   color: var(--pp-bone);
 }
 .title {
-  width: 42.1296cqw;
+  width: calc(637 * var(--pp-scale));
   font-weight: 500;
-  font-size: 3.2407cqw;
+  font-size: calc(49 * var(--pp-scale));
   line-height: 1.05;
   letter-spacing: -0.01em;
 }
@@ -61,9 +60,9 @@
   color: rgba(247, 244, 240, 0.6);
 }
 .lede {
-  width: 39.0212cqw;
+  width: calc(590 * var(--pp-scale));
   font-weight: 400;
-  font-size: 1.0582cqw;
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.45;
   letter-spacing: 0.02em;
   text-align: right;
@@ -76,18 +75,18 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 1.0582cqw;
+  gap: calc(16 * var(--pp-scale));
 }
 .step {
   display: flex;
   flex-direction: column;
-  gap: 0.8598cqw;
-  padding-bottom: 1.5212cqw;
+  gap: calc(13 * var(--pp-scale));
+  padding-bottom: calc(23 * var(--pp-scale));
   border-bottom: 1px solid rgba(247, 244, 240, 0.28);
 }
 .stepNum {
   font-weight: 400;
-  font-size: 1.6534cqw;
+  font-size: calc(25 * var(--pp-scale));
   line-height: 1;
   letter-spacing: -0.03em;
   color: rgba(247, 244, 240, 0.6);
@@ -100,7 +99,7 @@
 }
 .stepName {
   font-weight: 500;
-  font-size: 5.0265cqw;
+  font-size: calc(76 * var(--pp-scale));
   line-height: 0.9;
   letter-spacing: -0.03em;
   color: var(--pp-bone);
@@ -108,7 +107,7 @@
 }
 .stepDesc {
   font-weight: 400;
-  font-size: 1.0582cqw;
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1;
   letter-spacing: -0.03em;
   color: rgba(247, 244, 240, 0.6);
@@ -118,23 +117,23 @@
 .link {
   display: inline-flex;
   align-items: center;
-  gap: 0.3968cqw;
-  padding-bottom: 0.3968cqw;
+  gap: calc(6 * var(--pp-scale));
+  padding-bottom: calc(6 * var(--pp-scale));
   border-bottom: 1px solid var(--pp-bone);
   font-weight: 500;
-  font-size: 1.0582cqw;
+  font-size: calc(16 * var(--pp-scale));
   color: var(--pp-bone);
   text-decoration: none;
   white-space: nowrap;
 }
 .link svg {
-  width: 1.1905cqw;
-  height: 1.1905cqw;
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
   stroke: currentColor;
   transition: transform 0.4s var(--pp-ease-out);
 }
 .link:hover svg {
-  transform: translateX(0.2646cqw);
+  transform: translateX(calc(4 * var(--pp-scale)));
 }
 
 /* Hover roll — same masked mechanic as the other CTAs/links. On this full-presence
@@ -182,4 +181,61 @@
 .method :global(.r-word) {
   padding: 0.06em 0 0.14em;
   margin: -0.06em 0 -0.14em;
+}
+
+/* ── Tablet + mobile (<1024): the flex flow already stacks; switch off the
+   artboard scale for fluid type, compress spacing, stack the header and each
+   step row (name over description). The reveal animation is unchanged. ──────── */
+@media (max-width: 1023px) {
+  .method {
+    border-radius: 16px;
+  }
+  .content {
+    min-height: 0;
+    padding: var(--pp-stack) var(--pp-gutter);
+    gap: var(--pp-stack);
+    align-items: stretch;
+  }
+  .head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .title {
+    width: auto;
+    font-size: var(--pp-fs-h2);
+  }
+  .lede {
+    width: auto;
+    font-size: var(--pp-fs-body);
+    text-align: left;
+  }
+  .steps {
+    gap: clamp(18px, 3.5vw, 30px);
+  }
+  .step {
+    gap: 4px;
+    padding-bottom: clamp(12px, 2.5vw, 20px);
+  }
+  .stepNum {
+    font-size: var(--pp-fs-small);
+  }
+  .stepRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    white-space: normal;
+  }
+  .stepName {
+    font-size: clamp(34px, 7vw, 56px);
+    line-height: 1;
+  }
+  .stepDesc {
+    font-size: var(--pp-fs-body);
+    white-space: normal;
+  }
+  .link {
+    font-size: var(--pp-fs-body);
+    align-self: flex-start;
+  }
 }

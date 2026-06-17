@@ -20,36 +20,41 @@ export function Hero() {
   return (
     <main className={s.hero} data-nav-theme="dark" ref={root}>
       <div className={s.frame}>
-        {/* Horizon lens: blue bowtie + masked clouds + arc hairlines */}
-        <div className={s.lens} aria-hidden="true">
-          <img className={s.lensFill} src="/images/hero-lens.webp" alt="" />
-          <div className={s.lensClouds}>
+        {/* The layered backdrop (lens + conveyor + axis card). On desktop .stage is
+            display:contents so these stay absolutely positioned within .frame; below
+            1024 .stage becomes a full-bleed flow band carrying the cropped lens. */}
+        <div className={s.stage}>
+          {/* Horizon lens: blue bowtie + masked clouds + arc hairlines */}
+          <div className={s.lens} aria-hidden="true">
+            <img className={s.lensFill} src="/images/hero-lens.webp" alt="" />
+            <div className={s.lensClouds}>
+              <img
+                className={`${s.cloud} ${s.cloudLeft}`}
+                src="/images/clouds.webp"
+                alt=""
+              />
+              <img
+                className={`${s.cloud} ${s.cloudRight}`}
+                src="/images/clouds.webp"
+                alt=""
+              />
+            </div>
+            <img className={`${s.arc} ${s.arcTop}`} src="/icons/hero-arc.svg" alt="" />
             <img
-              className={`${s.cloud} ${s.cloudLeft}`}
-              src="/images/clouds.webp"
-              alt=""
-            />
-            <img
-              className={`${s.cloud} ${s.cloudRight}`}
-              src="/images/clouds.webp"
+              className={`${s.arc} ${s.arcBottom}`}
+              src="/icons/hero-arc.svg"
               alt=""
             />
           </div>
-          <img className={`${s.arc} ${s.arcTop}`} src="/icons/hero-arc.svg" alt="" />
-          <img
-            className={`${s.arc} ${s.arcBottom}`}
-            src="/icons/hero-arc.svg"
-            alt=""
-          />
-        </div>
 
-        <Conveyor documents={heroContent.documents} />
+          <Conveyor documents={heroContent.documents} />
 
-        {/* Centre axis + brand card */}
-        <div className={s.axis} aria-hidden="true">
-          <span className={s.axisLine} />
-          <div className={s.axisCard} data-axis-card>
-            <img src="/icons/pp-mark.svg" alt="" />
+          {/* Centre axis + brand card */}
+          <div className={s.axis} aria-hidden="true">
+            <span className={s.axisLine} />
+            <div className={s.axisCard} data-axis-card>
+              <img src="/icons/pp-mark.svg" alt="" />
+            </div>
           </div>
         </div>
 

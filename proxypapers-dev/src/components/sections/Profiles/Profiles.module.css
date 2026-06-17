@@ -9,7 +9,7 @@
    the informative layout; GSAP winds the cards into the fan and plays forward. */
 
 .profiles {
-  --card-h: clamp(420px, calc(100vh - 22.5cqw), 35.3175cqw);
+  --card-h: clamp(420px, calc(100vh - calc(340.2 * var(--pp-scale))), calc(534 * var(--pp-scale)));
   --card-w: calc(var(--card-h) * 0.692884);
   position: relative;
   width: 100%;
@@ -17,36 +17,35 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: min(8.5vw, 129px);
-  padding-bottom: min(6vw, 91px);
+  padding-top: calc(129 * var(--pp-scale));
+  padding-bottom: calc(91 * var(--pp-scale));
   background: var(--pp-ink);
   overflow: hidden;
 }
 
-/* Per-section container re-creating the 1512px Figma frame: capped width +
-   container-type so descendant cqw/calc resolve against 1512 (frozen above the
-   design width) while the dark ground runs full-bleed. */
+/* Per-section frame re-creating the 1512px Figma column: capped width so the
+   absolutely-positioned content resolves against 1512 (frozen above the design
+   width via var(--pp-scale)) while the dark ground runs full-bleed. */
 .frame {
   position: relative;
   width: min(100vw, 1512px);
-  container-type: inline-size;
 }
 
 .content {
   position: relative;
   width: 100%;
-  height: 50.93cqw;
+  height: calc(770.06 * var(--pp-scale));
 }
 
 /* ── Editorial header ──────────────────────────────────────────────────────*/
 .title {
   position: absolute;
-  left: 5.2249cqw;
+  left: calc(79 * var(--pp-scale));
   top: 0;
   font-weight: 500;
-  font-size: 3.2407cqw;
+  font-size: calc(49 * var(--pp-scale));
   line-height: 1.04;
-  letter-spacing: -0.0212cqw;
+  letter-spacing: calc(-0.32 * var(--pp-scale));
   color: var(--pp-bone);
 }
 .titleLine {
@@ -58,13 +57,13 @@
 
 .body {
   position: absolute;
-  top: 2.6455cqw;
-  right: 5.0265cqw;
-  width: 39.0212cqw;
+  top: calc(40 * var(--pp-scale));
+  right: calc(76 * var(--pp-scale));
+  width: calc(590 * var(--pp-scale));
   font-weight: 400;
-  font-size: 1.0582cqw;
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.45;
-  letter-spacing: 0.0212cqw;
+  letter-spacing: calc(0.32 * var(--pp-scale));
   text-align: right;
   color: rgba(247, 244, 240, 0.7);
 }
@@ -86,17 +85,17 @@
    via --card-w. Each calc reduces to the native vw left at native card width. */
 .card[data-profile="01"] {
   left: calc(50% - var(--card-w) * 1.721536);
-  top: 13.889cqw;
+  top: calc(210 * var(--pp-scale));
   z-index: 1;
 }
 .card[data-profile="02"] {
   left: calc(50% - var(--card-w) * 0.56769);
-  top: 13.889cqw;
+  top: calc(210 * var(--pp-scale));
   z-index: 2;
 }
 .card[data-profile="03"] {
   left: calc(50% + var(--card-w) * 0.586156);
-  top: 13.889cqw;
+  top: calc(210 * var(--pp-scale));
   z-index: 3;
 }
 
@@ -119,7 +118,7 @@
   overflow: hidden;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  box-shadow: 0 2.6cqw 4.6cqw -1.9cqw rgba(0, 0, 0, 0.55);
+  box-shadow: 0 calc(39.31 * var(--pp-scale)) calc(69.55 * var(--pp-scale)) calc(-28.73 * var(--pp-scale)) rgba(0, 0, 0, 0.55);
   transition:
     box-shadow 0.45s var(--pp-ease-out),
     filter 0.4s var(--pp-ease-out);
@@ -187,7 +186,7 @@
   font-weight: 500;
   font-size: calc(var(--card-h) * 0.073034);
   line-height: 1.05;
-  letter-spacing: -0.0106cqw;
+  letter-spacing: calc(-0.16 * var(--pp-scale));
 }
 .cardDesc {
   font-weight: 400;
@@ -212,6 +211,71 @@
 .cta {
   position: absolute;
   left: 48.51%;
-  top: calc(var(--card-h) + 17.4604cqw);
+  top: calc(var(--card-h) + calc(264 * var(--pp-scale)));
   transform: translateX(-50%);
+}
+
+/* ── Tablet + mobile (<1024): the fanned 3D deck reflows to a vertical stack of
+   the three cards resting on their info face (the CSS base already shows the back
+   spread). Card size becomes width-driven; the desktop pin/scrub flip is gated off
+   in useProfiles and a light per-card rise-in plays instead. ──────────────────── */
+@media (max-width: 1023px) {
+  .profiles {
+    --card-h: clamp(440px, 128vw, 600px);
+    min-height: 0;
+    align-items: stretch;
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .frame {
+    width: 100%;
+  }
+  .content {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: clamp(18px, 4vw, 28px);
+  }
+  .title {
+    position: static;
+    left: auto;
+    font-size: var(--pp-fs-h2);
+  }
+  .body {
+    position: static;
+    top: auto;
+    right: auto;
+    width: auto;
+    text-align: left;
+    font-size: var(--pp-fs-body);
+  }
+  .deck {
+    position: static;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(20px, 5vw, 32px);
+    margin-top: clamp(8px, 3vw, 20px);
+  }
+  .card,
+  .card[data-profile="01"],
+  .card[data-profile="02"],
+  .card[data-profile="03"] {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    max-width: var(--card-w);
+    height: var(--card-h);
+    margin: 0 auto;
+  }
+  .cta {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin: clamp(20px, 6vw, 36px) auto 0;
+  }
 }

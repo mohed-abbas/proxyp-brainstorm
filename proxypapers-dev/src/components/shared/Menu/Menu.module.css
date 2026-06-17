@@ -38,14 +38,13 @@
 /* The card. */
 .panel {
   position: absolute;
-  width: min(36.6376vw, 554px);
-  height: min(36.6376vw, 554px);
-  top: calc(min(4.2328vw, 64px) - min(0.5833vw, 8.82px));
-  right: calc(max(5.1587vw, 15.441vw - 155.5px) - min(0.5952vw, 9px));
-  container-type: inline-size;
+  width: calc(554 * var(--pp-scale));
+  height: calc(554 * var(--pp-scale));
+  top: calc(55.18 * var(--pp-scale));
+  right: calc(var(--pp-nav-inset) - 9 * var(--pp-scale));
   background: var(--pp-bone);
   border: 0.5px solid rgba(22, 23, 24, 0.08);
-  border-radius: min(1.8051cqw, 10px);
+  border-radius: calc(10 * var(--pp-scale));
   overflow: hidden;
   filter: drop-shadow(0 20px 34px rgba(22, 23, 24, 0.32))
     drop-shadow(0 3px 8px rgba(22, 23, 24, 0.22));
@@ -66,12 +65,12 @@
 /* FR | EN */
 .lang {
   position: absolute;
-  left: min(7.9422cqw, 44px);
-  top: min(4.8736cqw, 27px);
+  left: calc(44 * var(--pp-scale));
+  top: calc(27 * var(--pp-scale));
   margin: 0;
   font-family: var(--pp-font);
   font-weight: 500;
-  font-size: min(3.6101cqw, 20px);
+  font-size: calc(20 * var(--pp-scale));
   line-height: 1;
   letter-spacing: -0.03em;
   white-space: nowrap;
@@ -92,12 +91,12 @@
 /* Nav links */
 .navLinks {
   position: absolute;
-  left: min(6.8592cqw, 38px);
-  top: min(22.2022cqw, 123px);
-  width: min(56.1372cqw, 311px);
+  left: calc(38 * var(--pp-scale));
+  top: calc(123 * var(--pp-scale));
+  width: calc(311 * var(--pp-scale));
   display: flex;
   flex-direction: column;
-  gap: min(3.9711cqw, 22px);
+  gap: calc(22 * var(--pp-scale));
 }
 .link {
   display: block;
@@ -108,7 +107,7 @@
   margin-block: -0.12em;
   font-family: var(--pp-font);
   font-weight: 500;
-  font-size: min(8.8448cqw, 49px);
+  font-size: calc(49 * var(--pp-scale));
   line-height: 1.04;
   letter-spacing: -0.03em;
   color: var(--pp-ink);
@@ -163,16 +162,16 @@
 /* Bottom row: P-mark (left) · socials (right). */
 .foot {
   position: absolute;
-  left: min(6.8592cqw, 38px);
-  right: min(8.6643cqw, 48px);
-  bottom: min(5.0009cqw, 27.7px);
+  left: calc(38 * var(--pp-scale));
+  right: calc(48 * var(--pp-scale));
+  bottom: calc(27.7 * var(--pp-scale));
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
 }
 .logo {
   display: block;
-  width: min(4.3321cqw, 24px);
+  width: calc(24 * var(--pp-scale));
   line-height: 0;
 }
 .logo svg {
@@ -189,13 +188,13 @@
 .social {
   display: flex;
   align-items: center;
-  gap: min(1.6245cqw, 9px);
+  gap: calc(9 * var(--pp-scale));
   color: var(--pp-ink);
 }
 .socialLink {
   display: inline-flex;
-  width: min(4.3321cqw, 24px);
-  height: min(4.3321cqw, 24px);
+  width: calc(24 * var(--pp-scale));
+  height: calc(24 * var(--pp-scale));
   color: inherit;
   transition:
     color 0.3s var(--pp-ease-out),
@@ -275,11 +274,81 @@
   }
 }
 
-@media (max-width: 680px) {
+/* ── Tablet + mobile (<1024): a flow card anchored under the navbar that fades +
+   slides in (the pill clip-path unfold stops reading once the panel detaches from
+   the bar), with readable fluid link type. ───────────────────────────────────── */
+@media (max-width: 1023px) {
   .panel {
-    width: min(92vw, 554px);
+    top: calc(24px + var(--pp-tap) + 10px);
+    right: var(--pp-gutter);
+    left: auto;
+    width: min(420px, calc(100vw - 2 * var(--pp-gutter)));
     height: auto;
-    aspect-ratio: 1 / 1;
-    right: 4vw;
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 28px 24px;
+    border-radius: 14px;
+    clip-path: none;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    transform-origin: top right;
+    transition:
+      opacity 0.35s var(--pp-ease-out),
+      transform 0.5s var(--pp-ease-out);
+  }
+  .menu[data-state="open"] .panel {
+    clip-path: none;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.4s var(--pp-ease-out),
+      transform 0.55s var(--pp-ease-out);
+  }
+
+  /* Children flow in the column instead of the absolute artboard coordinates. */
+  .lang,
+  .navLinks,
+  .foot {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+  .lang {
+    font-size: var(--pp-fs-lead);
+    margin-bottom: 22px;
+  }
+  .navLinks {
+    gap: 6px;
+    margin-bottom: 26px;
+  }
+  .link {
+    font-size: clamp(30px, 6vw, 40px);
+  }
+  .foot {
+    margin-top: 24px;
+  }
+  .logo {
+    width: 24px;
+  }
+  .social {
+    gap: 10px;
+  }
+  .socialLink {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .panel {
+    left: var(--pp-gutter);
+    right: var(--pp-gutter);
+    width: auto;
+    max-width: none;
+    padding: 24px;
+  }
+  .link {
+    font-size: clamp(32px, 8.5vw, 44px);
   }
 }

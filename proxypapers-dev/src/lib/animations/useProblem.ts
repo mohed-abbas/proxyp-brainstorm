@@ -40,20 +40,30 @@ export function useProblem(scope: RefObject<HTMLElement | null>, s: Styles) {
 
       gsap.set(paths, { strokeDasharray: 100 });
 
-      // Small cards rest invisible and draw on hover, erase on leave.
-      const teardown: Array<() => void> = [];
-      smallPaths.forEach((path) => {
-        gsap.set(path, { strokeDashoffset: 100 });
-        const card = path.closest(`.${s.card}`);
-        if (!card) return;
-        const enter = () => animate(path, 0);
-        const leave = () => animate(path, 100);
-        card.addEventListener("mouseenter", enter);
-        card.addEventListener("mouseleave", leave);
-        teardown.push(() => {
-          card.removeEventListener("mouseenter", enter);
-          card.removeEventListener("mouseleave", leave);
+      // Small cards (FRICTION, RISK): on desktop they rest invisible and draw on
+      // hover, erasing on leave. Below 1024 there's no hover (touch), so the
+      // hover-draw is skipped and the zigzags simply rest drawn — matching the
+      // settled / no-JS state. gsap.matchMedia swaps the two on resize.
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 1024px)", () => {
+        const teardown: Array<() => void> = [];
+        smallPaths.forEach((path) => {
+          gsap.set(path, { strokeDashoffset: 100 });
+          const card = path.closest(`.${s.card}`);
+          if (!card) return;
+          const enter = () => animate(path, 0);
+          const leave = () => animate(path, 100);
+          card.addEventListener("mouseenter", enter);
+          card.addEventListener("mouseleave", leave);
+          teardown.push(() => {
+            card.removeEventListener("mouseenter", enter);
+            card.removeEventListener("mouseleave", leave);
+          });
         });
+        return () => teardown.forEach((fn) => fn());
+      });
+      mm.add("(max-width: 1023px)", () => {
+        gsap.set(smallPaths, { strokeDashoffset: 0 });
       });
 
       // Parked start state.
@@ -96,8 +106,6 @@ export function useProblem(scope: RefObject<HTMLElement | null>, s: Styles) {
         );
 
       ScrollTrigger.refresh();
-
-      return () => teardown.forEach((fn) => fn());
     },
     { scope },
   );

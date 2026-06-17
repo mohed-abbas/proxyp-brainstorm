@@ -12,7 +12,7 @@
   min-height: min(100vh, 800px);
   display: flex;
   align-items: center;
-  padding-inline: 5.291cqw 5.0265cqw;
+  padding-inline: calc(80 * var(--pp-scale)) calc(76 * var(--pp-scale));
   background: var(--pp-ink);
   overflow: hidden;
 }
@@ -20,7 +20,7 @@
 .content {
   position: relative;
   width: 100%;
-  height: 32.937cqw;
+  height: calc(498.01 * var(--pp-scale));
 }
 
 /* ── Left editorial column ─────────────────────────────────────────────────*/
@@ -28,19 +28,19 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 44.048cqw;
+  width: calc(666.01 * var(--pp-scale));
   font-weight: 500;
-  font-size: 0.9259cqw;
+  font-size: calc(14 * var(--pp-scale));
   line-height: normal;
-  letter-spacing: 0.0926cqw;
+  letter-spacing: calc(1.4 * var(--pp-scale));
   color: #fff;
 }
 .eyebrowRule {
   position: absolute;
-  left: 0.0033cqw;
-  top: 1.1243cqw;
-  width: 4.9636cqw;
-  height: 0.6237cqw;
+  left: calc(0.05 * var(--pp-scale));
+  top: calc(17 * var(--pp-scale));
+  width: calc(75.05 * var(--pp-scale));
+  height: calc(9.43 * var(--pp-scale));
   transform: rotate(0.33deg);
 }
 .eyebrowRule img {
@@ -52,24 +52,24 @@
 .headline {
   position: absolute;
   left: 0;
-  top: 2.6455cqw;
-  width: 44.048cqw;
+  top: calc(40 * var(--pp-scale));
+  width: calc(666.01 * var(--pp-scale));
   font-weight: 500;
-  font-size: 2.5794cqw;
+  font-size: calc(39 * var(--pp-scale));
   line-height: normal;
-  letter-spacing: -0.0258cqw;
+  letter-spacing: calc(-0.39 * var(--pp-scale));
   color: var(--pp-bone);
 }
 
 .body {
   position: absolute;
   left: 0;
-  top: 10.384cqw;
-  width: 36.442cqw;
+  top: calc(157.01 * var(--pp-scale));
+  width: calc(551 * var(--pp-scale));
   font-weight: 400;
-  font-size: 1.0582cqw;
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: 0.0106cqw;
+  letter-spacing: calc(0.16 * var(--pp-scale));
   color: var(--pp-bone);
 }
 
@@ -81,44 +81,44 @@
 }
 .cardLabel {
   position: absolute;
-  top: 1.1574cqw;
+  top: calc(17.5 * var(--pp-scale));
   font-weight: 400;
-  font-size: 0.7937cqw;
+  font-size: calc(12 * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: 0.0794cqw;
+  letter-spacing: calc(1.2 * var(--pp-scale));
   color: #fff;
   white-space: nowrap;
   z-index: 1;
 }
 .cardCopy {
   position: absolute;
-  top: 3.5384cqw;
-  width: 15.873cqw;
+  top: calc(53.5 * var(--pp-scale));
+  width: calc(240 * var(--pp-scale));
   font-weight: 500;
-  font-size: 1.0582cqw;
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.5;
-  letter-spacing: 0.0106cqw;
+  letter-spacing: calc(0.16 * var(--pp-scale));
   color: #fff;
   z-index: 1;
 }
 
 /* VOLUME — tall left card carrying the blue zigzag graphic */
 .cardVolume {
-  left: 45.37cqw;
-  top: 0.0661cqw;
-  width: 21.495cqw;
-  height: 32.87cqw;
+  left: calc(685.99 * var(--pp-scale));
+  top: calc(1 * var(--pp-scale));
+  width: calc(325 * var(--pp-scale));
+  height: calc(496.99 * var(--pp-scale));
 }
 .cardVolume .cardLabel,
 .cardVolume .cardCopy {
-  left: 1.2235cqw;
+  left: calc(18.5 * var(--pp-scale));
 }
 .volumeGraphic {
   position: absolute;
-  left: -0.0331cqw;
-  top: 6.0516cqw;
-  width: 22.553cqw;
-  height: 22.553cqw;
+  left: calc(-0.5 * var(--pp-scale));
+  top: calc(91.5 * var(--pp-scale));
+  width: calc(341 * var(--pp-scale));
+  height: calc(341 * var(--pp-scale));
 }
 .graphicInner {
   position: absolute;
@@ -134,38 +134,38 @@
 /* The smaller zigzag echoed in FRICTION and RISK. */
 .cardGraphic {
   position: absolute;
-  top: 2.6455cqw;
-  right: -3.4392cqw;
-  width: 11.5079cqw;
-  height: 11.5079cqw;
+  top: calc(40 * var(--pp-scale));
+  right: calc(-52 * var(--pp-scale));
+  width: calc(174 * var(--pp-scale));
+  height: calc(174 * var(--pp-scale));
   z-index: 0;
 }
 
 /* FRICTION — top-right card */
 .cardFriction {
-  left: 68.196cqw;
-  top: 0.0661cqw;
-  width: 21.495cqw;
-  height: 16.005cqw;
+  left: calc(1031.12 * var(--pp-scale));
+  top: calc(1 * var(--pp-scale));
+  width: calc(325 * var(--pp-scale));
+  height: calc(242 * var(--pp-scale));
 }
 /* RISK — bottom-right card */
 .cardRisk {
-  left: 68.196cqw;
-  top: 17.791cqw;
-  width: 21.495cqw;
-  height: 15.146cqw;
+  left: calc(1031.12 * var(--pp-scale));
+  top: calc(269 * var(--pp-scale));
+  width: calc(325 * var(--pp-scale));
+  height: calc(229.01 * var(--pp-scale));
 }
 .cardFriction .cardLabel,
 .cardFriction .cardCopy,
 .cardRisk .cardLabel,
 .cardRisk .cardCopy {
-  left: 1.0251cqw;
+  left: calc(15.5 * var(--pp-scale));
 }
 .cardRisk .cardLabel {
-  top: 1.2897cqw;
+  top: calc(19.5 * var(--pp-scale));
 }
 .cardRisk .cardCopy {
-  top: 3.6707cqw;
+  top: calc(55.5 * var(--pp-scale));
 }
 
 /* ── Reveal masks ───────────────────────────────────────────────────────────
@@ -183,4 +183,102 @@
 .zigzagPath {
   stroke-dasharray: 100;
   stroke-dashoffset: 0;
+}
+
+/* ── Tablet + mobile (<1024): the coordinate field reflows to a single column —
+   editorial block (eyebrow → headline → body) then the three data cards stacked
+   full-width, their internals flowing. Fluid type; reveal animation unchanged. ── */
+@media (max-width: 1023px) {
+  .problem {
+    min-height: 0;
+    align-items: stretch;
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .content {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, 4vw, 28px);
+  }
+  .problem .eyebrow {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    font-size: var(--pp-fs-small);
+    letter-spacing: 0.04em;
+  }
+  /* The hand-drawn underline is a desktop accent; it collides with the reflowed
+     headline, so drop it on compact (do less). */
+  .problem .eyebrowRule {
+    display: none;
+  }
+  .problem .headline {
+    position: static;
+    top: auto;
+    width: auto;
+    font-size: var(--pp-fs-h2);
+    letter-spacing: -0.01em;
+  }
+  .problem .body {
+    position: static;
+    top: auto;
+    width: auto;
+    font-size: var(--pp-fs-body);
+  }
+  /* Cards → full-width stacked blocks (override the per-card absolute coords). */
+  .problem .card,
+  .cardVolume,
+  .cardFriction,
+  .cardRisk {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    padding: clamp(18px, 5vw, 28px);
+  }
+  .problem .cardVolume {
+    margin-top: clamp(8px, 3vw, 20px);
+  }
+  .problem .cardLabel,
+  .problem .cardCopy {
+    position: static;
+    inset: auto;
+    left: auto;
+    top: auto;
+    width: auto;
+  }
+  .problem .cardLabel {
+    font-size: var(--pp-fs-small);
+    margin-bottom: 8px;
+  }
+  .problem .cardCopy {
+    font-size: var(--pp-fs-body);
+  }
+  /* VOLUME zigzag → keep the desktop treatment: a square box (the .graphicInner
+     negative insets are calibrated to that square to recover the SVG's native
+     373×395 ratio — don't touch them) that spans the full card width so its right
+     tips reach + slightly bleed past the right border, exactly like the web layout.
+     Break it out of the card padding so it hits both edges. */
+  .problem .volumeGraphic {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+    /* Box left sits on the card's left border (left tip lands ~3.6% in, as on web);
+       the extra negative right margin makes the box ~5% wider than the card so the
+       right tips bleed past the right border and clip there — the desktop look. */
+    margin-top: 16px;
+    margin-left: calc(-1 * clamp(18px, 5vw, 28px));
+    margin-right: calc(-1 * clamp(18px, 5vw, 28px) - 6%);
+    height: auto;
+    aspect-ratio: 1;
+  }
+  /* Small-card accent zigzag → dropped on compact: it's a decorative desktop
+     flourish only, and the cards read cleaner without it. */
+  .problem .cardGraphic {
+    display: none;
+  }
 }

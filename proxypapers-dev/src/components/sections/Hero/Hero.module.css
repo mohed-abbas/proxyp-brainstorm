@@ -1,8 +1,8 @@
 /* Hero — Chinese-Black canvas split by a Proxy-Blue horizon lens. Ported from
    design-final/styles/hero.css. Scale model: the composition lives in .frame,
-   a 1512x789 reference box capped at min(100vw, 1512px); children size in cqw so
-   they freeze above 1512px. Backdrop layers (lens, clouds, arcs, conveyor) break
-   out to full-bleed (100vw) while keeping the frozen cqw height. */
+   a 1512x789 reference box capped at min(100vw, 1512px); children size in literal
+   px * var(--pp-scale) so they freeze above 1512px. Backdrop layers (lens, clouds,
+   arcs, conveyor) break out to full-bleed (100vw). */
 
 .hero {
   position: relative;
@@ -18,9 +18,15 @@
 .frame {
   position: relative;
   width: min(100vw, 1512px);
-  height: min(52.18vw, 789px);
+  height: calc(789 * var(--pp-scale));
   margin-inline: auto;
-  container-type: inline-size;
+}
+
+/* Backdrop group. On desktop it generates no box (display:contents), so the
+   lens/conveyor/axis keep resolving against .frame exactly as before. The mobile
+   band (<1024) turns it into a real, full-bleed, cropped flow element. */
+.stage {
+  display: contents;
 }
 
 /* ── Horizon lens ──────────────────────────────────────────────────────────── */
@@ -28,9 +34,9 @@
   position: absolute;
   left: 50%;
   margin-left: -50vw;
-  top: 8.52cqw;
+  top: calc(128.82 * var(--pp-scale));
   width: 100vw;
-  height: 39.38cqw;
+  height: calc(595.43 * var(--pp-scale));
   z-index: 1;
 }
 .lensFill {
@@ -73,15 +79,15 @@
   left: 50%;
   margin-left: -50vw;
   width: 100vw;
-  height: 35.252cqw;
+  height: calc(533.01 * var(--pp-scale));
   pointer-events: none;
 }
 .arcTop {
-  top: -23.797cqw;
+  top: calc(-359.81 * var(--pp-scale));
   transform: scaleY(-1);
 }
 .arcBottom {
-  top: 28.187cqw;
+  top: calc(426.19 * var(--pp-scale));
 }
 
 /* ── Document conveyor ───────────────────────────────────────────────────────── */
@@ -89,9 +95,9 @@
   position: absolute;
   left: 50%;
   margin-left: -50vw;
-  top: 25.6cqw;
+  top: calc(387.07 * var(--pp-scale));
   width: 100vw;
-  height: 4.48cqw;
+  height: calc(67.74 * var(--pp-scale));
   z-index: 2;
   overflow: hidden;
 }
@@ -137,7 +143,7 @@
   top: 0;
   display: flex;
   align-items: center;
-  gap: 0.73cqw;
+  gap: calc(11.04 * var(--pp-scale));
   height: 100%;
   will-change: transform;
 }
@@ -147,11 +153,11 @@
   flex: none;
   display: flex;
   align-items: center;
-  gap: 0.6cqw;
-  width: 17.06cqw;
-  height: 4.46cqw;
-  padding: 0 0.6cqw;
-  border-radius: 0.71cqw;
+  gap: calc(9.07 * var(--pp-scale));
+  width: calc(257.95 * var(--pp-scale));
+  height: calc(67.44 * var(--pp-scale));
+  padding: 0 calc(9.07 * var(--pp-scale));
+  border-radius: calc(10.74 * var(--pp-scale));
   background: rgba(255, 255, 255, 0.18);
   border: 0.5px solid rgba(247, 244, 240, 0.3);
   backdrop-filter: blur(2px);
@@ -160,15 +166,15 @@
   flex: none;
   display: grid;
   place-items: center;
-  width: 3.15cqw;
-  height: 3.2cqw;
-  border-radius: 0.5cqw;
+  width: calc(47.63 * var(--pp-scale));
+  height: calc(48.38 * var(--pp-scale));
+  border-radius: calc(7.56 * var(--pp-scale));
   background: rgba(247, 244, 240, 0.1);
   color: var(--pp-bone);
 }
 .docRowIcon svg {
-  width: 2.05cqw;
-  height: 2.05cqw;
+  width: calc(31 * var(--pp-scale));
+  height: calc(31 * var(--pp-scale));
 }
 .docRowMain {
   flex: 1 1 auto;
@@ -180,14 +186,14 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.6cqw;
+  gap: calc(9.07 * var(--pp-scale));
 }
 .docRowTitle {
   flex: 1 1 auto;
   min-width: 0;
   display: block;
   font-weight: 500;
-  font-size: 0.93cqw;
+  font-size: calc(14.06 * var(--pp-scale));
   line-height: 1.1;
   color: var(--pp-bone);
   white-space: nowrap;
@@ -196,9 +202,9 @@
 }
 .docRowSub {
   display: block;
-  margin-top: 0.18cqw;
+  margin-top: calc(2.72 * var(--pp-scale));
   font-weight: 400;
-  font-size: 0.66cqw;
+  font-size: calc(9.98 * var(--pp-scale));
   line-height: 1.1;
   color: rgba(247, 244, 240, 0.6);
   white-space: nowrap;
@@ -207,23 +213,23 @@
 }
 .docRowChips {
   display: flex;
-  gap: 0.6cqw;
-  margin-top: 0.34cqw;
+  gap: calc(9.07 * var(--pp-scale));
+  margin-top: calc(5.14 * var(--pp-scale));
 }
 .docRowChip {
   display: inline-flex;
   align-items: center;
-  gap: 0.26cqw;
+  gap: calc(3.93 * var(--pp-scale));
   font-weight: 400;
-  font-size: 0.56cqw;
+  font-size: calc(8.47 * var(--pp-scale));
   line-height: 1;
   color: rgba(247, 244, 240, 0.75);
   white-space: nowrap;
 }
 .docRowChip::before {
   content: "";
-  width: 0.3cqw;
-  height: 0.3cqw;
+  width: calc(4.54 * var(--pp-scale));
+  height: calc(4.54 * var(--pp-scale));
   border-radius: 50%;
   background: currentColor;
   opacity: 0.85;
@@ -234,7 +240,7 @@
 .docRowCat {
   flex: none;
   font-weight: 400;
-  font-size: 0.62cqw;
+  font-size: calc(9.37 * var(--pp-scale));
   line-height: 1.1;
   color: rgba(247, 244, 240, 0.45);
   white-space: nowrap;
@@ -256,31 +262,31 @@
 }
 .skBarTitle {
   width: 72%;
-  height: 0.62cqw;
+  height: calc(9.37 * var(--pp-scale));
 }
 .skBarSub {
   width: 46%;
-  height: 0.46cqw;
-  margin-top: 0.36cqw;
+  height: calc(6.96 * var(--pp-scale));
+  margin-top: calc(5.44 * var(--pp-scale));
 }
 .skBarChip {
-  width: 1.7cqw;
-  height: 0.42cqw;
+  width: calc(25.7 * var(--pp-scale));
+  height: calc(6.35 * var(--pp-scale));
 }
 .skBarCat {
   flex: none;
-  width: 2.2cqw;
-  height: 0.42cqw;
+  width: calc(33.26 * var(--pp-scale));
+  height: calc(6.35 * var(--pp-scale));
 }
 
 /* ── Centre axis + brand card ────────────────────────────────────────────────── */
 .axis {
   position: absolute;
   left: 50%;
-  top: 17.26cqw;
+  top: calc(260.97 * var(--pp-scale));
   transform: translateX(-50%);
-  width: 5.53cqw;
-  height: 21.69cqw;
+  width: calc(83.61 * var(--pp-scale));
+  height: calc(327.95 * var(--pp-scale));
   z-index: 3;
   display: flex;
   justify-content: center;
@@ -302,20 +308,20 @@
 }
 .axisCard {
   position: absolute;
-  top: 7.8cqw;
+  top: calc(117.94 * var(--pp-scale));
   left: 50%;
   transform: translateX(-50%);
   display: grid;
   place-items: center;
-  width: 5.53cqw;
-  height: 5.62cqw;
-  border-radius: 0.62cqw;
+  width: calc(83.61 * var(--pp-scale));
+  height: calc(84.97 * var(--pp-scale));
+  border-radius: calc(9.37 * var(--pp-scale));
   background: var(--pp-bone);
   border: 0.5px solid rgba(247, 244, 240, 0.3);
-  box-shadow: 0 1cqw 3cqw rgba(0, 0, 0, 0.35);
+  box-shadow: 0 calc(15.12 * var(--pp-scale)) calc(45.36 * var(--pp-scale)) rgba(0, 0, 0, 0.35);
 }
 .axisCard img {
-  width: 2.41cqw;
+  width: calc(36.44 * var(--pp-scale));
   height: auto;
 }
 
@@ -325,19 +331,19 @@
   left: 50%;
   top: 2rem;
   transform: translateX(-50%);
-  width: min(55.886cqw, 845px);
+  width: calc(845 * var(--pp-scale));
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: min(1.653cqw, 25px);
+  gap: calc(25 * var(--pp-scale));
   z-index: 4;
   text-align: center;
 }
 .leadTitle {
   font-weight: 500;
-  font-size: min(4.0344cqw, 61px);
+  font-size: calc(61 * var(--pp-scale));
   line-height: 1.2;
-  letter-spacing: max(-1.22px, -0.0807cqw);
+  letter-spacing: calc(-1.22 * var(--pp-scale));
   color: var(--pp-bone);
 }
 /* "data." — the only accent: a soft blue gradient on the turn word. */
@@ -348,32 +354,32 @@
   color: transparent;
 }
 .leadBody {
-  width: min(39.02cqw, 590px);
+  width: calc(590 * var(--pp-scale));
   font-weight: 400;
-  font-size: min(1.058cqw, 16px);
+  font-size: calc(16 * var(--pp-scale));
   line-height: 1.4;
-  letter-spacing: min(0.0212cqw, 0.32px);
+  letter-spacing: calc(0.32 * var(--pp-scale));
   color: rgba(247, 244, 240, 0.7);
 }
 .leadCta {
   display: flex;
   align-items: center;
-  gap: min(2.645cqw, 40px);
-  margin-top: min(0.4cqw, 6px);
+  gap: calc(40 * var(--pp-scale));
+  margin-top: calc(6 * var(--pp-scale));
 }
 .link {
   display: inline-flex;
   flex-direction: column;
-  gap: min(0.4cqw, 6px);
+  gap: calc(6 * var(--pp-scale));
   font-weight: 500;
-  font-size: min(1.058cqw, 16px);
+  font-size: calc(16 * var(--pp-scale));
   color: rgba(247, 244, 240, 0.5);
   text-decoration: none;
   white-space: nowrap;
 }
 .link::after {
   content: "";
-  width: min(11.77cqw, 178px);
+  width: calc(178 * var(--pp-scale));
   height: 1px;
   background: rgba(247, 244, 240, 0.5);
   transition: background 0.3s var(--pp-ease-out);
@@ -432,13 +438,144 @@
 .statement {
   position: absolute;
   left: 50%;
-  top: 40.06cqw;
+  top: calc(605.71 * var(--pp-scale));
   transform: translateX(-50%);
-  width: min(37.5cqw, 567px);
+  width: calc(567 * var(--pp-scale));
   font-weight: 500;
-  font-size: min(1.323cqw, 20px);
+  font-size: calc(20 * var(--pp-scale));
   line-height: 1.35;
   color: #fff;
   text-align: center;
   z-index: 4;
+}
+
+/* ── Tablet + mobile (<1024): the layered coordinate composition reflows to a
+   centred column — lead → BAND → statement. The lens + conveyor + axis card are NOT
+   dropped: they're grouped into `.stage`, a full-bleed band carrying the CENTRAL
+   SLICE of the desktop composition (the curved "eclipse" cropped to the viewport,
+   conveyor running through, brand card dead-centre as the onboarding logo's landing
+   target). Text reflows centred above/below it. The hero grows naturally (safe
+   center) so the band is never clipped. ──────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+    padding: calc(var(--pp-tap) + 64px) var(--pp-gutter) var(--pp-stack);
+  }
+  .frame {
+    position: static;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--pp-stack);
+  }
+
+  /* Flow order: lead → band → statement. */
+  .lead {
+    order: 1;
+    position: relative;
+    z-index: 4;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    gap: clamp(16px, 4vw, 25px);
+  }
+  .statement {
+    order: 3;
+    position: relative;
+    z-index: 4;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    max-width: 40ch;
+    font-size: var(--pp-fs-lead);
+  }
+  .leadTitle {
+    font-size: var(--pp-fs-display);
+    letter-spacing: -0.01em;
+  }
+  .leadBody {
+    width: 100%;
+    max-width: 42ch;
+    font-size: var(--pp-fs-body);
+    letter-spacing: 0;
+  }
+  .leadCta {
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 8px;
+  }
+  .link {
+    font-size: var(--pp-fs-small);
+    gap: 6px;
+  }
+  .link::after {
+    width: 160px;
+  }
+
+  /* ── The band. `--pp-scale: 1px` renders the layers at native (desktop) px; the
+     lens keeps its desktop 1512×595 geometry (the arcs are its children, so they
+     stay aligned to the eye), and we simply CENTRE it in a shorter, full-bleed band
+     and clip — showing the eye's full-blue middle with the curve at the edges. ── */
+  .stage {
+    --pp-scale: 1px;
+    order: 2;
+    display: block;
+    position: relative;
+    /* 100vw flex item, centred on the (viewport-centred) frame by the parent's
+       align-items:center → true full-bleed without a left/transform offset. */
+    width: 100vw;
+    /* Tall enough to reveal the lens's arc hairlines (~±136px from centre) at the
+       band's top/bottom edges — the "eclipse" curve. */
+    height: clamp(280px, 74vw, 336px);
+    overflow: hidden;
+  }
+
+  /* Lens (eye) at desktop size, centred both axes. */
+  .lens {
+    top: 50%;
+    bottom: auto;
+    left: 50%;
+    margin-left: 0;
+    transform: translate(-50%, -50%);
+    width: calc(1512 * var(--pp-scale));
+    height: calc(595.43 * var(--pp-scale));
+    z-index: 1;
+  }
+  /* Arcs span the full eye width so their curves trace the lens edges. */
+  .arc {
+    left: 0;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Conveyor: 100vw so its centre mask (skeleton left / data right) sits under the
+     centred card; vertically centred in the band. */
+  .conveyor {
+    display: block;
+    top: 50%;
+    left: 0;
+    margin-left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    z-index: 3;
+  }
+
+  /* Axis line + brand card, centred. The 327px line crops to short segments above/
+     below the card; the card is the onboarding logo's landing target. */
+  .axis {
+    display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+  }
 }
