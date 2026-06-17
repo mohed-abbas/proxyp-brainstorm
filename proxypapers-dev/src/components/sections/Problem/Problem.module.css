@@ -257,15 +257,24 @@
   .problem .cardCopy {
     font-size: var(--pp-fs-body);
   }
-  /* VOLUME zigzag → a square decorative band under the copy. */
+  /* VOLUME zigzag → keep the desktop treatment: a square box (the .graphicInner
+     negative insets are calibrated to that square to recover the SVG's native
+     373×395 ratio — don't touch them) that spans the full card width so its right
+     tips reach + slightly bleed past the right border, exactly like the web layout.
+     Break it out of the card padding so it hits both edges. */
   .problem .volumeGraphic {
     position: relative;
     left: auto;
     top: auto;
-    width: 100%;
+    width: auto;
+    /* Box left sits on the card's left border (left tip lands ~3.6% in, as on web);
+       the extra negative right margin makes the box ~5% wider than the card so the
+       right tips bleed past the right border and clip there — the desktop look. */
+    margin-top: 16px;
+    margin-left: calc(-1 * clamp(18px, 5vw, 28px));
+    margin-right: calc(-1 * clamp(18px, 5vw, 28px) - 6%);
     height: auto;
     aspect-ratio: 1;
-    margin-top: 16px;
   }
   /* Small-card accent zigzag → a contained bottom-right corner accent. */
   .problem .cardGraphic {
