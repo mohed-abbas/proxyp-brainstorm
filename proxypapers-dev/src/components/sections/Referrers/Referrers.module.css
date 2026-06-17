@@ -213,3 +213,34 @@
   padding: 0.06em 0 0.14em;
   margin: -0.06em 0 -0.14em;
 }
+
+/* ── Tablet + mobile (<1024): already a centred column; cap + centre the orbit,
+   switch to fluid type, and give the CTA fixed readable sizing. The orbit spin +
+   reveal motion is unchanged (svgOrigin is in scale-invariant SVG units). ─────── */
+@media (max-width: 1023px) {
+  .referrers {
+    min-height: 0;
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .content {
+    width: 100%;
+    max-width: 560px;
+    gap: clamp(20px, 5vw, 32px);
+  }
+  .title {
+    font-size: var(--pp-fs-h2);
+  }
+  .orbit {
+    width: min(86vw, 360px);
+    height: auto;
+    aspect-ratio: 593 / 358;
+  }
+  .body {
+    font-size: var(--pp-fs-body);
+  }
+  .cta {
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: var(--pp-fs-body);
+  }
+}

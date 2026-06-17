@@ -127,3 +127,46 @@
   padding: 0.06em 0 0.14em;
   margin: -0.06em 0 -0.14em;
 }
+
+/* ── Tablet + mobile (<1024): the corner-anchored headline + action block stack
+   into one left-aligned column with fluid type. Reveal animation unchanged. ───── */
+@media (max-width: 1023px) {
+  .closing {
+    min-height: 0;
+    border-radius: 16px;
+    padding: var(--pp-stack) var(--pp-gutter);
+    align-items: stretch;
+  }
+  .inner {
+    width: 100%;
+  }
+  .closing .title {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    max-width: 14ch;
+    font-size: var(--pp-fs-display);
+  }
+  .closing .action {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    align-items: flex-start;
+    margin-top: var(--pp-stack);
+    gap: clamp(14px, 3vw, 22px);
+  }
+  .closing .body {
+    font-size: var(--pp-fs-body);
+    text-align: left;
+  }
+  .closing .link {
+    font-size: var(--pp-fs-body);
+    gap: 6px;
+  }
+  .closing .link svg {
+    width: 18px;
+    height: 18px;
+  }
+}

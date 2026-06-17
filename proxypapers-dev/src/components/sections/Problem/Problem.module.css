@@ -184,3 +184,96 @@
   stroke-dasharray: 100;
   stroke-dashoffset: 0;
 }
+
+/* ── Tablet + mobile (<1024): the coordinate field reflows to a single column —
+   editorial block (eyebrow → headline → body) then the three data cards stacked
+   full-width, their internals flowing. Fluid type; reveal animation unchanged. ── */
+@media (max-width: 1023px) {
+  .problem {
+    min-height: 0;
+    align-items: stretch;
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .content {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, 4vw, 28px);
+  }
+  .problem .eyebrow {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    font-size: var(--pp-fs-small);
+    letter-spacing: 0.04em;
+  }
+  /* The hand-drawn underline is a desktop accent; it collides with the reflowed
+     headline, so drop it on compact (do less). */
+  .problem .eyebrowRule {
+    display: none;
+  }
+  .problem .headline {
+    position: static;
+    top: auto;
+    width: auto;
+    font-size: var(--pp-fs-h2);
+    letter-spacing: -0.01em;
+  }
+  .problem .body {
+    position: static;
+    top: auto;
+    width: auto;
+    font-size: var(--pp-fs-body);
+  }
+  /* Cards → full-width stacked blocks (override the per-card absolute coords). */
+  .problem .card,
+  .cardVolume,
+  .cardFriction,
+  .cardRisk {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    padding: clamp(18px, 5vw, 28px);
+  }
+  .problem .cardVolume {
+    margin-top: clamp(8px, 3vw, 20px);
+  }
+  .problem .cardLabel,
+  .problem .cardCopy {
+    position: static;
+    inset: auto;
+    left: auto;
+    top: auto;
+    width: auto;
+  }
+  .problem .cardLabel {
+    font-size: var(--pp-fs-small);
+    margin-bottom: 8px;
+  }
+  .problem .cardCopy {
+    font-size: var(--pp-fs-body);
+  }
+  /* VOLUME zigzag → a square decorative band under the copy. */
+  .problem .volumeGraphic {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    margin-top: 16px;
+  }
+  /* Small-card accent zigzag → a contained bottom-right corner accent. */
+  .problem .cardGraphic {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    width: clamp(90px, 26vw, 140px);
+    height: auto;
+    aspect-ratio: 1;
+  }
+}
