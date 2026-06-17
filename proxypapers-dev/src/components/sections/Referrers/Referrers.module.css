@@ -1,5 +1,5 @@
 /* Referrers — "You advise high-net-worth clients?" (Figma 68:813).
-   Full-bleed dark band (sits OUTSIDE .page-frame, raw vw). A centred column:
+   Full-bleed dark band (sits OUTSIDE .page-frame). A centred column:
    title, an orbital "radar" diagram (P-mark in a glassy chip at centre, three
    concentric rings, five advisor avatars on the inner/middle orbits), body, CTA.
    The orbit is one 494×494 coordinate field clipped to the top so rings, mark
@@ -12,24 +12,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline: min(5.0265vw, 76px);
+  padding-inline: calc(76px * var(--pp-scale));
   background: var(--pp-ink);
   overflow: hidden;
 }
 
 .content {
   position: relative;
-  width: min(69.4444vw, 1050px);
+  width: calc(1050px * var(--pp-scale));
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: min(1.7857vw, 27px);
+  gap: calc(27px * var(--pp-scale));
   text-align: center;
 }
 
 .title {
   font-weight: 500;
-  font-size: min(3.2407vw, 49px);
+  font-size: calc(49px * var(--pp-scale));
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--pp-bone);
@@ -38,8 +38,8 @@
 /* ── Orbital diagram ──────────────────────────────────────────────────────── */
 .orbit {
   position: relative;
-  width: min(32.672vw, 593px);
-  height: min(19.709vw, 358px);
+  width: calc(593px * var(--pp-scale));
+  height: calc(358px * var(--pp-scale));
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -136,12 +136,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: min(1.7857vw, 27px);
+  gap: calc(27px * var(--pp-scale));
 }
 .body {
   width: 100%;
   font-weight: 400;
-  font-size: min(1.0582vw, 16px);
+  font-size: calc(16px * var(--pp-scale));
   line-height: 1.45;
   letter-spacing: 0.02em;
   color: rgba(247, 244, 240, 0.7);
@@ -152,12 +152,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: min(0.6614vw, 10px) min(1.3228vw, 20px);
-  border-radius: min(2.9762vw, 45px);
+  padding: calc(10px * var(--pp-scale)) calc(20px * var(--pp-scale));
+  border-radius: calc(45px * var(--pp-scale));
   background: var(--pp-blue);
   color: var(--pp-bone);
   font-weight: 500;
-  font-size: min(1.0582vw, 16px);
+  font-size: calc(16px * var(--pp-scale));
   text-decoration: none;
   white-space: nowrap;
   transition:
@@ -167,7 +167,7 @@
 .cta:hover,
 .cta:focus-visible {
   background-color: var(--pp-bone);
-  transform: translateY(max(-2px, -0.1323vw));
+  transform: translateY(calc(-2px * var(--pp-scale)));
 }
 
 /* Inverted hover roll — pill fills bone, label rolls up to a Proxy-Blue copy

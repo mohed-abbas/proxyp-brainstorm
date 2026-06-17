@@ -3,17 +3,17 @@
    the clouds image bled from the top and bottom-left. One centred, bottom-aligned
    group: a left brand column (big bone P-mark over the copyright) beside two link
    columns, each preceded by a hairline divider. BLUE surface (navbar takes its
-   blue theme). Full-bleed (outside .page-frame, raw vw); content capped per-metric
-   via min(vw, px) so it freezes at Figma size at/above 1512px. */
+   blue theme). Full-bleed (outside .page-frame); the decorative clouds keep raw vw,
+   content is capped per-metric via px * var(--pp-scale) (freezes at/above 1512). */
 
 .footer {
   position: relative;
   width: 100%;
   margin-top: 1rem;
-  min-height: min(53.9021vw, 815px);
-  padding-top: min(8.2011vw, 124px);
+  min-height: calc(815px * var(--pp-scale));
+  padding-top: calc(124px * var(--pp-scale));
   background: var(--pp-blue);
-  border-radius: min(1.3228vw, 20px) min(1.3228vw, 20px) 0 0;
+  border-radius: calc(20px * var(--pp-scale)) calc(20px * var(--pp-scale)) 0 0;
   overflow: hidden;
   isolation: isolate;
   color: var(--pp-bone);
@@ -28,7 +28,7 @@
   opacity: 0.1;
   background-image: url("/images/grain.webp");
   background-repeat: repeat;
-  background-size: min(25.1323vw, 380px) min(25.1323vw, 380px);
+  background-size: calc(380px * var(--pp-scale)) calc(380px * var(--pp-scale));
 }
 
 .cloud {
@@ -63,19 +63,19 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: min(12.3016vw, 186px);
+  gap: calc(186px * var(--pp-scale));
 }
 
 .brand {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: min(12.3016vw, 186px);
-  width: min(19.3122vw, 292px);
+  gap: calc(186px * var(--pp-scale));
+  width: calc(292px * var(--pp-scale));
 }
 .mark {
-  width: min(14.6101vw, 220.904px);
-  height: min(21.6906vw, 327.962px);
+  width: calc(220.904px * var(--pp-scale));
+  height: calc(327.962px * var(--pp-scale));
   display: flex;
   align-items: center;
 }
@@ -89,14 +89,14 @@
 }
 .legal {
   font-weight: 500;
-  font-size: min(1.0582vw, 16px);
+  font-size: calc(16px * var(--pp-scale));
   color: var(--pp-bone);
   white-space: nowrap;
 }
 
 /* ── Right group — two divider + column units spread apart ─────────────────── */
 .cols {
-  width: min(45.172vw, 683px);
+  width: calc(683px * var(--pp-scale));
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -104,13 +104,13 @@
 .unit {
   display: flex;
   align-items: center;
-  gap: min(2.1825vw, 33px);
+  gap: calc(33px * var(--pp-scale));
 }
 
 .rule {
   flex-shrink: 0;
   width: 1px;
-  height: min(41.5366vw, 628px);
+  height: calc(628px * var(--pp-scale));
   background: rgba(247, 244, 240, 0.28);
   transform-origin: top center;
 }
@@ -119,25 +119,25 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: min(41.5366vw, 628px);
+  height: calc(628px * var(--pp-scale));
 }
 .col[data-col="1"] {
-  width: min(5.8201vw, 88px);
+  width: calc(88px * var(--pp-scale));
 }
 .col[data-col="2"] {
-  width: min(14.418vw, 218px);
+  width: calc(218px * var(--pp-scale));
 }
 .group {
   display: flex;
   flex-direction: column;
-  gap: min(0.6614vw, 10px);
+  gap: calc(10px * var(--pp-scale));
   list-style: none;
 }
 
 .link {
   display: inline-block;
   font-weight: 500;
-  font-size: min(1.3228vw, 20px);
+  font-size: calc(20px * var(--pp-scale));
   line-height: 1.2;
   letter-spacing: 0.005em;
   color: var(--pp-bone);
@@ -152,7 +152,7 @@
 }
 .linkActive {
   text-decoration: underline;
-  text-underline-offset: min(0.2vw, 3px);
+  text-underline-offset: calc(3px * var(--pp-scale));
   text-decoration-thickness: 1px;
 }
 

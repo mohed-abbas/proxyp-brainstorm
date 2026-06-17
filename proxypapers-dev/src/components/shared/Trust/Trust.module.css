@@ -3,13 +3,13 @@
    certifications marquee. The brand's first LIGHT surface (the navbar flips to its
    light theme over it). FULL-BLEED EXCEPTION: composed OUTSIDE .page-frame, so the
    panel opens to the full viewport width. Copy is capped at the Figma size via
-   min(vw, px); the panel keeps growing past 1512 while the copy freezes. */
+   px * var(--pp-scale); the panel keeps growing past 1512 while the copy freezes. */
 
 .trust {
   position: relative;
   width: 100%;
   margin-top: 1rem;
-  min-height: min(34.5899vw, 523px);
+  min-height: calc(523px * var(--pp-scale));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,22 +20,22 @@
 .panel {
   position: relative;
   width: 100%;
-  min-height: min(34.5899vw, 523px);
+  min-height: calc(523px * var(--pp-scale));
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline: min(5.0265vw, 76px);
+  padding-inline: calc(76px * var(--pp-scale));
   background: var(--pp-bone);
-  border-radius: min(1.3228vw, 20px);
+  border-radius: calc(20px * var(--pp-scale));
   overflow: hidden;
 }
 
 /* Inset hairline frame — bordered rectangle around the copy; rides the panel. */
 .frame {
   position: absolute;
-  inset: min(0.9921vw, 15px) min(1.1243vw, 17px);
+  inset: calc(15px * var(--pp-scale)) calc(17px * var(--pp-scale));
   border: 1px solid var(--pp-ink);
-  border-radius: min(1.3228vw, 20px);
+  border-radius: calc(20px * var(--pp-scale));
   pointer-events: none;
 }
 
@@ -43,13 +43,13 @@
    GSAP reveals it for the expand then fades it out. */
 .eyebrow {
   position: absolute;
-  top: min(2.3148vw, 35px);
+  top: calc(35px * var(--pp-scale));
   left: 0;
   right: 0;
   z-index: 2;
   text-align: center;
   font-weight: 500;
-  font-size: min(1.0582vw, 16px);
+  font-size: calc(16px * var(--pp-scale));
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: var(--pp-ink);
@@ -71,15 +71,15 @@
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 min(5.0265vw, 76px),
-    #000 calc(100% - min(5.0265vw, 76px)),
+    #000 calc(76px * var(--pp-scale)),
+    #000 calc(100% - calc(76px * var(--pp-scale))),
     transparent 100%
   );
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 min(5.0265vw, 76px),
-    #000 calc(100% - min(5.0265vw, 76px)),
+    #000 calc(76px * var(--pp-scale)),
+    #000 calc(100% - calc(76px * var(--pp-scale))),
     transparent 100%
   );
   -webkit-mask-repeat: no-repeat;
@@ -95,9 +95,9 @@
   position: absolute;
   left: 0;
   width: 100%;
-  top: min(25.9259vw, 392px);
+  top: calc(392px * var(--pp-scale));
   transform: translateY(-50%);
-  font-size: min(3.2407vw, 49px);
+  font-size: calc(49px * var(--pp-scale));
 }
 /* The scrolling track. --marquee-shift / --marquee-duration are set by the hook
    from the measured one-set width, so the loop is seamless for any cert count /
@@ -191,17 +191,17 @@
 .content {
   position: relative;
   z-index: 1;
-  width: min(45.4365vw, 687px);
-  margin-bottom: min(6.8545vw, 103.64px);
+  width: calc(687px * var(--pp-scale));
+  margin-bottom: calc(103.64px * var(--pp-scale));
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: min(1.2566vw, 19px);
+  gap: calc(19px * var(--pp-scale));
   text-align: center;
 }
 .title {
   font-weight: 500;
-  font-size: min(3.2407vw, 49px);
+  font-size: calc(49px * var(--pp-scale));
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--pp-ink);
@@ -212,7 +212,7 @@
 }
 .body {
   font-weight: 400;
-  font-size: min(1.0582vw, 16px);
+  font-size: calc(16px * var(--pp-scale));
   line-height: 1.45;
   letter-spacing: 0.02em;
   color: rgba(22, 23, 24, 0.7);
