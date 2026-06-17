@@ -156,50 +156,62 @@
   text-decoration-thickness: 1px;
 }
 
-/* ── Mobile — stack everything ─────────────────────────────────────────────── */
-@media (max-width: 768px) {
+/* ── Tablet + mobile (<1024): leave the artboard scale for readable fluid type;
+   brand stacks above the link columns. Columns sit side-by-side on tablet, then
+   stack on mobile. Reveal animation unchanged. ──────────────────────────────── */
+@media (max-width: 1023px) {
   .footer {
     min-height: auto;
-    padding: 56px 24px 32px;
+    padding: clamp(48px, 9vw, 96px) var(--pp-gutter) 32px;
     border-radius: 16px 16px 0 0;
   }
   .content {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 40px;
+    gap: clamp(40px, 9vw, 72px);
   }
   .brand {
     width: auto;
-    gap: 28px;
+    gap: clamp(24px, 6vw, 48px);
   }
   .mark {
-    width: 88px;
+    width: clamp(96px, 20vw, 180px);
     height: auto;
   }
   .legal {
-    font-size: 13px;
+    font-size: var(--pp-fs-small);
   }
   .cols {
     width: 100%;
-    flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start;
-    gap: 36px;
+    gap: clamp(32px, 8vw, 96px);
   }
   .rule {
     display: none;
   }
-  .col {
+  .unit {
+    gap: 0;
+  }
+  .col,
+  .col[data-col="1"],
+  .col[data-col="2"] {
     height: auto;
     width: auto;
     justify-content: flex-start;
-    gap: 28px;
+    gap: clamp(20px, 5vw, 28px);
   }
   .group {
     gap: 8px;
   }
   .link {
-    font-size: 16px;
+    font-size: var(--pp-fs-body);
+  }
+}
+
+@media (max-width: 767px) {
+  .cols {
+    flex-direction: column;
+    gap: 36px;
   }
 }

@@ -223,3 +223,41 @@
   padding: 0.06em 0 0.14em;
   margin: -0.06em 0 -0.14em;
 }
+
+/* ── Tablet + mobile (<1024): readable fluid copy, compressed panel; the marquee
+   tracks the panel as a % so it stays seated as the panel shrinks. The pinned
+   expand + marquee motion is unchanged (the panel is full-width either way). ──── */
+@media (max-width: 1023px) {
+  .trust {
+    min-height: 0;
+  }
+  .panel {
+    min-height: clamp(380px, 64vw, 500px);
+    padding-inline: var(--pp-gutter);
+    border-radius: 16px;
+  }
+  .frame {
+    inset: 12px;
+    border-radius: 12px;
+  }
+  .eyebrow {
+    top: clamp(22px, 5vw, 35px);
+    font-size: var(--pp-fs-small);
+  }
+  .content {
+    width: 100%;
+    max-width: 560px;
+    margin-bottom: clamp(72px, 20vw, 130px);
+    gap: clamp(12px, 3vw, 19px);
+  }
+  .title {
+    font-size: var(--pp-fs-h2);
+  }
+  .body {
+    font-size: var(--pp-fs-body);
+  }
+  .certs {
+    top: 76%;
+    font-size: clamp(26px, 7vw, 40px);
+  }
+}
