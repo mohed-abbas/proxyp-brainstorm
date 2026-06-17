@@ -75,7 +75,11 @@
   font-family: var(--pp-font);
   color: var(--pp-ink);
   cursor: pointer;
-  transition: filter 0.3s var(--pp-ease-out);
+  transition:
+    background-color 0.8s var(--pp-ease-out),
+    border-color 0.8s var(--pp-ease-out),
+    color 0.8s var(--pp-ease-out),
+    filter 0.3s var(--pp-ease-out);
 }
 .nav:global(.pp-theme-light) .menuBtn {
   color: var(--pp-bone);
