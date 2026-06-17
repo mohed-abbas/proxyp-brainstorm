@@ -221,6 +221,7 @@
   .referrers {
     min-height: 0;
     padding: var(--pp-stack) var(--pp-gutter);
+    margin:1rem 0;
   }
   .content {
     width: 100%;
