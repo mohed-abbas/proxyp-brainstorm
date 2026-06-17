@@ -312,6 +312,26 @@ html.js .ob-stage {
   height: 108.6vw;
 }
 
+/* Tablet + mobile (<1024): the desktop vh anchors push the top-right cloud entirely
+   above a portrait viewport (only the left cloud's corner shows), leaving the
+   welcome lopsided. Re-pin the pair to opposite corners — one feathering in from the
+   TOP-LEFT, one from the BOTTOM-RIGHT — so the diagonal reads on a tall screen. Size
+   stays 108.6vw; each is offset by ~half so a single quadrant fills its corner. */
+@media (max-width: 1023px) {
+  .ob-cloud--left {
+    left: -50vw;
+    top: -55vw;
+    right: auto;
+    bottom: auto;
+  }
+  .ob-cloud--top-right {
+    left: auto;
+    top: auto;
+    right: -50vw;
+    bottom: -55vw;
+  }
+}
+
 .ob-brand {
   position: absolute;
   left: 50%;
