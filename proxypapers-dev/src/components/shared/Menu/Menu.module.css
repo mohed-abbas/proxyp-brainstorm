@@ -9,7 +9,7 @@
   z-index: 90;
   visibility: hidden;
   pointer-events: none;
-  transition: visibility 0s linear 0.7s;
+  transition: visibility 0s linear 0.9s;
 }
 .menu[data-state="open"] {
   visibility: visible;
@@ -29,7 +29,7 @@
   cursor: pointer;
   background: rgba(22, 23, 24, 0.12);
   opacity: 0;
-  transition: opacity 0.3s var(--pp-ease-out);
+  transition: opacity 0.4s var(--pp-ease-out);
 }
 .menu[data-state="open"] .scrim {
   opacity: 1;
@@ -52,15 +52,15 @@
   opacity: 0;
   clip-path: inset(1.5921% 1.6245% 89.3827% 75.2708% round 1.461%);
   transition:
-    opacity 0.2s var(--pp-ease-out) 0.45s,
-    clip-path 0.7s var(--pp-ease-out);
+    opacity 0.26s var(--pp-ease-out) 0.58s,
+    clip-path 0.9s var(--pp-ease-out);
 }
 .menu[data-state="open"] .panel {
   opacity: 1;
   clip-path: inset(0% 0% 0% 0% round 1.8051%);
   transition:
-    opacity 0.22s var(--pp-ease-out),
-    clip-path 0.9s var(--pp-ease-out);
+    opacity 0.29s var(--pp-ease-out),
+    clip-path 1.2s var(--pp-ease-out);
 }
 
 /* FR | EN */
@@ -124,11 +124,11 @@
   display: block;
   position: relative;
   transform: translateY(108%);
-  transition: transform 0.4s var(--pp-ease-out);
+  transition: transform 0.51s var(--pp-ease-out);
 }
 .menu[data-state="open"] .linkText {
   transform: none;
-  transition: transform 0.6s var(--pp-ease-out);
+  transition: transform 0.8s var(--pp-ease-out);
 }
 
 /* Hover roll-to-blue — same mechanic as the Trust certs: two stacked copies in the
@@ -218,34 +218,34 @@
   opacity: 0;
   transform: translateY(8px);
   transition:
-    opacity 0.35s var(--pp-ease-out),
-    transform 0.35s var(--pp-ease-out);
+    opacity 0.45s var(--pp-ease-out),
+    transform 0.45s var(--pp-ease-out);
 }
 .menu[data-state="open"] .lang,
 .menu[data-state="open"] .foot {
   opacity: 1;
   transform: none;
   transition:
-    opacity 0.4s var(--pp-ease-out),
-    transform 0.5s var(--pp-ease-out);
+    opacity 0.53s var(--pp-ease-out),
+    transform 0.67s var(--pp-ease-out);
 }
 .menu[data-state="open"] .lang {
-  transition-delay: 0.08s;
+  transition-delay: 0.11s;
 }
 .menu[data-state="open"] .link:nth-child(1) .linkText {
-  transition-delay: 0.12s;
+  transition-delay: 0.16s;
 }
 .menu[data-state="open"] .link:nth-child(2) .linkText {
-  transition-delay: 0.18s;
-}
-.menu[data-state="open"] .link:nth-child(3) .linkText {
   transition-delay: 0.24s;
 }
+.menu[data-state="open"] .link:nth-child(3) .linkText {
+  transition-delay: 0.32s;
+}
 .menu[data-state="open"] .link:nth-child(4) .linkText {
-  transition-delay: 0.3s;
+  transition-delay: 0.4s;
 }
 .menu[data-state="open"] .foot {
-  transition-delay: 0.36s;
+  transition-delay: 0.48s;
 }
 
 @media (prefers-reduced-motion: reduce) {
