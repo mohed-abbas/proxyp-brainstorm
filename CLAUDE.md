@@ -106,3 +106,50 @@ The production site is being built in `proxypapers-dev/` by porting `design-fina
   repo root.
 - **Before each commit:** `npm run build` + `npm run lint` must pass. Commit locally
   per section; push only when asked. **No AI/Claude mention in commit messages.**
+
+## Figma MCP integration
+
+How to translate Figma inputs into code for this project. Follow these for **every
+Figma-driven change**. (Note: these are always-on context — they govern behavior
+only when you are actually doing Figma work.)
+
+### Required flow (do not skip)
+
+1. Run `get_design_context` first to fetch the structured representation for the
+   exact node(s).
+2. If the response is too large or truncated, run `get_metadata` for the high-level
+   node map, then re-fetch only the required node(s) with `get_design_context`.
+3. Run `get_screenshot` for a visual reference of the node variant being implemented.
+4. Only once you have **both** `get_design_context` and `get_screenshot`, download any
+   needed assets and start implementing.
+5. Translate the output into **this project's** conventions — see below. Reuse the
+   project's tokens, components, and typography wherever possible.
+6. Validate against Figma for 1:1 look and behavior before marking complete.
+
+### Implementation rules (adapted to this repo)
+
+- The Figma MCP emits **React + Tailwind**. Treat it as a representation of design and
+  behavior, **not** final code style. **This project has no Tailwind** — strip the
+  utility classes and re-express styling as **CSS Modules per component + the global
+  `--pp-*` tokens** in `proxypapers-dev/src/app/globals.css` (see the `proxypapers-dev`
+  port rules above).
+- **Reuse existing shared components** from `proxypapers-dev/src/components/shared/`
+  (e.g. `PpMark`, `Navbar`, `Menu`) and existing typography/spacing rather than
+  duplicating. Place new shared UI under `src/components/shared/`.
+- Use the project's **color system, typography scale, and spacing tokens** (`--pp-*`)
+  consistently; avoid hardcoded values where a token exists. Avoid inline styles
+  unless truly necessary.
+- Respect existing routing, state management, and data-fetch patterns (App Router,
+  React 19, content in `src/data/en/`). Animations stay `gsap`/`ScrollTrigger`/`lenis`
+  per `ANIMATIONS-HUB.md`.
+- Strive for **1:1 visual parity** with the Figma design. On conflict, prefer
+  design-system tokens and adjust spacing/sizes minimally to match visuals. Validate
+  the final UI against the Figma screenshot for both look and behavior.
+- Follow **WCAG** accessibility requirements; add brief component documentation.
+
+### Assets
+
+- The Figma MCP server has an assets endpoint that serves images and SVGs.
+- If the server returns a **localhost source** for an image or SVG, **use that source
+  directly** — do **not** create or substitute placeholders.
+- **Do NOT add new icon packages** — all assets should come from the Figma payload.
