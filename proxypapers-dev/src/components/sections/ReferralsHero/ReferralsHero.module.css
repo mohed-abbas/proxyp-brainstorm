@@ -1,0 +1,107 @@
+/* Referrals hero. Ported 1:1 from the Figma 1512×982 artboard (node 421:8): every
+   element is pinned with literal artboard px * var(--pp-scale), so the composition
+   freezes at the design size above 1512px and scales down proportionally below. */
+
+.hero {
+  position: relative;
+  width: 100%;
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+/* The artboard frame: 1512 wide, centred, 982 tall. */
+.frame {
+  position: relative;
+  width: calc(1512 * var(--pp-scale));
+  height: calc(982 * var(--pp-scale));
+  margin-inline: auto;
+}
+
+/* ── Band backdrop ───────────────────────────────────────────────────────────
+   Full-width Figma export: blue bowtie + cloud wisps + the advisor network
+   (concentric arcs, dots, avatars, central P-mark) baked into one transparent
+   asset. Sits behind the type; the dark surround is transparent so the ink
+   canvas reads through above/below the band. */
+.band {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(1512 * var(--pp-scale));
+  height: calc(941 * var(--pp-scale));
+  object-fit: fill;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Headlines ───────────────────────────────────────────────────────────────
+   95px PP Neue Montreal Medium, -1.9px tracking. "clients." turns Proxy Blue. */
+.clients,
+.firm {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(95 * var(--pp-scale));
+  line-height: 1.2;
+  letter-spacing: calc(-1.9 * var(--pp-scale));
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+
+/* "For your clients." — top-right, centred in its 614px box. */
+.clients {
+  left: calc(822 * var(--pp-scale));
+  top: calc(192 * var(--pp-scale));
+  width: calc(614 * var(--pp-scale));
+  text-align: center;
+}
+.accent {
+  color: var(--pp-blue);
+}
+
+/* "For your firm." — left gutter, below the band's left edge. */
+.firm {
+  left: calc(79 * var(--pp-scale));
+  top: calc(590 * var(--pp-scale));
+  width: calc(511 * var(--pp-scale));
+}
+
+/* ── Body + CTA (bottom-right block, 835px wide) ─────────────────────────────── */
+.foot {
+  position: absolute;
+  z-index: 2;
+  left: calc(601 * var(--pp-scale));
+  top: calc(770 * var(--pp-scale));
+  width: calc(835 * var(--pp-scale));
+  height: calc(162 * var(--pp-scale));
+}
+.body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(25 * var(--pp-scale));
+  line-height: 1.2;
+  color: var(--pp-bone);
+}
+.cta {
+  position: absolute;
+  left: 0;
+  top: calc(123 * var(--pp-scale));
+}
+
+/* ── Intro armed-hidden states ───────────────────────────────────────────────
+   When JS is present (html.js, set before first paint) the hero paints in its
+   hidden start state so useReferralsHero can reveal it with no flash. Without JS
+   — or under reduced motion (the hook overrides these inline) — it stays settled. */
+:global(html.js) .clients,
+:global(html.js) .firm,
+:global(html.js) .band,
+:global(html.js) .body,
+:global(html.js) .cta {
+  opacity: 0;
+}

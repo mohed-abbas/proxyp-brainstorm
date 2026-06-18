@@ -1,0 +1,8 @@
+{
+  "hero": {
+    "clients": { "lead": "For your ", "accent": "clients." },
+    "firm": "For your firm.",
+    "body": "Proxy Papers takes care of the private information layer your clients have no time to maintain, and which routinely slows down your own work. We adapt to your professional framework.",
+    "cta": { "label": "Request a conversation", "href": "#" }
+  }
+}
