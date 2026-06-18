@@ -290,26 +290,32 @@
   color: var(--pp-blue);
 }
 
-/* "For your firm." — left gutter, below the band's left edge. */
+/* "For your firm." — first row of the .foot block. It flows in-column (the shared
+   rule above sets position:absolute for the headlines; firm opts out here so it
+   stacks with the body + CTA). */
 .firm {
-  left: calc(79 * var(--pp-scale));
-  top: calc(590 * var(--pp-scale));
-  width: calc(511 * var(--pp-scale));
+  position: static;
+  left: auto;
+  top: auto;
+  width: 100%;
 }
 
-/* ── Body + CTA (bottom-right block, 835px wide) ─────────────────────────────── */
+/* ── Firm headline + body + CTA — one left-aligned column at the gutter ────────
+   A deliberate deviation from the artboard (which split firm left and body/CTA
+   lower-centre): the three stack as a single block, left-aligned to the same
+   gutter as the headline, sitting in the lower-left of the frame. */
 .foot {
   position: absolute;
   z-index: 2;
-  left: calc(601 * var(--pp-scale));
-  top: calc(770 * var(--pp-scale));
-  width: calc(835 * var(--pp-scale));
-  height: calc(162 * var(--pp-scale));
+  left: calc(79 * var(--pp-scale));
+  top: calc(560 * var(--pp-scale));
+  width: calc(700 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(36 * var(--pp-scale));
 }
 .body {
-  position: absolute;
-  left: 0;
-  top: 0;
   width: 100%;
   margin: 0;
   font-family: var(--pp-font);
@@ -317,11 +323,6 @@
   font-size: calc(25 * var(--pp-scale));
   line-height: 1.2;
   color: var(--pp-bone);
-}
-.cta {
-  position: absolute;
-  left: 0;
-  top: calc(123 * var(--pp-scale));
 }
 
 /* ── Intro armed-hidden states ───────────────────────────────────────────────
@@ -375,9 +376,6 @@
   .clients {
     order: 1;
   }
-  .firm {
-    order: 3;
-  }
 
   /* Band — same lens crop window, now a full-bleed flow item. align-self:center
      centres the 100vw window without a transform (the reveal hook clearProps:
@@ -400,26 +398,18 @@
     --pp-scale: min(100vw / 1040, 0.62px);
   }
 
-  /* Body + CTA — static, full-width, left-aligned. The CTA's own size comes from
-     the global .pp-btn mobile rule in globals.css. */
+  /* Firm + body + CTA block — static, full-width, left-aligned, stacked with the
+     shared column gap (it now leads with the firm headline). The CTA's own size
+     comes from the global .pp-btn mobile rule in globals.css. */
   .foot {
     order: 4;
     position: static;
     left: auto;
     top: auto;
     width: 100%;
-    height: auto;
+    gap: var(--pp-stack);
   }
   .body {
-    position: static;
-    left: auto;
-    top: auto;
     font-size: var(--pp-fs-body);
-  }
-  .cta {
-    position: static;
-    left: auto;
-    top: auto;
-    margin-top: clamp(20px, 5vw, 32px);
   }
 }

@@ -111,9 +111,13 @@ export function ReferralsHero() {
         </div>
 
         <SplitText as="h1" className={s.clients} words={clientsWords} />
-        <SplitText as="h2" className={s.firm} words={firmWords} />
 
+        {/* "For your firm." + body + CTA are ONE left-aligned block at the gutter
+            (a deliberate desktop deviation from the artboard, which split the firm
+            headline left and the body/CTA lower-centre). The reveal hook targets
+            by class, so re-nesting firm here is animation-safe. */}
         <div className={s.foot}>
+          <SplitText as="h2" className={s.firm} words={firmWords} />
           <p className={s.body}>{body}</p>
           <div className={s.cta}>
             <PpButton href={cta.href} label={cta.label} />
