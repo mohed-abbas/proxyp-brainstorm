@@ -4,10 +4,11 @@ import { ReferralsHero } from "@/components/sections/ReferralsHero";
 import { TooMuch } from "@/components/sections/TooMuch";
 import { Sliders } from "@/components/sections/Sliders";
 import { Tracks } from "@/components/sections/Tracks";
+import { WhiteLabel } from "@/components/sections/WhiteLabel";
 
-// Referrals page. Hero ported from Figma (node 421:8); TooMuch (123:358), the
-// Sliders benefits section (141:480) and the Tracks collaboration card (123:75)
-// follow. Navbar + shared Footer are in place.
+// Referrals page. Hero ported from Figma (node 421:8); TooMuch (123:358), the Sliders
+// benefits section (141:480), the Tracks collaboration card (123:75) and the WhiteLabel
+// reveal band (compact 144:2 → expanded 123:58) follow. Navbar + shared Footer are in place.
 export default function ReferralsPage() {
   return (
     <>
@@ -16,6 +17,7 @@ export default function ReferralsPage() {
       <TooMuch />
       <Sliders />
       <Tracks />
+      <WhiteLabel />
       <Footer />
     </>
   );
