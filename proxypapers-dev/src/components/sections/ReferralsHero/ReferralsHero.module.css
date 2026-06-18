@@ -1,6 +1,12 @@
 /* Referrals hero. Ported 1:1 from the Figma 1512×982 artboard (node 421:8): every
    element is pinned with literal artboard px * var(--pp-scale), so the composition
-   freezes at the design size above 1512px and scales down proportionally below. */
+   freezes at the design size above 1512px and scales down proportionally below.
+
+   HEIGHT-RESPONSIVE (desktop): the foreground (frame + text) rides a CONTAIN scale
+   — min(width-fit, height-fit, 1px) — so the whole one-screen composition always
+   fits the viewport on BOTH axes and never crops on short/landscape laptops. The
+   hero is min-height:100svh and flex-centres the frame; the band behind it covers
+   the full hero on both axes (its own COVER scale, see .bandInner). */
 
 .hero {
   position: relative;
@@ -9,12 +15,27 @@
   overflow: hidden;
 }
 
-/* The artboard frame: 1512 wide, centred, 982 tall. */
+/* The artboard frame: 1512 wide, centred, 982 tall. Rides the hero's CONTAIN scale
+   (set on .hero ≥1024), so it shrinks to fit a short viewport instead of cropping. */
 .frame {
   position: relative;
   width: calc(1512 * var(--pp-scale));
   height: calc(982 * var(--pp-scale));
   margin-inline: auto;
+}
+
+/* Desktop: make the hero a height-aware, one-screen container and scope the CONTAIN
+   scale here so the frame + text fit the viewport on both axes. Scoped to ≥1024 so
+   the <1024 reflow (which sizes off fluid tokens, not --pp-scale) is untouched. */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 100vh; /* fallback */
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --pp-scale: min(100vw / 1512, 100svh / 982, 1px);
+  }
 }
 
 /* ── Band backdrop ───────────────────────────────────────────────────────────
@@ -23,18 +44,23 @@
    mask, two bone hairline curves, and the live advisor spiral at the waist.
 
    Built on the homepage hero LENS logic (Hero.module.css .lens/.stage): .band is
-   a full-bleed crop window (width:100vw, centred, overflow:hidden) whose height
-   rides --pp-scale; .bandInner holds the 1512×941 composition, centred inside.
-   The ONE deliberate difference from the lens: the bowtie's flared corner curves
-   must NEVER show — the composition is always wider than the viewport so the tips
-   overflow and crop at every width, including >1512 (see .bandInner's cover scale). */
+   the crop window. It covers the FULL hero on both axes — 100vw × 100svh, centred
+   on the frame's centre (which the flex hero pins to the viewport centre) via the
+   margin trick (NOT transform: the reveal hook clearProps:"transform" on .band, so
+   centring must survive that). .bandInner holds the 1512×941 composition, cover-
+   scaled and centred inside. The bowtie's flared corner curves must NEVER show: the
+   composition cover-scales on both axes (see .bandInner) so the tips always overflow
+   the window and crop at every size, including short, tall and >1512/2K viewports. */
 .band {
   position: absolute;
   left: 50%;
   margin-left: -50vw;
-  top: 0;
+  top: 50%;
+  margin-top: -50vh; /* fallback */
+  margin-top: -50svh;
   width: 100vw;
-  height: calc(941 * var(--pp-scale));
+  height: 100vh; /* fallback */
+  height: 100svh;
   overflow: hidden;
   z-index: 0;
   pointer-events: none;
@@ -54,7 +80,13 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  --pp-scale: max(min(100vw / 1512, 1px), 100vw / 2000);
+  /* COVER scale — fills the hero box on BOTH axes so the bowtie always bleeds
+     full and its flared tips crop on every side. The width terms preserve the
+     ≤1512 look (cover ≈ 1px at the common case); the `100svh / 941` term grows
+     it to cover tall viewports (fixing the 2K corner-bleed, where the window and
+     composition previously scaled by different factors). The window (.band) and
+     this composition now share one scale, so the framing stays proportional. */
+  --pp-scale: max(min(100vw / 1512, 1px), 100vw / 2000, 100svh / 941);
   width: calc(1512 * var(--pp-scale));
   height: calc(941 * var(--pp-scale));
 }
@@ -387,6 +419,7 @@
     left: auto;
     margin-left: 0;
     top: auto;
+    margin-top: 0;
     align-self: center;
     width: 100vw;
     height: clamp(220px, 58vw, 360px);

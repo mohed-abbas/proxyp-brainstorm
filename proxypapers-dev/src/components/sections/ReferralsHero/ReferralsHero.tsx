@@ -85,11 +85,13 @@ export function ReferralsHero() {
       <div className={s.frame}>
         {/* Band layers, ordered bottom→top per Figma: blue → spiral → clouds →
             hairlines (clouds paint over the spiral's outer rings at the flanks;
-            the bone hairlines sit on top, tracing the band's edges). */}
+            the bone hairlines sit on top, tracing the band's edges). The .band
+            window covers the full hero (100vw × 100svh, centred); .bandInner
+            cover-scales the composition inside it. */}
         <div className={s.band} aria-hidden="true">
-          {/* The composition — the 1512×941 design frame, centred in the .band crop
-              window (lens logic). Its own --pp-scale drives every layer so they scale
-              together; the window stays full-bleed and crops the bowtie's flared tips. */}
+          {/* The composition — the 1512×941 design frame, cover-scaled and centred
+              in the .band crop window. Its own --pp-scale drives every layer so they
+              scale together; the window crops the bowtie's flared tips. */}
           <div className={s.bandInner}>
             {/* Blue bowtie shape (extends well past the frame; tips cropped by .band). */}
             <img className={s.bandBlue} src="/images/referrals/band-blue.webp" alt="" />

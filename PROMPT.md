@@ -45,6 +45,21 @@ Port the complete landing page, **section by section**, from the source of truth
     `CLAUDE.md`) are left as-is. Heed `proxypapers-dev/AGENTS.md`: this Next.js
     (v16) has breaking changes — read `node_modules/next/dist/docs/` before
     writing app code. That note has been added to the repo-root `CLAUDE.md`.
+15. **Responsiveness — height as well as width.** `--pp-scale` is **width-driven**
+    (`min(100vw/1512, 1px)`), so `height: calc(N * --pp-scale)` ties a height to the
+    viewport's *width* and ignores its *height* — which crops content on short /
+    landscape laptops (e.g. 1492×797, 1366×768) and bleeds full-bleed art at 2K.
+    When porting, classify each section and follow the matching rule (full detail +
+    worked example in the `globals.css` `--pp-scale` comment block):
+    - **One-screen (hero):** scope a CONTAIN scale `min(100vw/ARTW, 100svh/ARTH, 1px)`,
+      `min-height:100svh` (with `100vh` fallback), centre the artboard. Never a fixed
+      `height: calc(N*--pp-scale)` for the frame. (`svh` = mobile-toolbar-safe.)
+    - **Full-bleed backgrounds:** own `overflow:hidden` window over the section box,
+      COVER scale `max(min(100vw/ARTW,1px), 100vw/CAP, 100svh/BGH)`, centred via the
+      margin trick (not `transform` — reveal hooks `clearProps:"transform"`).
+      Reference impl: `ReferralsHero` `.band` / `.bandInner`.
+    - **Flow (scrollable) sections:** width-only scale is fine, but use `min-height`
+      (never fixed `height`) and don't let `overflow:hidden` clip real content.
 
 ## Doc locations
 
