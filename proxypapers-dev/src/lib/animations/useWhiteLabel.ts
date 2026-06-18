@@ -7,9 +7,9 @@ type Styles = Record<string, string>;
 // WhiteLabel — the same reveal mechanic as Trust (setupTrust): the band PINS centred as a
 // small compact card (eyebrow on top, a large P-badge in the middle), then a heavy-scrubbed
 // timeline opens the panel to full width — the eyebrow lifts away, the badge shrinks and
-// rises to the top, the connector + concentric rings + YOU core grow in, the blue title
-// rises word-by-word on the left and the body settles in word-by-word on the right — then
-// holds open for a beat before releasing.
+// rises to the top, the concentric rings + YOU core grow in, the blue title rises
+// word-by-word on the left and the body settles in word-by-word on the right — then holds
+// open for a beat before releasing.
 //
 // Desktop only (≥1024): the compact card + pinned scrub assume the desktop panel. Below 1024
 // (and reduced motion) the hook returns early and the settled open band renders (CSS base).
@@ -29,7 +29,6 @@ export function useWhiteLabel(scope: RefObject<HTMLElement | null>, s: Styles) {
         const title = q(`.${s.title}`);
         const body = q(`.${s.body}`);
         const badge = q(`.${s.badge}`);
-        const line = q(`.${s.line}`);
         const rings = q(`.${s.rings}`);
         const sel = gsap.utils.selector(scope);
         const titleWords = sel(`.${s.title} .r-word__in`);
@@ -52,8 +51,6 @@ export function useWhiteLabel(scope: RefObject<HTMLElement | null>, s: Styles) {
           y: cap(7.5728, 114.5),
           transformOrigin: "50% 50%",
         });
-        // Connector draws DOWNWARD from just under the badge (top origin, scaleY 0→1).
-        gsap.set(line, { scaleY: 0, transformOrigin: "50% 0%" });
         gsap.set(rings, { autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%" });
 
         gsap
@@ -75,7 +72,6 @@ export function useWhiteLabel(scope: RefObject<HTMLElement | null>, s: Styles) {
           .to(badge, { scale: 1, y: 0, duration: 1.5, ease: "power2.inOut" }, 0)
           .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.45 }, 0)
           .to(rings, { autoAlpha: 1, scale: 1, duration: 1.5, ease: "power2.inOut" }, 0)
-          .to(line, { scaleY: 1, duration: 0.6 }, 0.4)
           .to(title, { autoAlpha: 1, duration: 0.4 }, 0.45)
           .to(titleWords, { yPercent: 0, duration: 0.6, stagger: 0.04 }, 0.5)
           .to(body, { autoAlpha: 1, duration: 0.5 }, 0.85)

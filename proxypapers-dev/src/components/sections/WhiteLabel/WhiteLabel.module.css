@@ -121,17 +121,6 @@
   fill: var(--pp-bone);
 }
 
-/* Connector from the badge down to the rings. */
-.line {
-  position: absolute;
-  top: calc(69.5 * var(--pp-scale));
-  left: 50%;
-  transform: translateX(-50%);
-  width: max(1px, calc(1.5 * var(--pp-scale)));
-  height: calc(57 * var(--pp-scale));
-  background: var(--pp-blue);
-}
-
 /* Concentric rings + YOU core, all centred on the radar focus (graphic 182.5, 321.5). */
 .rings {
   position: absolute;
