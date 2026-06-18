@@ -46,32 +46,49 @@
   transform: rotate(180deg) scaleY(-1);
 }
 
-/* Cloud wisps (node 123:397) — one fluffy texture, two instances, each a 787px
-   window onto the same 3715×973 sky-shaped mask at a different offset. */
+/* Cloud wisps (node 123:397) — one fluffy texture, two instances. In Figma the
+   whole cloud group is masked by the band shape (the Mask group's Subtract); the
+   MCP export flattened that away, so the pair is wrapped here in .clouds — a band-
+   shape clip IDENTICAL to .spiral's (box ≡ .bandBlue, no transform, overflow:hidden,
+   the pre-flopped feathered band alpha at 100% 100% / 0 0). That clips the clouds
+   to the band so they no longer spill onto the dark ink past the curved edges. */
+.clouds {
+  position: absolute;
+  left: calc(-981 * var(--pp-scale));
+  top: calc(-32 * var(--pp-scale));
+  width: calc(3715 * var(--pp-scale));
+  height: calc(973 * var(--pp-scale));
+  overflow: hidden;
+  -webkit-mask-image: url(/images/referrals/band-mask-soft.webp);
+  mask-image: url(/images/referrals/band-mask-soft.webp);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+}
+
+/* Each cloud — the fluffy texture (cloud-tex carries its OWN soft alpha = the wisp
+   shape), anchored in .clouds' space (origin = frame -981,-32, so +981/+32 vs the
+   band frame). It needs NO per-cloud mask: the wisp shape comes from the texture's
+   alpha, and .clouds clips it to the band. (The Figma per-cloud mask was the band
+   shape, which is redundant with .clouds and — applied in the cloud's mirrored
+   space — produced a hard mis-aligned cut.) */
 .cloud {
   position: absolute;
   width: calc(787 * var(--pp-scale));
   height: calc(787 * var(--pp-scale));
   object-fit: cover;
   transform: rotate(180deg) scaleY(-1);
-  -webkit-mask-image: url(/images/referrals/cloud-mask.webp);
-  mask-image: url(/images/referrals/cloud-mask.webp);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: calc(3715 * var(--pp-scale)) calc(973 * var(--pp-scale));
-  mask-size: calc(3715 * var(--pp-scale)) calc(973 * var(--pp-scale));
 }
 .cloudA {
-  left: calc(-444 * var(--pp-scale));
-  top: calc(-93 * var(--pp-scale));
-  -webkit-mask-position: calc(-537 * var(--pp-scale)) calc(61 * var(--pp-scale));
-  mask-position: calc(-537 * var(--pp-scale)) calc(61 * var(--pp-scale));
+  left: calc(537 * var(--pp-scale));
+  top: calc(-61 * var(--pp-scale));
 }
 .cloudB {
-  left: calc(1209 * var(--pp-scale));
-  top: calc(27 * var(--pp-scale));
-  -webkit-mask-position: calc(-2190 * var(--pp-scale)) calc(-59 * var(--pp-scale));
-  mask-position: calc(-2190 * var(--pp-scale)) calc(-59 * var(--pp-scale));
+  left: calc(2190 * var(--pp-scale));
+  top: calc(59 * var(--pp-scale));
 }
 
 /* Bone hairline curves (nodes 123:404 top, 123:405 bottom) — the same squashed

@@ -83,21 +83,26 @@ export function ReferralsHero() {
   return (
     <main className={s.hero} data-nav-theme="dark" ref={root}>
       <div className={s.frame}>
+        {/* Band layers, ordered bottom→top per Figma: blue → spiral → clouds →
+            hairlines (clouds paint over the spiral's outer rings at the flanks;
+            the bone hairlines sit on top, tracing the band's edges). */}
         <div className={s.band} aria-hidden="true">
           {/* Blue bowtie shape (full-bleed, clipped to the frame). */}
           <img className={s.bandBlue} src="/images/referrals/band-blue.webp" alt="" />
 
+          {/* The live advisor spiral at the waist. */}
+          <ReferralsSpiral styles={s} />
+
           {/* Cloud wisps — the fluffy texture revealed through the sky-shaped mask,
-              two instances sampling different regions of the same mask. */}
-          <img className={`${s.cloud} ${s.cloudA}`} src="/images/referrals/cloud-tex.webp" alt="" />
-          <img className={`${s.cloud} ${s.cloudB}`} src="/images/referrals/cloud-tex.webp" alt="" />
+              two instances, clipped to the band shape via .clouds. */}
+          <div className={s.clouds}>
+            <img className={`${s.cloud} ${s.cloudA}`} src="/images/referrals/cloud-tex.webp" alt="" />
+            <img className={`${s.cloud} ${s.cloudB}`} src="/images/referrals/cloud-tex.webp" alt="" />
+          </div>
 
           {/* Bone hairlines tracing the band's curved top + bottom edges. */}
           <img className={s.hairTop} src="/images/referrals/hair-top.svg" alt="" />
           <img className={s.hairBot} src="/images/referrals/hair-bot.svg" alt="" />
-
-          {/* The live advisor spiral at the waist. */}
-          <ReferralsSpiral styles={s} />
         </div>
 
         <SplitText as="h1" className={s.clients} words={clientsWords} />
