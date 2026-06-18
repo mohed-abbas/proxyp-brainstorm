@@ -1,17 +1,18 @@
-/* Sliders — "What Proxy Papers brings you" (Figma 141:480, frame "SlidersSection").
-   A full-viewport Chinese-Black section: a left section label beside a deck of benefit
-   slides, each a 11.35° tilted photo card (title upright via counter-rotation) plus a
-   right body paragraph. On desktop the section PINS and the slides cross-fade in place
-   (one scroll = next benefit) — see useSliders; the frame never moves. DARK surface.
+/* Sliders — "What Proxy Papers brings you" (Figma 141:480, iventions-inspired motion).
+   A full-viewport Chinese-Black section: a fixed left label beside a deck of benefit
+   slides. Each slide carries a title (ABOVE the frame), a tilted photo card, and a
+   right body paragraph. On desktop the section PINS and advances one benefit per scroll
+   — the title rolls, the photo cross-fades, the body rises — while the card frame stays
+   put and tilts subtly with the mouse (3D). DARK surface.
 
-   Two layouts, switched by JS: the BASE css stacks the slides in a vertical column
-   (the no-JS / reduced-motion / mobile fallback — every benefit readable). When the
-   hook engages the pinned slider it sets [data-mode="slider"] on the section, which
-   overlaps the slides absolutely so they cross-fade in a single fixed frame.
+   Two layouts, switched by JS: the BASE css stacks the slides as a vertical gallery
+   (no-JS / reduced-motion / mobile — every benefit readable). When the hook engages the
+   pinned slider it sets [data-mode="slider"] on the section, overlapping the slides so
+   they transition in one fixed frame.
 
-   Transform-per-node contract (as in Profiles): the card tilt lives on .cardTilt and
-   the title counter-tilt on .cardTitleTilt, each on its own element, so GSAP can own
-   .slide opacity / the title rise without fighting the CSS transforms. */
+   Transform-per-node contract: .card3d owns the mouse 3D tilt (--pp-rx/--pp-ry), .cardTilt
+   owns the static 11.35° brand tilt, GSAP owns photo/body opacity + the title roll — each
+   on its own node so nothing fights. */
 
 .sliders {
   position: relative;
@@ -46,7 +47,7 @@
   gap: var(--pp-stack);
 }
 
-/* Each slide = one benefit: its tilted card (left) + its body (right). */
+/* Each slide = one benefit: its card (with title above) + its body. */
 .slide {
   display: flex;
   align-items: center;
@@ -54,11 +55,12 @@
 }
 
 /* ── Slider mode (desktop + motion, set by the hook): overlap the slides in one fixed
-   frame so they cross-fade in place. ──────────────────────────────────────────────── */
+   frame so they transition in place. The title floats above the stage (absolute), so the
+   deck is sized to the stage and the body stays aligned with the card. ──────────────── */
 .sliders[data-mode="slider"] .deck {
   position: relative;
   width: calc(905.808 * var(--pp-scale)); /* stage 432.808 + gap 153 + body 320 */
-  height: calc(379.526 * var(--pp-scale)); /* the stage (tallest element) */
+  height: calc(379.526 * var(--pp-scale)); /* the stage (the title floats above it) */
 }
 .sliders[data-mode="slider"] .slide {
   position: absolute;
@@ -75,16 +77,52 @@
   white-space: nowrap;
 }
 
-/* The slider viewport — the rotated card's bounding cell (432.808 × 379.526). */
+/* The slider viewport — the rotated card's bounding cell (432.808 × 379.526); also the
+   positioning context for the title slot floating above it, and the 3D perspective host. */
 .stage {
+  position: relative;
   flex: none;
   width: calc(432.808 * var(--pp-scale));
   height: calc(379.526 * var(--pp-scale));
   display: flex;
   align-items: center;
   justify-content: center;
+  perspective: 1000px;
 }
 
+/* Title — a flat (upright) layer centred over the tilted card. In the pinned slider the
+   hook offsets each slide's title into a vertical roller (current on the card, previous
+   ghosted above, next below); on the gallery it just sits on each card. */
+.titleLayer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cardTitle {
+  width: calc(300 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(49 * var(--pp-scale));
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-align: center;
+  color: var(--pp-bone);
+  text-wrap: balance;
+}
+
+/* 3D layer — owns the subtle mouse tilt (vars set by the hook; default 0 = flat). */
+.card3d {
+  flex: none;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--pp-rx, 0) * 1deg)) rotateY(calc(var(--pp-ry, 0) * 1deg));
+  will-change: transform;
+}
+
+/* Brand in-plane tilt (static), inside the 3D layer. */
 .cardTilt {
   flex: none;
   transform: rotate(11.35deg);
@@ -96,7 +134,6 @@
   height: calc(311 * var(--pp-scale));
   border-radius: calc(28 * var(--pp-scale));
   overflow: hidden;
-  background: #fff;
 }
 
 .cardImg {
@@ -109,33 +146,12 @@
      portrait source biases down (50% 70%) so the group sits high in frame. */
 }
 
+/* The active title sits over the photo, so keep a moderate darkening for legibility
+   (kept on-brand/muted rather than a hard black). */
 .cardOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-/* Title holder — fills the card; the inner counter-rotation lands the text level. */
-.cardLabel {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cardTitleTilt {
-  transform: rotate(-11.35deg);
-}
-
-.cardTitle {
-  width: calc(285 * var(--pp-scale));
-  font-weight: 500;
-  font-size: calc(49 * var(--pp-scale));
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  text-align: left;
-  color: var(--pp-bone);
+  background: rgba(22, 23, 24, 0.48);
 }
 
 .body {
@@ -161,9 +177,9 @@
   }
 }
 
-/* ── Tablet + mobile (<1024): the row stacks to a left-aligned column (label → card →
-   body). The card keeps its tilt by giving .stage its own --pp-scale, so the whole
-   composition (card, radius, title) scales as one unit. ───────────────────────────── */
+/* ── Tablet + mobile (<1024): the row stacks to a left-aligned column; each slide is a
+   card (title centred on it) above its body. The card keeps its flat brand tilt (no 3D /
+   no mouse), scaled via .stage's own --pp-scale so the composition scales as one unit. ── */
 @media (max-width: 1023px) {
   .sliders {
     min-height: 0;
@@ -180,7 +196,6 @@
     gap: var(--pp-stack);
     padding-left: 0;
   }
-  /* Slides flow as a vertical gallery; each slide stacks its card over its body. */
   .sliders .deck {
     width: 100%;
     gap: calc(var(--pp-stack) * 1.4);
@@ -194,9 +209,14 @@
     white-space: normal;
     font-size: clamp(20px, 4.5vw, 25px);
   }
+  /* The card keeps its flat brand tilt with the title centred on it (no 3D perspective). */
   .sliders .stage {
     --pp-scale: min(100vw / 560, 0.78px);
     align-self: center;
+    perspective: none;
+  }
+  .sliders .cardTitle {
+    font-size: calc(46 * var(--pp-scale));
   }
   .sliders .body {
     width: 100%;

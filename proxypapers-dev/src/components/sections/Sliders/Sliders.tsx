@@ -6,11 +6,12 @@ import sliders from "@/data/en/sliders.json";
 import { SplitText } from "@/components/shared/SplitText";
 import { useSliders } from "@/lib/animations/useSliders";
 
-// Sliders — "What Proxy Papers brings you" (Figma 141:480). A full-viewport dark
-// section that PINS on entry: each scroll step advances one benefit — the card photo
-// swaps and the card title + right-hand body change with it — while the tilted frame
-// stays put and the left label stays fixed (see useSliders). Below 1024 (and for
-// reduced motion / no-JS) it degrades to a settled vertical gallery of every slide.
+// Sliders — "What Proxy Papers brings you" (Figma 141:480, iventions-inspired motion).
+// Full-viewport dark section that PINS: each scroll advances one benefit. The fixed
+// left label stays; the per-slide title sits ABOVE the frame and rolls (continuity);
+// the center card reads 3D and tilts subtly with the mouse; the photo cross-fades and
+// the body rises word-by-word. Below 1024 / reduced-motion / no-JS it degrades to a
+// settled vertical gallery (title → card → body per slide). See useSliders.
 export function Sliders() {
   const root = useRef<HTMLElement>(null);
   useSliders(root, s);
@@ -30,25 +31,27 @@ export function Sliders() {
             {sliders.cards.map((card) => (
               <div className={s.slide} key={card.id} data-slide={card.id}>
                 <div className={s.stage}>
-                  <div className={s.cardTilt}>
-                    <article className={s.card}>
-                      <img
-                        className={s.cardImg}
-                        src={card.img}
-                        alt=""
-                        style={{ objectPosition: card.imgPos ?? "50% 50%" }}
-                      />
-                      <span className={s.cardOverlay} aria-hidden="true" />
-                      <div className={s.cardLabel}>
-                        <div className={s.cardTitleTilt}>
-                          <SplitText
-                            as="p"
-                            className={s.cardTitle}
-                            words={card.title.split(" ")}
-                          />
-                        </div>
-                      </div>
-                    </article>
+                  {/* 3D layer (mouse tilt) → brand 11.35° tilt → the clipped photo card. */}
+                  <div className={s.card3d}>
+                    <div className={s.cardTilt}>
+                      <article className={s.card}>
+                        <img
+                          className={s.cardImg}
+                          src={card.img}
+                          alt=""
+                          style={{ objectPosition: card.imgPos ?? "50% 50%" }}
+                        />
+                        <span className={s.cardOverlay} aria-hidden="true" />
+                      </article>
+                    </div>
+                  </div>
+
+                  {/* Title — flat (upright) over the tilted card. In the pinned slider every
+                      slide's title shares this centre; the hook offsets them into a vertical
+                      roller (current on the card, previous ghosted above, next below) and
+                      re-runs the house word-rise as each lands. */}
+                  <div className={s.titleLayer}>
+                    <SplitText as="p" className={s.cardTitle} words={card.title.split(" ")} />
                   </div>
                 </div>
 
