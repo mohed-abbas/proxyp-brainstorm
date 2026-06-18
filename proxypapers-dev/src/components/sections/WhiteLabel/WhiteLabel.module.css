@@ -1,0 +1,240 @@
+/* WhiteLabel — "A white-label option…" (Figma compact 144:2 → expanded 123:58).
+   A Bone-White band that PINS compact (eyebrow + a large centred P-badge) and opens on a
+   heavy-scrubbed scroll into the full band: a Proxy-Blue title (left), muted body (right),
+   and a centred radar — the P-badge shrinks to the top, a connector drops to concentric
+   dashed/solid rings around a YOU core. Same reveal mechanic as Trust. LIGHT surface.
+   FULL-BLEED: the panel opens to the viewport width. Sizes off px * --pp-scale; the
+   collapsed state is GSAP transforms (see useWhiteLabel). The CSS base is the SETTLED OPEN
+   band (no-JS / reduced motion). Below 1024 it reflows to a stacked column on fluid tokens. */
+
+.whiteLabel {
+  position: relative;
+  width: 100%;
+  min-height: calc(384 * var(--pp-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Inner bone panel — the animated "window". Default = full settled band; JS collapses it
+   to the compact card and opens it. */
+.panel {
+  position: relative;
+  width: 100%;
+  min-height: calc(384 * var(--pp-scale));
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background: var(--pp-bone);
+  border-radius: calc(20 * var(--pp-scale));
+  overflow: hidden;
+}
+
+/* The 1512 artboard frame — always centred in the viewport (so the Figma coords below
+   stay put while the panel width opens over them). */
+.stage {
+  position: relative;
+  flex: none;
+  width: calc(1512 * var(--pp-scale));
+  min-height: calc(384 * var(--pp-scale));
+}
+
+/* Eyebrow — only in the collapsed card; hidden in the settled band, GSAP reveals it for
+   the open then fades it out. */
+.eyebrow {
+  position: absolute;
+  top: calc(26 * var(--pp-scale));
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--pp-ink);
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.title {
+  position: absolute;
+  left: calc(79 * var(--pp-scale));
+  top: calc(50% - 47 * var(--pp-scale));
+  width: calc(459 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(49 * var(--pp-scale));
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--pp-blue);
+}
+
+.body {
+  position: absolute;
+  left: calc(975 * var(--pp-scale));
+  top: calc(50% - 38 * var(--pp-scale));
+  width: calc(454 * var(--pp-scale));
+  font-weight: 400;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: rgba(22, 23, 24, 0.7);
+}
+
+/* Centred radar graphic. Masked so the rings dissolve toward the band's bottom edge. */
+.graphic {
+  position: absolute;
+  left: 50%;
+  top: calc(48 * var(--pp-scale));
+  transform: translateX(-50%);
+  width: calc(365 * var(--pp-scale));
+  height: calc(447.13 * var(--pp-scale));
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 78%);
+  mask-image: linear-gradient(to bottom, #000 58%, transparent 78%);
+}
+
+/* P-badge — blue disc with the white P-mark. The single element shown in the compact card
+   (GSAP scales it up + drops it to the card centre, then it settles small at the top). */
+.badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2; /* keep the opaque badge above the line/rings so they never show through it */
+  transform: translateX(-50%);
+  width: calc(58 * var(--pp-scale));
+  height: calc(59 * var(--pp-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--pp-blue);
+  border: 0.5px solid rgba(247, 244, 240, 0.3);
+  -webkit-backdrop-filter: blur(calc(6 * var(--pp-scale)));
+  backdrop-filter: blur(calc(6 * var(--pp-scale)));
+  overflow: hidden;
+}
+.mark {
+  height: calc(26.4 * var(--pp-scale));
+  width: auto;
+}
+.mark :global(.lk-mark__stem),
+.mark :global(.lk-mark__blade) {
+  fill: var(--pp-bone);
+}
+
+/* Connector between the rings and the badge. */
+.line {
+  position: absolute;
+  top: calc(69.5 * var(--pp-scale));
+  left: 50%;
+  transform: translateX(-50%);
+  width: max(1px, calc(1.5 * var(--pp-scale)));
+  height: calc(57 * var(--pp-scale));
+  background: var(--pp-blue);
+}
+
+/* Concentric rings + YOU core, all centred on the radar focus (graphic 182.5, 321.5). */
+.rings {
+  position: absolute;
+  left: 50%;
+  top: calc(321.5 * var(--pp-scale));
+  width: 0;
+  height: 0;
+}
+.ring,
+.core {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+.ring {
+  border: calc(2.544 * var(--pp-scale)) solid var(--pp-blue);
+}
+.r1 {
+  width: calc(348.47 * var(--pp-scale));
+  height: calc(357.37 * var(--pp-scale));
+  border-style: dashed;
+}
+.r2 {
+  width: calc(261.99 * var(--pp-scale));
+  height: calc(268.34 * var(--pp-scale));
+}
+.r3 {
+  width: calc(172.96 * var(--pp-scale));
+  height: calc(176.78 * var(--pp-scale));
+  border-style: dashed;
+}
+.core {
+  width: calc(106.27 * var(--pp-scale));
+  height: calc(108.1 * var(--pp-scale));
+  border: calc(2.544 * var(--pp-scale)) solid var(--pp-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pp-bone);
+}
+.coreLabel {
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--pp-ink);
+}
+
+/* Per-word reveal mask padding (house style — keeps descenders from clipping). */
+.whiteLabel :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+
+/* ── Tablet + mobile (<1024): the settled band reflows to a centred stacked column on the
+   fluid tokens (eyebrow → title → body → graphic). The graphic keeps its own --pp-scale so
+   the radar sizes to the screen instead of shrinking with the artboard. No pin/expand. ── */
+@media (max-width: 1023px) {
+  .whiteLabel {
+    min-height: 0;
+  }
+  .whiteLabel .panel {
+    min-height: 0;
+    padding: var(--pp-stack) var(--pp-gutter);
+    border-radius: 16px;
+  }
+  .whiteLabel .stage {
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--pp-stack);
+    text-align: center;
+  }
+  .whiteLabel .eyebrow {
+    position: static;
+    opacity: 1;
+    font-size: var(--pp-fs-small);
+  }
+  .whiteLabel .title,
+  .whiteLabel .body {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    max-width: 560px;
+  }
+  .whiteLabel .title {
+    font-size: var(--pp-fs-h2);
+  }
+  .whiteLabel .body {
+    font-size: var(--pp-fs-body);
+  }
+  .whiteLabel .graphic {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin: 0 auto;
+    --pp-scale: min(100vw / 460, 0.8px);
+  }
+}

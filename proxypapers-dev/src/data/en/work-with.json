@@ -1,0 +1,13 @@
+{
+  "label": "The profiles we work with.",
+  "profiles": [
+    { "text": "Notaries" },
+    { "text": "Accountants" },
+    { "text": "Tax & wealth attorneys" },
+    { "text": "Wealth managers", "accent": true },
+    { "text": "Family offices" },
+    { "text": "Private banks" },
+    { "text": "Insurers & brokers" },
+    { "text": "Business transmission firms" }
+  ]
+}

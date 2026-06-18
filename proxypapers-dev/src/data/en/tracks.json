@@ -1,0 +1,34 @@
+{
+  "title": "Two ways to work together.",
+  "intro": "Depending on your profession and your professional framework, we offer two distinct modes of collaboration. They are never combined.",
+  "tracks": [
+    {
+      "id": "01",
+      "eyebrow": "Track 01",
+      "name": "Peer referral",
+      "scope": "For regulated professions where any commission is excluded - notaries, accountants, attorneys.",
+      "body": "You recommend Proxy Papers to your clients in their direct interest, with no compensation and no financial agreement. We simply formalise the operational coordination between our teams and yours.",
+      "points": [
+        "A privileged entry point for your files",
+        "Direct operational coordination with your firm",
+        "A Proxy Papers dedicated advisor for your clients"
+      ],
+      "tag": "No compensation · no financial agreement"
+    },
+    {
+      "id": "02",
+      "eyebrow": "Track 02",
+      "name": "Business introduction",
+      "scope": "For wealth managers, brokers, family offices, private banks and similar networks.",
+      "body": "A formal business introduction agreement frames our collaboration and the related compensation.",
+      "points": [
+        "Written business introduction agreement",
+        "Compensation defined on a transparent schedule",
+        "Regular reporting on referred files",
+        "Joint design of a referral approach",
+        "A Proxy Papers dedicated advisor for your clients"
+      ],
+      "tag": "Formal agreement · transparent compensation"
+    }
+  ]
+}

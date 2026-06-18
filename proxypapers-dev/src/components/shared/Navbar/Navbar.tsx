@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import s from "./Navbar.module.css";
 import navContent from "@/data/en/nav.json";
 import { PpMark } from "@/components/shared/PpMark";
@@ -19,6 +19,15 @@ export function Navbar() {
   const theme = useNavTheme(navRef);
   useMenu({ open, onClose: close, btnRef, panelRef });
   useNavHandoff(navRef);
+
+  // The logo is armed-hidden by globals.css (`html.js [data-nav-logo]`) and lands
+  // via the onboarding curtain (useOnboarding → `.is-landed`). On pages without a
+  // welcome curtain (e.g. /referrals) there's nothing to hand it off, so reveal it
+  // on mount once we confirm no onboarding stage is present to do so.
+  useEffect(() => {
+    if (document.querySelector(".ob-stage")) return;
+    navRef.current?.querySelector("[data-nav-logo]")?.classList.add("is-landed");
+  }, []);
 
   return (
     <>

@@ -1,0 +1,301 @@
+/* Sliders — "What Proxy Papers brings you" (Figma 141:480, iventions-inspired motion).
+   A full-viewport Chinese-Black section: a fixed left label beside a deck of benefit
+   slides. Each slide carries a title (ABOVE the frame), a tilted photo card, and a
+   right body paragraph. On desktop the section PINS and advances one benefit per scroll
+   — the title rolls, the photo cross-fades, the body rises — while the card frame stays
+   put and tilts subtly with the mouse (3D). DARK surface.
+
+   Two layouts, switched by JS: the BASE css stacks the slides as a vertical gallery
+   (no-JS / reduced-motion / mobile — every benefit readable). When the hook engages the
+   pinned slider it sets [data-mode="slider"] on the section, overlapping the slides so
+   they transition in one fixed frame.
+
+   Transform-per-node contract: .card3d owns the mouse 3D tilt (--pp-rx/--pp-ry), .cardTilt
+   owns the static 11.35° brand tilt, GSAP owns photo/body opacity + the title roll — each
+   on its own node so nothing fights. */
+
+.sliders {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+/* Large screens: let the whole section (text + frame — everything is in pp units) keep
+   scaling past the 1512 artboard up to a cap, so wide monitors fill out instead of gaining
+   dead margin. Capped so it never renders huge. Below the cap this equals the global scale,
+   so ≤1512 laptops are unchanged. */
+@media (min-width: 1024px) {
+  .sliders {
+    --pp-scale: min(100vw / 1512, 1.2px);
+  }
+}
+
+.frame {
+  position: relative;
+  /* Track the section scale so the artboard cap grows with --pp-scale (was a flat 1512px). */
+  width: min(100vw, calc(1512 * var(--pp-scale)));
+  display: flex;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: calc(120 * var(--pp-scale));
+  padding-left: calc(77 * var(--pp-scale));
+}
+
+/* The deck holds the slide layers. BASE: a vertical column (no-JS / reduced-motion
+   fallback — every slide readable). Slider mode overlaps them (below). */
+.deck {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-stack);
+}
+
+/* Each slide = one benefit: its card (with title above) + its body. */
+.slide {
+  display: flex;
+  align-items: center;
+  gap: calc(120 * var(--pp-scale));
+}
+
+/* ── Slider mode (desktop + motion, set by the hook): overlap the slides in one fixed
+   frame so they transition in place. The title floats above the stage (absolute), so the
+   deck is sized to the stage and the body stays aligned with the card. ──────────────── */
+.sliders[data-mode="slider"] .deck {
+  position: relative;
+  width: calc(1008.938 * var(--pp-scale)); /* stage 568.938 + gap 120 + body 320 */
+  height: calc(490.574 * var(--pp-scale)); /* the stage (the title floats above it) */
+}
+.sliders[data-mode="slider"] .slide {
+  position: absolute;
+  inset: 0;
+}
+
+.label {
+  flex: none;
+  font-weight: 500;
+  font-size: calc(25 * var(--pp-scale));
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+
+/* The brand name "Proxy Papers" inside the label, in Proxy Blue (accent). */
+.labelAccent {
+  color: var(--pp-blue);
+}
+
+/* The slider viewport — the rotated card's bounding cell (a 500 × 400 card tilted 11.35°
+   spans 568.938 × 490.574); also the positioning context for the title slot floating above
+   it, and the 3D perspective host. */
+.stage {
+  position: relative;
+  flex: none;
+  width: calc(568.938 * var(--pp-scale));
+  height: calc(490.574 * var(--pp-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+/* Title — a flat (upright) layer centred over the tilted card. In the pinned slider the
+   hook stacks each slide's title into a vertical roller (current on the card, neighbours
+   ghosting above/below); on the gallery it just sits on each card. */
+.titleLayer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Slider mode: the title layer becomes a clipped, gradient-masked roller VIEWPORT centred
+   on the frame. The scrubbed timeline translates each slide's single title into a vertical
+   stack; the mask fades the neighbours above/below the centre (the iventions ghost-roll),
+   while the centre title stays solid. (Pattern from Trust's .certsViewport.) */
+.sliders[data-mode="slider"] .titleLayer {
+  inset: auto 0 auto 0;
+  top: 50%;
+  height: calc(560 * var(--pp-scale));
+  transform: translateY(-50%);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 34%,
+    #000 66%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 34%,
+    #000 66%,
+    transparent 100%
+  );
+}
+
+.cardTitle {
+  width: calc(300 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(49 * var(--pp-scale));
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-align: center;
+  color: var(--pp-bone);
+  text-wrap: balance;
+  will-change: transform;
+}
+
+/* 3D layer — owns the subtle mouse tilt (vars set by the hook; default 0 = flat). */
+.card3d {
+  flex: none;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--pp-rx, 0) * 1deg)) rotateY(calc(var(--pp-ry, 0) * 1deg));
+  will-change: transform;
+}
+
+/* Brand in-plane tilt (static), inside the 3D layer. */
+.cardTilt {
+  flex: none;
+  transform: rotate(11.35deg);
+}
+
+.card {
+  position: relative;
+  width: calc(500 * var(--pp-scale));
+  height: calc(400 * var(--pp-scale));
+  border-radius: calc(28 * var(--pp-scale));
+  overflow: hidden;
+}
+
+.cardImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Per-slide focal point comes from the card's `imgPos` (inline style); e.g. slide 1's
+     portrait source biases down (50% 70%) so the group sits high in frame. */
+}
+
+/* The active title sits over the photo, so keep a moderate darkening for legibility
+   (kept on-brand/muted rather than a hard black). */
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 23, 24, 0.48);
+}
+
+/* Body — the right column. The viewport holds its place in the row; in slider mode it
+   becomes a clipped, gradient-masked roller (like the title) so each slide's body rolls
+   in/out and neighbours ghost. In the gallery it's a transparent passthrough. */
+.bodyViewport {
+  flex: none;
+  width: calc(320 * var(--pp-scale));
+}
+
+.sliders[data-mode="slider"] .bodyViewport {
+  position: relative;
+  height: calc(232 * var(--pp-scale));
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 30%,
+    #000 70%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 30%,
+    #000 70%,
+    transparent 100%
+  );
+}
+
+.body {
+  width: 100%;
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.4;
+  color: var(--pp-bone);
+  will-change: transform;
+}
+
+/* Per-word reveal mask padding (house style — keeps descenders from clipping). */
+.sliders :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+
+/* Desktop reduced-motion fallback: no pin, so the deck is a tall vertical gallery.
+   Top-align the fixed label against it (centring would float it mid-column). */
+@media (prefers-reduced-motion: reduce) and (min-width: 1024px) {
+  .row {
+    align-items: flex-start;
+  }
+}
+
+/* ── Tablet + mobile (<1024): the row stacks to a left-aligned column; each slide is a
+   card (title centred on it) above its body. The card keeps its flat brand tilt (no 3D /
+   no mouse), scaled via .stage's own --pp-scale so the composition scales as one unit. ── */
+@media (max-width: 1023px) {
+  .sliders {
+    min-height: 0;
+    align-items: stretch;
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .frame {
+    width: 100%;
+  }
+  .row {
+    position: static;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--pp-stack);
+    padding-left: 0;
+  }
+  .sliders .deck {
+    width: 100%;
+    gap: calc(var(--pp-stack) * 1.4);
+  }
+  .sliders .slide {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(20px, 5vw, 32px);
+  }
+  .sliders .label {
+    white-space: normal;
+    font-size: clamp(20px, 4.5vw, 25px);
+  }
+  /* The card keeps its flat brand tilt with the title centred on it (no 3D perspective). */
+  .sliders .stage {
+    --pp-scale: min(100vw / 740, 0.78px);
+    align-self: center;
+    perspective: none;
+  }
+  .sliders .cardTitle {
+    font-size: calc(46 * var(--pp-scale));
+  }
+  .sliders .bodyViewport {
+    width: 100%;
+  }
+  .sliders .body {
+    font-size: var(--pp-fs-body);
+  }
+}

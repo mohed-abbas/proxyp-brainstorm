@@ -412,9 +412,12 @@ html.js [data-axis-card] {
   opacity: 0;
 }
 
-/* Scroll lock while the welcome assembles; released when JS adds .pp-ready. */
-html.js:not(.pp-ready),
-html.js:not(.pp-ready) body {
+/* Scroll lock while the welcome assembles; released when JS adds .pp-ready.
+   Gated on an onboarding curtain actually being present (:has(.ob-stage)) — pages
+   without a welcome (e.g. /referrals) have nothing to release the lock, so they
+   must never engage it. */
+html.js:not(.pp-ready):has(.ob-stage),
+html.js:not(.pp-ready):has(.ob-stage) body {
   overflow: hidden;
   height: 100%;
 }

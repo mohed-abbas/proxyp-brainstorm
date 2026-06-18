@@ -1,0 +1,230 @@
+/* Tracks — "Two ways to work together" (Figma 123:75, PRofilTypes). A full-bleed
+   Proxy-Blue card (rounded 20) carrying a 1360px content column, vertically centred
+   on a 725-tall card: a header row (title + right-aligned intro) over two 635px
+   collaboration tracks split by a centred hairline. All type is Bone White (the
+   scope line muted to 60%). BLUE surface. Sizes off literal Figma px * --pp-scale;
+   below 1024 it leaves the artboard scale, stacks the columns, and uses fluid tokens. */
+
+.tracks {
+  position: relative;
+  width: 100%;
+  min-height: calc(725 * var(--pp-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pp-blue);
+  border-radius: calc(20 * var(--pp-scale));
+  overflow: hidden;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: calc(68 * var(--pp-scale));
+  width: calc(1360 * var(--pp-scale));
+}
+
+/* Header row — title left, intro pinned right (≥133px apart). */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(133 * var(--pp-scale));
+  width: 100%;
+  color: var(--pp-bone);
+}
+
+.title {
+  flex: none;
+  font-weight: 500;
+  font-size: calc(49 * var(--pp-scale));
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.intro {
+  flex: none;
+  width: calc(590 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-align: right;
+}
+
+/* The two tracks + the centred divider (out of flow). */
+.row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: calc(30 * var(--pp-scale));
+  width: calc(635 * var(--pp-scale));
+  color: var(--pp-bone);
+}
+
+.colHead {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10 * var(--pp-scale));
+}
+
+.eyebrow {
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.name {
+  font-weight: 500;
+  font-size: calc(39 * var(--pp-scale));
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.scope {
+  width: calc(340 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(14 * var(--pp-scale));
+  line-height: 1.4;
+  color: rgba(247, 244, 240, 0.6);
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 * var(--pp-scale));
+}
+
+.body {
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.4;
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10 * var(--pp-scale));
+  list-style: none;
+}
+
+.point {
+  display: flex;
+  align-items: center;
+  gap: calc(10 * var(--pp-scale));
+}
+
+.dot {
+  flex: none;
+  width: calc(16 * var(--pp-scale));
+  height: calc(16 * var(--pp-scale));
+  color: var(--pp-bone);
+}
+
+.pointText {
+  width: calc(366 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.3;
+}
+
+/* Tag pill — translucent bone fill + hairline, hugging its label. */
+.tag {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(10 * var(--pp-scale)) calc(20 * var(--pp-scale));
+  border: 1px solid rgba(247, 244, 240, 0.2);
+  border-radius: calc(34 * var(--pp-scale));
+  background: rgba(247, 244, 240, 0.2);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Vertical hairline between the two tracks (Figma Line 34), centred. */
+.divider {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 1px;
+  height: calc(417 * var(--pp-scale));
+  background: rgba(247, 244, 240, 0.2);
+}
+
+/* ── Tablet + mobile (<1024): leave the artboard scale; stack the two tracks and
+   size off the fluid tokens with comfortable gutters. ───────────────────────────── */
+@media (max-width: 1023px) {
+  .tracks {
+    min-height: 0;
+    border-radius: 16px;
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .tracks .content {
+    width: 100%;
+    gap: var(--pp-stack);
+  }
+  .tracks .head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(12px, 3vw, 24px);
+  }
+  .tracks .title {
+    white-space: normal;
+    font-size: var(--pp-fs-h2);
+  }
+  .tracks .intro {
+    width: 100%;
+    text-align: left;
+    font-size: var(--pp-fs-body);
+  }
+  .tracks .row {
+    flex-direction: column;
+    gap: var(--pp-stack);
+  }
+  .tracks .col {
+    width: 100%;
+    gap: clamp(16px, 4vw, 30px);
+  }
+  .tracks .eyebrow,
+  .tracks .body,
+  .tracks .tag {
+    font-size: var(--pp-fs-body);
+  }
+  .tracks .name {
+    font-size: var(--pp-fs-h3);
+  }
+  .tracks .scope {
+    width: 100%;
+    font-size: var(--pp-fs-small);
+  }
+  .tracks .dot {
+    width: 16px;
+    height: 16px;
+  }
+  .tracks .pointText {
+    width: auto;
+    flex: 1;
+    font-size: var(--pp-fs-body);
+  }
+  .tracks .tag {
+    padding: 10px 20px;
+    border-radius: 999px;
+    white-space: normal;
+  }
+  .tracks .divider {
+    display: none;
+  }
+}
