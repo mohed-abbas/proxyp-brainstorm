@@ -52,7 +52,8 @@ export function useWhiteLabel(scope: RefObject<HTMLElement | null>, s: Styles) {
           y: cap(7.5728, 114.5),
           transformOrigin: "50% 50%",
         });
-        gsap.set(line, { autoAlpha: 0 });
+        // Connector draws DOWNWARD from just under the badge (top origin, scaleY 0→1).
+        gsap.set(line, { scaleY: 0, transformOrigin: "50% 0%" });
         gsap.set(rings, { autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%" });
 
         gsap
@@ -74,7 +75,7 @@ export function useWhiteLabel(scope: RefObject<HTMLElement | null>, s: Styles) {
           .to(badge, { scale: 1, y: 0, duration: 1.5, ease: "power2.inOut" }, 0)
           .to(eyebrow, { autoAlpha: 0, y: "-1.1vw", duration: 0.45 }, 0)
           .to(rings, { autoAlpha: 1, scale: 1, duration: 1.5, ease: "power2.inOut" }, 0)
-          .to(line, { autoAlpha: 1, duration: 0.6 }, 0.4)
+          .to(line, { scaleY: 1, duration: 0.6 }, 0.4)
           .to(title, { autoAlpha: 1, duration: 0.4 }, 0.45)
           .to(titleWords, { yPercent: 0, duration: 0.6, stagger: 0.04 }, 0.5)
           .to(body, { autoAlpha: 1, duration: 0.5 }, 0.85)
