@@ -99,6 +99,7 @@
   position: absolute;
   top: 0;
   left: 50%;
+  z-index: 2; /* keep the opaque badge above the line/rings so they never show through it */
   transform: translateX(-50%);
   width: calc(58 * var(--pp-scale));
   height: calc(59 * var(--pp-scale));
