@@ -18,9 +18,9 @@ type Styles = Record<string, string>;
 // Mobile (<1024): no pin / no scrub / no tilt; every slide is a gallery card (title on it)
 // above its body, word-rising on enter. Reduced motion: settled, static.
 //
-// `dwell` switches the roll feel: false (default) = one continuous, never-stopping roll
-// (smooth); true = ease into each benefit and REST before rolling on (stops at each slide).
-export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles, dwell: boolean) {
+// Roll feel: one continuous, never-stopping roll (smooth) — the content glides steadily
+// with the scroll.
+export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles) {
   useGSAP(
     () => {
       const section = scope.current;
@@ -144,10 +144,9 @@ export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles, dwel
 
         // Pinned, SCRUBBED master timeline (iventions): the benefits roll through the frame
         // centre — title, body and photo in lockstep, tied 1:1 to scroll and reversible.
-        // Length = n viewport-heights (the equal-band pacing kept).
-        const SLIDE_VH = 1;
-        const ROLL = 1;
-        const DWELL = 0.6;
+        // SLIDE_VH = viewport-heights of scroll per benefit — the master speed knob (lower =
+        // faster). scrub = catch-up lag in seconds (lower = snappier, less floaty tail).
+        const SLIDE_VH = 0.7;
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
@@ -156,7 +155,7 @@ export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles, dwel
             pin: true,
             pinType: "transform",
             anticipatePin: 1,
-            scrub: 1.2,
+            scrub: 0.8,
             invalidateOnRefresh: true,
             onRefresh: () => {
               measure();
@@ -165,20 +164,9 @@ export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles, dwel
           },
           onUpdate: applyRoll,
         });
-        if (dwell) {
-          // Dwell mode: ease into each benefit, then HOLD pos (the rest-on-stat) before
-          // rolling on — the "stops at each slide" feel.
-          for (let i = 1; i < n; i++) {
-            tl.to(roll, { pos: i, ease: "power2.inOut", duration: ROLL }).to(roll, {
-              pos: i,
-              duration: DWELL,
-            });
-          }
-        } else {
-          // Smooth mode (default): one continuous linear roll across every benefit — never
-          // stops; the content glides steadily with the scroll.
-          tl.to(roll, { pos: n - 1, ease: "none", duration: n - 1 });
-        }
+        // Smooth: one continuous linear roll across every benefit — never stops; the content
+        // glides steadily with the scroll.
+        tl.to(roll, { pos: n - 1, ease: "none", duration: n - 1 });
 
         return () => {
           tiltCleanup();
@@ -203,6 +191,6 @@ export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles, dwel
         });
       });
     },
-    { scope, dependencies: [dwell], revertOnUpdate: true },
+    { scope, revertOnUpdate: true },
   );
 }

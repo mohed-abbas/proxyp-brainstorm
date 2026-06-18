@@ -35,7 +35,7 @@
 .row {
   display: flex;
   align-items: center;
-  gap: calc(153 * var(--pp-scale));
+  gap: calc(120 * var(--pp-scale));
   padding-left: calc(77 * var(--pp-scale));
 }
 
@@ -51,7 +51,7 @@
 .slide {
   display: flex;
   align-items: center;
-  gap: calc(153 * var(--pp-scale));
+  gap: calc(120 * var(--pp-scale));
 }
 
 /* ── Slider mode (desktop + motion, set by the hook): overlap the slides in one fixed
@@ -59,8 +59,8 @@
    deck is sized to the stage and the body stays aligned with the card. ──────────────── */
 .sliders[data-mode="slider"] .deck {
   position: relative;
-  width: calc(905.808 * var(--pp-scale)); /* stage 432.808 + gap 153 + body 320 */
-  height: calc(379.526 * var(--pp-scale)); /* the stage (the title floats above it) */
+  width: calc(1008.938 * var(--pp-scale)); /* stage 568.938 + gap 120 + body 320 */
+  height: calc(490.574 * var(--pp-scale)); /* the stage (the title floats above it) */
 }
 .sliders[data-mode="slider"] .slide {
   position: absolute;
@@ -77,13 +77,14 @@
   white-space: nowrap;
 }
 
-/* The slider viewport — the rotated card's bounding cell (432.808 × 379.526); also the
-   positioning context for the title slot floating above it, and the 3D perspective host. */
+/* The slider viewport — the rotated card's bounding cell (a 500 × 400 card tilted 11.35°
+   spans 568.938 × 490.574); also the positioning context for the title slot floating above
+   it, and the 3D perspective host. */
 .stage {
   position: relative;
   flex: none;
-  width: calc(432.808 * var(--pp-scale));
-  height: calc(379.526 * var(--pp-scale));
+  width: calc(568.938 * var(--pp-scale));
+  height: calc(490.574 * var(--pp-scale));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,8 +158,8 @@
 
 .card {
   position: relative;
-  width: calc(379 * var(--pp-scale));
-  height: calc(311 * var(--pp-scale));
+  width: calc(500 * var(--pp-scale));
+  height: calc(400 * var(--pp-scale));
   border-radius: calc(28 * var(--pp-scale));
   overflow: hidden;
 }
@@ -226,32 +227,6 @@
   margin: -0.06em 0 -0.14em;
 }
 
-/* Preview switch (smooth ⇄ dwell). Low-key fixed pill, desktop only. */
-.modeToggle {
-  position: fixed;
-  right: calc(20 * var(--pp-scale));
-  bottom: calc(20 * var(--pp-scale));
-  z-index: 60;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(247, 244, 240, 0.18);
-  background: rgba(22, 23, 24, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: var(--pp-bone);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  cursor: pointer;
-  transition: border-color 0.2s ease;
-}
-.modeToggle:hover {
-  border-color: rgba(247, 244, 240, 0.4);
-}
-
 /* Desktop reduced-motion fallback: no pin, so the deck is a tall vertical gallery.
    Top-align the fixed label against it (centring would float it mid-column). */
 @media (prefers-reduced-motion: reduce) and (min-width: 1024px) {
@@ -294,7 +269,7 @@
   }
   /* The card keeps its flat brand tilt with the title centred on it (no 3D perspective). */
   .sliders .stage {
-    --pp-scale: min(100vw / 560, 0.78px);
+    --pp-scale: min(100vw / 740, 0.78px);
     align-self: center;
     perspective: none;
   }
@@ -306,9 +281,5 @@
   }
   .sliders .body {
     font-size: var(--pp-fs-body);
-  }
-  /* No roll in the gallery → no switch. */
-  .modeToggle {
-    display: none;
   }
 }
