@@ -87,22 +87,27 @@ export function ReferralsHero() {
             hairlines (clouds paint over the spiral's outer rings at the flanks;
             the bone hairlines sit on top, tracing the band's edges). */}
         <div className={s.band} aria-hidden="true">
-          {/* Blue bowtie shape (full-bleed, clipped to the frame). */}
-          <img className={s.bandBlue} src="/images/referrals/band-blue.webp" alt="" />
+          {/* The composition — the 1512×941 design frame, centred in the .band crop
+              window (lens logic). Its own --pp-scale drives every layer so they scale
+              together; the window stays full-bleed and crops the bowtie's flared tips. */}
+          <div className={s.bandInner}>
+            {/* Blue bowtie shape (extends well past the frame; tips cropped by .band). */}
+            <img className={s.bandBlue} src="/images/referrals/band-blue.webp" alt="" />
 
-          {/* The live advisor spiral at the waist. */}
-          <ReferralsSpiral styles={s} />
+            {/* The live advisor spiral at the waist. */}
+            <ReferralsSpiral styles={s} />
 
-          {/* Cloud wisps — the fluffy texture revealed through the sky-shaped mask,
-              two instances, clipped to the band shape via .clouds. */}
-          <div className={s.clouds}>
-            <img className={`${s.cloud} ${s.cloudA}`} src="/images/referrals/cloud-tex.webp" alt="" />
-            <img className={`${s.cloud} ${s.cloudB}`} src="/images/referrals/cloud-tex.webp" alt="" />
+            {/* Cloud wisps — the fluffy texture revealed through the sky-shaped mask,
+                two instances, clipped to the band shape via .clouds. */}
+            <div className={s.clouds}>
+              <img className={`${s.cloud} ${s.cloudA}`} src="/images/referrals/cloud-tex.webp" alt="" />
+              <img className={`${s.cloud} ${s.cloudB}`} src="/images/referrals/cloud-tex.webp" alt="" />
+            </div>
+
+            {/* Bone hairlines tracing the band's curved top + bottom edges. */}
+            <img className={s.hairTop} src="/images/referrals/hair-top.svg" alt="" />
+            <img className={s.hairBot} src="/images/referrals/hair-bot.svg" alt="" />
           </div>
-
-          {/* Bone hairlines tracing the band's curved top + bottom edges. */}
-          <img className={s.hairTop} src="/images/referrals/hair-top.svg" alt="" />
-          <img className={s.hairBot} src="/images/referrals/hair-bot.svg" alt="" />
         </div>
 
         <SplitText as="h1" className={s.clients} words={clientsWords} />

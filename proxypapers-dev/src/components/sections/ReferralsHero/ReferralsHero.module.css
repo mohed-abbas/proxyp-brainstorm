@@ -21,18 +21,42 @@
    Decomposed from Figma node 123:369 into real layers (not one baked export):
    a full-bleed blue bowtie shape, fluffy-cloud wisps revealed through a sky
    mask, two bone hairline curves, and the live advisor spiral at the waist.
-   The wrapper is the artboard's 1512×941 band frame; overflow:hidden clips the
-   layers (the bowtie/clouds/hairlines bleed well past the frame in Figma) so the
-   dark ink canvas reads through above/below the band. */
+
+   Built on the homepage hero LENS logic (Hero.module.css .lens/.stage): .band is
+   a full-bleed crop window (width:100vw, centred, overflow:hidden) whose height
+   rides --pp-scale; .bandInner holds the 1512×941 composition, centred inside.
+   The ONE deliberate difference from the lens: the bowtie's flared corner curves
+   must NEVER show — the composition is always wider than the viewport so the tips
+   overflow and crop at every width, including >1512 (see .bandInner's cover scale). */
 .band {
   position: absolute;
-  left: 0;
+  left: 50%;
+  margin-left: -50vw;
   top: 0;
-  width: calc(1512 * var(--pp-scale));
+  width: 100vw;
   height: calc(941 * var(--pp-scale));
   overflow: hidden;
   z-index: 0;
   pointer-events: none;
+}
+
+/* The composition: the 1512×941 design frame, centred in the crop window so it
+   stays centred when the window is wider (>1512) or shorter (mobile). It carries
+   its OWN --pp-scale, which every layer below inherits via their calc(N*--pp-scale)
+   offsets — so the bowtie, clouds, masked spiral, rings and avatars all scale as a
+   unit and the masks stay aligned. Centring is a transform here (NOT on .band): the
+   reveal hook clearProps:"transform" on .band would wipe it, but never touches this.
+   Cover scale (≥1024): equals the global scale ≤1512 (composition == window, desktop
+   pixel-identical); freezes at 1px on normal big screens; grows past ~2000px so the
+   3715-wide bowtie is always ≥1.85·100vw → flared corners never appear at any size. */
+.bandInner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  --pp-scale: max(min(100vw / 1512, 1px), 100vw / 2000);
+  width: calc(1512 * var(--pp-scale));
+  height: calc(941 * var(--pp-scale));
 }
 
 /* Blue bowtie shape (node 123:370) — 3715×973, anchored per the artboard and
@@ -310,4 +334,92 @@
 :global(html.js) .body,
 :global(html.js) .cta {
   opacity: 0;
+}
+
+/* ── Tablet + mobile reflow (<1024px) ────────────────────────────────────────
+   Below the 1024 breakpoint the section stops riding the 1512 artboard (which
+   would shrink type to nothing) and reflows into a single left-aligned column,
+   per the site convention and the phone mockup (referralsMockPhone.png). Flow
+   order brackets the band between the two headlines: clients → band → firm →
+   body+CTA, echoing the desktop "the network connects clients ↔ firm" idea. */
+@media (max-width: 1023px) {
+  .frame {
+    position: static;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--pp-stack);
+    /* top pad clears the fixed navbar; sides are the shared gutter */
+    padding: calc(var(--pp-tap) + 64px) var(--pp-gutter) var(--pp-stack);
+  }
+
+  /* Headlines — sized to fit the mobile screen (the mockup's oversized bleed was an
+     uncontrolled-font artifact, not the intent). Left-aligned to the gutter, wrapping
+     within the column on the shared fluid display token. "clients." keeps its accent. */
+  .clients,
+  .firm {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    white-space: normal;
+    text-align: left;
+    font-size: var(--pp-fs-display);
+    letter-spacing: -0.01em;
+    line-height: 1.08;
+  }
+  .clients {
+    order: 1;
+  }
+  .firm {
+    order: 3;
+  }
+
+  /* Band — same lens crop window, now a full-bleed flow item. align-self:center
+     centres the 100vw window without a transform (the reveal hook clearProps:
+     "transform" on .band would wipe one). The window height is a controlled clamp;
+     the taller composition is cropped to the waist slice (like the lens on mobile). */
+  .band {
+    order: 2;
+    position: relative;
+    left: auto;
+    margin-left: 0;
+    top: auto;
+    align-self: center;
+    width: 100vw;
+    height: clamp(220px, 58vw, 360px);
+  }
+  /* The fixed-aspect spiral can't object-fit:fill-stretch like the lens image, so the
+     composition scales to fit the spiral to ~viewport width (≈85% on phones; capped so
+     it isn't oversized on large tablets). The window still crops the bowtie's tips. */
+  .bandInner {
+    --pp-scale: min(100vw / 1040, 0.62px);
+  }
+
+  /* Body + CTA — static, full-width, left-aligned. The CTA's own size comes from
+     the global .pp-btn mobile rule in globals.css. */
+  .foot {
+    order: 4;
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+  }
+  .body {
+    position: static;
+    left: auto;
+    top: auto;
+    font-size: var(--pp-fs-body);
+  }
+  .cta {
+    position: static;
+    left: auto;
+    top: auto;
+    margin-top: clamp(20px, 5vw, 32px);
+  }
 }
