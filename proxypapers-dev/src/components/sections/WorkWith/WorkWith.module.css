@@ -1,0 +1,112 @@
+/* WorkWith — "The profiles we work with." (Figma 162:3, "PRofile Work With"). A
+   full-bleed Chinese-Black band: a small caption on the left and a column of referrer
+   professions on the right, one in Proxy Blue. Type is Bone White. DARK surface. Sizes
+   off literal Figma px * --pp-scale.
+
+   Motion (iventions' "worked" mechanic): native scroll, no pin. The caption is
+   position:sticky on a focus line; the list's tall vh padding makes the row taller than
+   the viewport, so the caption stays put while the list scrolls PAST it at the page's own
+   speed. Whichever profession reaches that line — level with the caption — lights Proxy
+   Blue (useWorkWith sets data-active; CSS owns the 0.6s colour ease). Below 1024 it stacks
+   and the highlight tracks the viewport centre. */
+
+.workWith {
+  position: relative;
+  width: 100%;
+  background: var(--pp-ink);
+  color: var(--pp-bone);
+}
+
+/* Two-column row: sticky caption (left, 416 wide) + the profession list (right, 649),
+   147 apart — matching the Figma x-offsets within the 1212 content block. The top padding
+   equals the focus line (40vh), so BOTH the caption and the first profession start on that
+   line and stay level as the caption sticks and the list scrolls past; the bottom padding
+   is exit runway. Together they make the row taller than any viewport (so sticky engages). */
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(147 * var(--pp-scale));
+  width: calc(1212 * var(--pp-scale));
+  margin: 0 auto;
+  padding-block: 40vh 22vh;
+}
+
+/* Left caption — sticks at the focus line (40vh, matching .content padding-top) while the
+   list scrolls past, staying level with the active profession. */
+.label {
+  position: sticky;
+  top: 40vh;
+  flex: none;
+  width: calc(416 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(39 * var(--pp-scale));
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--pp-bone);
+}
+
+/* Right column — the profession list (runway lives on .content, not here). */
+.list {
+  flex: none;
+  width: calc(649 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(16 * var(--pp-scale));
+  list-style: none;
+}
+
+.item {
+  font-weight: 700;
+  font-size: calc(56 * var(--pp-scale));
+  line-height: calc(67 / 56);
+  letter-spacing: -0.02em;
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+
+/* Traveling highlight: useWorkWith flags the profession on the focus line with data-active;
+   it eases to Proxy Blue while the rest hold Bone. The transition lives on the painted span
+   (colour inherited from .item) so a purely inherited change still eases. */
+.item :global(.r-word__in) {
+  color: inherit;
+  transition: color 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.item[data-active="true"] {
+  color: var(--pp-blue);
+}
+
+/* Per-word reveal mask padding (house style — keeps descenders from clipping). */
+.workWith :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+
+/* ── Tablet + mobile (<1024): leave the artboard scale; stack the caption over the list
+   (no sticky / no vh runway) and size off the fluid tokens with comfortable gutters. ── */
+@media (max-width: 1023px) {
+  .workWith {
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .workWith .content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--pp-stack);
+    width: 100%;
+    padding-block: 0;
+  }
+  .workWith .label {
+    position: static;
+    top: auto;
+    width: 100%;
+    font-size: var(--pp-fs-h3);
+  }
+  .workWith .list {
+    width: 100%;
+    padding-block: 0;
+    gap: clamp(8px, 2vw, 16px);
+  }
+  .workWith .item {
+    font-size: var(--pp-fs-h2);
+    white-space: normal;
+  }
+}
