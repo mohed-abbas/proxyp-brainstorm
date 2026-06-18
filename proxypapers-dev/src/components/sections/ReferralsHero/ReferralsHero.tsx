@@ -5,14 +5,68 @@ import s from "./ReferralsHero.module.css";
 import content from "@/data/en/referrals.json";
 import { SplitText, type SplitWord } from "@/components/shared/SplitText";
 import { PpButton } from "@/components/shared/PpButton";
+import { PpMark } from "@/components/shared/PpMark";
 import { useReferralsHero } from "@/lib/animations/useReferralsHero";
+import { useReferralsOrbit } from "@/lib/animations/useReferralsOrbit";
 
-// Referrals hero — ported from Figma (node 421:8). A Chinese-Black canvas split by
-// a Proxy-Blue "bowtie" band that carries the advisor network (avatars on solid +
-// dashed concentric arcs around a central P-mark node). For this layout pass the
-// band is the exact Figma export (blue + clouds + arcs + avatars + P-node baked
-// into one asset); the animation pass decomposes it into real, parallaxable layers
-// (masked sky, inline-SVG arcs, <img> avatars, PpMark node).
+type Styles = Record<string, string>;
+
+const spiralAvatars = content.hero.spiral.avatars;
+const ringAvatars = (ring: string) =>
+  spiralAvatars.filter((a) => a.ring === ring);
+
+// The advisor spiral — Figma's exact layout (node 123:379): six concentric rings
+// alternating solid/dashed (radii 86.5 · 150.5 · 222.5 · 302.5 · 379.5 · 440.5,
+// centred in an 881-unit field), six avatars on the three solid rings, and a
+// 58.9px centre P-node. Only the MOTION (load reveal + perpetual rotation) is
+// borrowed from the home Referrers diagram — see useReferralsOrbit. The whole
+// field is clipped to the blue band shape, so the big rings read as the shallow
+// arcs of the Figma band and orbiting avatars dissolve at the band's edges.
+function ReferralsSpiral({ styles }: { styles: Styles }) {
+  const orbit = useRef<HTMLDivElement>(null);
+  useReferralsOrbit(orbit, styles);
+
+  return (
+    <div className={styles.spiral} ref={orbit} aria-hidden="true">
+      <div className={styles.field}>
+        <svg
+          className={styles.rings}
+          viewBox="0 0 881 881"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle className={styles.ringSolid} cx="440.5" cy="440.5" r="86.5" />
+          <circle className={styles.ringDash} cx="440.5" cy="440.5" r="150.5" />
+          <circle className={styles.ringSolid} cx="440.5" cy="440.5" r="222.5" />
+          <circle className={styles.ringDash} cx="440.5" cy="440.5" r="302.5" />
+          <circle className={styles.ringSolid} cx="440.5" cy="440.5" r="379.5" />
+          <circle className={styles.ringDash} cx="440.5" cy="440.5" r="440.5" />
+        </svg>
+
+        {(["r1", "r2", "r3"] as const).map((ring) => (
+          <div key={ring} className={styles.orbitLayer} data-ring={ring}>
+            {ringAvatars(ring).map((a) => (
+              <span key={a.id} className={styles.avatar} data-avatar={a.id}>
+                <img src={a.img} alt="" />
+              </span>
+            ))}
+          </div>
+        ))}
+
+        <span className={styles.mark}>
+          <PpMark />
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// Referrals hero — ported from Figma (band node 123:369). A Chinese-Black canvas
+// carrying a Proxy-Blue "bowtie" band: a full-bleed blue shape (band-blue.webp)
+// pinched at the waist, fluffy-cloud wisps revealed through a sky mask at its wide
+// ends, and two bone hairline curves tracing its top and bottom edges. The advisor
+// network at the waist is NOT baked into the band — it is the live ReferralsSpiral
+// (the home orbital), masked to the waist and perpetually spinning.
 export function ReferralsHero() {
   const root = useRef<HTMLElement>(null);
   useReferralsHero(root, s);
@@ -29,12 +83,22 @@ export function ReferralsHero() {
   return (
     <main className={s.hero} data-nav-theme="dark" ref={root}>
       <div className={s.frame}>
-        <img
-          className={s.band}
-          src="/images/referrals/band.webp"
-          alt=""
-          aria-hidden="true"
-        />
+        <div className={s.band} aria-hidden="true">
+          {/* Blue bowtie shape (full-bleed, clipped to the frame). */}
+          <img className={s.bandBlue} src="/images/referrals/band-blue.webp" alt="" />
+
+          {/* Cloud wisps — the fluffy texture revealed through the sky-shaped mask,
+              two instances sampling different regions of the same mask. */}
+          <img className={`${s.cloud} ${s.cloudA}`} src="/images/referrals/cloud-tex.webp" alt="" />
+          <img className={`${s.cloud} ${s.cloudB}`} src="/images/referrals/cloud-tex.webp" alt="" />
+
+          {/* Bone hairlines tracing the band's curved top + bottom edges. */}
+          <img className={s.hairTop} src="/images/referrals/hair-top.svg" alt="" />
+          <img className={s.hairBot} src="/images/referrals/hair-bot.svg" alt="" />
+
+          {/* The live advisor spiral at the waist. */}
+          <ReferralsSpiral styles={s} />
+        </div>
 
         <SplitText as="h1" className={s.clients} words={clientsWords} />
         <SplitText as="h2" className={s.firm} words={firmWords} />
