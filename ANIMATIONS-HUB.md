@@ -463,6 +463,44 @@ on scroll).
 - **Feasibility / constraints:** reduced motion → not started (hook returns early).
   Long linear durations keep it calm; decorative (`aria-hidden`), no pointer events.
 
+## Sliders (referrals page)
+
+### Sliders benefit roller (pinned, SCRUBBED triple roller, iventions)
+- **Where:** the Sliders section on `/referrals` ("What Proxy Papers brings you") — full
+  viewport, dark. Fixed left label · centre photo frame (3D brand tilt + mouse) · right body.
+- **User-facing description:** "the section pins and the benefits roll continuously as you
+  scroll — the title (on the frame) and the body roll vertically in lockstep, the centre is
+  solid and the neighbours ghost above/below, the photo cross-fades, and it eases to a rest
+  on each benefit. Scrolling back rolls it back. Below 1024 it's a settled vertical gallery."
+- **Trigger:** scroll, **pinned + scrubbed**. `gsap.timeline({ scrollTrigger: { trigger:
+  section, start: "top top", end: "+=" + n*100 + "%" (n = benefit count), pin: true,
+  pinType: "transform", anticipatePin: 1, scrub: 1.2, invalidateOnRefresh: true,
+  onRefresh: re-measure } , onUpdate: applyRoll })`. A separate `once` trigger (`top 80%`)
+  fades the deck up + rises the left label before the pin. Desktop-only via
+  `gsap.matchMedia("(min-width:1024px)")`.
+- **Mechanics:** the timeline scrubs a proxy `roll.pos` (0..n−1) — per benefit an eased step
+  `to(roll,{pos:i, ease:"power2.inOut", duration:1})` then a pos-holding dwell
+  `to(roll,{pos:i, duration:0.6})` (the rest-on-stat). Each frame `applyRoll()` offsets every
+  title/body by `(index − pos) × rowH/bodyRowH` (absolute, no relative tweens → refresh-safe)
+  and cross-fades each photo by `max(0, 1 − |index − pos|)`. Pitches measured from the
+  laid-out card (`rowH = cardH × 0.66`) and tallest body (`bodyRowH = maxBodyH + rowH×0.18`),
+  re-measured on refresh so they track `--pp-scale`. Title/body layers are gradient-masked
+  viewports (`.titleLayer` 560·scale tall, mask 34–66%; `.bodyViewport` 232·scale tall, mask
+  30–70%) so the centre row is solid and neighbours fade — the ghost-roll. Mouse 3D tilt
+  (`--pp-rx/--pp-ry`, base 4/−9 ±4°, `quickTo` eased) is unchanged and inherited by every
+  overlapped `.card3d`.
+- **Source ref:** matches iventions.com (`.css-14hzl1p`) — three synced roller columns,
+  scrub-tied with eased dwell + gradient-mask edges (measured live). Reuses the scrub+pin
+  pattern of `useProfiles.ts` and the masked viewport of `Trust.module.css` `.certsViewport`.
+- **Implementation note:** `useSliders.ts` (`useGSAP`, scope-scoped). Per-slide `.slide`
+  blocks kept (overlapped + absolute in slider mode; vertical gallery on mobile). Title & body
+  are SplitText markup but roll as whole blocks here (words parked at rest); the left label +
+  the mobile gallery still word-rise. `data-mode="slider"` toggles the masked-viewport layout.
+- **Feasibility / constraints:** desktop ≥1024 only; mobile (<1024) and reduced motion →
+  settled gallery (no pin/scrub/tilt), each slide word-rises on enter. Scrub tracks Lenis via
+  the shared ticker (`LenisProvider`). Tuning knobs: `scrub`, roll/dwell ratio (1 / 0.6),
+  `rowH`/`bodyRowH`, mask stops, viewport heights.
+
 ## Closing
 
 ### Closing reveal (oversized headline → link → reassurance copy)

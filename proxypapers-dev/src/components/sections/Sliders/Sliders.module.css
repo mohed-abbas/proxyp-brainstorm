@@ -91,8 +91,8 @@
 }
 
 /* Title — a flat (upright) layer centred over the tilted card. In the pinned slider the
-   hook offsets each slide's title into a vertical roller (current on the card, previous
-   ghosted above, next below); on the gallery it just sits on each card. */
+   hook stacks each slide's title into a vertical roller (current on the card, neighbours
+   ghosting above/below); on the gallery it just sits on each card. */
 .titleLayer {
   position: absolute;
   inset: 0;
@@ -101,6 +101,32 @@
   justify-content: center;
   pointer-events: none;
   z-index: 1;
+}
+
+/* Slider mode: the title layer becomes a clipped, gradient-masked roller VIEWPORT centred
+   on the frame. The scrubbed timeline translates each slide's single title into a vertical
+   stack; the mask fades the neighbours above/below the centre (the iventions ghost-roll),
+   while the centre title stays solid. (Pattern from Trust's .certsViewport.) */
+.sliders[data-mode="slider"] .titleLayer {
+  inset: auto 0 auto 0;
+  top: 50%;
+  height: calc(560 * var(--pp-scale));
+  transform: translateY(-50%);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 34%,
+    #000 66%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 34%,
+    #000 66%,
+    transparent 100%
+  );
 }
 
 .cardTitle {
@@ -112,6 +138,7 @@
   text-align: center;
   color: var(--pp-bone);
   text-wrap: balance;
+  will-change: transform;
 }
 
 /* 3D layer — owns the subtle mouse tilt (vars set by the hook; default 0 = flat). */
@@ -154,19 +181,75 @@
   background: rgba(22, 23, 24, 0.48);
 }
 
-.body {
+/* Body — the right column. The viewport holds its place in the row; in slider mode it
+   becomes a clipped, gradient-masked roller (like the title) so each slide's body rolls
+   in/out and neighbours ghost. In the gallery it's a transparent passthrough. */
+.bodyViewport {
   flex: none;
   width: calc(320 * var(--pp-scale));
+}
+
+.sliders[data-mode="slider"] .bodyViewport {
+  position: relative;
+  height: calc(232 * var(--pp-scale));
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 30%,
+    #000 70%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 30%,
+    #000 70%,
+    transparent 100%
+  );
+}
+
+.body {
+  width: 100%;
   font-weight: 500;
   font-size: calc(16 * var(--pp-scale));
   line-height: 1.4;
   color: var(--pp-bone);
+  will-change: transform;
 }
 
 /* Per-word reveal mask padding (house style — keeps descenders from clipping). */
 .sliders :global(.r-word) {
   padding: 0.06em 0 0.14em;
   margin: -0.06em 0 -0.14em;
+}
+
+/* Preview switch (smooth ⇄ dwell). Low-key fixed pill, desktop only. */
+.modeToggle {
+  position: fixed;
+  right: calc(20 * var(--pp-scale));
+  bottom: calc(20 * var(--pp-scale));
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(247, 244, 240, 0.18);
+  background: rgba(22, 23, 24, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--pp-bone);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.modeToggle:hover {
+  border-color: rgba(247, 244, 240, 0.4);
 }
 
 /* Desktop reduced-motion fallback: no pin, so the deck is a tall vertical gallery.
@@ -218,8 +301,14 @@
   .sliders .cardTitle {
     font-size: calc(46 * var(--pp-scale));
   }
-  .sliders .body {
+  .sliders .bodyViewport {
     width: 100%;
+  }
+  .sliders .body {
     font-size: var(--pp-fs-body);
+  }
+  /* No roll in the gallery → no switch. */
+  .modeToggle {
+    display: none;
   }
 }

@@ -1,22 +1,26 @@
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
 
-// Sliders — the pinned benefit slider (Figma 141:480, iventions-inspired motion).
+// Sliders — the pinned benefit slider (Figma 141:480, iventions motion).
 //
-// Desktop (≥1024, ≥2 slides): the section PINS; scrolling advances one benefit at a
-// time. The titles form a VERTICAL ROLLER over the card — the current title sits on the
-// frame, the previous ghosts above it and the next ghosts below; each step rolls the
-// stack up. Underneath, the photo cross-fades and the body rises word-by-word, while the
-// tilted frame stays put and tilts subtly with the mouse (a base 3D pose + a gentle
-// pointer ±°, eased back on leave). The frame vars (--pp-rx/--pp-ry) are inherited from
-// the section so every overlapped card tilts identically and stays aligned.
+// Desktop (≥1024, ≥2 slides): the section PINS, then a SCRUBBED master timeline rolls the
+// benefits continuously with scroll (tied 1:1, reversible). The title and body are vertical
+// rollers — each is offset from the frame centre by (index − pos) row-heights, so they roll
+// as whole rows; their layers are gradient-masked so the centre is solid and neighbours
+// ghost above/below. The photo cross-fades by proximity. An eased step + a pos-holding dwell
+// per benefit give iventions' "rest then roll". The tilted frame tilts subtly with the mouse
+// (base 3D pose + gentle pointer ±°, eased back); --pp-rx/--pp-ry are inherited from the
+// section so every overlapped card tilts identically.
 //
-// Mobile (<1024): no pin / no tilt; every slide is a gallery card (title on it) above
-// its body, revealing on enter. Reduced motion: settled, static.
-export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles) {
+// Mobile (<1024): no pin / no scrub / no tilt; every slide is a gallery card (title on it)
+// above its body, word-rising on enter. Reduced motion: settled, static.
+//
+// `dwell` switches the roll feel: false (default) = one continuous, never-stopping roll
+// (smooth); true = ease into each benefit and REST before rolling on (stops at each slide).
+export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles, dwell: boolean) {
   useGSAP(
     () => {
       const section = scope.current;
@@ -89,78 +93,92 @@ export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles) {
 
         section.dataset.mode = "slider";
 
-        // The roller pitch — neighbours sit just above/below the card.
-        const cardEl = slides[0].querySelector<HTMLElement>(`.${s.card}`);
-        const rowH = (cardEl ? cardEl.offsetHeight : 296) * 0.66;
-        const op = (d: number) => (d === 0 ? 1 : d === 1 ? 0.22 : d === 2 ? 0.1 : 0.05);
+        const n = slides.length;
 
-        // Place every title relative to the active index: active on the card (y 0, full),
-        // others stacked by rowH and faded — the vertical roller.
-        const placeTitles = (active: number, animate: boolean) => {
+        // Roller pitches (px), measured from the laid-out frame + bodies so they track the
+        // responsive --pp-scale. rowH = how far the title stack steps per benefit (neighbours
+        // land just off the card); bodyRowH = the body slot (tallest body + a gap) so a body
+        // never overlaps its neighbour mid-roll. Re-measured on every ScrollTrigger refresh.
+        let rowH = 0;
+        let bodyRowH = 0;
+        const measure = () => {
+          const cardEl = slides[0].querySelector<HTMLElement>(`.${s.card}`);
+          rowH = (cardEl ? cardEl.offsetHeight : 296) * 0.66;
+          const bodyH = ch.map((c) => (c.bodyEl ? c.bodyEl.offsetHeight : 0));
+          bodyRowH = Math.max(80, ...bodyH) + rowH * 0.18;
+        };
+        measure();
+
+        // Apply the continuous roll for a position (0..n−1): every title/body is offset from
+        // centre by (its index − pos) row-heights, so `pos` is the benefit at the frame
+        // centre; the photo cross-fades by proximity (full at its integer pos, gone a row
+        // away). Driven each frame by the scrubbed proxy below — absolute, no relative tweens,
+        // so it stays correct through refreshes/resizes.
+        const roll = { pos: 0 };
+        const applyRoll = () => {
           ch.forEach((c, j) => {
-            const target = { y: (j - active) * rowH, autoAlpha: op(Math.abs(j - active)) };
-            if (animate) gsap.to(c.title, { ...target, duration: 0.6, ease: "power3.out" });
-            else gsap.set(c.title, target);
+            const off = j - roll.pos;
+            gsap.set(c.title, { y: off * rowH });
+            gsap.set(c.bodyEl, { y: off * bodyRowH });
+            gsap.set([c.img, c.overlay], { autoAlpha: Math.max(0, 1 - Math.abs(off)) });
           });
         };
 
-        // Park channels for slide 0 (photo + body visible; titles staged hidden for enter).
-        // Slide 0's title words stage below the mask so they rise in on enter; every other
-        // title rests at 0 (it word-rises only when it becomes active, in goTo).
-        ch.forEach((c, i) => {
-          gsap.set(c.title, { y: (i - 0) * rowH, autoAlpha: 0 });
-          gsap.set(c.titleWords, { yPercent: i === 0 ? 120 : 0 });
-          gsap.set([c.img, c.overlay], { autoAlpha: i === 0 ? 1 : 0 });
-          gsap.set(c.bodyEl, { autoAlpha: i === 0 ? 1 : 0 });
-          gsap.set(c.bodyWords, { yPercent: 120 });
+        // Block rollers now — titles/bodies move as whole rows at opacity 1 (the gradient
+        // mask does the edge-fade), so park their words at rest (no per-word rise here).
+        ch.forEach((c) => {
+          gsap.set(c.titleWords, { yPercent: 0 });
+          gsap.set(c.bodyWords, { yPercent: 0 });
         });
         gsap.set(labelWords, { yPercent: 120 });
+        applyRoll();
 
-        // Enter: label rises, the roller fades to its resting opacities, title 0 + body 0 rise.
+        // Enter: fade the deck up + rise the label as the section arrives (before the pin).
+        const deck = slides[0].parentElement;
         const enterTl = gsap.timeline({
-          defaults: { ease: "power3.out", force3D: true },
+          defaults: { ease: "power3.out" },
           scrollTrigger: { trigger: section, start: "top 80%", once: true },
         });
-        enterTl.to(labelWords, { yPercent: 0, duration: 0.7, stagger: 0.05 }, 0);
-        enterTl.add(() => placeTitles(0, true), 0.15);
-        enterTl.to(ch[0].titleWords, { yPercent: 0, duration: 0.7, stagger: 0.04 }, 0.3);
-        enterTl.to(ch[0].bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.02 }, 0.45);
+        if (deck) enterTl.from(deck, { autoAlpha: 0, duration: 0.7 }, 0);
+        enterTl.to(labelWords, { yPercent: 0, duration: 0.7, stagger: 0.05 }, 0.1);
 
-        let current = 0;
-        const last = slides.length - 1;
-
-        const goTo = (i: number) => {
-          const prev = current;
-          current = i;
-          placeTitles(i, true); // roll the whole title stack
-          // Title — re-run the house word-rise as the new one lands on the card (the prev
-          // title's words rest at 0 while it rolls away to a ghost).
-          gsap.set(ch[i].titleWords, { yPercent: 120 });
-          gsap.to(ch[i].titleWords, { yPercent: 0, duration: 0.7, ease: "power3.out", stagger: 0.04 });
-          // Photo cross-fade.
-          gsap.to([ch[prev].img, ch[prev].overlay], { autoAlpha: 0, duration: 0.5, ease: "power2.out" });
-          gsap.to([ch[i].img, ch[i].overlay], { autoAlpha: 1, duration: 0.5, ease: "power2.out" });
-          // Body — fade prev out, re-run the house word-rise on the new one.
-          gsap.to(ch[prev].bodyEl, { autoAlpha: 0, duration: 0.35, ease: "power2.out" });
-          gsap.set(ch[i].bodyWords, { yPercent: 120 });
-          gsap.set(ch[i].bodyEl, { autoAlpha: 1 });
-          gsap.to(ch[i].bodyWords, { yPercent: 0, duration: 0.7, ease: "power3.out", stagger: 0.02 });
-        };
-
-        // Pin for (N-1) viewport-heights; swap at each step threshold (no scrub/snap).
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top top",
-          end: "+=" + last * 100 + "%",
-          pin: true,
-          pinType: "transform",
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const i = Math.round(self.progress * last);
-            if (i !== current) goTo(i);
+        // Pinned, SCRUBBED master timeline (iventions): the benefits roll through the frame
+        // centre — title, body and photo in lockstep, tied 1:1 to scroll and reversible.
+        // Length = n viewport-heights (the equal-band pacing kept).
+        const SLIDE_VH = 1;
+        const ROLL = 1;
+        const DWELL = 0.6;
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "+=" + Math.round(n * SLIDE_VH * 100) + "%",
+            pin: true,
+            pinType: "transform",
+            anticipatePin: 1,
+            scrub: 1.2,
+            invalidateOnRefresh: true,
+            onRefresh: () => {
+              measure();
+              applyRoll();
+            },
           },
+          onUpdate: applyRoll,
         });
+        if (dwell) {
+          // Dwell mode: ease into each benefit, then HOLD pos (the rest-on-stat) before
+          // rolling on — the "stops at each slide" feel.
+          for (let i = 1; i < n; i++) {
+            tl.to(roll, { pos: i, ease: "power2.inOut", duration: ROLL }).to(roll, {
+              pos: i,
+              duration: DWELL,
+            });
+          }
+        } else {
+          // Smooth mode (default): one continuous linear roll across every benefit — never
+          // stops; the content glides steadily with the scroll.
+          tl.to(roll, { pos: n - 1, ease: "none", duration: n - 1 });
+        }
 
         return () => {
           tiltCleanup();
@@ -185,6 +203,6 @@ export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles) {
         });
       });
     },
-    { scope },
+    { scope, dependencies: [dwell], revertOnUpdate: true },
   );
 }

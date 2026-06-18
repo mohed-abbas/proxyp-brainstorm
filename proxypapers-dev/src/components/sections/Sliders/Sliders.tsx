@@ -1,20 +1,39 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import s from "./Sliders.module.css";
 import sliders from "@/data/en/sliders.json";
 import { SplitText } from "@/components/shared/SplitText";
 import { useSliders } from "@/lib/animations/useSliders";
 
 // Sliders — "What Proxy Papers brings you" (Figma 141:480, iventions-inspired motion).
-// Full-viewport dark section that PINS: each scroll advances one benefit. The fixed
-// left label stays; the per-slide title sits ABOVE the frame and rolls (continuity);
-// the center card reads 3D and tilts subtly with the mouse; the photo cross-fades and
-// the body rises word-by-word. Below 1024 / reduced-motion / no-JS it degrades to a
-// settled vertical gallery (title → card → body per slide). See useSliders.
+// Full-viewport dark section that PINS, then a scrubbed timeline rolls the benefits
+// continuously with scroll (iventions): the title, the frame photo, and the body advance
+// in lockstep — title & body are gradient-masked vertical rollers (centre solid, neighbours
+// ghosted), the photo cross-fades — easing to a dwell on each stat. The fixed left label
+// stays; the center card reads 3D and tilts subtly with the mouse. Below 1024 /
+// reduced-motion / no-JS it degrades to a settled vertical gallery (title → card → body
+// per slide). See useSliders.
 export function Sliders() {
   const root = useRef<HTMLElement>(null);
-  useSliders(root, s);
+
+  // Roll-feel switch (preview): false = smooth continuous roll (default, never stops),
+  // true = dwell (ease in and rest on each benefit). Persisted in localStorage so the
+  // choice survives reloads (lazy-read on the client; the button suppresses the resulting
+  // hydration text mismatch).
+  const [dwell, setDwell] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("pp-sliders-dwell") === "1",
+  );
+  const toggleDwell = () =>
+    setDwell((d) => {
+      const next = !d;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("pp-sliders-dwell", next ? "1" : "0");
+      }
+      return next;
+    });
+
+  useSliders(root, s, dwell);
 
   return (
     <section
@@ -55,16 +74,30 @@ export function Sliders() {
                   </div>
                 </div>
 
-                <SplitText
-                  as="p"
-                  className={s.body}
-                  words={card.body.split(" ")}
-                />
+                <div className={s.bodyViewport}>
+                  <SplitText
+                    as="p"
+                    className={s.body}
+                    words={card.body.split(" ")}
+                  />
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Preview switch — flip between the smooth (continuous) and dwell (rest-on-each)
+          roll. Desktop only (the roll exists only when pinned/scrubbed). */}
+      <button
+        type="button"
+        className={s.modeToggle}
+        onClick={toggleDwell}
+        aria-pressed={dwell}
+        suppressHydrationWarning
+      >
+        Roll: {dwell ? "Dwell" : "Smooth"}
+      </button>
     </section>
   );
 }
