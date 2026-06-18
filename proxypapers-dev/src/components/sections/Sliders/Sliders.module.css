@@ -1,0 +1,205 @@
+/* Sliders — "What Proxy Papers brings you" (Figma 141:480, frame "SlidersSection").
+   A full-viewport Chinese-Black section: a left section label beside a deck of benefit
+   slides, each a 11.35° tilted photo card (title upright via counter-rotation) plus a
+   right body paragraph. On desktop the section PINS and the slides cross-fade in place
+   (one scroll = next benefit) — see useSliders; the frame never moves. DARK surface.
+
+   Two layouts, switched by JS: the BASE css stacks the slides in a vertical column
+   (the no-JS / reduced-motion / mobile fallback — every benefit readable). When the
+   hook engages the pinned slider it sets [data-mode="slider"] on the section, which
+   overlaps the slides absolutely so they cross-fade in a single fixed frame.
+
+   Transform-per-node contract (as in Profiles): the card tilt lives on .cardTilt and
+   the title counter-tilt on .cardTitleTilt, each on its own element, so GSAP can own
+   .slide opacity / the title rise without fighting the CSS transforms. */
+
+.sliders {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+.frame {
+  position: relative;
+  width: min(100vw, 1512px);
+  display: flex;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: calc(153 * var(--pp-scale));
+  padding-left: calc(77 * var(--pp-scale));
+}
+
+/* The deck holds the slide layers. BASE: a vertical column (no-JS / reduced-motion
+   fallback — every slide readable). Slider mode overlaps them (below). */
+.deck {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-stack);
+}
+
+/* Each slide = one benefit: its tilted card (left) + its body (right). */
+.slide {
+  display: flex;
+  align-items: center;
+  gap: calc(153 * var(--pp-scale));
+}
+
+/* ── Slider mode (desktop + motion, set by the hook): overlap the slides in one fixed
+   frame so they cross-fade in place. ──────────────────────────────────────────────── */
+.sliders[data-mode="slider"] .deck {
+  position: relative;
+  width: calc(905.808 * var(--pp-scale)); /* stage 432.808 + gap 153 + body 320 */
+  height: calc(379.526 * var(--pp-scale)); /* the stage (tallest element) */
+}
+.sliders[data-mode="slider"] .slide {
+  position: absolute;
+  inset: 0;
+}
+
+.label {
+  flex: none;
+  font-weight: 500;
+  font-size: calc(25 * var(--pp-scale));
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+
+/* The slider viewport — the rotated card's bounding cell (432.808 × 379.526). */
+.stage {
+  flex: none;
+  width: calc(432.808 * var(--pp-scale));
+  height: calc(379.526 * var(--pp-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardTilt {
+  flex: none;
+  transform: rotate(11.35deg);
+}
+
+.card {
+  position: relative;
+  width: calc(379 * var(--pp-scale));
+  height: calc(311 * var(--pp-scale));
+  border-radius: calc(28 * var(--pp-scale));
+  overflow: hidden;
+  background: #fff;
+}
+
+.cardImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Per-slide focal point comes from the card's `imgPos` (inline style); e.g. slide 1's
+     portrait source biases down (50% 70%) so the group sits high in frame. */
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Title holder — fills the card; the inner counter-rotation lands the text level. */
+.cardLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardTitleTilt {
+  transform: rotate(-11.35deg);
+}
+
+.cardTitle {
+  width: calc(285 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(49 * var(--pp-scale));
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-align: left;
+  color: var(--pp-bone);
+}
+
+.body {
+  flex: none;
+  width: calc(320 * var(--pp-scale));
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.4;
+  color: var(--pp-bone);
+}
+
+/* Per-word reveal mask padding (house style — keeps descenders from clipping). */
+.sliders :global(.r-word) {
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
+}
+
+/* Desktop reduced-motion fallback: no pin, so the deck is a tall vertical gallery.
+   Top-align the fixed label against it (centring would float it mid-column). */
+@media (prefers-reduced-motion: reduce) and (min-width: 1024px) {
+  .row {
+    align-items: flex-start;
+  }
+}
+
+/* ── Tablet + mobile (<1024): the row stacks to a left-aligned column (label → card →
+   body). The card keeps its tilt by giving .stage its own --pp-scale, so the whole
+   composition (card, radius, title) scales as one unit. ───────────────────────────── */
+@media (max-width: 1023px) {
+  .sliders {
+    min-height: 0;
+    align-items: stretch;
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .frame {
+    width: 100%;
+  }
+  .row {
+    position: static;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--pp-stack);
+    padding-left: 0;
+  }
+  /* Slides flow as a vertical gallery; each slide stacks its card over its body. */
+  .sliders .deck {
+    width: 100%;
+    gap: calc(var(--pp-stack) * 1.4);
+  }
+  .sliders .slide {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(20px, 5vw, 32px);
+  }
+  .sliders .label {
+    white-space: normal;
+    font-size: clamp(20px, 4.5vw, 25px);
+  }
+  .sliders .stage {
+    --pp-scale: min(100vw / 560, 0.78px);
+    align-self: center;
+  }
+  .sliders .body {
+    width: 100%;
+    font-size: var(--pp-fs-body);
+  }
+}

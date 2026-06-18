@@ -1,0 +1,30 @@
+{
+  "label": "What Proxy Papers brings you",
+  "cards": [
+    {
+      "id": "reclaimed-time",
+      "title": "Reclaimed advisory time",
+      "body": "When your client works with Proxy Papers, documents arrive ready, sorted and current. You spend your time on high-value advisory work.",
+      "img": "/images/referrals/sliders/reclaimed-time.webp",
+      "imgPos": "50% 70%"
+    },
+    {
+      "id": "better-prepared",
+      "title": "Better-prepared files",
+      "body": "Meetings unfold differently when everyone has access to the same up-to-date base of information.",
+      "img": "/images/referrals/sliders/slide2.webp"
+    },
+    {
+      "id": "continuity",
+      "title": "Continuity beyond the firm",
+      "body": "Your recommendations remain useful to your client even outside your firm's scope the daily flow and all sources, not a single engagement.",
+      "img": "/images/referrals/sliders/slide3.webp"
+    },
+    {
+      "id": "compliant-framework",
+      "title": "A compliant framework",
+      "body": "We operate within a framework your wealthy clients require and your firm can recommend without reservation.",
+      "img": "/images/referrals/sliders/slide4.webp"
+    }
+  ]
+}
