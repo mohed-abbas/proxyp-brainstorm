@@ -88,6 +88,11 @@
   white-space: nowrap;
 }
 
+/* The brand name "Proxy Papers" inside the label, in Proxy Blue (accent). */
+.labelAccent {
+  color: var(--pp-blue);
+}
+
 /* The slider viewport — the rotated card's bounding cell (a 500 × 400 card tilted 11.35°
    spans 568.938 × 490.574); also the positioning context for the title slot floating above
    it, and the 3D perspective host. */

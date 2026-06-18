@@ -19,6 +19,11 @@ export function Sliders() {
 
   useSliders(root, s);
 
+  // Fixed left label, with the brand name "Proxy Papers" carried in Proxy Blue (accent).
+  const labelWords = sliders.label
+    .split(" ")
+    .map((w) => (w === "Proxy" || w === "Papers" ? { text: w, className: s.labelAccent } : w));
+
   return (
     <section
       className={s.sliders}
@@ -28,7 +33,7 @@ export function Sliders() {
     >
       <div className={s.frame}>
         <div className={s.row}>
-          <SplitText as="p" className={s.label} words={sliders.label.split(" ")} />
+          <SplitText as="p" className={s.label} words={labelWords} />
 
           <div className={s.deck}>
             {sliders.cards.map((card) => (
