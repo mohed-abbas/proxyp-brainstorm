@@ -194,11 +194,14 @@
   height: 46%;
   width: auto;
 }
+/* Match the navbar logo exactly: ink stem + blue blade on the bone disc (the
+   navbar card uses the same --pp-ink/--pp-blue pair, not the lockup tokens — those
+   default to a bone stem here, which would vanish on the bone disc). */
 .mark :global(.lk-mark__stem) {
-  fill: var(--pp-lockup-ink);
+  fill: var(--pp-ink);
 }
 .mark :global(.lk-mark__blade) {
-  fill: var(--pp-lockup-blade);
+  fill: var(--pp-blue);
 }
 
 /* Orbit layers — each fills the field so the % avatar positions are unchanged;
