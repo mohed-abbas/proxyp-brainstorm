@@ -25,9 +25,20 @@
   overflow: hidden;
 }
 
+/* Large screens: let the whole section (text + frame — everything is in pp units) keep
+   scaling past the 1512 artboard up to a cap, so wide monitors fill out instead of gaining
+   dead margin. Capped so it never renders huge. Below the cap this equals the global scale,
+   so ≤1512 laptops are unchanged. */
+@media (min-width: 1024px) {
+  .sliders {
+    --pp-scale: min(100vw / 1512, 1.2px);
+  }
+}
+
 .frame {
   position: relative;
-  width: min(100vw, 1512px);
+  /* Track the section scale so the artboard cap grows with --pp-scale (was a flat 1512px). */
+  width: min(100vw, calc(1512 * var(--pp-scale)));
   display: flex;
   align-items: center;
 }
