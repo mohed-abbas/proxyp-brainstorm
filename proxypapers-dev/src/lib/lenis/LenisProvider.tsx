@@ -39,9 +39,12 @@ export function LenisProvider({ children }: { children: ReactNode }) {
 
     // Stop until the onboarding curtain releases (matches the source). The welcome
     // assembles on a clock with scroll locked; the intro controller calls .start()
-    // on ready. Reduced motion / no-JS never locks, so leave Lenis running.
+    // on ready. Only lock when a curtain is actually present — pages without an
+    // Onboarding (e.g. /referrals) have nothing to call .start(), so locking there
+    // would strand the page scroll-locked. Reduced motion / no-JS never locks.
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (document.documentElement.classList.contains("js") && !reduced) {
+    const hasOnboarding = !!document.querySelector(".ob-stage");
+    if (hasOnboarding && document.documentElement.classList.contains("js") && !reduced) {
       instance.stop();
     }
 
