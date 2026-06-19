@@ -1,6 +1,16 @@
 /* Referrals hero. Ported 1:1 from the Figma 1512×982 artboard (node 421:8): every
    element is pinned with literal artboard px * var(--pp-scale), so the composition
-   freezes at the design size above 1512px and scales down proportionally below. */
+   freezes at the design size above 1512px and scales down proportionally below.
+
+   HEIGHT-RESPONSIVE (desktop): the foreground (frame + text) rides a CONTAIN scale
+   — min(width-fit, height-fit) — so the whole one-screen composition always fits the
+   viewport on BOTH axes and never crops on short/landscape laptops, AND grows past
+   the 1512 artboard so the headlines hold the canvas (and read cohesively with the
+   cover-scaled band) instead of freezing small. The hero is min-height:100svh and
+   flex-centres the frame; the band behind it covers the full hero (its own COVER
+   scale, see .bandInner). The text anchors HORIZONTALLY to --pp-nav-inset (the
+   shared navbar gutter), not the centred frame, so firm/clients track the navbar's
+   logo/menu at every width above 1512 instead of drifting into the centre. */
 
 .hero {
   position: relative;
@@ -9,12 +19,30 @@
   overflow: hidden;
 }
 
-/* The artboard frame: 1512 wide, centred, 982 tall. */
+/* The artboard frame: full-width, 982 tall, flex-centred in the hero. It is now only
+   the VERTICAL coordinate system (height rides the contain scale); width:100% makes
+   its absolutely-positioned children resolve horizontal offsets against the viewport,
+   so the --pp-nav-inset anchors on .foot / .clients land on the navbar gutters. */
 .frame {
   position: relative;
-  width: calc(1512 * var(--pp-scale));
+  width: 100%;
   height: calc(982 * var(--pp-scale));
   margin-inline: auto;
+}
+
+/* Desktop: make the hero a height-aware, one-screen container and scope the CONTAIN
+   scale here so the frame + text fit the viewport on both axes. No 1px cap — the
+   foreground scales up past 1512 too (still height-bounded, so it never crops).
+   Scoped to ≥1024 so the <1024 reflow (fluid tokens, not --pp-scale) is untouched. */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 100vh; /* fallback */
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --pp-scale: min(100vw / 1512, 100svh / 982);
+  }
 }
 
 /* ── Band backdrop ───────────────────────────────────────────────────────────
@@ -23,18 +51,23 @@
    mask, two bone hairline curves, and the live advisor spiral at the waist.
 
    Built on the homepage hero LENS logic (Hero.module.css .lens/.stage): .band is
-   a full-bleed crop window (width:100vw, centred, overflow:hidden) whose height
-   rides --pp-scale; .bandInner holds the 1512×941 composition, centred inside.
-   The ONE deliberate difference from the lens: the bowtie's flared corner curves
-   must NEVER show — the composition is always wider than the viewport so the tips
-   overflow and crop at every width, including >1512 (see .bandInner's cover scale). */
+   the crop window. It covers the FULL hero on both axes — 100vw × 100svh, centred
+   on the frame's centre (which the flex hero pins to the viewport centre) via the
+   margin trick (NOT transform: the reveal hook clearProps:"transform" on .band, so
+   centring must survive that). .bandInner holds the 1512×941 composition, cover-
+   scaled and centred inside. The bowtie's flared corner curves must NEVER show: the
+   composition cover-scales on both axes (see .bandInner) so the tips always overflow
+   the window and crop at every size, including short, tall and >1512/2K viewports. */
 .band {
   position: absolute;
   left: 50%;
   margin-left: -50vw;
-  top: 0;
+  top: 50%;
+  margin-top: -50vh; /* fallback */
+  margin-top: -50svh;
   width: 100vw;
-  height: calc(941 * var(--pp-scale));
+  height: 100vh; /* fallback */
+  height: 100svh;
   overflow: hidden;
   z-index: 0;
   pointer-events: none;
@@ -54,7 +87,13 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  --pp-scale: max(min(100vw / 1512, 1px), 100vw / 2000);
+  /* COVER scale — fills the hero box on BOTH axes so the bowtie always bleeds
+     full and its flared tips crop on every side. The width terms preserve the
+     ≤1512 look (cover ≈ 1px at the common case); the `100svh / 941` term grows
+     it to cover tall viewports (fixing the 2K corner-bleed, where the window and
+     composition previously scaled by different factors). The window (.band) and
+     this composition now share one scale, so the framing stays proportional. */
+  --pp-scale: max(min(100vw / 1512, 1px), 100vw / 2000, 100svh / 941);
   width: calc(1512 * var(--pp-scale));
   height: calc(941 * var(--pp-scale));
 }
@@ -279,37 +318,49 @@
   white-space: nowrap;
 }
 
-/* "For your clients." — top-right, centred in its 614px box. */
+/* "For your clients." — top-right; its right edge ("clients.") sits on the navbar's
+   Menu-button right edge (the shared --pp-nav-inset gutter), so it tracks the navbar
+   at every width instead of freezing in a centred box above 1512. */
 .clients {
-  left: calc(822 * var(--pp-scale));
+  right: var(--pp-nav-inset);
+  left: auto;
   top: calc(192 * var(--pp-scale));
-  width: calc(614 * var(--pp-scale));
-  text-align: center;
+  width: auto;
+  text-align: right;
 }
 .accent {
   color: var(--pp-blue);
 }
 
-/* "For your firm." — left gutter, below the band's left edge. */
+/* "For your firm." — first row of the .foot block. It flows in-column (the shared
+   rule above sets position:absolute for the headlines; firm opts out here so it
+   stacks with the body + CTA). */
 .firm {
-  left: calc(79 * var(--pp-scale));
-  top: calc(590 * var(--pp-scale));
-  width: calc(511 * var(--pp-scale));
+  position: static;
+  left: auto;
+  top: auto;
+  width: 100%;
 }
 
-/* ── Body + CTA (bottom-right block, 835px wide) ─────────────────────────────── */
+/* ── Firm headline + body + CTA — one left-aligned column at the navbar gutter ────
+   The three stack as a single block whose left edge ("For your firm.") sits on the
+   navbar logo's left edge (the shared --pp-nav-inset gutter), tracking the navbar at
+   every width. BOTTOM-anchored (not top): the CTA holds a stable bottom line and the
+   block grows UPWARD for longer copy (French ships first, ~20% longer) instead of
+   pushing the CTA toward the frame bottom. 106 = 982 − 876 (design bottom inset). */
 .foot {
   position: absolute;
   z-index: 2;
-  left: calc(601 * var(--pp-scale));
-  top: calc(770 * var(--pp-scale));
-  width: calc(835 * var(--pp-scale));
-  height: calc(162 * var(--pp-scale));
+  left: var(--pp-nav-inset);
+  bottom: calc(106 * var(--pp-scale));
+  top: auto;
+  width: calc(700 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(36 * var(--pp-scale));
 }
 .body {
-  position: absolute;
-  left: 0;
-  top: 0;
   width: 100%;
   margin: 0;
   font-family: var(--pp-font);
@@ -317,11 +368,6 @@
   font-size: calc(25 * var(--pp-scale));
   line-height: 1.2;
   color: var(--pp-bone);
-}
-.cta {
-  position: absolute;
-  left: 0;
-  top: calc(123 * var(--pp-scale));
 }
 
 /* ── Intro armed-hidden states ───────────────────────────────────────────────
@@ -375,9 +421,6 @@
   .clients {
     order: 1;
   }
-  .firm {
-    order: 3;
-  }
 
   /* Band — same lens crop window, now a full-bleed flow item. align-self:center
      centres the 100vw window without a transform (the reveal hook clearProps:
@@ -389,6 +432,7 @@
     left: auto;
     margin-left: 0;
     top: auto;
+    margin-top: 0;
     align-self: center;
     width: 100vw;
     height: clamp(220px, 58vw, 360px);
@@ -400,26 +444,18 @@
     --pp-scale: min(100vw / 1040, 0.62px);
   }
 
-  /* Body + CTA — static, full-width, left-aligned. The CTA's own size comes from
-     the global .pp-btn mobile rule in globals.css. */
+  /* Firm + body + CTA block — static, full-width, left-aligned, stacked with the
+     shared column gap (it now leads with the firm headline). The CTA's own size
+     comes from the global .pp-btn mobile rule in globals.css. */
   .foot {
     order: 4;
     position: static;
     left: auto;
     top: auto;
     width: 100%;
-    height: auto;
+    gap: var(--pp-stack);
   }
   .body {
-    position: static;
-    left: auto;
-    top: auto;
     font-size: var(--pp-fs-body);
-  }
-  .cta {
-    position: static;
-    left: auto;
-    top: auto;
-    margin-top: clamp(20px, 5vw, 32px);
   }
 }

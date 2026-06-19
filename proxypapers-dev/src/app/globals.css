@@ -38,6 +38,36 @@
      phase adds a floor + reflow here, in this one token. */
   --pp-scale: min(100vw / 1512, 1px);
 
+  /* ── Height-responsiveness when porting (read before pinning a section height) ──
+     --pp-scale is WIDTH-driven only. So `height: calc(N * var(--pp-scale))` makes
+     a height depend on viewport WIDTH, ignoring viewport HEIGHT — which crops
+     content on short/landscape laptops and bleeds full-bleed art at 2K. Three rules:
+
+     1. ONE-SCREEN (hero) sections — must fit a single screen, never crop:
+        scope a CONTAIN scale on the section and centre the artboard, e.g.
+          @media (min-width:1024px){ .hero{
+            min-height:100vh; min-height:100svh;       (svh = toolbar-safe)
+            display:flex; align-items:center; justify-content:center;
+            --pp-scale: min(100vw/ARTW, 100svh/ARTH); } }   (drop the 1px cap to let
+        the foreground also GROW past the artboard, still height-bounded so it never
+        crops). The height term shrinks the whole composition to fit short viewports.
+        NEVER give such a frame a fixed `height: calc(N*--pp-scale)` alone. And anchor
+        edge-hugging text HORIZONTALLY to --pp-nav-inset (the shared navbar gutter),
+        NOT to the centred frame — so it tracks the navbar above 1512 instead of
+        freezing mid-canvas (give the frame width:100% so child offsets are viewport-
+        relative). See ReferralsHero .clients / .foot.
+
+     2. FULL-BLEED BACKGROUNDS — must cover, tips always cropped:
+        own overflow:hidden window sized to the section box (100vw × 100svh,
+        centred via the margin trick — NOT transform, which reveal hooks clear),
+        and a COVER scale that fills both axes, e.g.
+          --pp-scale: max(min(100vw/ARTW,1px), 100vw/CAP, 100svh/BGH);
+        (See ReferralsHero .band / .bandInner for a worked example.)
+
+     3. FLOW (scrollable) sections — content taller than a screen is fine:
+        keep the width-only --pp-scale but use `min-height` (never fixed `height`)
+        so content can grow, and don't let `overflow:hidden` clip real content. */
+
   /* Bespoke navbar side inset — a deliberately non-linear margin that widens
      faster than the artboard above 1512 (so the bar never spans edge-to-edge on
      huge screens). NOT a simple scale; shared by Navbar + the Menu panel anchor. */
