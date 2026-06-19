@@ -1,7 +1,7 @@
 {
   "title": "You advise high-net-worth clients?",
   "body": "Notaries, accountants, attorneys, wealth managers, family offices: Proxy Papers handles the private information layer of your clients so you can focus on advisory work that actually matters. Peer referral or formal business introduction: we adapt to your professional framework.",
-  "cta": { "label": "Enter the referrers area", "href": "#" },
+  "cta": { "label": "Enter the referrers area", "href": "/referrals" },
   "advisors": [
     { "id": "1", "ring": "inner", "img": "/images/advisor-1.png" },
     { "id": "2", "ring": "inner", "img": "/images/advisor-2.png" },

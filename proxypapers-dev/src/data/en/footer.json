@@ -7,7 +7,7 @@
       "groups": [
         [
           { "label": "Approach", "href": "#", "active": true },
-          { "label": "Referrers", "href": "#" },
+          { "label": "Referrers", "href": "/referrals" },
           { "label": "Contact", "href": "#" },
           { "label": "Services", "href": "#" }
         ],
