@@ -3,10 +3,14 @@
    freezes at the design size above 1512px and scales down proportionally below.
 
    HEIGHT-RESPONSIVE (desktop): the foreground (frame + text) rides a CONTAIN scale
-   — min(width-fit, height-fit, 1px) — so the whole one-screen composition always
-   fits the viewport on BOTH axes and never crops on short/landscape laptops. The
-   hero is min-height:100svh and flex-centres the frame; the band behind it covers
-   the full hero on both axes (its own COVER scale, see .bandInner). */
+   — min(width-fit, height-fit) — so the whole one-screen composition always fits the
+   viewport on BOTH axes and never crops on short/landscape laptops, AND grows past
+   the 1512 artboard so the headlines hold the canvas (and read cohesively with the
+   cover-scaled band) instead of freezing small. The hero is min-height:100svh and
+   flex-centres the frame; the band behind it covers the full hero (its own COVER
+   scale, see .bandInner). The text anchors HORIZONTALLY to --pp-nav-inset (the
+   shared navbar gutter), not the centred frame, so firm/clients track the navbar's
+   logo/menu at every width above 1512 instead of drifting into the centre. */
 
 .hero {
   position: relative;
@@ -15,18 +19,21 @@
   overflow: hidden;
 }
 
-/* The artboard frame: 1512 wide, centred, 982 tall. Rides the hero's CONTAIN scale
-   (set on .hero ≥1024), so it shrinks to fit a short viewport instead of cropping. */
+/* The artboard frame: full-width, 982 tall, flex-centred in the hero. It is now only
+   the VERTICAL coordinate system (height rides the contain scale); width:100% makes
+   its absolutely-positioned children resolve horizontal offsets against the viewport,
+   so the --pp-nav-inset anchors on .foot / .clients land on the navbar gutters. */
 .frame {
   position: relative;
-  width: calc(1512 * var(--pp-scale));
+  width: 100%;
   height: calc(982 * var(--pp-scale));
   margin-inline: auto;
 }
 
 /* Desktop: make the hero a height-aware, one-screen container and scope the CONTAIN
-   scale here so the frame + text fit the viewport on both axes. Scoped to ≥1024 so
-   the <1024 reflow (which sizes off fluid tokens, not --pp-scale) is untouched. */
+   scale here so the frame + text fit the viewport on both axes. No 1px cap — the
+   foreground scales up past 1512 too (still height-bounded, so it never crops).
+   Scoped to ≥1024 so the <1024 reflow (fluid tokens, not --pp-scale) is untouched. */
 @media (min-width: 1024px) {
   .hero {
     min-height: 100vh; /* fallback */
@@ -34,7 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    --pp-scale: min(100vw / 1512, 100svh / 982, 1px);
+    --pp-scale: min(100vw / 1512, 100svh / 982);
   }
 }
 
@@ -311,12 +318,15 @@
   white-space: nowrap;
 }
 
-/* "For your clients." — top-right, centred in its 614px box. */
+/* "For your clients." — top-right; its right edge ("clients.") sits on the navbar's
+   Menu-button right edge (the shared --pp-nav-inset gutter), so it tracks the navbar
+   at every width instead of freezing in a centred box above 1512. */
 .clients {
-  left: calc(822 * var(--pp-scale));
+  right: var(--pp-nav-inset);
+  left: auto;
   top: calc(192 * var(--pp-scale));
-  width: calc(614 * var(--pp-scale));
-  text-align: center;
+  width: auto;
+  text-align: right;
 }
 .accent {
   color: var(--pp-blue);
@@ -332,15 +342,18 @@
   width: 100%;
 }
 
-/* ── Firm headline + body + CTA — one left-aligned column at the gutter ────────
-   A deliberate deviation from the artboard (which split firm left and body/CTA
-   lower-centre): the three stack as a single block, left-aligned to the same
-   gutter as the headline, sitting in the lower-left of the frame. */
+/* ── Firm headline + body + CTA — one left-aligned column at the navbar gutter ────
+   The three stack as a single block whose left edge ("For your firm.") sits on the
+   navbar logo's left edge (the shared --pp-nav-inset gutter), tracking the navbar at
+   every width. BOTTOM-anchored (not top): the CTA holds a stable bottom line and the
+   block grows UPWARD for longer copy (French ships first, ~20% longer) instead of
+   pushing the CTA toward the frame bottom. 106 = 982 − 876 (design bottom inset). */
 .foot {
   position: absolute;
   z-index: 2;
-  left: calc(79 * var(--pp-scale));
-  top: calc(560 * var(--pp-scale));
+  left: var(--pp-nav-inset);
+  bottom: calc(106 * var(--pp-scale));
+  top: auto;
   width: calc(700 * var(--pp-scale));
   display: flex;
   flex-direction: column;

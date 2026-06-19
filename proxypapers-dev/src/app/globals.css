@@ -48,9 +48,14 @@
           @media (min-width:1024px){ .hero{
             min-height:100vh; min-height:100svh;       (svh = toolbar-safe)
             display:flex; align-items:center; justify-content:center;
-            --pp-scale: min(100vw/ARTW, 100svh/ARTH, 1px); } }
-        The height term shrinks the whole composition to fit short viewports.
-        NEVER give such a frame a fixed `height: calc(N*--pp-scale)` alone.
+            --pp-scale: min(100vw/ARTW, 100svh/ARTH); } }   (drop the 1px cap to let
+        the foreground also GROW past the artboard, still height-bounded so it never
+        crops). The height term shrinks the whole composition to fit short viewports.
+        NEVER give such a frame a fixed `height: calc(N*--pp-scale)` alone. And anchor
+        edge-hugging text HORIZONTALLY to --pp-nav-inset (the shared navbar gutter),
+        NOT to the centred frame — so it tracks the navbar above 1512 instead of
+        freezing mid-canvas (give the frame width:100% so child offsets are viewport-
+        relative). See ReferralsHero .clients / .foot.
 
      2. FULL-BLEED BACKGROUNDS — must cover, tips always cropped:
         own overflow:hidden window sized to the section box (100vw × 100svh,
