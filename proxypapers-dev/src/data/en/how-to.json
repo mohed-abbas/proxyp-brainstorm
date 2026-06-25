@@ -1,0 +1,39 @@
+{
+  "heading": "How to begin.",
+  "stage": { "w": 1359, "h": 623 },
+  "steps": [
+    {
+      "id": "discovery",
+      "theme": "blue",
+      "eyebrow": "Step 1",
+      "title": "The discovery meeting",
+      "body": "One hour to understand your situation and check for a fit.",
+      "copyWidth": 411,
+      "pos": { "x": 0, "y": 1, "z": 2 },
+      "pill": { "label": "Free — 1H", "variant": "outline", "x": 505, "y": 30 }
+    },
+    {
+      "id": "audit",
+      "theme": "light",
+      "eyebrow": "Step 2",
+      "title": "The onboarding audit",
+      "body": "You leave with a costed action plan and the matching proposal.",
+      "copyWidth": 439,
+      "pos": { "x": 344, "y": 215, "z": 3 },
+      "pill": { "label": "Billed", "variant": "fill", "x": 537, "y": 29 }
+    },
+    {
+      "id": "engagement",
+      "theme": "blue",
+      "eyebrow": "Step 3",
+      "title": "The engagement begins",
+      "body": "Launch of the engagement with your dedicated advisor.",
+      "copyWidth": 357,
+      "pos": { "x": 689, "y": 429, "z": 2 }
+    }
+  ],
+  "clouds": [
+    { "id": "tr", "x": 689, "y": 1, "w": 670, "h": 408, "flip": false },
+    { "id": "bl", "x": 0, "y": 215, "w": 670, "h": 408, "flip": true }
+  ]
+}

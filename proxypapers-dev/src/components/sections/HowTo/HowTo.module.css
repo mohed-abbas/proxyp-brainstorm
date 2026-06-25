@@ -1,0 +1,287 @@
+/* "How to begin." onboarding path (Figma node 160:1015). A heading above a diagonal
+   staircase of three step cards (each 670×194), with two fluffy-cloud tiles filling the
+   negative space and the bone "audit" card floating over them at the centre. Every element
+   is pinned with literal artboard px * var(--pp-scale), so the composition freezes at its
+   design size above 1512px and scales down proportionally below. Sits on the Chinese-Black
+   ground; below 1024 it reflows to a single-column stack. */
+
+.how {
+  position: relative;
+  width: 100%;
+  background: var(--pp-ink);
+  color: var(--pp-bone);
+}
+
+/* Desktop: full-bleed up to the 1512 artboard (frozen at design size above it). The 1359
+   content frame centres in the viewport with the navbar gutter (≈76.5px) either side. */
+@media (min-width: 1024px) {
+  .how {
+    --pp-scale: min(100vw / 1512, 1px);
+    padding: var(--pp-stack) 0;
+  }
+  .inner {
+    width: calc(1359 * var(--pp-scale));
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: calc(34 * var(--pp-scale));
+  }
+  /* Figma sets each card's title + body on a single line (whitespace-nowrap); the copy
+     column width is the natural text width, not a wrap constraint. */
+  .title,
+  .body {
+    white-space: nowrap;
+  }
+}
+
+/* Heading (node 160:966) — 49px medium bone, tracked tight. */
+.heading {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(49 * var(--pp-scale));
+  line-height: 1.05;
+  letter-spacing: calc(-0.98 * var(--pp-scale));
+  color: var(--pp-bone);
+}
+
+/* ── Stage (node 160:1014) ─────────────────────────────────────────────────────
+   The 1359×623 coordinate system for the absolutely-placed cards + cloud tiles. */
+.stage {
+  position: relative;
+  width: calc(var(--sw) * var(--pp-scale));
+  height: calc(var(--sh) * var(--pp-scale));
+}
+
+/* ── Step card (nodes 160:967 / 160:972 / 160:976) ─────────────────────────────
+   670×194 rounded card placed from its design-pixel position; --cz lifts the centre
+   bone card above the cloud tiles it overlaps. */
+.card {
+  position: absolute;
+  left: calc(var(--cx) * var(--pp-scale));
+  top: calc(var(--cy) * var(--pp-scale));
+  width: calc(670 * var(--pp-scale));
+  height: calc(194 * var(--pp-scale));
+  z-index: var(--cz, 2);
+  border-radius: calc(20 * var(--pp-scale));
+  overflow: hidden;
+}
+.card[data-theme="blue"] {
+  background: var(--pp-blue);
+}
+.card[data-theme="light"] {
+  background: var(--pp-bone);
+}
+
+/* Copy column (node 160:971) — eyebrow + title + body, vertically centred, inset 41px. */
+.copy {
+  position: absolute;
+  left: calc(41 * var(--pp-scale));
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(var(--cw) * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 * var(--pp-scale));
+}
+.eyebrow {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  letter-spacing: calc(-0.32 * var(--pp-scale));
+}
+.title {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(39 * var(--pp-scale));
+  line-height: 1.2;
+  letter-spacing: calc(-0.78 * var(--pp-scale));
+}
+.body {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+}
+
+/* Blue card → bone copy (body at 70%); light card → blue copy (body ink at 70%). */
+.card[data-theme="blue"] .eyebrow,
+.card[data-theme="blue"] .title {
+  color: var(--pp-bone);
+}
+.card[data-theme="blue"] .body {
+  color: rgba(247, 244, 240, 0.7);
+}
+.card[data-theme="light"] .eyebrow,
+.card[data-theme="light"] .title {
+  color: var(--pp-blue);
+}
+.card[data-theme="light"] .body {
+  color: rgba(22, 23, 24, 0.7);
+}
+
+/* Pill (nodes 160:1016 / 160:1020) — top-right tag. Outline (Step 1) is a bone hairline on
+   the blue card; fill (Step 2) is a Proxy-Blue chip on the bone card. Both read in bone. */
+.pill {
+  position: absolute;
+  left: calc(var(--px) * var(--pp-scale));
+  top: calc(var(--py) * var(--pp-scale));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(10 * var(--pp-scale)) calc(29 * var(--pp-scale));
+  border-radius: calc(31 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--pp-bone);
+}
+.pill[data-variant="outline"] {
+  border: 1px solid var(--pp-bone);
+}
+.pill[data-variant="fill"] {
+  background: var(--pp-blue);
+}
+
+/* ── Cloud tile (nodes 160:1001 / 160:1008) ────────────────────────────────────
+   Rounded sky photo filling the staircase gaps. The bottom-left tile is flipped so the
+   pair don't read as identical; a faint grain pass keeps the blue from going flat. */
+.cloud {
+  position: absolute;
+  left: calc(var(--cx) * var(--pp-scale));
+  top: calc(var(--cy) * var(--pp-scale));
+  width: calc(var(--cw) * var(--pp-scale));
+  height: calc(var(--ch) * var(--pp-scale));
+  z-index: 1;
+  border-radius: calc(20 * var(--pp-scale));
+  overflow: hidden;
+  background: var(--pp-blue);
+}
+.cloudImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.cloud[data-flip] .cloudImg {
+  transform: scale(-1, -1);
+  object-position: 30% 40%;
+}
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  pointer-events: none;
+  background: url(/images/grain.webp) top left / calc(1024 * var(--pp-scale))
+    calc(1024 * var(--pp-scale)) repeat;
+}
+
+/* Flash-free arming: heading, cards and clouds paint hidden until useHowTo reveals them
+   (JS only — no-JS / SSR fallback keeps them visible). */
+html.js .heading,
+html.js .card,
+html.js .cloud {
+  opacity: 0;
+}
+
+/* ── Tablet + mobile reflow (<1024px) ──────────────────────────────────────────
+   The diagonal staircase can't hold below 1024, so the stage becomes a single-column
+   stack: each step a full-width auto-height card, the cloud tiles interleaved as banners.
+   flex order weaves them step → cloud → step → cloud → step. */
+@media (max-width: 1023px) {
+  .how {
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .inner {
+    max-width: 640px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pp-stack);
+  }
+  .heading {
+    font-size: var(--pp-fs-h2);
+    letter-spacing: -0.01em;
+  }
+
+  .stage {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .card {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    padding: var(--pp-gutter);
+    border-radius: 16px;
+  }
+  .card[data-step="discovery"] {
+    order: 1;
+  }
+  .card[data-step="audit"] {
+    order: 3;
+  }
+  .card[data-step="engagement"] {
+    order: 5;
+  }
+  .copy {
+    position: static;
+    transform: none;
+    width: 100%;
+    gap: 12px;
+  }
+  .eyebrow,
+  .body {
+    font-size: var(--pp-fs-body);
+  }
+  .title {
+    font-size: var(--pp-fs-h2);
+    letter-spacing: -0.01em;
+  }
+  .pill {
+    position: absolute;
+    left: auto;
+    right: var(--pp-gutter);
+    top: var(--pp-gutter);
+    padding: 8px 18px;
+    border-radius: 24px;
+    font-size: var(--pp-fs-body);
+  }
+
+  .cloud {
+    position: static;
+    width: 100%;
+    height: 140px;
+    border-radius: 16px;
+  }
+  .cloud[data-cloud="tr"] {
+    order: 2;
+  }
+  .cloud[data-cloud="bl"] {
+    order: 4;
+  }
+  .grain {
+    background-size: 512px 512px;
+  }
+}
+
+/* Reduced motion: nothing to arm — show the settled composition. */
+@media (prefers-reduced-motion: reduce) {
+  html.js .heading,
+  html.js .card,
+  html.js .cloud {
+    opacity: 1;
+  }
+}
