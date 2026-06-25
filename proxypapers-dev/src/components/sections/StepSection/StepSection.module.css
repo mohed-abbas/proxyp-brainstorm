@@ -1,0 +1,403 @@
+/* StepSection (Figma 142:307) — the expanded method on a full-width Proxy-Blue panel
+   (20px radius), echoing the Method panel: above 1512 the band fills the viewport
+   while content stays capped at the 1512 frame. Every length is a literal Figma
+   px * var(--pp-scale); below 1024 it reflows to fluid type and stacked cards. */
+
+.steps {
+  position: relative;
+  width: 100%;
+  margin-top: 2rem; /* the inter-panel rhythm shared with the other full-bleed panels */
+  display: flex;
+  justify-content: center;
+  background: var(--pp-blue);
+  border-radius: calc(20 * var(--pp-scale));
+  overflow: hidden;
+}
+
+.frame {
+  width: 100%;
+  max-width: 1512px;
+  display: flex;
+  justify-content: center;
+}
+
+/* 1360-wide centred column (76px inset), vertically centred in the 1012 panel. */
+.content {
+  position: relative;
+  width: 100%;
+  min-height: calc(1012 * var(--pp-scale));
+  padding-inline: calc(76 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(83 * var(--pp-scale));
+  color: var(--pp-bone);
+}
+
+/* ── Header (node 142:311) ────────────────────────────────────────────────────
+   Heading left (capped 637) · lede right (capped 590), gap 133, vertically centred. */
+.head {
+  display: flex;
+  align-items: center;
+  gap: calc(133 * var(--pp-scale));
+}
+.heading {
+  width: calc(637 * var(--pp-scale));
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(49 * var(--pp-scale));
+  line-height: 1.2;
+  letter-spacing: calc(-0.98 * var(--pp-scale));
+  color: var(--pp-bone);
+}
+.headingMuted {
+  color: rgba(247, 244, 240, 0.6);
+}
+.lede {
+  width: calc(590 * var(--pp-scale));
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  letter-spacing: calc(0.32 * var(--pp-scale));
+  text-align: right;
+  color: var(--pp-bone);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(27 * var(--pp-scale));
+}
+
+/* ── Pre-engagement cards (node 142:408) ──────────────────────────────────────
+   Two equal 667×198 cards (bone hairline), each holding a vertically-centred block:
+   a title-row (title + pill, justified) over the description. */
+.engCards {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: calc(26 * var(--pp-scale));
+  align-items: center;
+}
+.engCard {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: calc(198 * var(--pp-scale));
+  border: 1px solid var(--pp-bone);
+  border-radius: calc(20 * var(--pp-scale));
+  overflow: hidden;
+}
+.engInner {
+  position: absolute;
+  left: calc(32 * var(--pp-scale));
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(604 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(14 * var(--pp-scale));
+}
+.engRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(20 * var(--pp-scale));
+  width: 100%;
+}
+.engTitle {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(39 * var(--pp-scale));
+  line-height: 1;
+  letter-spacing: calc(-0.78 * var(--pp-scale));
+  white-space: nowrap;
+  color: var(--pp-bone);
+}
+.engDesc {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  letter-spacing: calc(0.32 * var(--pp-scale));
+  color: var(--pp-bone);
+}
+
+/* Pill (nodes 142:388 filled · 142:392 outlined). */
+.pill {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(5 * var(--pp-scale)) calc(15 * var(--pp-scale));
+  border-radius: calc(28 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  letter-spacing: calc(-0.32 * var(--pp-scale));
+  white-space: nowrap;
+}
+.pillFilled {
+  background: var(--pp-bone);
+  color: var(--pp-ink);
+}
+.pillOutline {
+  border: 1px solid var(--pp-bone);
+  color: var(--pp-bone);
+}
+
+/* ── Connector (node 142:430) ─────────────────────────────────────────────────
+   Two 52px vertical hairlines around a lowercase label. */
+.connector {
+  width: calc(216 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(23 * var(--pp-scale));
+}
+.connectorRule {
+  width: 1px;
+  height: calc(52 * var(--pp-scale));
+  background: rgba(247, 244, 240, 0.5);
+}
+.connectorLabel {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1;
+  letter-spacing: calc(0.48 * var(--pp-scale));
+  text-transform: lowercase;
+  text-align: center;
+  color: var(--pp-bone);
+}
+
+/* ── Numbered step (node 142:418) ─────────────────────────────────────────────
+   A Bone card with the blue "NN Name" lockup left and the description right (67px
+   symmetric insets, 100px vertical padding), then the pagination dots. */
+.stepGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(31 * var(--pp-scale));
+}
+/* Default: a Bone card listing all five steps (rows divided by a hairline) — the
+   no-JS / reduced-motion / mobile fallback, every step accessible. */
+.stepCard {
+  position: relative;
+  width: 100%;
+  background: var(--pp-bone);
+  border-radius: calc(20 * var(--pp-scale));
+  overflow: hidden;
+}
+.stepViewport {
+  display: flex;
+  flex-direction: column;
+}
+.stepSlide {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(40 * var(--pp-scale));
+  padding: calc(48 * var(--pp-scale)) calc(67 * var(--pp-scale));
+}
+.stepSlide + .stepSlide {
+  border-top: 1px solid rgba(22, 23, 24, 0.12);
+}
+.stepLead {
+  display: flex;
+  align-items: center;
+  gap: calc(20 * var(--pp-scale));
+  color: var(--pp-blue);
+  white-space: nowrap;
+}
+.stepNum {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(39 * var(--pp-scale));
+  line-height: 1;
+  letter-spacing: calc(-1.17 * var(--pp-scale));
+}
+.stepName {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(76 * var(--pp-scale));
+  line-height: 1;
+  letter-spacing: calc(-2.28 * var(--pp-scale));
+}
+.stepDesc {
+  width: calc(384 * var(--pp-scale));
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.25;
+  color: var(--pp-ink);
+}
+
+/* Pagination dots (node 142:407) — one 32px active ring (filled centre) + four 16px
+   filled dots, 10px gaps. */
+.dots {
+  display: flex;
+  align-items: center;
+  gap: calc(10 * var(--pp-scale));
+  height: calc(32 * var(--pp-scale));
+}
+.dot {
+  width: calc(16 * var(--pp-scale));
+  height: calc(16 * var(--pp-scale));
+  border-radius: 50%;
+  background: var(--pp-bone);
+}
+.dotActive {
+  width: calc(32 * var(--pp-scale));
+  height: calc(32 * var(--pp-scale));
+  background: transparent;
+  border: 1px solid var(--pp-bone);
+  display: grid;
+  place-items: center;
+}
+.dotActive::after {
+  content: "";
+  width: calc(16 * var(--pp-scale));
+  height: calc(16 * var(--pp-scale));
+  border-radius: 50%;
+  background: var(--pp-bone);
+}
+
+/* ── Slider mode (desktop, set by useStepSlider) ──────────────────────────────
+   The section fits the viewport and pins; the step card becomes a fixed-height
+   viewport whose slides are absolute-stacked (the hook reveals one at a time and
+   slides each into place on scroll). */
+.steps[data-mode="slider"] {
+  min-height: 100svh;
+  align-items: center;
+  --pp-scale: min(100vw / 1512, 100svh / 1012);
+}
+.steps[data-mode="slider"] .stepCard {
+  height: calc(257 * var(--pp-scale));
+}
+.steps[data-mode="slider"] .stepViewport {
+  display: block;
+  height: 100%;
+}
+.steps[data-mode="slider"] .stepSlide {
+  position: absolute;
+  inset: 0;
+  padding: calc(100 * var(--pp-scale)) calc(67 * var(--pp-scale));
+  border-top: none;
+}
+
+/* ── Tablet + mobile (<1024) ──────────────────────────────────────────────────
+   Off the artboard scale: fluid type, stacked header, stacked engagement cards, and
+   the step card reflows to a column (lockup over description). */
+@media (max-width: 1023px) {
+  .steps {
+    border-radius: 16px;
+  }
+  .content {
+    min-height: 0;
+    padding: var(--pp-stack) var(--pp-gutter);
+    gap: var(--pp-stack);
+  }
+  .head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .heading {
+    width: auto;
+    font-size: var(--pp-fs-h2);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .lede {
+    width: auto;
+    font-size: var(--pp-fs-body);
+    text-align: left;
+    letter-spacing: 0;
+  }
+  .body {
+    gap: 24px;
+  }
+  .engCards {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .engCard {
+    height: auto;
+    min-height: calc(160px);
+  }
+  .engInner {
+    position: static;
+    transform: none;
+    width: 100%;
+    padding: clamp(22px, 5vw, 30px);
+  }
+  .engTitle {
+    font-size: var(--pp-fs-h3);
+    white-space: normal;
+  }
+  .engTitle,
+  .engDesc {
+    letter-spacing: 0;
+  }
+  .engDesc {
+    font-size: var(--pp-fs-body);
+  }
+  .pill {
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: var(--pp-fs-small);
+    letter-spacing: 0;
+  }
+  .connector {
+    width: 100%;
+  }
+  .connectorRule {
+    height: 32px;
+  }
+  .connectorLabel {
+    font-size: var(--pp-fs-small);
+    letter-spacing: 0.5px;
+  }
+  .stepCard {
+    border-radius: 16px;
+  }
+  .stepSlide {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: clamp(24px, 6vw, 44px) clamp(22px, 6vw, 48px);
+  }
+  .stepLead {
+    gap: 12px;
+  }
+  .stepNum {
+    font-size: var(--pp-fs-h3);
+    letter-spacing: 0;
+  }
+  .stepName {
+    font-size: clamp(40px, 11vw, 76px);
+    letter-spacing: -0.02em;
+  }
+  .stepDesc {
+    width: 100%;
+    font-size: var(--pp-fs-body);
+  }
+  /* No slider on mobile — the list shows every step, so the dots are redundant. */
+  .dots {
+    display: none;
+  }
+}

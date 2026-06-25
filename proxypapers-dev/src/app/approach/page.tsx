@@ -2,6 +2,7 @@ import { Navbar } from "@/components/shared/Navbar";
 import { Footer } from "@/components/shared/Footer";
 import { ApproachHero } from "@/components/sections/ApproachHero";
 import { FreedomSection } from "@/components/sections/FreedomSection";
+import { StepSection } from "@/components/sections/StepSection";
 import { Closing } from "@/components/sections/Closing";
 
 // Our Approach page (/approach) — the destination for the homepage Method
@@ -15,6 +16,7 @@ export default function ApproachPage() {
       <Navbar />
       <ApproachHero />
       <FreedomSection />
+      <StepSection />
       {/* Further Figma sections slot in here. */}
       <Closing />
       <Footer />

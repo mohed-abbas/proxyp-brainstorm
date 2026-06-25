@@ -27,5 +27,50 @@
         "desc": "You no longer depend on anyone to retrieve a document about yourself."
       }
     ]
+  },
+  "steps": {
+    "heading": { "lead": "Five steps, ", "muted": "one single contact." },
+    "lede": "The same dedicated advisor stays with you from the first meeting to the annual review. No rotating teams, no subcontracting.",
+    "engagement": [
+      {
+        "title": "The discovery meeting",
+        "pill": { "label": "Free. 1h", "variant": "filled" },
+        "desc": "We understand your situation, you ask us anything, and together we decide whether there is a fit."
+      },
+      {
+        "title": "The onboarding audit",
+        "pill": { "label": "Billed", "variant": "outline" },
+        "desc": "We map your sources, advisors, deadlines and volume. You receive a costed action plan and a proposal."
+      }
+    ],
+    "connector": "then the engagement begins",
+    "total": 5,
+    "items": [
+      {
+        "num": "01",
+        "name": "Onboarding",
+        "desc": "We collect, sort and classify all your existing documents, backed up on your Papers Box, hosted in France. By the end, you know where everything is."
+      },
+      {
+        "num": "02",
+        "name": "Organization",
+        "desc": "We structure folders by theme, open secure sharing with your advisors, and set deadline alerts. The framework is in place."
+      },
+      {
+        "num": "03",
+        "name": "Follow-up",
+        "desc": "Regular updates and periodic on-site visits, monthly or quarterly. Your file stays alive, never frozen."
+      },
+      {
+        "num": "04",
+        "name": "Support",
+        "desc": "For your projects — purchase, sale, donation, estate, tax — we transmit the right items to the right advisor at the right time."
+      },
+      {
+        "num": "05",
+        "name": "Management",
+        "desc": "Real-time visibility on your Papers Box, periodic report with decision-support insights. You regain control, with full clarity."
+      }
+    ]
   }
 }

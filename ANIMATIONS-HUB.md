@@ -706,3 +706,32 @@ on scroll).
   `.submit`; thumb inset matches the toggle padding at both breakpoints so
   `translateX(100%)` lands exactly on the second half. Reduced motion drops the thumb
   transition. No JS — React state flips the `data-pos`/`data-active` attrs, CSS animates.
+
+## Approach page
+
+### Step slider (scroll-driven five-step stepper)
+- **Where:** StepSection on `/approach` (the expanded method) — the Bone step card
+  holding steps 01–05, plus the pagination dots.
+- **User-facing description:** "the section locks in place and, as you scroll, each
+  step rises into view one after another — the old step slides up and fades out, the
+  next rises from below — and the dots track where you are."
+- **Trigger:** scroll-trigger, pinned + scrubbed + snapped. Desktop (≥1024) only.
+- **Mechanics:** the section pins (`start: top top`, `end: +=(n−1)*60%`,
+  `pinType: transform`, `anticipatePin: 1`, `scrub: 0.6`, `snap: 1/(n−1)`). The five
+  step slides are absolute-stacked in the card; `onUpdate` maps progress →
+  `round(progress*(n−1))` = active index. On change: outgoing `yPercent ±45 / autoAlpha 0`
+  (`power2.in`, 0.45s), incoming `fromTo yPercent ±60→0 / autoAlpha 0→1` (`power3.out`,
+  0.6s); sign follows scroll direction (advance = rise from below). Dots toggle the
+  active class. The section fits the viewport via a CONTAIN `--pp-scale`
+  (`min(100vw/1512, 100svh/1012)`) so the whole composition is visible while pinned.
+- **Source ref:** no design-final source — new for `/approach`; pattern mirrors
+  `useSliders` (pinned/scrubbed roller).
+- **Implementation note:** `src/lib/animations/useStepSlider.ts` (`useGSAP`, scoped,
+  `gsap.matchMedia` ≥1024, `revertOnUpdate`). Progressive enhancement: the hook sets
+  `data-mode="slider"` on the section; CSS then absolute-stacks the slides + fits the
+  section to the viewport. Cleanup kills the ScrollTrigger, clears `data-mode`, and
+  restores the dot classes.
+- **Feasibility / constraints:** reduced motion / no-JS / <1024 → default CSS shows all
+  five steps as a stacked list (every step accessible), no pin, dots hidden. Dots are
+  scroll indicators (not yet click-to-seek). Adding/removing steps just changes
+  `steps.items` in `approach.json` (the dots + snap derive from the count).
