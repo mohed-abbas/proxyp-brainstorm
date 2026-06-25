@@ -32,6 +32,16 @@
   .body {
     white-space: nowrap;
   }
+
+  /* Cut-out around the centre card (Figma node 160:1014): the surrounding tiles leave a
+     uniform 20px gap, so the bone "audit" card appears notched into the cloud tiles rather
+     than overlapping them. The card sits above the clouds (z-index 3 > 1); a spread-only
+     ink ring paints that 20px band over whatever is behind — clouds where they'd show, the
+     ground elsewhere (invisible). Spread follows the radius, so the cut-out corners round
+     concentrically (20 card + 20 ring = 40). */
+  .card[data-step="audit"] {
+    box-shadow: 0 0 0 calc(20 * var(--pp-scale)) var(--pp-ink);
+  }
 }
 
 /* Heading (node 160:966) — 49px medium bone, tracked tight. */
