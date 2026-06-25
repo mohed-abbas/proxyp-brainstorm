@@ -300,9 +300,20 @@
   width: 100%;
   height: calc(43 * var(--pp-scale));
   padding-block: 0;
-  border: 0;
+  /* Transparent at rest (no size shift); on hover .pp-btn fills the pill bone — which
+     would vanish into the bone card — so we draw a Proxy-Blue hairline to keep the
+     button's edge legible. Specific to this page's bone surface. */
+  border: 1px solid transparent;
   cursor: pointer;
   font-family: var(--pp-font);
+  transition:
+    background-color 0.4s var(--pp-ease-out),
+    border-color 0.4s var(--pp-ease-out),
+    transform 0.3s var(--pp-ease-out);
+}
+.submit:hover,
+.submit:focus-visible {
+  border-color: var(--pp-blue);
 }
 .note {
   font-family: var(--pp-font);
