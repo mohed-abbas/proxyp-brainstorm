@@ -1,0 +1,154 @@
+/* Approach hero. Ported 1:1 from the Figma 1512×1122 artboard (node 601:4): a dark
+   Chinese-Black ground with the "sky river" band sweeping across, the split headline,
+   and the "Since 2016…" lede. Every element is pinned with literal artboard
+   px * var(--pp-scale), so the composition freezes at the design size and scales
+   proportionally.
+
+   HEIGHT-RESPONSIVE (desktop): the frame rides a CONTAIN scale — min(width-fit,
+   height-fit) — so the one-screen composition always fits the viewport on BOTH axes
+   and never crops on short/landscape laptops. The hero is min-height:100svh and
+   flex-centres the frame; the dark ground fills any letterbox gap. Below 1024 the
+   layout reflows to a stacked column on fluid tokens (no --pp-scale). */
+
+.hero {
+  position: relative;
+  width: 100%;
+  background: var(--pp-ink);
+  overflow: hidden;
+}
+
+/* Desktop: a height-aware, one-screen container. The CONTAIN scale fits the frame on
+   both axes; scoped to ≥1024 so the <1024 reflow (fluid tokens) is untouched. */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 100vh; /* fallback */
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --pp-scale: min(100vw / 1512, 100svh / 1122);
+  }
+}
+
+/* The artboard frame: full-width, 1122 tall, flex-centred in the hero. It is the
+   coordinate system for the absolutely-positioned band + copy. */
+.frame {
+  position: relative;
+  width: 100%;
+  height: calc(1122 * var(--pp-scale));
+  margin-inline: auto;
+}
+
+/* ── Sky-river band (node 532:26) ─────────────────────────────────────────────
+   The pre-composited band maps exactly to the frame's x[0–1512]/y[0–977] region
+   (the export is 1512×977 at 2×, the uniform dark bottom strip trimmed). Width 100%
+   of the frame + the native ratio means no distortion; the dark ground continues
+   below it. Decorative, behind the copy. */
+.band {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: calc(977 * var(--pp-scale));
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Headline (nodes 142:12 + 142:194) ────────────────────────────────────────
+   One <h1> reading "A method, not a promise"; its two lines are pinned at opposite
+   corners of the band. 95px PP Neue Montreal Medium, -1.9px tracking. "method," turns
+   Proxy Blue (brand at full presence); the rest stays Bone White. */
+.headline {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: calc(-1.9 * var(--pp-scale));
+  color: var(--pp-bone);
+}
+.line1,
+.line2 {
+  position: absolute;
+  z-index: 2;
+  font-size: calc(95 * var(--pp-scale));
+  white-space: nowrap;
+}
+/* "A method," — top-left (artboard left edge 65.7, top 235.8). */
+.line1 {
+  left: calc(65.7 * var(--pp-scale));
+  top: calc(235.8 * var(--pp-scale));
+}
+/* "not a promise" — lower-right (artboard left edge 878, top 646.1). */
+.line2 {
+  left: calc(878 * var(--pp-scale));
+  top: calc(646.1 * var(--pp-scale));
+}
+.accent {
+  color: var(--pp-blue);
+}
+
+/* ── Lede (node 142:13) ───────────────────────────────────────────────────────
+   25px Bone, 578.8 wide, anchored bottom-left (left 70.6, top 885.4). */
+.lede {
+  position: absolute;
+  z-index: 2;
+  left: calc(70.6 * var(--pp-scale));
+  top: calc(885.4 * var(--pp-scale));
+  width: calc(578.8 * var(--pp-scale));
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(25 * var(--pp-scale));
+  line-height: 1.2;
+  color: var(--pp-bone);
+}
+
+/* ── Mobile / tablet (<1024) ──────────────────────────────────────────────────
+   No mobile Figma was provided, so the desktop composition reflows to a stacked
+   column on fluid tokens: headline, the band shown as a horizontal strip, then the
+   lede. Everything drops out of absolute positioning. */
+@media (max-width: 1023px) {
+  .frame {
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--pp-stack);
+    padding: calc(var(--pp-stack) * 1.6) var(--pp-gutter) var(--pp-stack);
+  }
+
+  .band {
+    position: relative;
+    order: 2;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1512 / 977;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  .headline {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05em;
+  }
+  .line1,
+  .line2 {
+    position: static;
+    white-space: normal;
+    font-size: var(--pp-fs-display);
+    letter-spacing: -0.02em;
+  }
+
+  .lede {
+    position: static;
+    order: 3;
+    width: 100%;
+    max-width: 36ch;
+    font-size: var(--pp-fs-lead);
+  }
+}
