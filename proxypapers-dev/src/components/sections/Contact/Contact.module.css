@@ -108,6 +108,7 @@
 
 /* Audience toggle (node 242:408) — segmented control on a grey track. */
 .toggle {
+  position: relative;
   display: flex;
   width: 100%;
   height: calc(51 * var(--pp-scale));
@@ -116,7 +117,27 @@
   border-radius: calc(47 * var(--pp-scale));
   margin-bottom: calc(44 * var(--pp-scale));
 }
+/* The blue pill is a single element that GLIDES between the two halves rather than
+   the active segment painting itself — so the selection reads as one connected thumb
+   sliding across. It sits inside the toggle's padding (top/bottom/left match it) and is
+   exactly half the inner width; translateX(100%) lands it precisely on the advisor half. */
+.thumb {
+  position: absolute;
+  top: calc(4 * var(--pp-scale));
+  bottom: calc(4 * var(--pp-scale));
+  left: calc(5 * var(--pp-scale));
+  width: calc((100% - 10 * var(--pp-scale)) / 2);
+  background: var(--pp-blue);
+  border-radius: calc(60 * var(--pp-scale));
+  pointer-events: none;
+  transition: transform 0.45s var(--pp-ease-out);
+}
+.thumb[data-pos="advisor"] {
+  transform: translateX(100%);
+}
 .seg {
+  position: relative;
+  z-index: 1;
   flex: 1;
   border: 0;
   cursor: pointer;
@@ -127,14 +148,15 @@
   font-size: calc(20 * var(--pp-scale));
   letter-spacing: calc(-0.6 * var(--pp-scale));
   color: rgba(22, 23, 24, 0.5);
-  transition:
-    background-color 0.4s var(--pp-ease-out),
-    color 0.4s var(--pp-ease-out);
+  transition: color 0.4s var(--pp-ease-out);
 }
 .seg[data-active="true"] {
-  background: var(--pp-blue);
-  border-radius: calc(60 * var(--pp-scale));
   color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .thumb {
+    transition: none;
+  }
 }
 
 /* Fields (node 242:460) — a column of underlined rows, gap 48. */
@@ -270,26 +292,17 @@
   align-items: center;
   gap: calc(20 * var(--pp-scale));
 }
+/* Visual + roll-swap hover come from the global .pp-btn (applied alongside this in
+   the markup). .submit only adds the form-width sizing: full width, the form's 43px
+   pill height, and zero vertical padding so the fixed height — not .pp-btn's padding —
+   governs. cursor:pointer because <button> doesn't inherit .pp-btn's anchor cursor. */
 .submit {
   width: 100%;
   height: calc(43 * var(--pp-scale));
+  padding-block: 0;
   border: 0;
   cursor: pointer;
-  background: var(--pp-blue);
-  border-radius: calc(45 * var(--pp-scale));
   font-family: var(--pp-font);
-  font-weight: 500;
-  font-size: calc(16 * var(--pp-scale));
-  color: var(--pp-bone);
-  transition:
-    background-color 0.4s var(--pp-ease-out),
-    transform 0.3s var(--pp-ease-out);
-}
-.submit:hover,
-.submit:focus-visible {
-  background: #6ea1ff;
-  transform: translateY(-1px);
-  outline: none;
 }
 .note {
   font-family: var(--pp-font);
@@ -482,6 +495,13 @@
     border-radius: 47px;
     margin-bottom: clamp(28px, 6vw, 40px);
   }
+  .thumb {
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    width: calc((100% - 10px) / 2);
+    border-radius: 60px;
+  }
   .seg {
     padding: 12px 8px;
     font-size: var(--pp-fs-body);
@@ -531,8 +551,6 @@
   }
   .submit {
     height: 48px;
-    border-radius: 45px;
-    font-size: var(--pp-fs-body);
   }
   .note {
     font-size: var(--pp-fs-small);

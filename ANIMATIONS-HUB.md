@@ -688,3 +688,21 @@ on scroll).
   `clearProps:"transform"` on the card avoids the inline-transform-vs-breakpoint
   shadowing gotcha on a later resize. Timing (`exitAt`, durations, `scale` amount) is
   the easy knob to tune.
+
+### Contact form — audience toggle glide + submit roll-swap
+
+- **What:** two CSS-only interactions on the form card. (1) The individual/advisor
+  segmented control: a single blue pill (`.thumb`, absolutely positioned at half the
+  inner width) GLIDES between the two halves via `transform: translateX(0 ↔ 100%)`
+  (0.45s `--pp-ease-out`), driven by `data-pos={audience}`; the segments no longer
+  paint their own background — only their text color crossfades (active → white). Reads
+  as one connected element sliding, not two buttons recoloring. (2) The submit button
+  now carries the shared `.pp-btn` roll-swap (pill fills bone, label rolls up to Proxy
+  Blue) — same mechanic as the Hero/Profiles CTAs; it stays a real `<button
+  type="submit">` (so it keeps the `.pp-btn__roll/__main/__clone` markup inline rather
+  than swapping in `PpButton`, which is an `<a>`), and `.submit` is trimmed to just the
+  form-width sizing.
+- **Implementation note:** `Contact.module.css` `.toggle`/`.thumb`/`.seg` +
+  `.submit`; thumb inset matches the toggle padding at both breakpoints so
+  `translateX(100%)` lands exactly on the second half. Reduced motion drops the thumb
+  transition. No JS — React state flips the `data-pos`/`data-active` attrs, CSS animates.

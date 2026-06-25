@@ -76,8 +76,11 @@ export function Contact() {
               <p className={s.formTitle}>{form.title}</p>
             </div>
 
-            {/* Audience toggle (node 242:408) — a segmented control. */}
+            {/* Audience toggle (node 242:408) — a segmented control whose blue pill
+                glides between the two halves (.thumb) instead of each segment painting
+                itself, so the selection feels like one connected element sliding over. */}
             <div className={s.toggle} role="radiogroup" aria-label="I am">
+              <span className={s.thumb} data-pos={audience} aria-hidden="true" />
               <button
                 type="button"
                 role="radio"
@@ -165,10 +168,18 @@ export function Contact() {
                 </span>
               </label>
 
-              {/* Submit (node 242:453). */}
+              {/* Submit (node 242:453) — shares the site CTA roll-swap (.pp-btn): the
+                  pill fills bone on hover and the label rolls up to Proxy Blue. Stays a
+                  real type="submit" button (PpButton is an <a>, can't submit), so it
+                  carries the .pp-btn markup itself + .submit for the form-width sizing. */}
               <div className={s.submitRow}>
-                <button type="submit" className={s.submit}>
-                  {form.submit}
+                <button type="submit" className={`pp-btn ${s.submit}`}>
+                  <span className="pp-btn__roll">
+                    <span className="pp-btn__main">{form.submit}</span>
+                    <span className="pp-btn__clone" aria-hidden="true">
+                      {form.submit}
+                    </span>
+                  </span>
                 </button>
                 <p className={s.note}>{form.note}</p>
               </div>
