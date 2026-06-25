@@ -6,5 +6,26 @@
       "tail": "not a promise"
     },
     "lede": "Since 2016 we have been guiding executives, heirs and families through the lasting organisation of their private information. Here is how."
+  },
+  "freedom": {
+    "heading": "Tomorrow's estate is also an estate of data.",
+    "body": {
+      "lead": "Digital acceleration is transforming the way each of us receives, keeps and transmits private information. Advisors produce data they keep on their own systems. The client rarely truly owns it. ",
+      "rest": "Proxy Papers puts that ownership back where it belongs: with you, under your control, in a reliable framework."
+    },
+    "cards": [
+      {
+        "variant": "blue",
+        "eyebrow": "Freedom",
+        "title": "Your data stays yours.",
+        "desc": "Readable, transferable, never captive."
+      },
+      {
+        "variant": "outline",
+        "eyebrow": "Independence",
+        "title": "Never wait on an advisor again.",
+        "desc": "You no longer depend on anyone to retrieve a document about yourself."
+      }
+    ]
   }
 }
