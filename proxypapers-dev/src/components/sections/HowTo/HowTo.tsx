@@ -49,15 +49,17 @@ function StepCard({ step }: { step: Step }) {
   );
 }
 
-// Decorative fluffy-cloud tile (Figma nodes 160:1001 / 160:1008) — a rounded sky photo
-// filling the staircase's negative space (top-right + bottom-left). One is flipped so the
-// two don't read as identical; a faint grain pass keeps the blue from going flat.
+// Decorative fluffy-cloud tile (Figma nodes 160:1001 / 160:1008) — a rounded blue sky tile
+// filling the staircase's negative space. The cloud (a soft blob in clouds.webp on a
+// transparent ground) is anchored into one corner per Figma — top-right for the TR tile,
+// bottom-left for the BL tile — via the CSS background; the rest stays clear blue. A faint
+// grain pass keeps the blue from going flat. Per-tile background sizing lives in the CSS
+// (keyed by data-cloud), so the tile only supplies its placement on the stage.
 function CloudTile({ cloud }: { cloud: Cloud }) {
   return (
     <div
       className={s.cloud}
       data-cloud={cloud.id}
-      data-flip={cloud.flip || undefined}
       aria-hidden="true"
       style={
         {
@@ -68,7 +70,6 @@ function CloudTile({ cloud }: { cloud: Cloud }) {
         } as CSSProperties
       }
     >
-      <img className={s.cloudImg} src="/images/clouds.webp" alt="" />
       <span className={s.grain} />
     </div>
   );

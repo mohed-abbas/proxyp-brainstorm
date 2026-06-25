@@ -42,6 +42,23 @@
   .card[data-step="audit"] {
     box-shadow: 0 0 0 calc(20 * var(--pp-scale)) var(--pp-ink);
   }
+
+  /* Cloud anchored into a corner (Figma): TR tile → top-right, BL tile → bottom-left. The
+     first background-size/position pair is the veil gradient (fills the tile); the second
+     is the cloud blob, sized + offset in design px so it tucks into the corner and scales
+     with --pp-scale. */
+  .cloud[data-cloud="tr"] {
+    background-size: cover,
+      calc(600 * var(--pp-scale)) calc(600 * var(--pp-scale));
+    background-position: center,
+      calc(360 * var(--pp-scale)) calc(-280 * var(--pp-scale));
+  }
+  .cloud[data-cloud="bl"] {
+    background-size: cover,
+      calc(650 * var(--pp-scale)) calc(650 * var(--pp-scale));
+    background-position: center,
+      calc(-275 * var(--pp-scale)) calc(35 * var(--pp-scale));
+  }
 }
 
 /* Heading (node 160:966) — 49px medium bone, tracked tight. */
@@ -159,8 +176,12 @@
 }
 
 /* ── Cloud tile (nodes 160:1001 / 160:1008) ────────────────────────────────────
-   Rounded sky photo filling the staircase gaps. The bottom-left tile is flipped so the
-   pair don't read as identical; a faint grain pass keeps the blue from going flat. */
+   Rounded blue sky tile filling the staircase gaps. clouds.webp is a soft cloud blob on a
+   transparent ground; it's anchored into one corner per Figma (top-right for TR, bottom-
+   left for BL) so most of the tile stays clear blue. A faint blue veil softens the cloud
+   and a grain pass keeps the field from going flat. The cloud blob is the SECOND background
+   layer; the first (the veil gradient) fills the whole tile. Per-tile size + corner offset
+   are set in the desktop / mobile media blocks (keyed by data-cloud). */
 .cloud {
   position: absolute;
   left: calc(var(--cx) * var(--pp-scale));
@@ -170,19 +191,13 @@
   z-index: 1;
   border-radius: calc(20 * var(--pp-scale));
   overflow: hidden;
-  background: var(--pp-blue);
-}
-.cloudImg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-.cloud[data-flip] .cloudImg {
-  transform: scale(-1, -1);
-  object-position: 30% 40%;
+  background-color: var(--pp-blue);
+  background-image: linear-gradient(
+      rgba(90, 144, 244, 0.18),
+      rgba(90, 144, 244, 0.18)
+    ),
+    url(/images/clouds.webp);
+  background-repeat: no-repeat;
 }
 .grain {
   position: absolute;
@@ -275,12 +290,16 @@ html.js .cloud {
     width: 100%;
     height: 140px;
     border-radius: 16px;
+    /* --pp-scale is undefined below 1024, so anchor the cloud with fixed values here. */
+    background-size: cover, 300px 300px;
   }
   .cloud[data-cloud="tr"] {
     order: 2;
+    background-position: center, right top;
   }
   .cloud[data-cloud="bl"] {
     order: 4;
+    background-position: center, left bottom;
   }
   .grain {
     background-size: 512px 512px;
