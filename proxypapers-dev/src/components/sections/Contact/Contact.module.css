@@ -617,6 +617,11 @@
     min-height: 100vh;
     min-height: 100svh;
     justify-content: center;
+    /* Reserve the fixed-navbar zone (top 64 + height 50 = 114, + breathing room) at the
+       top so the centred card never rides up under the menu button. The card centres in
+       the space below this padding; the absolute header overlay (inset:0) ignores it and
+       still centres full-screen for the intro. */
+    padding-top: calc(138 * var(--pp-scale));
     /* Clip the title/lead as they exit the top/bottom edges. */
     overflow: hidden;
   }
