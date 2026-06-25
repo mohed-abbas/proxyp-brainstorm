@@ -276,9 +276,11 @@
 }
 
 /* ── Slider mode (desktop, set by useStepSlider) ──────────────────────────────
-   The section fits the viewport and pins; the step card becomes a fixed-height
-   viewport whose slides are absolute-stacked (the hook reveals one at a time and
-   slides each into place on scroll). */
+   The section fits the viewport and pins. The Bone card becomes a fixed one-step
+   clip window; the inner .stepViewport is one tall filmstrip (all five steps stacked
+   at one card-height each) that the hook translates by one card per step. As the
+   active step climbs out the top, the next rises from the bottom in the SAME
+   continuous travel — a vertical conveyor (Concept A), no fade gap. */
 .steps[data-mode="slider"] {
   min-height: 100svh;
   align-items: center;
@@ -288,12 +290,13 @@
   height: calc(257 * var(--pp-scale));
 }
 .steps[data-mode="slider"] .stepViewport {
-  display: block;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
 }
 .steps[data-mode="slider"] .stepSlide {
-  position: absolute;
-  inset: 0;
+  flex: none;
+  height: calc(257 * var(--pp-scale));
   padding: calc(100 * var(--pp-scale)) calc(67 * var(--pp-scale));
   border-top: none;
 }

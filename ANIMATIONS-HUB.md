@@ -709,28 +709,34 @@ on scroll).
 
 ## Approach page
 
-### Step slider (scroll-driven five-step stepper)
+### Step slider (scroll-driven five-step conveyor)
 - **Where:** StepSection on `/approach` (the expanded method) — the Bone step card
   holding steps 01–05, plus the pagination dots.
-- **User-facing description:** "the section locks in place and, as you scroll, each
-  step rises into view one after another — the old step slides up and fades out, the
-  next rises from below — and the dots track where you are."
+- **User-facing description:** "the section locks in place and, as you scroll, the
+  steps ride up like a conveyor — the active step climbs out the top while the next is
+  already rising into view from the bottom, one continuous motion — and the dots track
+  where you are."
 - **Trigger:** scroll-trigger, pinned + scrubbed + snapped. Desktop (≥1024) only.
-- **Mechanics:** the section pins (`start: top top`, `end: +=(n−1)*60%`,
-  `pinType: transform`, `anticipatePin: 1`, `scrub: 0.6`, `snap: 1/(n−1)`). The five
-  step slides are absolute-stacked in the card; `onUpdate` maps progress →
-  `round(progress*(n−1))` = active index. On change: outgoing `yPercent ±45 / autoAlpha 0`
-  (`power2.in`, 0.45s), incoming `fromTo yPercent ±60→0 / autoAlpha 0→1` (`power3.out`,
-  0.6s); sign follows scroll direction (advance = rise from below). Dots toggle the
-  active class. The section fits the viewport via a CONTAIN `--pp-scale`
+- **Mechanics (Concept A vertical conveyor):** the section pins (`start: top top`,
+  `end: +=(n−1)*60%`, `pinType: transform`, `anticipatePin: 1`, `scrub: 0.6`,
+  `snap: 1/(n−1)`). The five step slides are one tall filmstrip (the `.stepViewport`
+  strip, each slide at one card-height) inside the Bone `.stepCard`, which clips to a
+  single card (`overflow: hidden`). `onUpdate` maps scroll progress straight to the
+  strip translate — `yPercent = −(100/n) · progress · (n−1)` — so the strip rides up
+  exactly one card per step in one continuous travel (no per-slide fade swap, no dead
+  gap); scrub smooths it. Active index = `round(progress*(n−1))`: that slide tweens to
+  `opacity 1`, the rest to `0.25` (`power1.out`, 0.3s), so as cards straddle the clip
+  edge the leaving one dims and the entering one brightens. Dots toggle the active
+  class. The section fits the viewport via a CONTAIN `--pp-scale`
   (`min(100vw/1512, 100svh/1012)`) so the whole composition is visible while pinned.
 - **Source ref:** no design-final source — new for `/approach`; pattern mirrors
   `useSliders` (pinned/scrubbed roller).
 - **Implementation note:** `src/lib/animations/useStepSlider.ts` (`useGSAP`, scoped,
   `gsap.matchMedia` ≥1024, `revertOnUpdate`). Progressive enhancement: the hook sets
-  `data-mode="slider"` on the section; CSS then absolute-stacks the slides + fits the
-  section to the viewport. Cleanup kills the ScrollTrigger, clears `data-mode`, and
-  restores the dot classes.
+  `data-mode="slider"` on the section; CSS then stacks the slides into the filmstrip +
+  fits the section to the viewport. Cleanup kills the ScrollTrigger, clears
+  `data-mode`, and restores the dot classes (matchMedia reverts the strip transform +
+  slide opacities).
 - **Feasibility / constraints:** reduced motion / no-JS / <1024 → default CSS shows all
   five steps as a stacked list (every step accessible), no pin, dots hidden. Dots are
   scroll indicators (not yet click-to-seek). Adding/removing steps just changes
