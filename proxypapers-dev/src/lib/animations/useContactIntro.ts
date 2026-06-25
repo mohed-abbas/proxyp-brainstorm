@@ -33,13 +33,20 @@ export function useContactIntro(scope: RefObject<HTMLElement | null>, s: Styles)
       const lead = q(`.${s.lead}`);
       const card = q(`.${s.card}`);
       const words = q(".r-word__in"); // the title's per-word reveal spans
+      // The form's content rows, in DOM order, that rise once the card has arrived —
+      // eyebrow, title, the four inputs, the source select, the consent and the submit
+      // note. The BUTTONS (audience toggle + submit) are deliberately excluded: they
+      // ride in with the card rather than sliding up on their own.
+      const formItems = q(
+        `.${s.eyebrow}, .${s.formTitle}, .${s.field}, .${s.selectRow}, .${s.consent}, .${s.note}`,
+      );
 
       const desktop = window.matchMedia("(min-width: 1024px)").matches;
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       // No stage → no intro. Land on the settled, fully-visible layout.
       if (!desktop || reduced) {
-        gsap.set([...title, ...lead, ...card, ...words], { clearProps: "all" });
+        gsap.set([...title, ...lead, ...card, ...words, ...formItems], { clearProps: "all" });
         return;
       }
 
@@ -80,6 +87,9 @@ export function useContactIntro(scope: RefObject<HTMLElement | null>, s: Styles)
       gsap.set(words, { yPercent: 110 });
       gsap.set(lead, { opacity: 0, y: 24 });
       gsap.set(card, { yPercent: 110, opacity: 1 });
+      // Form rows wait hidden + nudged down inside the (opaque) card, ready to slide up
+      // once the card lands. Buttons are left untouched, so they show with the card.
+      gsap.set(formItems, { opacity: 0, y: 20 });
 
       const tl = gsap.timeline({ delay: 0.2, onComplete: unlock });
 
@@ -110,10 +120,31 @@ export function useContactIntro(scope: RefObject<HTMLElement | null>, s: Styles)
       // the header's fade (last ~10%) bridges the handoff so the stage never reads empty.
       // clearProps:transform on finish drops the identity transform (avoids the
       // inline-transform-vs-breakpoint resize gotcha).
+      const cardStart = exitAt + exitDur * 0.9;
+      const cardDur = 1.3;
       tl.to(
         card,
-        { yPercent: 0, duration: 1.3, ease: "power2.out", clearProps: "transform" },
-        exitAt + exitDur * 0.9,
+        { yPercent: 0, duration: cardDur, ease: "power2.out", clearProps: "transform" },
+        cardStart,
+      );
+
+      // 4. FORM FILL — the moment the card STARTS entering, its content rows rise with
+      // the site's slide-up reveal (y + fade, staggered top→bottom), so the form fills
+      // in as the card glides up (they finish about when it lands). Excludes the buttons,
+      // so the toggle + submit ride in with the card while the rows fill around them.
+      // clearProps:transform leaves the resting opacity inline (the rows stay visible)
+      // while dropping the identity transform.
+      tl.to(
+        formItems,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+          stagger: 0.08,
+          clearProps: "transform",
+        },
+        cardStart,
       );
 
       // Safety net: if the page unmounts mid-intro (client nav away), onComplete never

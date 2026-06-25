@@ -653,6 +653,13 @@ on scroll).
      stage never reads empty. `clearProps:"transform"` on finish. Card stays FULL
      opacity the whole slide — it wipes over the descending lead as an opaque surface;
      fading it let the dark ground + lead ghost through.
+  4. FORM FILL — the moment the card STARTS entering (`@cardStart`), the form's content
+     rows (`.eyebrow, .formTitle, .field, .selectRow, .consent, .note` — 9 elements in
+     DOM order) rise with the site's slide-up reveal (`y 20→0, opacity 0→1`, dur 0.6
+     `power3.out`, `stagger 0.08`), so the form fills in as the card glides up and the
+     rows finish about when it lands. The BUTTONS (audience toggle `.seg` + `.submit`)
+     are deliberately excluded — they ride in with the card, never sliding.
+     `clearProps:"transform"` on finish (resting opacity stays inline).
 - **Scroll lock:** the intro locks Lenis for its duration (`lenis.stop()` → `start()`
   on the timeline's `onComplete`) so a stray wheel/trackpad gesture can't fight the
   curtain and desync the poses. `/contact` has no onboarding curtain, so `LenisProvider`

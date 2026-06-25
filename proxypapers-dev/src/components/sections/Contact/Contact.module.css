@@ -643,10 +643,18 @@
     justify-content: center;
   }
   /* Arm the header + card hidden so nothing flashes before the hook sets the start
-     poses (title word masks, lead offset, card below the fold). */
+     poses (title word masks, lead offset, card below the fold). The form content rows
+     are armed too — they slide up once the card lands (the hook reveals them). The
+     buttons (toggle + submit) are intentionally NOT armed: they ride in with the card. */
   :global(html.js) .title,
   :global(html.js) .lead,
-  :global(html.js) .card {
+  :global(html.js) .card,
+  :global(html.js) .eyebrow,
+  :global(html.js) .formTitle,
+  :global(html.js) .field,
+  :global(html.js) .selectRow,
+  :global(html.js) .consent,
+  :global(html.js) .note {
     opacity: 0;
   }
 }
