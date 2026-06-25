@@ -1,0 +1,273 @@
+/* LocalisationSection (Figma 142:574, artboard 1150.53×634.7) — the Papers Box reveal
+   on the Chinese-Black ground: a centred text column with four glassy, rotated file
+   cards floating at the corners. Full-bleed dark field (like HowTo), content centred
+   via the design-pixel --pp-scale so the composition freezes at design size ≥1512 and
+   scales down below. Every length is a literal artboard px * var(--pp-scale); below
+   1024 it reflows to a centred fluid column and the decorative cards drop away. */
+
+.section {
+  position: relative;
+  width: 100%;
+  background: var(--pp-ink);
+  color: var(--pp-bone);
+  padding-block: var(--pp-stack);
+  overflow: hidden;
+}
+
+/* The 1150.53-wide artboard envelope, centred — the 634.7-tall positioning context for
+   the absolutely-placed content column (z 2) and the corner cards (z 1). */
+.frame {
+  position: relative;
+  width: calc(1150.53 * var(--pp-scale));
+  height: calc(634.7 * var(--pp-scale));
+  margin-inline: auto;
+}
+
+/* ── Centred text column (node 142:481) ──────────────────────────────────────── */
+.content {
+  position: absolute;
+  top: calc(141 * var(--pp-scale));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: calc(748 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(30 * var(--pp-scale));
+  text-align: center;
+}
+
+.heading {
+  width: calc(622 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(30 * var(--pp-scale));
+}
+
+/* "Hosted in France" (node 142:572) — bone chip, ink text. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(5 * var(--pp-scale)) calc(15 * var(--pp-scale));
+  border-radius: calc(28 * var(--pp-scale));
+  background: var(--pp-bone);
+  color: var(--pp-ink);
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.title,
+.subtitle {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(49 * var(--pp-scale));
+  line-height: normal;
+  letter-spacing: calc(-1.47 * var(--pp-scale));
+}
+.title {
+  color: var(--pp-blue);
+}
+.subtitle {
+  color: var(--pp-bone);
+}
+
+.body {
+  margin: 0;
+  width: 100%;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: normal;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* ── Feature checks (node 142:571) — a 572-wide centred row that wraps 3 + 2. ──── */
+.features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: calc(572 * var(--pp-scale));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: calc(10 * var(--pp-scale));
+  column-gap: calc(20 * var(--pp-scale));
+}
+.feature {
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--pp-scale));
+  white-space: nowrap;
+}
+.checkIcon {
+  flex: none;
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
+  color: var(--pp-blue);
+}
+.featureLabel {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(14 * var(--pp-scale));
+  line-height: normal;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* ── Floating corner cards (nodes 142:448–480) ────────────────────────────────
+   Each wrapper is the rotated card's axis-aligned bounding box, placed at its Figma
+   corner; the glass .card inside carries the rotation. */
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.cardWrap {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  position: relative;
+  width: calc(202 * var(--pp-scale));
+  height: calc(167 * var(--pp-scale));
+  border-radius: calc(20 * var(--pp-scale));
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(247, 244, 240, 0.2);
+  -webkit-backdrop-filter: blur(calc(16.7 * var(--pp-scale)));
+  backdrop-filter: blur(calc(16.7 * var(--pp-scale)));
+  overflow: hidden;
+}
+.cardInner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(152 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(7 * var(--pp-scale));
+}
+.fileIcon {
+  flex: none;
+  width: calc(24.855 * var(--pp-scale));
+  height: calc(24.855 * var(--pp-scale));
+  color: var(--pp-blue);
+}
+.cardLabel {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(20 * var(--pp-scale));
+  line-height: normal;
+  color: var(--pp-bone);
+}
+.cardMeta {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(14 * var(--pp-scale));
+  line-height: normal;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* Corner placements (AABB top-left + the inner card's rotation). */
+.card_tax {
+  left: calc(2.08 * var(--pp-scale));
+  top: calc(1.21 * var(--pp-scale));
+  width: calc(235.884 * var(--pp-scale));
+  height: calc(210.198 * var(--pp-scale));
+}
+.card_tax .card {
+  transform: rotate(-13.74deg);
+}
+.card_realEstate {
+  left: calc(909.08 * var(--pp-scale));
+  top: 0;
+  width: calc(237.247 * var(--pp-scale));
+  height: calc(212.611 * var(--pp-scale));
+}
+.card_realEstate .card {
+  transform: rotate(14.32deg);
+}
+.card_succession {
+  left: 0;
+  top: calc(389.07 * var(--pp-scale));
+  width: calc(258.437 * var(--pp-scale));
+  height: calc(245.626 * var(--pp-scale));
+}
+.card_succession .card {
+  transform: rotate(30deg);
+}
+.card_insurance {
+  left: calc(892.09 * var(--pp-scale));
+  top: calc(389.07 * var(--pp-scale));
+  width: calc(258.437 * var(--pp-scale));
+  height: calc(245.626 * var(--pp-scale));
+}
+.card_insurance .card {
+  transform: rotate(-30deg);
+}
+
+/* ── Tablet + mobile (<1024) ──────────────────────────────────────────────────
+   Off the artboard scale: fluid type, a centred static column, no fixed envelope, and
+   the decorative corner cards drop away. */
+@media (max-width: 1023px) {
+  .frame {
+    width: 100%;
+    height: auto;
+    padding-inline: var(--pp-gutter);
+  }
+  .content {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 640px;
+    margin-inline: auto;
+    gap: var(--pp-stack);
+  }
+  .heading {
+    width: 100%;
+    gap: 18px;
+  }
+  .pill {
+    padding: 5px 15px;
+    border-radius: 999px;
+    font-size: var(--pp-fs-small);
+  }
+  .title,
+  .subtitle {
+    font-size: var(--pp-fs-h2);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .body {
+    font-size: var(--pp-fs-body);
+  }
+  .features {
+    width: 100%;
+    row-gap: 12px;
+    column-gap: 20px;
+  }
+  .checkIcon {
+    width: 18px;
+    height: 18px;
+  }
+  .featureLabel {
+    font-size: var(--pp-fs-small);
+  }
+  .cards {
+    display: none;
+  }
+}

@@ -72,5 +72,24 @@
         "desc": "Real-time visibility on your Papers Box, periodic report with decision-support insights. You regain control, with full clarity."
       }
     ]
+  },
+  "localisation": {
+    "pill": "Hosted in France",
+    "title": "The Papers Box",
+    "subtitle": "Your Secure Digital Framework.",
+    "body": "A secure application hosted in France, on your phone and computer. Folders by theme, encrypted advisor sharing, deadline alerts. Nothing ever leaves the sovereign infrastructure we operate.",
+    "features": [
+      "Real-time folders",
+      "Encrypted sharing with your advisors",
+      "Deadline notifications",
+      "Personalised periodic report",
+      "Secure application hosted in France"
+    ],
+    "cards": [
+      { "key": "tax", "label": "Tax", "meta": "8 documents · current" },
+      { "key": "realEstate", "label": "Real Estate", "meta": "14 documents · current" },
+      { "key": "succession", "label": "Succession", "meta": "deadline · 12d" },
+      { "key": "insurance", "label": "Insurance", "meta": "shared · broker" }
+    ]
   }
 }
