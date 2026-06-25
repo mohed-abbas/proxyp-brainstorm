@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { ppNeueMontreal } from "@/lib/fonts";
 import { LenisProvider } from "@/lib/lenis/LenisProvider";
 import { IntroProvider } from "@/lib/intro/IntroProvider";
+import { PageTransitionProvider } from "@/components/shared/PageTransition";
 import site from "@/data/en/site.json";
 import "./globals.css";
 
@@ -36,7 +37,9 @@ export default function RootLayout({
       <body className="pp-theme-dark">
         <script dangerouslySetInnerHTML={{ __html: JS_FLAG }} />
         <LenisProvider>
-          <IntroProvider>{children}</IntroProvider>
+          <IntroProvider>
+            <PageTransitionProvider>{children}</PageTransitionProvider>
+          </IntroProvider>
         </LenisProvider>
       </body>
     </html>

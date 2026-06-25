@@ -1,0 +1,94 @@
+/* ============================================================
+   Page transition — one Proxy-Blue curtain travels up while the
+   FoldMark origami-folds shut to a seam (cover) and unfolds open
+   (reveal). GSAP owns every transform; CSS only declares the rest
+   pose, the 3D context, and each panel's crease hinge.
+   ============================================================ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999; /* above the fixed navbar */
+  pointer-events: none; /* only blocks input while a transition runs (set in JS) */
+  overflow: hidden;
+}
+
+/* The single curtain. No CSS transform — GSAP owns yPercent (a CSS translate
+   here would be read by GSAP as a fixed-px `y` and stack under yPercent). */
+.panel {
+  position: absolute;
+  inset: 0;
+  background: var(--pp-blue);
+  display: grid;
+  place-items: center;
+  overflow: hidden; /* clip the bleeding watermark to the curtain so nothing leaks
+                       into the viewport once the panel travels off-screen */
+  will-change: transform;
+  transform: translateY(100%); /* parked below until GSAP takes over on first run */
+}
+
+/* Grain + faint watermark — same assets/feel as the onboarding welcome, so the
+   curtain reads as the same world rather than a bare blue rectangle. */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: url("/images/grain.webp");
+  background-repeat: repeat;
+  background-size: 380px 380px;
+}
+.watermark {
+  position: absolute;
+  top: -5.7vh;
+  right: -13.77vw;
+  height: 115.05vh;
+  aspect-ratio: 755.212 / 1129.77;
+  z-index: 2;
+  color: #404243;
+  opacity: 0.16;
+  pointer-events: none;
+}
+.watermark img {
+  width: 100%;
+  height: 100%;
+}
+
+/* 3D context for the fold — above the grain/watermark. */
+.stage {
+  position: relative;
+  z-index: 3;
+  perspective: 1100px;
+  display: grid;
+  place-items: center;
+}
+
+/* Mark on the blue field is solid Bone White — brand at full presence. */
+.mark {
+  height: clamp(72px, 12vh, 132px);
+  width: auto;
+  transform-style: preserve-3d;
+  overflow: visible;
+  will-change: transform, opacity;
+}
+.mark [data-fold] {
+  fill: var(--pp-bone);
+  transform-box: fill-box; /* origins resolve against each panel's own bbox */
+  backface-visibility: hidden;
+}
+
+/* Crease hinges. Each panel rotates about its shared edge; GSAP tweens the
+   unitless --fold (0 = open → 90 = folded edge-on), CSS turns it into degrees. */
+.mark [data-fold="bar"] {
+  transform-origin: 50% 100%; /* crease C — bottom edge (y=18.18) */
+  transform: rotate3d(1, 0, 0, calc(var(--fold, 0) * 1deg));
+}
+.mark [data-fold="bowl"] {
+  transform-origin: 0% 50%; /* crease B — left edge (x=18.23) */
+  transform: rotate3d(0, 1, 0, calc(var(--fold, 0) * 1deg));
+}
+.mark [data-fold="stem"] {
+  transform-origin: 100% 0%; /* crease A — top-right of the leg's bbox, on the 45° edge */
+  transform: rotate3d(1, -1, 0, calc(var(--fold, 0) * 1deg));
+}
