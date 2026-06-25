@@ -1,0 +1,16 @@
+{
+  "hero": {
+    "headline": {
+      "lead": "Three ",
+      "accent": "profiles.",
+      "rest": " One shared framework. No fixed packages."
+    },
+    "body": "Each engagement is calibrated during the onboarding audit, based on the complexity of your estate, your pace and your projects. The three profiles below describe the typical volumes we encounter. The proposal itself is always bespoke.",
+    "badge": "No public pricing — all services quoted on request, following the onboarding audit.",
+    "profiles": [
+      { "id": "essentiel", "label": "Essentiel", "ring": "r1" },
+      { "id": "signature", "label": "Signature", "ring": "r2" },
+      { "id": "exception", "label": "Exception", "ring": "r3" }
+    ]
+  }
+}

@@ -1,0 +1,391 @@
+/* Service profiles deck. Each card is ported 1:1 from the Figma 1512×621 card artboard
+   (nodes 160:411 / 160:605 / 160:675): every element is pinned with literal artboard px
+   * var(--pp-scale), so a card freezes at its design size above 1512px and scales down
+   proportionally below. The three cards stack on scroll (mechanic wired in
+   useServiceCards once all three are in); the bone cards sit on the Chinese-Black
+   ground and lift off it with a soft shadow. */
+
+.cards {
+  position: relative;
+  width: 100%;
+  background: var(--pp-ink);
+}
+
+/* Base (and no-JS / reduced-motion / mobile) layout: a readable vertical flow. The
+   pinned overlay below only takes over for motion-enabled desktops. */
+.deck {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Desktop, motion allowed: the deck becomes a single full-viewport frame and the cards
+   OVERLAY it (absolute, stacked), driven by the pinned scrub in useServiceCards. The
+   card scale is height-aware so a card fits with breathing room (760 ≈ 621 card + stack
+   headroom) and sits inset from the edges so the rounded corners read. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .cards {
+    /* Full-bleed up to the 1512 artboard (frozen at design size above it); the height
+       term only kicks in on short viewports so the card + its peeking stack still fit. */
+    --pp-scale: min(100vw / 1512, 100svh / 760, 1px);
+  }
+  .deck {
+    height: 100vh; /* fallback */
+    height: 100svh;
+  }
+  .slot {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+  }
+  /* Flash-free arming: incoming cards paint one frame below until the hook runs. */
+  html.js .slot:not(:first-child) {
+    transform: translateY(100%);
+  }
+}
+
+/* Desktop, reduced motion: no pin/overlay — a readable vertical deck at artboard scale. */
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .cards {
+    --pp-scale: min(100vw / 1512, 1px);
+    padding: var(--pp-stack) 0;
+  }
+  .deck {
+    gap: var(--pp-stack);
+  }
+}
+
+/* ── Card (node 160:411) ──────────────────────────────────────────────────────
+   The 1512×621 bone card: rounded, soft-shadowed, the coordinate system for its
+   absolutely-positioned number / copy / pricing / bento. */
+.card {
+  position: relative;
+  width: calc(1512 * var(--pp-scale));
+  height: calc(621 * var(--pp-scale));
+  background: var(--pp-bone);
+  border-radius: calc(20 * var(--pp-scale));
+  box-shadow: 0 calc(24 * var(--pp-scale)) calc(64 * var(--pp-scale))
+    rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+/* Big index number (node 160:476) — 153px, pale bone-grey, behind the copy. */
+.num {
+  position: absolute;
+  left: calc(77 * var(--pp-scale));
+  top: calc(11 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(153.481 * var(--pp-scale));
+  line-height: 1;
+  letter-spacing: calc(-3.0696 * var(--pp-scale));
+  color: #dfddda;
+}
+
+/* Copy column (node 160:959) — title + subtitle, then the sparkle-led description. */
+.copy {
+  position: absolute;
+  left: calc(77 * var(--pp-scale));
+  top: calc(209 * var(--pp-scale));
+  width: calc(562 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(40 * var(--pp-scale));
+}
+.head {
+  display: flex;
+  flex-direction: column;
+}
+.title {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(56 * var(--pp-scale));
+  line-height: 1.05;
+  letter-spacing: calc(-1.12 * var(--pp-scale));
+  color: var(--pp-blue);
+}
+.subtitle {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(20 * var(--pp-scale));
+  line-height: 1.2;
+  letter-spacing: calc(-0.4 * var(--pp-scale));
+  color: var(--pp-ink);
+}
+.descRow {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(10 * var(--pp-scale));
+  width: 100%;
+}
+.star {
+  flex: none;
+  width: calc(28 * var(--pp-scale));
+  height: calc(28 * var(--pp-scale));
+  color: var(--pp-ink);
+}
+.desc {
+  margin: 0;
+  width: calc(529 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(20 * var(--pp-scale));
+  line-height: 1.2;
+  color: var(--pp-ink);
+}
+
+/* Pricing line (node 160:471). */
+.pricing {
+  position: absolute;
+  left: calc(77 * var(--pp-scale));
+  top: calc(550 * var(--pp-scale));
+  width: calc(562 * var(--pp-scale));
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  color: rgba(22, 23, 24, 0.7);
+}
+
+/* ── Bento of included services (node 160:964) ────────────────────────────────
+   A 576×509 field at the card's right; each tile is positioned from its design-pixel
+   geometry (--tx/--ty/--tw/--th set inline from the data). */
+.bento {
+  position: absolute;
+  left: calc(866 * var(--pp-scale));
+  top: calc(56 * var(--pp-scale));
+  width: calc(var(--bw) * var(--pp-scale));
+  height: calc(var(--bh) * var(--pp-scale));
+}
+.tile {
+  position: absolute;
+  left: calc(var(--tx) * var(--pp-scale));
+  top: calc(var(--ty) * var(--pp-scale));
+  width: calc(var(--tw) * var(--pp-scale));
+  height: calc(var(--th) * var(--pp-scale));
+  border: 1px solid rgba(22, 23, 24, 0.2);
+  border-radius: calc(20 * var(--pp-scale));
+  overflow: hidden;
+}
+/* Tile content sits in the lower-left (Figma inner frame at 14,70). */
+.tileInner {
+  position: absolute;
+  left: calc(14 * var(--pp-scale));
+  top: calc(70 * var(--pp-scale));
+  right: calc(14 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(5 * var(--pp-scale));
+}
+.tileIcon {
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
+  color: var(--pp-blue);
+}
+.tileLabel {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.15;
+  color: var(--pp-blue);
+}
+
+/* ── Non-light variants (Signature dark + Exception blue, nodes 160:605 / 160:675) ──
+   Both carry bone copy, bone tile content and a white-hairline bento — only the ground,
+   the number, the copy offset and the pill colour differ per variant below. */
+.card:not([data-theme="light"]) .title,
+.card:not([data-theme="light"]) .subtitle,
+.card:not([data-theme="light"]) .desc,
+.card:not([data-theme="light"]) .star {
+  color: var(--pp-bone);
+}
+.card:not([data-theme="light"]) .pricing {
+  color: rgba(247, 244, 240, 0.7);
+}
+.card:not([data-theme="light"]) .tile {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.card:not([data-theme="light"]) .tileIcon,
+.card:not([data-theme="light"]) .tileLabel {
+  color: var(--pp-bone);
+}
+
+/* Dark variant (Signature) — ink ground; the blue accent survives only on the pill. Only
+   the number colour changes (it keeps the light card's top so all three numbers align);
+   the copy rides up to 170 to balance the taller copy (it carries the extra pill). */
+.card[data-theme="dark"] {
+  background: var(--pp-ink);
+}
+.card[data-theme="dark"] .num {
+  color: #404040;
+}
+.card[data-theme="dark"] .copy {
+  top: calc(170 * var(--pp-scale));
+}
+
+/* Blue variant (Exception) — Proxy Blue at full presence; everything reads in bone,
+   including the pill. Number is a lighter blue (#6ea1ff), aligned with the others; copy
+   at 157.5. */
+.card[data-theme="blue"] {
+  background: var(--pp-blue);
+}
+.card[data-theme="blue"] .num {
+  color: #6ea1ff;
+}
+.card[data-theme="blue"] .copy {
+  top: calc(157.5 * var(--pp-scale));
+}
+.card[data-theme="blue"] .inherits {
+  border-color: var(--pp-bone);
+}
+.card[data-theme="blue"] .inheritsLabel,
+.card[data-theme="blue"] .inheritsIcon {
+  color: var(--pp-bone);
+}
+
+/* "Everything in … plus →" pill (nodes 160:655 / 160:719) — a hairline carrying a label
+   + corner-down-right glyph; the third item in the copy column. Blue on the dark card
+   (base), bone on the blue card (override above). */
+.inherits {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: calc(10 * var(--pp-scale));
+  padding: calc(10 * var(--pp-scale)) calc(29 * var(--pp-scale));
+  border: 1px solid var(--pp-blue);
+  border-radius: calc(31 * var(--pp-scale));
+}
+.inheritsLabel {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--pp-blue);
+}
+.inheritsIcon {
+  flex: none;
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
+  color: var(--pp-blue);
+}
+
+/* ── Tablet + mobile reflow (<1024px) ────────────────────────────────────────
+   Below 1024 a card stops riding the 1512 artboard and becomes a fluid, full-width
+   stacked block: copy first, then the bento as a responsive two-column grid. The cards
+   flow vertically (no pin) — the settled, legible form. */
+@media (max-width: 1023px) {
+  .cards {
+    padding: var(--pp-stack) var(--pp-gutter);
+  }
+  .deck {
+    flex-direction: column;
+    gap: var(--pp-stack);
+    max-width: 640px;
+    margin-inline: auto;
+  }
+  .slot {
+    width: 100%;
+  }
+  .card {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    padding: var(--pp-gutter);
+    display: flex;
+    flex-direction: column;
+    gap: var(--pp-stack);
+  }
+
+  .num {
+    position: static;
+    font-size: clamp(64px, 18vw, 110px);
+    letter-spacing: -0.02em;
+  }
+  .copy {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+  }
+  .title {
+    font-size: var(--pp-fs-h2);
+    letter-spacing: -0.01em;
+  }
+  .subtitle,
+  .desc {
+    font-size: var(--pp-fs-body);
+  }
+  .star {
+    width: 24px;
+    height: 24px;
+  }
+  .pricing {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    font-size: var(--pp-fs-small, 14px);
+  }
+  .inherits {
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 24px;
+  }
+  .inheritsLabel {
+    font-size: var(--pp-fs-body);
+  }
+  .inheritsIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Bento → fluid two-column grid; tiles drop their absolute geometry and flow. */
+  .bento {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .tile {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    min-height: 120px;
+    border-radius: 14px;
+  }
+  .tileInner {
+    position: static;
+    left: auto;
+    top: auto;
+    right: auto;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .tileIcon {
+    width: 18px;
+    height: 18px;
+  }
+  .tileLabel {
+    font-size: var(--pp-fs-body);
+  }
+}

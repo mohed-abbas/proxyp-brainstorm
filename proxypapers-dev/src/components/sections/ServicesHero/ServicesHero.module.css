@@ -1,0 +1,326 @@
+/* Services hero. Ported 1:1 from the Figma 1512×983 artboard (node 158:349): every
+   element is pinned with literal artboard px * var(--pp-scale), so the composition
+   freezes at the design size above 1512px and scales down proportionally below.
+
+   HEIGHT-RESPONSIVE (desktop): the frame rides a CONTAIN scale — min(width-fit,
+   height-fit) — so the one-screen composition always fits the viewport on BOTH axes
+   and never crops on short/landscape laptops, AND grows past the 1512 artboard so the
+   statement holds the canvas instead of freezing small. The hero is min-height:100svh
+   and flex-centres the frame. Edge-hugging copy anchors HORIZONTALLY to --pp-nav-inset
+   (the shared navbar gutter), not the centred frame, so it tracks the navbar at every
+   width above 1512 instead of drifting into the centre. */
+
+.hero {
+  position: relative;
+  width: 100%;
+  background: var(--pp-blue);
+  overflow: hidden;
+  /* Rounded bottom corners (Figma rounded-bl/br-[20px]) — the bone page behind shows
+     through, giving the blue hero a card-like foot. */
+  border-bottom-left-radius: calc(20 * var(--pp-scale));
+  border-bottom-right-radius: calc(20 * var(--pp-scale));
+}
+
+/* Desktop: a height-aware, one-screen container; scope the CONTAIN scale here so the
+   frame fits the viewport on both axes. No 1px cap — the composition scales up past
+   1512 too (still height-bounded, so it never crops). Scoped to ≥1024 so the <1024
+   reflow (fluid tokens, not --pp-scale) is untouched. */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 100vh; /* fallback */
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --pp-scale: min(100vw / 1512, 100svh / 983);
+  }
+}
+
+/* The artboard frame: full-width, 983 tall, flex-centred in the hero. It is the
+   coordinate system for the absolutely-positioned orbit; width:100% makes children
+   resolve horizontal offsets against the viewport so the --pp-nav-inset anchor on
+   .copy lands on the navbar gutter. */
+.frame {
+  position: relative;
+  width: 100%;
+  height: calc(983 * var(--pp-scale));
+  margin-inline: auto;
+}
+
+/* ── Atmosphere ──────────────────────────────────────────────────────────────
+   Blue ground lives on .hero; this layer adds the faint grain tile and the two
+   soft cloud wisps. Fully decorative, behind the copy + orbit. */
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+/* Grain overlay — a 1024px tile from top-left at 10% (Figma noise pass). Keeps the
+   blue from reading as flat fill (the brief's "subtle depth, not flat" rule). */
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  background: url(/images/grain.webp) top left / calc(1024 * var(--pp-scale))
+    calc(1024 * var(--pp-scale)) repeat;
+}
+
+/* Cloud wisps (Figma nodes 158:350 top-right, 158:352 bottom-left) — one soft-alpha
+   texture, two instances, each anchored per the artboard and bleeding off-canvas. */
+.cloud {
+  position: absolute;
+  object-fit: cover;
+  pointer-events: none;
+}
+.cloudTop {
+  left: calc(1090 * var(--pp-scale));
+  top: calc(-90 * var(--pp-scale));
+  width: calc(787 * var(--pp-scale));
+  height: calc(787 * var(--pp-scale));
+}
+.cloudBot {
+  left: calc(-653 * var(--pp-scale));
+  top: calc(382 * var(--pp-scale));
+  width: calc(1029 * var(--pp-scale));
+  height: calc(1029 * var(--pp-scale));
+}
+
+/* ── Copy block (node 158:353) ────────────────────────────────────────────────
+   Headline + body + badge as one left-aligned column. Its left edge anchors to the
+   shared --pp-nav-inset gutter (≈ the artboard's 83px inset) so it tracks the navbar
+   logo at every width; top + width ride the artboard. */
+.copy {
+  position: absolute;
+  z-index: 2;
+  left: var(--pp-nav-inset);
+  top: calc(228 * var(--pp-scale));
+  width: calc(1127 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(41 * var(--pp-scale));
+}
+
+/* Headline — 95px PP Neue Montreal Medium, -1.9px tracking, wraps to three lines.
+   "profiles." turns Chinese-Black; the rest stays bone. */
+.headline {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(95 * var(--pp-scale));
+  line-height: 0.95;
+  letter-spacing: calc(-1.9 * var(--pp-scale));
+  color: var(--pp-bone);
+}
+/* A touch of mask headroom so descenders (p, g) don't clip in the per-word reveal
+   window at this tight leading. */
+.headline :global(.r-word) {
+  padding-bottom: 0.1em;
+}
+.accent {
+  color: var(--pp-ink);
+}
+
+/* Body — 25px bone, 981px wide (node 157:4). */
+.body {
+  margin: 0;
+  width: calc(981 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(25 * var(--pp-scale));
+  line-height: 1.2;
+  color: var(--pp-bone);
+}
+
+/* Badge (node 160:409) — white pill, blue dot + ink label. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(10 * var(--pp-scale));
+  background: #fff;
+  border-radius: calc(31 * var(--pp-scale));
+  padding: calc(10 * var(--pp-scale)) calc(29 * var(--pp-scale));
+}
+.badgeDot {
+  flex: none;
+  width: calc(10 * var(--pp-scale));
+  height: calc(10 * var(--pp-scale));
+  border-radius: 50%;
+  background: var(--pp-blue);
+}
+.badgeText {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  color: var(--pp-ink);
+  white-space: nowrap;
+}
+
+/* ── Profiles orbit (node 160:407) ────────────────────────────────────────────
+   768×742 field anchored to the artboard's bottom-right (left 1040, top 543); it
+   bleeds off the hero corner (clipped by .hero overflow + radius). The field is the
+   coordinate system: rings via an SVG (viewBox 0 0 768 742, centre 384,371), chips +
+   centre P-disc positioned as a % of the field. */
+.orbit {
+  position: absolute;
+  z-index: 1;
+  left: calc(1040 * var(--pp-scale));
+  top: calc(543 * var(--pp-scale));
+  width: calc(768 * var(--pp-scale));
+  height: calc(742 * var(--pp-scale));
+  pointer-events: none;
+}
+
+.rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+/* Bone strokes on the blue ground: two solid rings (r 137 · 361) frame the dashed
+   ring (r 241) that sweeps perpetually (see useServicesOrbit). */
+.ringSolid {
+  fill: none;
+  stroke: rgba(247, 244, 240, 0.5);
+  stroke-width: 1.5;
+}
+.ringDash {
+  fill: none;
+  stroke: rgba(247, 244, 240, 0.45);
+  stroke-width: 1.5;
+  stroke-dasharray: 7 10;
+  stroke-linecap: round;
+}
+
+/* The three profile chips — pale bone tags carrying the locked profile names, each
+   centred on its ring point and rotated tangent to the arc (all three sit on one
+   up-left radial, so they share the same ~-38° tilt). Positioned by their CENTRE
+   (translate -50%) so the rotate composes cleanly; the reveal animates opacity only,
+   never transform, so this tilt is preserved. */
+.chip {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(-38deg);
+  transform-origin: 50% 50%;
+  padding: calc(8 * var(--pp-scale)) calc(16 * var(--pp-scale));
+  border-radius: calc(8 * var(--pp-scale));
+  background: var(--pp-bone);
+  color: var(--pp-ink);
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(17 * var(--pp-scale));
+  letter-spacing: calc(-0.2 * var(--pp-scale));
+  white-space: nowrap;
+  box-shadow: 0 calc(4 * var(--pp-scale)) calc(18 * var(--pp-scale))
+    rgba(22, 23, 24, 0.14);
+}
+/* Ring points (field %): Essentiel r137 → (299,264); Signature r241 → (235,183);
+   Exception r361 → (160,89). */
+.chip[data-ring="r1"] {
+  left: 38.93%;
+  top: 35.58%;
+}
+.chip[data-ring="r2"] {
+  left: 30.6%;
+  top: 24.66%;
+}
+.chip[data-ring="r3"] {
+  left: 20.83%;
+  top: 11.99%;
+}
+
+/* Centre P-disc (node 158:354 + Group 160:404) — a 78px bone disc (10.16% of the
+   field) holding the P-mark. Positioned by top-left % (NOT translate) so the load
+   pop (scale) can't wipe the centring. */
+.mark {
+  position: absolute;
+  left: 44.92%;
+  top: 44.74%;
+  width: 10.16%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--pp-bone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.mark svg {
+  height: 42%;
+  width: auto;
+}
+/* Match the navbar logo: ink stem + blue blade on the bone disc. */
+.mark :global(.lk-mark__stem) {
+  fill: var(--pp-ink);
+}
+.mark :global(.lk-mark__blade) {
+  fill: var(--pp-blue);
+}
+
+/* ── Intro armed-hidden states ───────────────────────────────────────────────
+   When JS is present (html.js, set before first paint) the copy paints hidden so
+   useServicesHero can reveal it with no flash. Without JS — or under reduced motion
+   (the hook overrides inline) — it stays settled. The orbit arms itself in the hook. */
+:global(html.js) .headline,
+:global(html.js) .body,
+:global(html.js) .badge {
+  opacity: 0;
+}
+
+/* ── Tablet + mobile reflow (<1024px) ────────────────────────────────────────
+   Below 1024 the section stops riding the 1512 artboard (which would shrink type to
+   nothing) and reflows into a single left-aligned column: copy first, then the orbit
+   as a centred, scaled flow item below. */
+@media (max-width: 1023px) {
+  .frame {
+    position: static;
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--pp-stack);
+    /* top pad clears the fixed navbar; sides are the shared gutter */
+    padding: calc(var(--pp-tap) + 64px) var(--pp-gutter) var(--pp-stack);
+  }
+
+  .copy {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    gap: var(--pp-stack);
+  }
+  .headline {
+    font-size: var(--pp-fs-display);
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+  }
+  .body {
+    width: 100%;
+    font-size: var(--pp-fs-body);
+  }
+  .badgeText {
+    white-space: normal;
+  }
+
+  /* Orbit — a centred, fixed-aspect flow item sized to the column. Its own --pp-scale
+     fits the 768-wide field to ~viewport width; the hero still clips any bleed. */
+  .orbit {
+    position: relative;
+    left: auto;
+    top: auto;
+    align-self: center;
+    --pp-scale: min(100vw / 820, 0.62px);
+    width: calc(768 * var(--pp-scale));
+    height: calc(742 * var(--pp-scale));
+  }
+}
