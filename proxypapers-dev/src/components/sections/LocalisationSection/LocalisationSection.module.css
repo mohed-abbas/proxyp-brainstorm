@@ -14,22 +14,22 @@
   overflow: hidden;
 }
 
-/* The 1150.53-wide artboard envelope, centred — the 634.7-tall positioning context for
-   the absolutely-placed content column (z 2) and the corner cards (z 1). */
+/* The 1154-wide artboard envelope, centred — the 536-tall positioning context for the
+   absolutely-placed content column (z 1) and the centre-clustered cards (z 2). */
 .frame {
   position: relative;
-  width: calc(1150.53 * var(--pp-scale));
-  height: calc(634.7 * var(--pp-scale));
+  width: calc(1154 * var(--pp-scale));
+  height: calc(536 * var(--pp-scale));
   margin-inline: auto;
 }
 
-/* ── Centred text column (node 142:481) ──────────────────────────────────────── */
+/* ── Centred text column (node 142:575) — vertically + horizontally centred. ───── */
 .content {
   position: absolute;
-  top: calc(141 * var(--pp-scale));
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
+  transform: translate(-50%, -50%);
+  z-index: 1;
   width: calc(748 * var(--pp-scale));
   display: flex;
   flex-direction: column;
@@ -37,6 +37,8 @@
   gap: calc(30 * var(--pp-scale));
   text-align: center;
 }
+/* The text sits BELOW the cards (z 1 < z 2) so the clustered cards frost over the
+   headline at the start of the reveal, then uncover it as they deal out. */
 
 .heading {
   width: calc(622 * var(--pp-scale));
@@ -129,7 +131,7 @@
   padding: 0;
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
 }
 .cardWrap {
   position: absolute;
@@ -159,10 +161,21 @@
   align-items: flex-start;
   gap: calc(7 * var(--pp-scale));
 }
+/* White rounded badge holding the blue file mark (node 142:493). */
+.cardBadge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: calc(38 * var(--pp-scale));
+  height: calc(38 * var(--pp-scale));
+  border-radius: calc(7 * var(--pp-scale));
+  background: #fff;
+  overflow: hidden;
+}
 .fileIcon {
   flex: none;
-  width: calc(24.855 * var(--pp-scale));
-  height: calc(24.855 * var(--pp-scale));
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
   color: var(--pp-blue);
 }
 .cardLabel {
@@ -182,42 +195,47 @@
   color: rgba(247, 244, 240, 0.7);
 }
 
-/* Corner placements (AABB top-left + the inner card's rotation). */
-.card_tax {
-  left: calc(2.08 * var(--pp-scale));
-  top: calc(1.21 * var(--pp-scale));
-  width: calc(235.884 * var(--pp-scale));
-  height: calc(210.198 * var(--pp-scale));
-}
-.card_tax .card {
-  transform: rotate(-13.74deg);
-}
+/* Contracted clustered placements (AABB top-left + the inner card's rotation), stacked
+   Real Estate (back) → Succession → Insurance → Tax (front) per the Figma deck. */
 .card_realEstate {
-  left: calc(909.08 * var(--pp-scale));
-  top: 0;
-  width: calc(237.247 * var(--pp-scale));
-  height: calc(212.611 * var(--pp-scale));
+  left: calc(459.35 * var(--pp-scale));
+  top: calc(132.5 * var(--pp-scale));
+  width: calc(231.298 * var(--pp-scale));
+  height: calc(203.998 * var(--pp-scale));
+  z-index: 1;
 }
 .card_realEstate .card {
-  transform: rotate(14.32deg);
+  transform: rotate(11.53deg);
 }
 .card_succession {
-  left: 0;
-  top: calc(389.07 * var(--pp-scale));
-  width: calc(258.437 * var(--pp-scale));
-  height: calc(245.626 * var(--pp-scale));
+  left: calc(376.32 * var(--pp-scale));
+  top: calc(100.79 * var(--pp-scale));
+  width: calc(229.354 * var(--pp-scale));
+  height: calc(201.416 * var(--pp-scale));
+  z-index: 2;
 }
 .card_succession .card {
-  transform: rotate(30deg);
+  transform: rotate(-10.64deg);
 }
 .card_insurance {
-  left: calc(892.09 * var(--pp-scale));
-  top: calc(389.07 * var(--pp-scale));
-  width: calc(258.437 * var(--pp-scale));
-  height: calc(245.626 * var(--pp-scale));
+  left: calc(549.6 * var(--pp-scale));
+  top: calc(192.49 * var(--pp-scale));
+  width: calc(232.801 * var(--pp-scale));
+  height: calc(206.012 * var(--pp-scale));
+  z-index: 3;
 }
 .card_insurance .card {
-  transform: rotate(-30deg);
+  transform: rotate(12.23deg);
+}
+.card_tax {
+  left: calc(369.38 * var(--pp-scale));
+  top: calc(228.46 * var(--pp-scale));
+  width: calc(237.253 * var(--pp-scale));
+  height: calc(212.083 * var(--pp-scale));
+  z-index: 4;
+}
+.card_tax .card {
+  transform: rotate(-14.43deg);
 }
 
 /* ── Tablet + mobile (<1024) ──────────────────────────────────────────────────

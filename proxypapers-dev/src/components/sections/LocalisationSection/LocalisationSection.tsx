@@ -3,13 +3,17 @@ import content from "@/data/en/approach.json";
 
 const { pill, title, subtitle, body, features, cards } = content.localisation;
 
-// LocalisationSection — ported 1:1 from Figma (node 142:574, artboard 1150.53×634.7).
-// The Papers Box reveal: on the Chinese-Black ground, a centred column ("Hosted in
-// France" pill → "The Papers Box" accent + "Your Secure Digital Framework." → body →
-// two rows of feature checks) with four glassy, rotated file cards floating at the
-// corners (Tax · Real Estate · Succession · Insurance). Lengths are literal artboard
-// px * var(--pp-scale); below 1024 it reflows to a centred fluid column and the
-// decorative cards drop away.
+// LocalisationSection — ported 1:1 from Figma "Contracted Version" (node 142:519,
+// artboard 1154×536). The Papers Box, in its pre-expansion state: on the Chinese-Black
+// ground, a vertically-centred column ("Hosted in France" pill → "The Papers Box"
+// accent + "Your Secure Digital Framework." → body → two rows of feature checks) with
+// the four glassy, rotated file cards (Tax · Real Estate · Succession · Insurance)
+// clustered as a stack over the centre, frosting the text behind them. Lengths are
+// literal artboard px * var(--pp-scale); below 1024 it reflows to a centred fluid
+// column and the cards drop away.
+//
+// This is the static base; the cards will be animated out to the corners (the expanded
+// layout, Figma 142:574) as a separate step.
 
 // lucide/check (Figma node 142:549) — currentColor stroke so it themes via CSS.
 function CheckIcon() {
@@ -88,15 +92,17 @@ export function LocalisationSection() {
           </ul>
         </div>
 
-        {/* Four glassy, rotated file cards floating at the corners (nodes 142:448–480).
-            Decorative product illustration — hidden from assistive tech and dropped
-            below 1024. */}
+        {/* Four glassy, rotated file cards clustered as a stack over the centre (nodes
+            142:491–518), frosting the text behind them. Decorative product illustration
+            — hidden from assistive tech and dropped below 1024. */}
         <ul className={s.cards} aria-hidden="true">
           {cards.map((card) => (
             <li key={card.key} className={`${s.cardWrap} ${s[`card_${card.key}`]}`}>
               <div className={s.card}>
                 <div className={s.cardInner}>
-                  <FileIcon />
+                  <span className={s.cardBadge}>
+                    <FileIcon />
+                  </span>
                   <p className={s.cardLabel}>{card.label}</p>
                   <p className={s.cardMeta}>{card.meta}</p>
                 </div>
