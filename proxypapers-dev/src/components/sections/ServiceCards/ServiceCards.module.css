@@ -371,6 +371,9 @@
     width: 100%;
     height: auto;
     min-height: 120px;
+    /* Restore the Figma 14px inner inset (lost when .tileInner drops its absolute
+       left/top/right offsets below), so the icon + label don't jam into the corner. */
+    padding: 14px;
     border-radius: 14px;
   }
   .tileInner {
@@ -379,6 +382,7 @@
     top: auto;
     right: auto;
     height: 100%;
+    gap: 8px;
     justify-content: flex-end;
   }
   .tileIcon {
