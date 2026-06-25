@@ -10,12 +10,13 @@ type Styles = Record<string, string>;
 type Tile = { icon: string; label: string; x: number; y: number; w: number; h: number };
 type Card = (typeof data.cards)[number];
 
-// Decorative sparkle bullet (Figma "Star 1", node 160:464) — a four-point star in ink,
-// marking the profile description.
+// Decorative sparkle bullet (Figma "Star 1", node 160:464) — a 12-point burst star marking
+// the profile description. Exact vector path exported from Figma (27×28); `currentColor`
+// lets the card theme drive the fill (ink on the light card, bone on the dark cards).
 function Sparkle({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 0c.5 6.4 5.1 11 11.5 11.5C17.1 12 12.5 16.6 12 23c-.5-6.4-5.1-11-11.5-11.5C6.9 11 11.5 6.4 12 0z" />
+    <svg className={className} viewBox="0 0 27 28" fill="currentColor" aria-hidden="true">
+      <path d="M13.3164 0L14.9689 8.9142L21.5454 2.67376L17.6426 10.8568L26.6312 9.67376L18.6639 14L26.6312 18.3262L17.6426 17.1432L21.5454 25.3262L14.9689 19.0858L13.3164 28L11.6639 19.0858L5.08741 25.3262L8.99017 17.1432L0.00161457 18.3262L7.96888 14L0.00161457 9.67376L8.99017 10.8568L5.08741 2.67376L11.6639 8.9142L13.3164 0Z" />
     </svg>
   );
 }
