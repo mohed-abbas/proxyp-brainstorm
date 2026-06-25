@@ -1,5 +1,6 @@
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { useLenis } from "@/lib/lenis/LenisProvider";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
@@ -23,6 +24,8 @@ type Styles = Record<string, string>;
 // page is the settled flow (header above card above band), and this hook clears any
 // inline props and returns — every word of the header stays readable.
 export function useContactIntro(scope: RefObject<HTMLElement | null>, s: Styles) {
+  const lenisRef = useLenis();
+
   useGSAP(
     () => {
       const q = gsap.utils.selector(scope);
@@ -42,6 +45,33 @@ export function useContactIntro(scope: RefObject<HTMLElement | null>, s: Styles)
 
       const vh = window.innerHeight;
 
+      // Lock scroll for the duration of the intro so a stray wheel/trackpad gesture
+      // can't fight the curtain (which would desync the title/lead/card poses). Unlike
+      // the onboarding pages, /contact has no curtain, so LenisProvider leaves scroll
+      // RUNNING — we must stop it ourselves and release on completion.
+      //
+      // Lenis lives in an ancestor (LenisProvider) whose effect runs AFTER this
+      // descendant effect (React flushes effects child→parent), so lenisRef.current is
+      // still null right now and a plain stop() here would no-op. Poll a few frames
+      // until the ref is populated, then stop. `cancelled` lets unlock abort a pending
+      // lock (fast unmount) and guarantees release.
+      let cancelled = false;
+      const tryLock = (frame = 0) => {
+        if (cancelled) return;
+        const lenis = lenisRef?.current;
+        if (lenis) {
+          lenis.stop();
+        } else if (frame < 120) {
+          requestAnimationFrame(() => tryLock(frame + 1));
+        }
+      };
+      const unlock = () => {
+        cancelled = true;
+        lenisRef?.current?.start();
+        ScrollTrigger.refresh();
+      };
+      tryLock();
+
       // Arm: title container visible but its words masked below; lead offset + hidden;
       // card waiting below the fold (clipped by the stage's overflow) at FULL opacity —
       // it slides up as an opaque surface so it cleanly wipes over the descending lead
@@ -51,7 +81,7 @@ export function useContactIntro(scope: RefObject<HTMLElement | null>, s: Styles)
       gsap.set(lead, { opacity: 0, y: 24 });
       gsap.set(card, { yPercent: 110, opacity: 1 });
 
-      const tl = gsap.timeline({ delay: 0.2 });
+      const tl = gsap.timeline({ delay: 0.2, onComplete: unlock });
 
       // 1. ENTRANCE — site reveal: words rise into their masks, lead fades up under.
       tl.to(
@@ -85,6 +115,10 @@ export function useContactIntro(scope: RefObject<HTMLElement | null>, s: Styles)
         { yPercent: 0, duration: 1.3, ease: "power2.out", clearProps: "transform" },
         exitAt + exitDur * 0.9,
       );
+
+      // Safety net: if the page unmounts mid-intro (client nav away), onComplete never
+      // fires — restore scroll on cleanup so we never strand Lenis stopped.
+      return unlock;
     },
     { scope },
   );

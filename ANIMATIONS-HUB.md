@@ -653,6 +653,15 @@ on scroll).
      stage never reads empty. `clearProps:"transform"` on finish. Card stays FULL
      opacity the whole slide — it wipes over the descending lead as an opaque surface;
      fading it let the dark ground + lead ghost through.
+- **Scroll lock:** the intro locks Lenis for its duration (`lenis.stop()` → `start()`
+  on the timeline's `onComplete`) so a stray wheel/trackpad gesture can't fight the
+  curtain and desync the poses. `/contact` has no onboarding curtain, so `LenisProvider`
+  leaves scroll running — the hook stops it itself. Because `LenisProvider` is an
+  ancestor, its effect (which populates `lenisRef.current`) runs AFTER this descendant
+  effect, so the ref is null at first; the hook polls a few `rAF` frames until it's set,
+  then stops (a `cancelled` flag lets the cleanup / `onComplete` abort a pending lock and
+  guarantees release on unmount). Mobile / reduced-motion / no-JS never lock (early
+  return). After the card settles, scroll releases and the band + footer scroll normally.
 - **Source ref:** none (new page, no design-final HTML); pattern = leeroy.ca/contact;
   entrance reuses the shared `.r-word` reveal primitive + `SplitText`.
 - **Implementation note:** `src/lib/animations/useContactIntro.ts` (`useGSAP`, scope =
