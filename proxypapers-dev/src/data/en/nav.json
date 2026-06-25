@@ -14,7 +14,7 @@
     { "label": "Approach", "href": "#" },
     { "label": "Referrers", "href": "/referrals" },
     { "label": "Services", "href": "/services" },
-    { "label": "Contact", "href": "#" }
+    { "label": "Contact", "href": "/contact" }
   ],
   "social": [
     { "label": "Instagram", "href": "#", "icon": "/icons/icon-instagram.svg" },

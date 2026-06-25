@@ -626,3 +626,49 @@ on scroll).
 - **Feasibility / constraints:** depends on the hero card + navbar logo being laid
   out (they're armed-hidden via opacity but keep layout, so their rects are exact);
   reduced motion skips the whole handoff (settled hero).
+
+## Contact
+
+### Contact intro — entrance reveal → hold → "curtain split" exit
+- **Where:** `/contact` first screen — the header (title "Let's set a meeting." +
+  lead) and the request-form card, inside a `.stage`. Title rendered via `SplitText`.
+- **User-facing description:** "On load the title reveals word-by-word (the site's
+  slide-up) with the lead fading up under it; it holds; then the title slides up out
+  the top and the lead drops down out the bottom — both scaling up as they go, like
+  they're flying out of the screen — while the form card slides up into the centre."
+  Inspired by leeroy.ca/contact.
+- **Trigger:** on load (auto-play once on mount). NOT scroll-driven — after it settles
+  the user scrolls normally to reach the 01/02/03 band + footer below the stage.
+- **Mechanics:** one `gsap.timeline({ delay: 0.2 })`, three beats:
+  1. ENTRANCE — title words `.r-word__in` `yPercent 110→0`, dur 0.8 `power3.out`,
+     stagger 0.06 @0; lead `opacity 0→1, y 24→0`, dur 0.7 `power3.out` @0.35.
+  2. HOLD — gap until `exitAt = 1.6`.
+  3. EXIT — title `y: -innerHeight*0.62, scale: 1→1.5, opacity: 0`, dur 1.15
+     `power2.in` (accelerates out = toward-camera); lead mirrors `y: +…, scale 1.5,
+     opacity 0` (equal speed, opposite directions = the curtain). Card armed
+     `yPercent 110, opacity 1` (waits below the fold, clipped by the stage's
+     `overflow:hidden`) holds until the header is ~90% gone, then tweens `yPercent 0`,
+     dur 1.3 `power2.out` @`exitAt + exitDur*0.9` (≈2.64s) — its own beat, glides up and
+     decelerates into place; the header fade's last ~10% bridges the handoff so the
+     stage never reads empty. `clearProps:"transform"` on finish. Card stays FULL
+     opacity the whole slide — it wipes over the descending lead as an opaque surface;
+     fading it let the dark ground + lead ghost through.
+- **Source ref:** none (new page, no design-final HTML); pattern = leeroy.ca/contact;
+  entrance reuses the shared `.r-word` reveal primitive + `SplitText`.
+- **Implementation note:** `src/lib/animations/useContactIntro.ts` (`useGSAP`, scope =
+  section ref). The first screen becomes a 100vh `.stage` ONLY under
+  `html.js + @media (min-width:1024px) and (prefers-reduced-motion: no-preference)`
+  (header `position:absolute; inset:0; width:auto` flex-centred; card centred in flow).
+  The hook's JS guards mirror that media query EXACTLY — else it would hide a header +
+  card with no stage to play in. Title + lead + card armed `opacity:0` in CSS to kill a
+  first-frame flash; the hook sets the real start poses (word masks, lead offset, card
+  below the fold) pre-paint. `.title :global(.r-word){ padding-bottom:0.1em }` gives the
+  "g" descender headroom in the mask (at rest and during the reveal).
+- **Feasibility / constraints:** reduced motion / mobile (<1024) / no-JS → the stage
+  rule never applies and the page is the settled static flow (header above card above
+  band), so the lead copy is always readable; the hook early-returns with
+  `clearProps:"all"` on title/lead/card/words. `y` uses a px value computed from
+  `innerHeight` (not a `vh` string) so GSAP gets a concrete transform;
+  `clearProps:"transform"` on the card avoids the inline-transform-vs-breakpoint
+  shadowing gotcha on a later resize. Timing (`exitAt`, durations, `scale` amount) is
+  the easy knob to tune.

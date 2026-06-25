@@ -1,0 +1,47 @@
+{
+  "header": {
+    "title": { "lead": "Let's set a ", "accent": "meeting." },
+    "lead": "The discovery meeting lasts one hour. It is on us and without commitment. Its purpose is to understand your situation and to check together that there is a fit. We reply within two business days."
+  },
+  "form": {
+    "eyebrow": "DISCOVERY MEETING",
+    "title": "Tell us a little, and we'll be in touch.",
+    "audience": {
+      "individual": "I’m an individual",
+      "advisor": "I’m a referring advisor"
+    },
+    "fields": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone (optional)",
+      "situation": "A few words on your situation (optional)",
+      "source": "Where did you hear about us? (optional)"
+    },
+    "sources": [
+      "An advisor or notary",
+      "A web search",
+      "Press or media",
+      "Word of mouth",
+      "Other"
+    ],
+    "consent": {
+      "lead": "I have read and accept the ",
+      "link": "privacy policy",
+      "href": "#"
+    },
+    "submit": "Send my request",
+    "note": "We reply within two business days"
+  },
+  "assurances": [
+    { "n": "01", "text": "One hour - focused on your situation" },
+    { "n": "02", "text": "On us - no commitment, no preparation" },
+    { "n": "03", "text": "A reply within two business days" }
+  ],
+  "alt": {
+    "title": "If you prefer to go faster.",
+    "body": "You can also reach us directly by email or phone, during business hours.",
+    "email": "contact@proxy-papers.fr",
+    "phone": "+33 (0)0 00 00 00 00",
+    "hours": "Mon–Fri · 9:00–18:00"
+  }
+}

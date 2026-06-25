@@ -1,0 +1,647 @@
+/* Contact page. Ported 1:1 from the Figma 1512×2479 artboard (node 239:3): every
+   element is pinned with literal artboard px * var(--pp-scale), so the composition
+   freezes at its design size above 1512px and scales down proportionally below. This
+   is a FLOW section (taller than one screen), so it keeps the width-only --pp-scale
+   from :root (1px cap) and sizes with min-height — never a fixed full-section height.
+   The Chinese-Black ground carries the meeting statement, the bone request-form card,
+   and the dark form-footer band; the shared blue Footer follows. */
+
+.contact {
+  position: relative;
+  width: 100%;
+  background: var(--pp-ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Top clears the fixed navbar and lands the header at the artboard's y=192; bottom
+     is the artboard gap (1576 → 1664) before the footer. */
+  padding: calc(192 * var(--pp-scale)) 0 calc(88 * var(--pp-scale));
+}
+
+/* ── Header (node 595:3) — 835-wide centred statement + intro. ─────────────── */
+.header {
+  width: calc(835 * var(--pp-scale));
+  text-align: center;
+  /* Gap to the form card (Figma: content bottom 423 → form top 511). */
+  margin-bottom: calc(88 * var(--pp-scale));
+}
+.title {
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(95 * var(--pp-scale));
+  line-height: 0.95;
+  letter-spacing: calc(-1.9 * var(--pp-scale));
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+.accent {
+  color: var(--pp-blue);
+}
+/* Mask headroom so the descender (the "g" in "meeting.") isn't clipped by the per-word
+   reveal mask — both at rest and during the slide-up. */
+.title :global(.r-word) {
+  padding-bottom: 0.1em;
+}
+.lead {
+  margin: calc(27 * var(--pp-scale)) auto 0;
+  width: calc(835 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(25 * var(--pp-scale));
+  line-height: 1.2;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* ── Intro stage (node 250:730 region) ────────────────────────────────────────
+   Base / static / no-JS / reduced-motion: a plain centred column — header above the
+   card, the settled layout. Under html.js + motion-allowed desktop it becomes a 100vh
+   frame for the curtain-split intro (see the motion block at the foot of this file). */
+.stage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Bone card (node 239:81) — the request form. */
+.card {
+  width: calc(1131 * var(--pp-scale));
+  background: var(--pp-bone);
+  border-radius: calc(20 * var(--pp-scale));
+  /* 34 top/bottom, 115 sides → the 900-wide inner content column (Figma left 115). */
+  padding: calc(34 * var(--pp-scale)) calc(115 * var(--pp-scale));
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Form head (node 242:454) — centred eyebrow + title, 419 wide. */
+.formHead {
+  width: calc(419 * var(--pp-scale));
+  margin: 0 auto calc(40 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(12 * var(--pp-scale));
+  text-align: center;
+}
+.eyebrow {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.5;
+  letter-spacing: calc(0.16 * var(--pp-scale));
+  text-transform: uppercase;
+  color: var(--pp-blue);
+}
+.formTitle {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(31 * var(--pp-scale));
+  line-height: 1.05;
+  letter-spacing: calc(-0.93 * var(--pp-scale));
+  color: var(--pp-ink);
+}
+
+/* Audience toggle (node 242:408) — segmented control on a grey track. */
+.toggle {
+  display: flex;
+  width: 100%;
+  height: calc(51 * var(--pp-scale));
+  padding: calc(4 * var(--pp-scale)) calc(5 * var(--pp-scale));
+  background: #e0e0e0;
+  border-radius: calc(47 * var(--pp-scale));
+  margin-bottom: calc(44 * var(--pp-scale));
+}
+.seg {
+  flex: 1;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  border-radius: calc(10 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(20 * var(--pp-scale));
+  letter-spacing: calc(-0.6 * var(--pp-scale));
+  color: rgba(22, 23, 24, 0.5);
+  transition:
+    background-color 0.4s var(--pp-ease-out),
+    color 0.4s var(--pp-ease-out);
+}
+.seg[data-active="true"] {
+  background: var(--pp-blue);
+  border-radius: calc(60 * var(--pp-scale));
+  color: #fff;
+}
+
+/* Fields (node 242:460) — a column of underlined rows, gap 48. */
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: calc(48 * var(--pp-scale));
+}
+
+/* Underlined input row (node 242:413 …) — label as placeholder, ink underline that
+   turns Proxy Blue on focus (Figma shows the active field's underline in blue). */
+.field {
+  width: 100%;
+  height: calc(43 * var(--pp-scale));
+  border: 0;
+  border-bottom: 1px solid rgba(22, 23, 24, 0.4);
+  background: transparent;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  letter-spacing: calc(-0.48 * var(--pp-scale));
+  color: var(--pp-ink);
+  border-radius: 0;
+}
+.field::placeholder {
+  color: rgba(22, 23, 24, 0.5);
+  opacity: 1;
+}
+.field:focus {
+  outline: none;
+  border-bottom-color: var(--pp-blue);
+}
+
+/* Source select (node 242:434) — same underline row, native select + chevron. */
+.selectRow {
+  position: relative;
+  width: 100%;
+  height: calc(43 * var(--pp-scale));
+  border-bottom: 1px solid rgba(22, 23, 24, 0.4);
+}
+.select {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: calc(30 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  letter-spacing: calc(-0.48 * var(--pp-scale));
+  /* Resting tone matches the Figma label placeholder (node 242:437, 0.4); the open
+     option list renders in full ink. */
+  color: rgba(22, 23, 24, 0.4);
+  border-radius: 0;
+}
+.select option {
+  color: var(--pp-ink);
+}
+.select:focus {
+  outline: none;
+}
+.selectRow:focus-within {
+  border-bottom-color: var(--pp-blue);
+}
+.chevron {
+  position: absolute;
+  right: 0;
+  top: calc(50% - 9 * var(--pp-scale));
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
+  color: rgba(22, 23, 24, 0.5);
+  pointer-events: none;
+}
+
+/* Consent (node 242:448) — checkbox + label with a blue privacy-policy link. */
+.consent {
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--pp-scale));
+  cursor: pointer;
+}
+.check {
+  flex: none;
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
+  margin: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: calc(2 * var(--pp-scale));
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+.check:checked {
+  background: var(--pp-blue);
+  border-color: var(--pp-blue);
+}
+.check:checked::after {
+  content: "";
+  position: absolute;
+  left: calc(5.5 * var(--pp-scale));
+  top: calc(2 * var(--pp-scale));
+  width: calc(5 * var(--pp-scale));
+  height: calc(9 * var(--pp-scale));
+  border: solid #fff;
+  border-width: 0 calc(2 * var(--pp-scale)) calc(2 * var(--pp-scale)) 0;
+  transform: rotate(45deg);
+}
+.check:focus-visible {
+  outline: 2px solid var(--pp-blue);
+  outline-offset: 2px;
+}
+.consentText {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  color: var(--pp-ink);
+}
+.consentLink {
+  color: var(--pp-blue);
+  text-decoration: underline;
+}
+
+/* Submit (node 242:453) — full-width blue pill + caption. */
+.submitRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(20 * var(--pp-scale));
+}
+.submit {
+  width: 100%;
+  height: calc(43 * var(--pp-scale));
+  border: 0;
+  cursor: pointer;
+  background: var(--pp-blue);
+  border-radius: calc(45 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  color: var(--pp-bone);
+  transition:
+    background-color 0.4s var(--pp-ease-out),
+    transform 0.3s var(--pp-ease-out);
+}
+.submit:hover,
+.submit:focus-visible {
+  background: #6ea1ff;
+  transform: translateY(-1px);
+  outline: none;
+}
+.note {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(14 * var(--pp-scale));
+  line-height: 1.2;
+  color: rgba(22, 23, 24, 0.7);
+  text-align: center;
+}
+
+/* ── Form-footer band (node 242:518) — assurances list + alt contact. ─────── */
+.footerBand {
+  width: calc(1131 * var(--pp-scale));
+  margin-top: calc(49 * var(--pp-scale));
+  display: flex;
+  align-items: center;
+  gap: calc(234 * var(--pp-scale));
+}
+
+/* Assurances (node 242:517) — three rows framed by hairlines, blue index + bone text. */
+.assurances {
+  width: calc(440 * var(--pp-scale));
+  list-style: none;
+  border-top: 1px solid rgba(247, 244, 240, 0.15);
+}
+.assurance {
+  display: flex;
+  align-items: center;
+  gap: calc(15 * var(--pp-scale));
+  height: calc(50 * var(--pp-scale));
+  border-bottom: 1px solid rgba(247, 244, 240, 0.15);
+}
+.assuranceNum {
+  flex: none;
+  width: calc(25 * var(--pp-scale));
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(20 * var(--pp-scale));
+  line-height: 1;
+  color: var(--pp-blue);
+}
+.assuranceText {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(20 * var(--pp-scale));
+  line-height: 1;
+  color: var(--pp-bone);
+}
+
+/* Alt contact (node 242:514) — right-aligned copy + the two contact chips. */
+.alt {
+  width: calc(457 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: calc(42 * var(--pp-scale));
+}
+.altCopy {
+  width: calc(351 * var(--pp-scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(27 * var(--pp-scale));
+  text-align: right;
+}
+.altTitle {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(31 * var(--pp-scale));
+  line-height: 1.05;
+  color: var(--pp-bone);
+}
+.altBody {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1.2;
+  color: rgba(247, 244, 240, 0.7);
+}
+.altContacts {
+  width: 100%;
+  display: flex;
+  gap: calc(20 * var(--pp-scale));
+}
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: calc(14 * var(--pp-scale));
+  text-decoration: none;
+}
+.contactIcon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(40 * var(--pp-scale));
+  height: calc(40 * var(--pp-scale));
+  border: 1px solid rgba(247, 244, 240, 0.2);
+  border-radius: calc(10 * var(--pp-scale));
+  color: var(--pp-blue);
+  transition: border-color 0.3s var(--pp-ease-out);
+}
+.contactItem:hover .contactIcon {
+  border-color: rgba(247, 244, 240, 0.5);
+}
+.contactGlyph {
+  width: calc(18 * var(--pp-scale));
+  height: calc(18 * var(--pp-scale));
+}
+.contactLabel {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(16 * var(--pp-scale));
+  line-height: 1;
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+.contactPhone {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10 * var(--pp-scale));
+}
+.contactHours {
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(12 * var(--pp-scale));
+  line-height: 1;
+  color: rgba(247, 244, 240, 0.7);
+  white-space: nowrap;
+}
+
+/* ── Tablet + mobile reflow (<1024px) ────────────────────────────────────────
+   Below 1024 the page stops riding the 1512 artboard (which would shrink type to
+   nothing) and reflows into a single centred column on fluid tokens: header, then the
+   card, then the form-footer band stacked (assurances above the alt-contact). */
+@media (max-width: 1023px) {
+  .contact {
+    padding: calc(var(--pp-tap) + 64px) var(--pp-gutter) var(--pp-stack);
+    gap: var(--pp-stack);
+  }
+
+  .stage,
+  .header,
+  .lead,
+  .card,
+  .footerBand {
+    width: 100%;
+    max-width: 680px;
+  }
+  .stage {
+    gap: var(--pp-stack);
+  }
+  .header {
+    margin-bottom: 0;
+  }
+  .footerBand {
+    margin-top: 0;
+  }
+  .title {
+    font-size: var(--pp-fs-display);
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+    white-space: normal;
+  }
+  .lead {
+    margin-top: var(--pp-gutter);
+    font-size: var(--pp-fs-body);
+  }
+
+  .card {
+    border-radius: 20px;
+    padding: clamp(24px, 5vw, 40px);
+  }
+  .formHead {
+    width: 100%;
+    margin-bottom: clamp(28px, 6vw, 40px);
+    gap: 10px;
+  }
+  .eyebrow {
+    font-size: var(--pp-fs-small);
+    letter-spacing: 0.1em;
+  }
+  .formTitle {
+    font-size: var(--pp-fs-h3);
+    letter-spacing: -0.01em;
+  }
+
+  .toggle {
+    height: auto;
+    padding: 5px;
+    border-radius: 47px;
+    margin-bottom: clamp(28px, 6vw, 40px);
+  }
+  .seg {
+    padding: 12px 8px;
+    font-size: var(--pp-fs-body);
+    letter-spacing: 0;
+    border-radius: 60px;
+    line-height: 1.1;
+  }
+
+  .fields {
+    gap: clamp(24px, 5vw, 40px);
+  }
+  .field,
+  .selectRow {
+    height: 44px;
+  }
+  .field,
+  .select {
+    font-size: var(--pp-fs-body);
+    letter-spacing: 0;
+  }
+  .select {
+    padding-right: 28px;
+  }
+  .chevron {
+    top: calc(50% - 9px);
+    width: 18px;
+    height: 18px;
+  }
+
+  .consent {
+    gap: 8px;
+  }
+  .check {
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+  }
+  .check:checked::after {
+    left: 5.5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border-width: 0 2px 2px 0;
+  }
+  .consentText {
+    font-size: var(--pp-fs-body);
+  }
+  .submit {
+    height: 48px;
+    border-radius: 45px;
+    font-size: var(--pp-fs-body);
+  }
+  .note {
+    font-size: var(--pp-fs-small);
+  }
+
+  /* Band → stacked column: assurances first, then the alt-contact (left-aligned). */
+  .footerBand {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--pp-stack);
+  }
+  .assurances {
+    width: 100%;
+    border-top-color: rgba(247, 244, 240, 0.18);
+  }
+  .assurance {
+    height: 56px;
+    gap: 14px;
+    border-bottom-color: rgba(247, 244, 240, 0.18);
+  }
+  .assuranceNum {
+    width: 28px;
+    font-size: var(--pp-fs-lead);
+  }
+  .assuranceText {
+    font-size: var(--pp-fs-lead);
+    line-height: 1.15;
+  }
+
+  .alt {
+    width: 100%;
+    align-items: flex-start;
+    gap: clamp(24px, 5vw, 42px);
+  }
+  .altCopy {
+    width: 100%;
+    text-align: left;
+  }
+  .altTitle {
+    font-size: var(--pp-fs-h3);
+  }
+  .altBody {
+    font-size: var(--pp-fs-body);
+  }
+  .altContacts {
+    flex-wrap: wrap;
+    gap: clamp(16px, 4vw, 24px) clamp(20px, 5vw, 32px);
+  }
+  .contactIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  .contactGlyph {
+    width: 18px;
+    height: 18px;
+  }
+  .contactLabel {
+    font-size: var(--pp-fs-body);
+  }
+  .contactPhone {
+    gap: 6px;
+  }
+  .contactHours {
+    font-size: var(--pp-fs-small);
+  }
+}
+
+/* ── Intro motion layout (html.js + motion-allowed desktop only) ──────────────
+   Turns the first screen into a 100vh stage for the curtain-split intro
+   (useContactIntro): the header floats centred (its title + lead about to part) and
+   the card sits centred in flow, rising in on mount. Gated to match the hook's guards
+   EXACTLY (≥1024 + no-preference + html.js) — without JS or under reduced motion the
+   base static layout above stands, so the header copy is never hidden. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  :global(html.js) .contact {
+    /* Drop the static top inset so the 100vh stage centres against the true viewport. */
+    padding-top: 0;
+  }
+  :global(html.js) .stage {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    justify-content: center;
+    /* Clip the title/lead as they exit the top/bottom edges. */
+    overflow: hidden;
+  }
+  :global(html.js) .header {
+    position: absolute;
+    inset: 0;
+    /* The header is a full-stage absolute overlay (so it can centre, then part). It
+       holds only the non-interactive title + lead, so it must never eat pointer events —
+       otherwise, once it exits at opacity:0, its box still covers the card and the form
+       fields become unclickable. */
+    pointer-events: none;
+    /* Reset the base 835-wide box so inset:0 can stretch the header full-width; its
+       flex centring then centres the title + lead in the viewport (not the left edge). */
+    width: auto;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Arm the header + card hidden so nothing flashes before the hook sets the start
+     poses (title word masks, lead offset, card below the fold). */
+  :global(html.js) .title,
+  :global(html.js) .lead,
+  :global(html.js) .card {
+    opacity: 0;
+  }
+}
