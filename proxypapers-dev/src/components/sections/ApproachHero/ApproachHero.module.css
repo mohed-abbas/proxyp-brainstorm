@@ -1,14 +1,20 @@
-/* Approach hero. Ported 1:1 from the Figma 1512×1122 artboard (node 601:4): a dark
-   Chinese-Black ground with the "sky river" band sweeping across, the split headline,
-   and the "Since 2016…" lede. Every element is pinned with literal artboard
-   px * var(--pp-scale), so the composition freezes at the design size and scales
-   proportionally.
+/* Approach hero. Ported 1:1 from the Figma 1512×1122 artboard (node 634:5/634:6): a
+   Chinese-Black canvas carrying the Proxy-Blue "sky river" band — the SAME band family
+   as ReferralsHero (node 123:369), here un-mirrored — sweeping diagonally across the
+   waist, with the split headline ("A method," / "not a promise") in the dark shoulders
+   and the "Since 2016…" lede bottom-left.
 
-   HEIGHT-RESPONSIVE (desktop): the frame rides a CONTAIN scale — min(width-fit,
-   height-fit) — so the one-screen composition always fits the viewport on BOTH axes
-   and never crops on short/landscape laptops. The hero is min-height:100svh and
-   flex-centres the frame; the dark ground fills any letterbox gap. Below 1024 the
-   layout reflows to a stacked column on fluid tokens (no --pp-scale). */
+   UNIFORM COVER, CLIPPED — proportional, no bleed. The band is built as live layers
+   (blue shape + masked cloud wisps + two bone hairlines + a dashed flight-path + three
+   file marks). The artboard rides a single UNIFORM scale --su (= max(width-fit,
+   height-fit)), so the river keeps its proportions at every size (no per-axis stretch
+   that thins it). .bandInner is the artboard box at that scale, centred and CLIPPED
+   (overflow:hidden) — so the river fills the hero on both axes while anything OUTSIDE
+   the 1512×1122 artboard (the off-artboard blue flanks) is cut at the artboard edge and
+   can never bleed in. The text + marks share --su so they stay locked to the band's dark
+   shoulders; headlines/lede anchor vertically to the artboard centre (50svh ± offset·su)
+   and horizontally to the navbar gutters. Below 1024 it reflows to a stacked fluid
+   column with the band as a contained strip. */
 
 .hero {
   position: relative;
@@ -17,138 +23,281 @@
   overflow: hidden;
 }
 
-/* Desktop: a height-aware, one-screen container. The CONTAIN scale fits the frame on
-   both axes; scoped to ≥1024 so the <1024 reflow (fluid tokens) is untouched. */
+/* Desktop: a one-screen hero. --su covers the viewport on both axes with one uniform
+   factor; --sx/--sy are the per-axis fits it is built from. Scoped to ≥1024. */
 @media (min-width: 1024px) {
   .hero {
     min-height: 100vh; /* fallback */
     min-height: 100svh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    --pp-scale: min(100vw / 1512, 100svh / 1122);
+    --sx: calc(100vw / 1512);
+    --sy: calc(100svh / 1122);
+    /* band: uniform COVER (proportional river, clipped to the artboard). */
+    --su: max(var(--sx), var(--sy));
+    /* text: CONTAIN (the smaller fit) so it never oversizes or drops off-screen on
+       wide/short viewports, while the band still covers. */
+    --sc: min(var(--sx), var(--sy));
+  }
+  .frame {
+    height: 100vh; /* fallback */
+    height: 100svh;
   }
 }
 
-/* The artboard frame: full-width, 1122 tall, flex-centred in the hero. It is the
-   coordinate system for the absolutely-positioned band + copy. */
+/* The artboard frame — the positioning context for the band + copy, filling the hero. */
 .frame {
   position: relative;
   width: 100%;
-  height: calc(1122 * var(--pp-scale));
   margin-inline: auto;
 }
 
-/* ── Sky-river band (node 532:26) ─────────────────────────────────────────────
-   The pre-composited band maps exactly to the frame's x[0–1512]/y[0–977] region
-   (the export is 1512×977 at 2×, the uniform dark bottom strip trimmed). Width 100%
-   of the frame + the native ratio means no distortion; the dark ground continues
-   below it. Decorative, behind the copy. */
+/* ── Band ─────────────────────────────────────────────────────────────────────
+   .band is the full-bleed window; .bandInner is the artboard box (uniform --su),
+   centred and clipped so the river fills both axes and off-artboard geometry is cut
+   at the artboard edge (no bleed). */
 .band {
   position: absolute;
+  inset: 0;
+  overflow: hidden;
   z-index: 0;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: calc(977 * var(--pp-scale));
-  object-fit: fill;
   pointer-events: none;
-  user-select: none;
+}
+.bandInner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(1512 * var(--su));
+  height: calc(1122 * var(--su));
+  overflow: hidden;
 }
 
-/* ── Headline (nodes 142:12 + 142:194) ────────────────────────────────────────
-   One <h1> reading "A method, not a promise"; its two lines are pinned at opposite
-   corners of the band. 95px PP Neue Montreal Medium, -1.9px tracking. "method," turns
-   Proxy Blue (brand at full presence); the rest stays Bone White. */
-.headline {
-  margin: 0;
-  font-family: var(--pp-font);
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: calc(-1.9 * var(--pp-scale));
-  color: var(--pp-bone);
+/* Blue sky-river shape (node 634:9) — 3715×973 at artboard (-1219, 4). Reused from the
+   referrals band (same asset, native orientation). Its wide ends extend past the
+   artboard box and clip there — so they never reach the viewport. */
+.bandBlue {
+  position: absolute;
+  left: calc(-1219 * var(--su));
+  top: calc(4 * var(--su));
+  width: calc(3715 * var(--su));
+  height: calc(973 * var(--su));
 }
+
+/* Cloud wisps (node 634:12) — the fluffy texture revealed through the band-shape mask,
+   two instances clipped to the river. The clip box ≡ .bandBlue's box; the mask is the
+   band-shape soft alpha, flipped to the native (un-mirrored) orientation. */
+.clouds {
+  position: absolute;
+  left: calc(-1219 * var(--su));
+  top: calc(4 * var(--su));
+  width: calc(3715 * var(--su));
+  height: calc(973 * var(--su));
+  overflow: hidden;
+  -webkit-mask-image: url(/images/approach/band-mask-soft.webp);
+  mask-image: url(/images/approach/band-mask-soft.webp);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+}
+.cloud {
+  position: absolute;
+  width: calc(787 * var(--su));
+  height: calc(787 * var(--su));
+  object-fit: cover;
+}
+.cloudA {
+  left: calc(2391 * var(--su));
+  top: calc(-61 * var(--su));
+}
+.cloudB {
+  left: calc(738 * var(--su));
+  top: calc(59 * var(--su));
+}
+
+/* Bone hairline curves (nodes 634:19 top, 634:20 bottom) — squashed-ellipse strokes
+   tracing the river's waist. */
+.hairTop {
+  position: absolute;
+  left: calc(-1165 * var(--su));
+  top: calc(-443 * var(--su));
+  width: calc(2824 * var(--su));
+  height: calc(867 * var(--su));
+}
+.hairBot {
+  position: absolute;
+  left: calc(-143 * var(--su));
+  top: calc(557 * var(--su));
+  width: calc(2824 * var(--su));
+  height: calc(347 * var(--su));
+}
+
+/* Dashed flight-path (node 634:22) — 1604.5×309.2 at artboard (-150.6, 352.5). */
+.dashed {
+  position: absolute;
+  left: calc(-150.609 * var(--su));
+  top: calc(352.456 * var(--su));
+  width: calc(1604.547 * var(--su));
+  height: calc(309.232 * var(--su));
+  opacity: 0.7;
+}
+
+/* Three file marks riding the path (node 634:23) — uniform --su keeps them square. */
+.marks {
+  position: absolute;
+  left: calc(606.781 * var(--su));
+  top: calc(456.037 * var(--su));
+}
+.mark {
+  position: absolute;
+  display: block;
+}
+/* node 634:24 */
+.mark1 {
+  left: calc(35.219 * var(--su));
+  top: calc(21.26 * var(--su));
+  width: calc(49.926 * var(--su));
+  height: calc(49.926 * var(--su));
+  transform: rotate(-5.8deg);
+}
+/* node 634:28 (centre, largest) */
+.mark2 {
+  left: calc(111.922 * var(--su));
+  top: calc(2.96 * var(--su));
+  width: calc(67 * var(--su));
+  height: calc(67 * var(--su));
+  transform: rotate(-4.73deg);
+}
+/* node 634:26 */
+.mark3 {
+  left: calc(207.711 * var(--su));
+  top: calc(5.76 * var(--su));
+  width: calc(49.926 * var(--su));
+  height: calc(49.926 * var(--su));
+  transform: rotate(-5.97deg);
+}
+
+/* ── Headlines (nodes 634:30 + 634:31) ────────────────────────────────────────
+   95px PP Neue Montreal Medium, -1.9px tracking. "method," turns Proxy Blue. Sized +
+   positioned on --sc (contain) so the lines stay readable and on-screen at every aspect;
+   horizontally anchored to the navbar gutters. */
 .line1,
 .line2 {
   position: absolute;
   z-index: 2;
-  font-size: calc(95 * var(--pp-scale));
+  margin: 0;
+  font-family: var(--pp-font);
+  font-weight: 500;
+  font-size: calc(95 * var(--sc));
+  line-height: 1.2;
+  letter-spacing: calc(-1.9 * var(--sc));
+  color: var(--pp-bone);
   white-space: nowrap;
 }
-/* "A method," — top-left (artboard left edge 65.7, top 235.8). */
+/* "A method," — top-left shoulder (artboard top 235.8). */
 .line1 {
-  left: calc(65.7 * var(--pp-scale));
-  top: calc(235.8 * var(--pp-scale));
+  left: var(--pp-nav-inset);
+  top: calc(235.8 * var(--sc));
+  text-align: left;
 }
-/* "not a promise" — lower-right (artboard left edge 878, top 646.1). */
+/* "not a promise" — lower-right shoulder (artboard top 646.1). */
 .line2 {
-  left: calc(878 * var(--pp-scale));
-  top: calc(646.1 * var(--pp-scale));
+  right: var(--pp-nav-inset);
+  top: calc(646.1 * var(--sc));
+  text-align: right;
 }
 .accent {
   color: var(--pp-blue);
 }
 
-/* ── Lede (node 142:13) ───────────────────────────────────────────────────────
-   25px Bone, 578.8 wide, anchored bottom-left (left 70.6, top 885.4). */
+/* ── Lede (node 634:7) — 25px Bone, bottom-left at the gutter (artboard top 885.4). ── */
 .lede {
   position: absolute;
   z-index: 2;
-  left: calc(70.6 * var(--pp-scale));
-  top: calc(885.4 * var(--pp-scale));
-  width: calc(578.8 * var(--pp-scale));
+  left: var(--pp-nav-inset);
+  top: calc(885.4 * var(--sc));
+  width: calc(578.834 * var(--sc));
   margin: 0;
   font-family: var(--pp-font);
   font-weight: 500;
-  font-size: calc(25 * var(--pp-scale));
+  font-size: calc(25 * var(--sc));
   line-height: 1.2;
   color: var(--pp-bone);
 }
 
-/* ── Mobile / tablet (<1024) ──────────────────────────────────────────────────
-   No mobile Figma was provided, so the desktop composition reflows to a stacked
-   column on fluid tokens: headline, the band shown as a horizontal strip, then the
-   lede. Everything drops out of absolute positioning. */
+/* ── Intro armed-hidden states ───────────────────────────────────────────────
+   Under html.js the hero paints in its hidden start state so useApproachHero reveals it
+   with no flash. Without JS — or under reduced motion (the hook overrides inline) — it
+   stays settled. */
+:global(html.js) .line1,
+:global(html.js) .line2,
+:global(html.js) .band,
+:global(html.js) .lede {
+  opacity: 0;
+}
+
+/* ── Tablet + mobile reflow (<1024px) ────────────────────────────────────────
+   Off the artboard scale: a single left-aligned fluid column — headline lines stacked,
+   the band as a contained full-bleed strip between them, then the lede. The band layers
+   render at a single uniform --su, centred in the strip. */
 @media (max-width: 1023px) {
   .frame {
-    height: auto;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--pp-stack);
-    padding: calc(var(--pp-stack) * 1.6) var(--pp-gutter) var(--pp-stack);
-  }
-
-  .band {
-    position: relative;
-    order: 2;
+    position: static;
     width: 100%;
+    max-width: 600px;
     height: auto;
-    aspect-ratio: 1512 / 977;
-    object-fit: cover;
-    border-radius: 16px;
-  }
-
-  .headline {
-    order: 1;
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.05em;
+    align-items: flex-start;
+    gap: var(--pp-stack);
+    padding: calc(var(--pp-tap) + 64px) var(--pp-gutter) var(--pp-stack);
   }
+
   .line1,
   .line2 {
     position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    width: 100%;
     white-space: normal;
+    text-align: left;
     font-size: var(--pp-fs-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
+    line-height: 1.08;
+  }
+  .line1 {
+    order: 1;
+  }
+  .line2 {
+    order: 3;
+  }
+
+  /* Band — a full-bleed flow strip cropped to the river waist; composition at uniform
+     --su, centred in the strip. */
+  .band {
+    order: 2;
+    position: relative;
+    inset: auto;
+    align-self: center;
+    width: 100vw;
+    height: clamp(220px, 58vw, 360px);
+  }
+  .bandInner {
+    --su: min(100vw / 1040, 0.62px);
+    width: calc(1512 * var(--su));
+    height: calc(1122 * var(--su));
   }
 
   .lede {
+    order: 4;
     position: static;
-    order: 3;
+    left: auto;
+    top: auto;
     width: 100%;
     max-width: 36ch;
-    font-size: var(--pp-fs-lead);
+    font-size: var(--pp-fs-body);
   }
 }

@@ -1,36 +1,68 @@
+"use client";
+
+import { useRef } from "react";
 import s from "./ApproachHero.module.css";
 import content from "@/data/en/approach.json";
+import { SplitText, type SplitWord } from "@/components/shared/SplitText";
+import { useApproachHero } from "@/lib/animations/useApproachHero";
 
-const { headline, lede } = content.hero;
-
-// Approach hero — ported 1:1 from Figma (node 601:4, 1512×1122 artboard). A dark
-// Chinese-Black ground carrying the signature "sky river": a cloud-textured Proxy-Blue
-// band that sweeps diagonally across the canvas (hairline edges, a dashed flight path,
-// three drifting document icons), bleeding off both sides. The band is a single
-// pre-composited asset (Figma export of node 532:26) mapped exactly to the frame's
-// x[0–1512]/y[0–977] region; the headline ("A method," / "not a promise") and the
-// "Since 2016…" lede ride on top as live text, pinned to the artboard via --pp-scale.
+// Approach hero — ported from Figma (node 634:6). A Chinese-Black canvas carrying the
+// Proxy-Blue "sky river" band (the same band family as ReferralsHero, here un-mirrored):
+// a full-bleed blue shape pinched at the waist, fluffy-cloud wisps revealed through a
+// sky mask, two bone hairlines tracing its edges, and a dashed flight-path with three
+// drifting file marks at the waist. The split headline sits in the dark shoulders; the
+// lede anchors bottom-left. Band layers are live (not a baked crop) inside a cover-
+// cropped window, so the wide river fills the hero and crops like Figma — see the CSS.
 export function ApproachHero() {
+  const root = useRef<HTMLElement>(null);
+  useApproachHero(root, s);
+
+  const { headline, lede } = content.hero;
+
+  // "A method," — the turn word ("method,") carries the Proxy-Blue accent.
+  const line1Words: SplitWord[] = [
+    headline.lead,
+    { text: headline.accent, className: s.accent },
+  ];
+  const line2Words: SplitWord[] = headline.tail.split(" ");
+
   return (
-    <section className={s.hero} data-nav-theme="dark" aria-label="Our approach">
+    <section
+      className={s.hero}
+      data-nav-theme="dark"
+      aria-label="Our approach"
+      ref={root}
+    >
       <div className={s.frame}>
-        {/* The sky-river composition — band + clouds + hairlines + dashed path +
-            document icons, baked into one image. Decorative. */}
-        <img
-          className={s.band}
-          src="/images/approach-band.webp"
-          alt=""
-          aria-hidden="true"
-        />
+        {/* Band layers, ordered bottom→top per Figma: blue → masked clouds → hairlines
+            → dashed path → file marks. The .band window covers the full hero (100vw ×
+            100svh, centred); .bandInner cover-scales the composition inside it. */}
+        <div className={s.band} aria-hidden="true">
+          <div className={s.bandInner}>
+            <img className={s.bandBlue} src="/images/referrals/band-blue.webp" alt="" />
 
-        <h1 className={s.headline}>
-          <span className={s.line1}>
-            {headline.lead}{" "}
-            <span className={s.accent}>{headline.accent}</span>
-          </span>
-          <span className={s.line2}>{headline.tail}</span>
-        </h1>
+            <div className={s.clouds}>
+              <img className={`${s.cloud} ${s.cloudA}`} src="/images/referrals/cloud-tex.webp" alt="" />
+              <img className={`${s.cloud} ${s.cloudB}`} src="/images/referrals/cloud-tex.webp" alt="" />
+            </div>
 
+            <img className={s.hairTop} src="/images/referrals/hair-top.svg" alt="" />
+            <img className={s.hairBot} src="/images/referrals/hair-bot.svg" alt="" />
+
+            <img className={s.dashed} src="/images/approach/dashed.svg" alt="" />
+
+            {/* Three glassy file marks (Figma nodes 634:24/28/26) — the exact exported
+                SVGs (translucent gradient fill + vertically-fading stroke). */}
+            <div className={s.marks}>
+              <img className={`${s.mark} ${s.mark1}`} src="/images/approach/mark-1.svg" alt="" />
+              <img className={`${s.mark} ${s.mark2}`} src="/images/approach/mark-2.svg" alt="" />
+              <img className={`${s.mark} ${s.mark3}`} src="/images/approach/mark-3.svg" alt="" />
+            </div>
+          </div>
+        </div>
+
+        <SplitText as="h1" className={s.line1} words={line1Words} />
+        <SplitText as="p" className={s.line2} words={line2Words} />
         <p className={s.lede}>{lede}</p>
       </div>
     </section>
