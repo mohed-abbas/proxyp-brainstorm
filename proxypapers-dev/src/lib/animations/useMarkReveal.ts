@@ -5,16 +5,18 @@ import type { RefObject } from "react";
 type Styles = Record<string, string>;
 
 // useMarkReveal — the /approach "Pioneer since 2016" scene (Figma 634:209 + separated
-// state 634:343). Two pinned, scrubbed beats matching the brief:
+// state 634:343). The section pins; two beats with DIFFERENT drivers:
 //
-//  1. ASSEMBLE — the section pins; the bone stem stays put while the Proxy-Blue blade
+//  1. ASSEMBLE (scroll-scrubbed) — the bone stem stays put while the Proxy-Blue blade
 //     slides from its separated spot (+731 / +59 design-px) into the stem, forming the
-//     P-mark. (The blade's CSS position IS its resting spot, so we translate it home.)
-//  2. REVEAL — once assembled, the composition comes in: every text block rises with
-//     the site-wide per-word slide-up mask (.r-word__in: yPercent 120 → 0), while the
-//     dashed connectors DRAW ON — the down-arrow via a rect mask growing top→bottom,
-//     the snake via a normalized stroke mask (dashoffset 1 → 0). The blue end dots pop
-//     at the snake's start and end. Nothing fades.
+//     P-mark, tied to scroll. A hold tween follows so the pin keeps holding past the
+//     meeting point. (The blade's CSS position IS its resting spot, so we translate it.)
+//  2. REVEAL (auto-played) — the MOMENT the two vectors meet, a SEPARATE, self-playing
+//     timeline runs on its own (not scrubbed): every text block rises with the site-wide
+//     per-word slide-up mask (.r-word__in: yPercent 120 → 0), the dashed connectors draw
+//     on (arrow = rect mask grows top→bottom, snake = normalized stroke dashoffset 1→0),
+//     and the blue dots pop at the snake's termini. Scrolling back past the meeting point
+//     reverses it. A scrub-progress threshold (assemble vs. hold split) is the trigger.
 //
 // Lengths are design-px scaled by --mark-u; rather than parse that min() expression we
 // derive the live px-per-design-unit from the rendered stem width (315 design-px), via
@@ -66,57 +68,68 @@ export function useMarkReveal(scope: RefObject<HTMLElement | null>, s: Styles) {
           transformOrigin: "50% 50%",
         });
 
-        const tl = gsap.timeline({
-          defaults: { ease: "power3.out", force3D: true },
+        // ── REVEAL — a self-playing timeline (paused). Plays once the vectors meet;
+        // reverses if the user scrolls back before the meeting point. Real-time seconds,
+        // NOT scrubbed. Mask fromTos carry immediateRender so the collapsed state is set
+        // at build and reasserted on reverse → connectors stay undrawn until it plays.
+        const reveal = gsap.timeline({
+          paused: true,
+          defaults: { ease: "power3.out" },
+        });
+        reveal.to(yearWords, { yPercent: 0, duration: 0.6, stagger: 0.1 }, 0);
+        if (arrowMask)
+          reveal.fromTo(
+            arrowMask,
+            { attr: { height: 0 } },
+            { attr: { height: 259 }, duration: 0.7, ease: "none", immediateRender: true },
+            0.2,
+          );
+        reveal.to(dotStart, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 0.15);
+        if (snakeMask)
+          reveal.fromTo(
+            snakeMask,
+            { attr: { "stroke-dashoffset": 1 } },
+            { attr: { "stroke-dashoffset": 0 }, duration: 1.0, ease: "none", immediateRender: true },
+            0.2,
+          );
+        reveal.to(dotEnd, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 1.1);
+        reveal
+          .to(labelWords, { yPercent: 0, duration: 0.5, stagger: 0.06 }, 0.3)
+          .to(bodyWords, { yPercent: 0, duration: 0.45, stagger: 0.012 }, 0.45)
+          .to(headWords, { yPercent: 0, duration: 0.6, stagger: 0.05 }, 0.55);
+
+        // ── ASSEMBLE — scroll-scrubbed, pinned. The blade meets the stem over the first
+        // half (duration 1); an empty hold (duration 1) fills the rest of the pin so the
+        // section stays put while the reveal auto-plays. The vectors meet at progress 0.5.
+        const MEET = 0.5;
+        const assemble = gsap.timeline({
+          defaults: { force3D: true },
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=200%",
-            scrub: 1.4,
+            end: "+=180%",
+            scrub: 1,
             pin: true,
             pinType: "transform",
             pinSpacing: true,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              // The instant the vectors meet, let the reveal run on its own; scrubbing
+              // back before the meeting point rewinds it.
+              if (self.progress >= MEET) reveal.play();
+              else reveal.reverse();
+            },
           },
         });
-
-        // 1 — assemble: blade slides from the separated offset into the fixed stem.
-        tl.fromTo(
-          angle,
-          { x: () => 731 * u(), y: () => 59 * u() },
-          { x: 0, y: 0, duration: 1.3, ease: "power2.inOut" },
-          0,
-        );
-
-        // 2 — reveal, after the mark has settled.
-        // Years rise on the blade, then the down-arrow draws between them.
-        tl.to(yearWords, { yPercent: 0, duration: 0.6, stagger: 0.12 }, 1.15);
-        if (arrowMask)
-          tl.fromTo(
-            arrowMask,
-            { attr: { height: 0 } },
-            { attr: { height: 259 }, duration: 0.8, ease: "none", immediateRender: true },
-            1.45,
-          );
-
-        // Snake draws start→end with its dots popping at each terminus.
-        tl.to(dotStart, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 1.4);
-        if (snakeMask)
-          tl.fromTo(
-            snakeMask,
-            { attr: { "stroke-dashoffset": 1 } },
-            { attr: { "stroke-dashoffset": 0 }, duration: 1.1, ease: "none", immediateRender: true },
-            1.45,
-          );
-        tl.to(dotEnd, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 2.45);
-
-        // Timeline copy rises, then the headline.
-        tl.to(labelWords, { yPercent: 0, duration: 0.5, stagger: 0.06 }, 1.55)
-          .to(bodyWords, { yPercent: 0, duration: 0.45, stagger: 0.012 }, 1.7)
-          .to(headWords, { yPercent: 0, duration: 0.6, stagger: 0.05 }, 1.85)
-          // small tail so the fully-assembled scene holds before unpin.
-          .to({}, { duration: 0.4 });
+        assemble
+          .fromTo(
+            angle,
+            { x: () => 731 * u(), y: () => 59 * u() },
+            { x: 0, y: 0, duration: 1, ease: "power2.inOut" },
+            0,
+          )
+          .to({}, { duration: 1 }); // hold — keeps the section pinned for the auto reveal
       });
     },
     { scope },
