@@ -1,5 +1,10 @@
+"use client";
+
+import { useRef } from "react";
 import s from "./FreedomSection.module.css";
 import content from "@/data/en/approach.json";
+import { SplitText } from "@/components/shared/SplitText";
+import { useFreedom } from "@/lib/animations/useFreedom";
 
 const { heading, body, cards } = content.freedom;
 
@@ -9,16 +14,26 @@ const { heading, body, cards } = content.freedom;
 // "Freedom" card and an ink-outlined "Independence" card. Mirrors the Method panel's
 // full-bleed-panel → 1512 frame → centred-content structure; lengths are literal
 // artboard px * var(--pp-scale).
+//
+// On enter, the heading + body reveal word-by-word and the cards lift in (useFreedom).
 export function FreedomSection() {
+  const root = useRef<HTMLElement>(null);
+  useFreedom(root, s);
+
   return (
-    <section className={s.freedom} data-nav-theme="light" aria-label="Freedom and independence">
+    <section
+      className={s.freedom}
+      data-nav-theme="light"
+      aria-label="Freedom and independence"
+      ref={root}
+    >
       <div className={s.frame}>
         <div className={s.content}>
           <header className={s.head}>
-            <h2 className={s.heading}>{heading}</h2>
+            <SplitText as="h2" className={s.heading} words={heading.split(" ")} />
             <p className={s.body}>
-              <span className={s.bodyLead}>{body.lead}</span>
-              <span className={s.bodyRest}>{body.rest}</span>
+              <SplitText className={s.bodyLead} words={body.lead.trim().split(" ")} />{" "}
+              <SplitText className={s.bodyRest} words={body.rest.trim().split(" ")} />
             </p>
           </header>
 
