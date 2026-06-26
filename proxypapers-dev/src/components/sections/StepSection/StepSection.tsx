@@ -64,9 +64,9 @@ export function StepSection() {
 
             {/* Connector (node 142:430) — two hairline rules around a lowercase label. */}
             <div className={s.connector} aria-hidden="true">
-              <span className={s.connectorRule} />
+              <span className={`${s.connectorRule} ${s.connectorRuleTop}`} />
               <span className={s.connectorLabel}>{connector}</span>
-              <span className={s.connectorRule} />
+              <span className={`${s.connectorRule} ${s.connectorRuleBottom}`} />
             </div>
 
             {/* The numbered steps (node 142:418) — a slider on desktop, a list otherwise. */}

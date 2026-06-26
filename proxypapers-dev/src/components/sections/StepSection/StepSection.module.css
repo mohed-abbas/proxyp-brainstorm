@@ -155,7 +155,7 @@
   color: var(--pp-bone);
 }
 
-/* ── Connector (node 142:430) ─────────────────────────────────────────────────
+/* ── Connector (node 634:115) ─────────────────────────────────────────────────
    Two 52px vertical hairlines around a lowercase label. */
 .connector {
   width: calc(216 * var(--pp-scale));
@@ -164,10 +164,27 @@
   align-items: center;
   gap: calc(23 * var(--pp-scale));
 }
+/* Dashed hairline (Figma 634:116/118: 1px stroke, dash 7 / gap 7) that fades OUT
+   away from the label — solid bone at the label end, transparent at the far end —
+   via a mask gradient. The dash is the shared base; Top/Bottom set the fade side. */
 .connectorRule {
   width: 1px;
   height: calc(52 * var(--pp-scale));
-  background: rgba(247, 244, 240, 0.5);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--pp-bone) 0,
+    var(--pp-bone) calc(7 * var(--pp-scale)),
+    transparent calc(7 * var(--pp-scale)),
+    transparent calc(14 * var(--pp-scale))
+  );
+}
+.connectorRuleTop {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000);
+  mask-image: linear-gradient(to bottom, transparent, #000);
+}
+.connectorRuleBottom {
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
+  mask-image: linear-gradient(to bottom, #000, transparent);
 }
 .connectorLabel {
   font-family: var(--pp-font);
