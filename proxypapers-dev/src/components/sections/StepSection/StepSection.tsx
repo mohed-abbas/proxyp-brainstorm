@@ -3,7 +3,9 @@
 import { useRef } from "react";
 import s from "./StepSection.module.css";
 import content from "@/data/en/approach.json";
+import { SplitText } from "@/components/shared/SplitText";
 import { useStepSlider } from "@/lib/animations/useStepSlider";
+import { useStepsHeader } from "@/lib/animations/useStepsHeader";
 
 const { heading, lede, engagement, connector, total, items } = content.steps;
 
@@ -19,6 +21,7 @@ const { heading, lede, engagement, connector, total, items } = content.steps;
 export function StepSection() {
   const root = useRef<HTMLElement>(null);
   useStepSlider(root, s);
+  useStepsHeader(root, s);
 
   return (
     <section
@@ -31,10 +34,10 @@ export function StepSection() {
         <div className={s.content}>
           <header className={s.head}>
             <h2 className={s.heading}>
-              <span>{heading.lead}</span>
-              <span className={s.headingMuted}>{heading.muted}</span>
+              <SplitText words={heading.lead.trim().split(" ")} />{" "}
+              <SplitText className={s.headingMuted} words={heading.muted.trim().split(" ")} />
             </h2>
-            <p className={s.lede}>{lede}</p>
+            <SplitText as="p" className={s.lede} words={lede.split(" ")} />
           </header>
 
           <div className={s.body}>
