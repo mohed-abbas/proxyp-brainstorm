@@ -12,7 +12,15 @@
    off there — the settled scene renders). */
 
 .section {
-  --mark-u: min(100vw / 1512, 100svh / 982);
+  /* Breathing room: reserve a margin on both axes so the contain-fit scene never
+     touches the viewport edges (the blade top sits at artboard y≈0, so a flush fit
+     crops it). The scene scales to fit the padded box and stays flex-centred. */
+  --mark-gx: clamp(24px, 3vw, 64px);
+  --mark-gy: clamp(40px, 6svh, 72px);
+  --mark-u: min(
+    (100vw - 2 * var(--mark-gx)) / 1512,
+    (100svh - 2 * var(--mark-gy)) / 982
+  );
   position: relative;
   width: 100%;
   height: 100svh;
