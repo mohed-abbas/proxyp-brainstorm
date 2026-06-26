@@ -1,0 +1,13 @@
+{
+  "ariaLabel": "Security and certifications",
+  "eyebrow": "Security & certifications",
+  "certs": [
+    "GDPR compliance",
+    "AI Act compliance",
+    "NF 203 CCFN digital vault",
+    "Trusted third party for tax purposes",
+    "Password manager"
+  ],
+  "title": { "lines": ["A certified trust framework."] },
+  "body": "Our commitments do not rely on declarations but on enforceable certifications. We work exclusively with infrastructure hosted in France and compliant with the relevant European frameworks."
+}

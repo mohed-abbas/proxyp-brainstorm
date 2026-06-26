@@ -4,6 +4,7 @@ import { ApproachHero } from "@/components/sections/ApproachHero";
 import { FreedomSection } from "@/components/sections/FreedomSection";
 import { StepSection } from "@/components/sections/StepSection";
 import { LocalisationSection } from "@/components/sections/LocalisationSection";
+import { TrustBand } from "@/components/sections/TrustBand";
 import { Closing } from "@/components/sections/Closing";
 
 // Our Approach page (/approach) — the destination for the homepage Method
@@ -18,6 +19,7 @@ export default function ApproachPage() {
       <FreedomSection />
       <StepSection />
       <LocalisationSection />
+      <TrustBand />
       {/* Further Figma sections slot in here. */}
       <Closing />
       <Footer />
