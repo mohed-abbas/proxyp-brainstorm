@@ -1,19 +1,22 @@
+"use client";
+
+import { useRef } from "react";
 import s from "./LocalisationSection.module.css";
 import content from "@/data/en/approach.json";
+import { useLocalisation } from "@/lib/animations/useLocalisation";
 
 const { pill, title, subtitle, body, features, cards } = content.localisation;
 
-// LocalisationSection — ported 1:1 from Figma "Contracted Version" (node 142:519,
-// artboard 1154×536). The Papers Box, in its pre-expansion state: on the Chinese-Black
-// ground, a vertically-centred column ("Hosted in France" pill → "The Papers Box"
-// accent + "Your Secure Digital Framework." → body → two rows of feature checks) with
-// the four glassy, rotated file cards (Tax · Real Estate · Succession · Insurance)
-// clustered as a stack over the centre, frosting the text behind them. Lengths are
-// literal artboard px * var(--pp-scale); below 1024 it reflows to a centred fluid
-// column and the cards drop away.
+// LocalisationSection — the Papers Box (Figma 142:574). On the Chinese-Black ground, a
+// centred column ("Hosted in France" pill → "The Papers Box" accent + "Your Secure
+// Digital Framework." → body → two rows of feature checks) with four glassy, rotated
+// file cards (Tax · Real Estate · Succession · Insurance) at the corners. Lengths are
+// literal artboard px * var(--pp-scale); below 1024 it reflows to a centred fluid column
+// and the cards drop away.
 //
-// This is the static base; the cards will be animated out to the corners (the expanded
-// layout, Figma 142:574) as a separate step.
+// The corner layout is the resting state. useLocalisation deals the cards in from a
+// centre cluster (the Figma "Contracted Version", node 142:519) once the whole section
+// is in view, while the text rises — see the hook for the choreography.
 
 // lucide/check (Figma node 142:549) — currentColor stroke so it themes via CSS.
 function CheckIcon() {
@@ -65,8 +68,12 @@ function FileIcon() {
 }
 
 export function LocalisationSection() {
+  const scope = useRef<HTMLElement>(null);
+  useLocalisation(scope, s);
+
   return (
     <section
+      ref={scope}
       className={s.section}
       data-nav-theme="dark"
       aria-label="The Papers Box — your secure digital framework"
