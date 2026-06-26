@@ -54,10 +54,11 @@
    the crop window. It covers the FULL hero on both axes — 100vw × 100svh, centred
    on the frame's centre (which the flex hero pins to the viewport centre) via the
    margin trick (NOT transform: the reveal hook clearProps:"transform" on .band, so
-   centring must survive that). .bandInner holds the 1512×941 composition, cover-
-   scaled and centred inside. The bowtie's flared corner curves must NEVER show: the
-   composition cover-scales on both axes (see .bandInner) so the tips always overflow
-   the window and crop at every size, including short, tall and >1512/2K viewports. */
+   centring must survive that). .bandInner holds the 1512×941 composition, uniform-
+   cover-scaled, centred, and CLIPPED to the artboard (see .bandInner). The bowtie's
+   flared corner curves must NEVER show: cover keeps the visible region inside the
+   artboard and the clip cuts anything past it, so the tips stay out at every size —
+   short, tall, 16:9, ultra-wide and >1512/2K alike. */
 .band {
   position: absolute;
   left: 50%;
@@ -79,23 +80,26 @@
    offsets — so the bowtie, clouds, masked spiral, rings and avatars all scale as a
    unit and the masks stay aligned. Centring is a transform here (NOT on .band): the
    reveal hook clearProps:"transform" on .band would wipe it, but never touches this.
-   Cover scale (≥1024): equals the global scale ≤1512 (composition == window, desktop
-   pixel-identical); freezes at 1px on normal big screens; grows past ~2000px so the
-   3715-wide bowtie is always ≥1.85·100vw → flared corners never appear at any size. */
+
+   UNIFORM COVER, CLIPPED TO THE ARTBOARD — same mechanism as ApproachHero. The box
+   rides ONE uniform scale max(width-fit, height-fit), so it is always ≥ the viewport
+   on BOTH axes → the visible region is a sub-rectangle of the 1512×941 artboard, i.e.
+   exactly what Figma cropped. The bowtie's flared corner curves live OUTSIDE that
+   artboard (x −981…2734), so they fall outside the visible region AND are physically
+   cut by overflow:hidden — they can never creep into the top-left / bottom-right
+   corners. This replaces the old hand-tuned 3-way max (min(…,1px), 100vw/2000,
+   100svh/941), whose weak 100vw/2000 horizontal term under-covered wide screens and
+   let those flares bleed in. Below 1024 the band reflows to a strip (see mobile
+   block) where the clip is turned off — there the bowtie must overflow to fill 100vw. */
 .bandInner {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  /* COVER scale — fills the hero box on BOTH axes so the bowtie always bleeds
-     full and its flared tips crop on every side. The width terms preserve the
-     ≤1512 look (cover ≈ 1px at the common case); the `100svh / 941` term grows
-     it to cover tall viewports (fixing the 2K corner-bleed, where the window and
-     composition previously scaled by different factors). The window (.band) and
-     this composition now share one scale, so the framing stays proportional. */
-  --pp-scale: max(min(100vw / 1512, 1px), 100vw / 2000, 100svh / 941);
+  --pp-scale: max(100vw / 1512, 100svh / 941);
   width: calc(1512 * var(--pp-scale));
   height: calc(941 * var(--pp-scale));
+  overflow: hidden;
 }
 
 /* Blue bowtie shape (node 123:370) — 3715×973, anchored per the artboard and
@@ -439,9 +443,13 @@
   }
   /* The fixed-aspect spiral can't object-fit:fill-stretch like the lens image, so the
      composition scales to fit the spiral to ~viewport width (≈85% on phones; capped so
-     it isn't oversized on large tablets). The window still crops the bowtie's tips. */
+     it isn't oversized on large tablets). The window still crops the bowtie's tips.
+     overflow:visible turns OFF the desktop artboard clip here: in the strip the band is
+     narrower than 100vw at the 0.62px cap, so the bowtie must overflow .bandInner to
+     fill the full-bleed window (the .band clamp height still crops it to the waist). */
   .bandInner {
     --pp-scale: min(100vw / 1040, 0.62px);
+    overflow: visible;
   }
 
   /* Firm + body + CTA block — static, full-width, left-aligned, stacked with the
