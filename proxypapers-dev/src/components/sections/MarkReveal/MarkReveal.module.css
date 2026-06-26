@@ -1,0 +1,59 @@
+/* MarkReveal (Figma 634:343, artboard 1512×982) — the P-mark shown PULLED APART on
+   the Chinese-Black ground. A full-bleed dark band; the 1362×626 vector box is
+   flex-centred, which lands it at the Figma offsets (left 75, top 178). Inside it the
+   two halves are absolutely placed at their exact SeparatedVector coordinates and are
+   allowed to overflow that box (they stay within the 982-tall band).
+
+   Every length rides --mark-u, a CONTAIN-fit unit: min(100vw/1512, 100svh/982). It
+   tracks whichever axis is the constraint, so the 1512×982 artboard always fits the
+   viewport in BOTH width and height (no overflow on short-wide screens, no wasted
+   space on tall-narrow ones) while keeping the mark's aspect ratio. The section is a
+   full viewport-height band so the mark stays centred and fully visible at any aspect
+   ratio. This is the INITIAL, resting state — the assemble animation is layered next. */
+
+.section {
+  --mark-u: min(100vw / 1512, 100svh / 982);
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: calc(626 * var(--mark-u));
+  background: var(--pp-ink);
+  color: var(--pp-bone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* The 1362×626 SeparatedVector box — positioning context for the two halves.
+   Centred in the band, so its origin matches Figma's left 75 / top 178. */
+.markFrame {
+  position: relative;
+  width: calc(1362 * var(--mark-u));
+  height: calc(626 * var(--mark-u));
+}
+
+/* StemVector (node 634:346) — bone half, low-left. x 0 / y 125 in the box. */
+.stem {
+  position: absolute;
+  left: 0;
+  top: calc(125 * var(--mark-u));
+  width: calc(315 * var(--mark-u));
+  height: calc(626 * var(--mark-u));
+}
+
+/* AngleVector (node 634:347) — blue half, high-right. x 731 / y -126 in the box. */
+.angle {
+  position: absolute;
+  left: calc(731 * var(--mark-u));
+  top: calc(-126 * var(--mark-u));
+  width: calc(631 * var(--mark-u));
+  height: calc(625 * var(--mark-u));
+}
+
+.stemSvg,
+.angleSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
