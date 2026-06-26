@@ -14,6 +14,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* The bar is a transparent full-width flex container sitting above the page
+     (and, when open, above the menu panel). Without this it would swallow clicks
+     in its empty middle band — e.g. the menu's language switcher beneath it.
+     Only the two bone pills should be interactive. */
+  pointer-events: none;
 }
 
 /* Shared bone surface for both pills. */
@@ -23,6 +28,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* Re-enable interaction on the pills (the bar itself is pointer-events: none). */
+  pointer-events: auto;
   border-radius: calc(8 * var(--pp-scale));
   background: var(--pp-bone);
   border: 0.5px solid rgba(247, 244, 240, 0.5);

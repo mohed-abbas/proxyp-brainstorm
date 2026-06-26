@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./Tracks.module.css";
-import tracks from "@/data/en/tracks.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useTracks } from "@/lib/animations/useTracks";
 
@@ -13,6 +13,7 @@ import { useTracks } from "@/lib/animations/useTracks";
 // (see useTracks). BLUE surface (navbar flips to the blue theme). Below 1024 the two
 // columns stack and the section sizes off the fluid tokens.
 export function Tracks() {
+  const tracks = useContent("tracks");
   const root = useRef<HTMLElement>(null);
   useTracks(root, s);
 

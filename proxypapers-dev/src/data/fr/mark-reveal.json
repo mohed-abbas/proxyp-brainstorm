@@ -1,0 +1,15 @@
+{
+  "ariaLabel": "Pionnier depuis 2016, pertinent aujourd'hui",
+  "years": { "start": "2016", "end": "2026" },
+  "headline": "Pionnier depuis 2016. Pertinent aujourd'hui.",
+  "timeline": [
+    {
+      "label": "2016 · Les débuts",
+      "body": "Fondée par Sandrine Rieussec, à partir d'une expérience familiale et d'une conviction : la gestion privée des données mérite un service à part entière — distinct de l'administratif d'appoint et du conseil patrimonial."
+    },
+    {
+      "label": "Aujourd'hui · Indispensable",
+      "body": "Dix ans plus tard, l'accélération du numérique rend ce service indispensable. Nous avons l'antériorité, le cadre et les outils."
+    }
+  ]
+}

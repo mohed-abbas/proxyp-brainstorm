@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./ReferralsHero.module.css";
-import content from "@/data/en/referrals.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText, type SplitWord } from "@/components/shared/SplitText";
 import { PpButton } from "@/components/shared/PpButton";
 import { PpMark } from "@/components/shared/PpMark";
@@ -10,10 +10,6 @@ import { useReferralsHero } from "@/lib/animations/useReferralsHero";
 import { useReferralsOrbit } from "@/lib/animations/useReferralsOrbit";
 
 type Styles = Record<string, string>;
-
-const spiralAvatars = content.hero.spiral.avatars;
-const ringAvatars = (ring: string) =>
-  spiralAvatars.filter((a) => a.ring === ring);
 
 // The advisor spiral — Figma's exact layout (node 123:379): six concentric rings
 // alternating solid/dashed (radii 86.5 · 150.5 · 222.5 · 302.5 · 379.5 · 440.5,
@@ -23,6 +19,9 @@ const ringAvatars = (ring: string) =>
 // field is clipped to the blue band shape, so the big rings read as the shallow
 // arcs of the Figma band and orbiting avatars dissolve at the band's edges.
 function ReferralsSpiral({ styles }: { styles: Styles }) {
+  const spiralAvatars = useContent("referrals").hero.spiral.avatars;
+  const ringAvatars = (ring: string) =>
+    spiralAvatars.filter((a) => a.ring === ring);
   const orbit = useRef<HTMLDivElement>(null);
   useReferralsOrbit(orbit, styles);
 
@@ -68,6 +67,7 @@ function ReferralsSpiral({ styles }: { styles: Styles }) {
 // network at the waist is NOT baked into the band — it is the live ReferralsSpiral
 // (the home orbital), masked to the waist and perpetually spinning.
 export function ReferralsHero() {
+  const content = useContent("referrals");
   const root = useRef<HTMLElement>(null);
   useReferralsHero(root, s);
 

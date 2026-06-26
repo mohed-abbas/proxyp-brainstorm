@@ -1,0 +1,70 @@
+{
+  "cards": [
+    {
+      "id": "essentiel",
+      "theme": "light",
+      "number": "01",
+      "title": "Essentiel",
+      "subtitle": "Mettre en ordre. Tenir à jour.",
+      "description": "Les patrimoines déjà bien tenus, où l'enjeu est avant tout de gagner du temps, de structurer ce qui existe et de fluidifier les échanges avec un ou deux conseillers de référence.",
+      "pricing": "Tarification — sur devis après audit d'embarquement.",
+      "bento": {
+        "w": 576,
+        "h": 509,
+        "tiles": [
+          { "icon": "rocket", "label": "Audit d'embarquement et plan d'action", "x": 0, "y": 0, "w": 180, "h": 159 },
+          { "icon": "inbox", "label": "Papers Box configurée et personnalisée", "x": 200, "y": 0, "w": 376, "h": 159 },
+          { "icon": "folder", "label": "Mise en ordre initiale de vos dossiers", "x": 0, "y": 175, "w": 180, "h": 159 },
+          { "icon": "triangle-alert", "label": "Alertes échéances paramétrées", "x": 200, "y": 175, "w": 180, "h": 159 },
+          { "icon": "share-2", "label": "Partages sécurisés avec vos conseillers", "x": 400, "y": 175, "w": 176, "h": 159 },
+          { "icon": "message-circle", "label": "Suivi périodique, rythme convenu", "x": 0, "y": 350, "w": 280, "h": 159 },
+          { "icon": "user", "label": "Un conseiller dédié, joignable", "x": 300, "y": 350, "w": 276, "h": 159 }
+        ]
+      }
+    },
+    {
+      "id": "signature",
+      "theme": "dark",
+      "number": "02",
+      "title": "Signature",
+      "subtitle": "Un cadre vivant. Pour un patrimoine actif.",
+      "description": "Les dirigeants en activité, les investisseurs et les familles dont le patrimoine évolue régulièrement. Plusieurs conseillers à coordonner, plusieurs entités, des projets en cours.",
+      "inherits": { "label": "Tout le contenu de l'offre Essentiel, plus", "icon": "corner-down-right" },
+      "pricing": "Tarification — sur devis après audit d'embarquement.",
+      "bento": {
+        "w": 576,
+        "h": 509,
+        "tiles": [
+          { "icon": "smartphone-nfc", "label": "Coordination active avec vos conseillers", "x": 0, "y": 0, "w": 280, "h": 159 },
+          { "icon": "tent", "label": "Interventions périodiques sur site", "x": 300, "y": 0, "w": 276, "h": 159 },
+          { "icon": "projector", "label": "Préparation des rendez-vous avec vos conseils", "x": 0, "y": 175, "w": 180, "h": 159 },
+          { "icon": "zap", "label": "Accès prioritaire à votre conseiller dédié", "x": 200, "y": 175, "w": 376, "h": 159 },
+          { "icon": "file-chart-column-increasing", "label": "Rapport périodique avec axes de réflexion", "x": 0, "y": 350, "w": 180, "h": 159 },
+          { "icon": "audio-waveform", "label": "Suivi des projets en cours", "x": 200, "y": 350, "w": 376, "h": 159 }
+        ]
+      }
+    },
+    {
+      "id": "exception",
+      "theme": "blue",
+      "number": "03",
+      "title": "Exception",
+      "subtitle": "Un cadre de gouvernance. Pour les patrimoines complexes.",
+      "description": "Les patrimoines complexes — holdings, structures internationales, transmissions en cours, indivisions, biens d'exception. Les familles qui recherchent un cadre de gouvernance interne au-delà du simple suivi.",
+      "inherits": { "label": "Tout le contenu de l'offre Signature, plus", "icon": "corner-down-right" },
+      "pricing": "Tarification — sur devis après audit d'embarquement.",
+      "bento": {
+        "w": 576,
+        "h": 509,
+        "tiles": [
+          { "icon": "calendar-check", "label": "Disponibilité étendue de votre conseiller", "x": 0, "y": 0, "w": 180, "h": 159 },
+          { "icon": "blocks", "label": "Cartographie patrimoniale documentaire complète", "x": 200, "y": 0, "w": 376, "h": 159 },
+          { "icon": "circle-pile", "label": "Préparation des conseils de famille et comités", "x": 0, "y": 175, "w": 280, "h": 159 },
+          { "icon": "timeline", "label": "Coordination étendue, écosystème de conseils complet", "x": 300, "y": 175, "w": 276, "h": 159 },
+          { "icon": "audio-waveform", "label": "Suivi des transmissions, donations, successions", "x": 0, "y": 350, "w": 380, "h": 159 },
+          { "icon": "heart-handshake", "label": "Accompagnement renforcé, biens d'exception", "x": 400, "y": 350, "w": 176, "h": 159 }
+        ]
+      }
+    }
+  ]
+}

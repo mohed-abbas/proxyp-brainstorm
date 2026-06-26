@@ -2,12 +2,13 @@
 
 import { useRef } from "react";
 import s from "./Problem.module.css";
-import problem from "@/data/en/problem.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { Zigzag } from "./Zigzag";
 import { useProblem } from "@/lib/animations/useProblem";
 
 export function Problem() {
+  const problem = useContent("problem");
   const root = useRef<HTMLElement>(null);
   useProblem(root, s);
 

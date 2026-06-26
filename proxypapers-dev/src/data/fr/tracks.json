@@ -1,0 +1,34 @@
+{
+  "title": "Deux façons de travailler ensemble.",
+  "intro": "Selon votre profession et votre cadre déontologique, nous proposons deux modes de collaboration distincts. Ils ne se cumulent jamais.",
+  "tracks": [
+    {
+      "id": "01",
+      "eyebrow": "Mode 01",
+      "name": "Recommandation confraternelle",
+      "scope": "Destiné aux professions réglementées pour lesquelles toute commission est exclue : notaires, experts-comptables, avocats.",
+      "body": "Vous recommandez Proxy Papers à vos clients dans leur intérêt direct, sans rétribution, sans convention financière. Nous formalisons simplement la coordination opérationnelle entre nos équipes et la vôtre.",
+      "points": [
+        "Une porte d'entrée privilégiée pour vos dossiers",
+        "Une coordination opérationnelle directe avec votre cabinet",
+        "Un conseiller dédié côté Proxy Papers pour vos clients"
+      ],
+      "tag": "Aucune rétribution · aucune convention financière"
+    },
+    {
+      "id": "02",
+      "eyebrow": "Mode 02",
+      "name": "Apport d'affaires",
+      "scope": "Destiné aux conseillers en gestion de patrimoine, courtiers, family offices, banques privées et réseaux assimilés.",
+      "body": "Une convention d'apport d'affaires formalise notre collaboration et la rémunération qui en découle.",
+      "points": [
+        "Convention d'apporteur d'affaires écrite",
+        "Rémunération définie selon barème transparent",
+        "Reporting régulier sur les dossiers apportés",
+        "Co-construction d'une approche de mise en relation",
+        "Un conseiller dédié côté Proxy Papers pour vos clients"
+      ],
+      "tag": "Convention formelle · rémunération transparente"
+    }
+  ]
+}

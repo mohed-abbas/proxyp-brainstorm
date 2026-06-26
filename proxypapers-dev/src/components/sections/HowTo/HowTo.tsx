@@ -2,11 +2,12 @@
 
 import { useRef, type CSSProperties } from "react";
 import s from "./HowTo.module.css";
-import data from "@/data/en/how-to.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
+import type { Dictionary } from "@/data/locales";
 import { useHowTo } from "@/lib/animations/useHowTo";
 
-type Step = (typeof data.steps)[number];
-type Cloud = (typeof data.clouds)[number];
+type Step = Dictionary["how-to"]["steps"][number];
+type Cloud = Dictionary["how-to"]["clouds"][number];
 
 // One step card (Figma nodes 160:967 / 160:972 / 160:976, 670×194). Absolutely placed in
 // the stage from its design-pixel position; carries the step eyebrow, title, body and an
@@ -80,6 +81,7 @@ function CloudTile({ cloud }: { cloud: Cloud }) {
 // tiles filling the gaps and the bone "audit" card floating over them at the centre.
 // Sits on the Chinese-Black ground; full-bleed up to the 1512 artboard, scaling below.
 export function HowTo() {
+  const data = useContent("how-to");
   const root = useRef<HTMLElement>(null);
   useHowTo(root, s);
 

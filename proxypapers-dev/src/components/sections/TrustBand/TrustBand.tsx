@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./TrustBand.module.css";
-import trustBandContent from "@/data/en/trust-band.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useTrustBand } from "@/lib/animations/useTrustBand";
 
@@ -17,12 +17,14 @@ export type TrustBandContent = {
 // TrustBand — the /approach "Security & certifications" band (Figma 634:133 /
 // 634:322). Same markup + CSS as the shared Trust band and the same pinned/scrubbed
 // expand (via useTrustBand, a fork of useTrust); it differs only in copy and a
-// Proxy-Blue accent title. Content lives in data/en/trust-band.json.
+// Proxy-Blue accent title. Content lives in data/<locale>/trust-band.json.
 export function TrustBand({
-  content = trustBandContent,
+  content: contentProp,
 }: {
   content?: TrustBandContent;
 }) {
+  const fallback = useContent("trust-band") as TrustBandContent;
+  const content = contentProp ?? fallback;
   const root = useRef<HTMLElement>(null);
   useTrustBand(root, s);
 

@@ -1,0 +1,40 @@
+{
+  "legal": "© Proxy Papers — Tous droits réservés.",
+  "columns": [
+    {
+      "id": "1",
+      "ariaLabel": "Footer",
+      "groups": [
+        [
+          { "label": "Notre approche", "href": "/approach", "active": true },
+          { "label": "Prescripteurs & partenaires", "href": "/referrals" },
+          { "label": "Contact", "href": "#" },
+          { "label": "Les offres", "href": "/services" }
+        ],
+        [
+          { "label": "Facebook", "href": "#" },
+          { "label": "Instagram", "href": "#" },
+          { "label": "Twitter", "href": "#" },
+          { "label": "LinkedIn", "href": "#" }
+        ]
+      ]
+    },
+    {
+      "id": "2",
+      "ariaLabel": "Resources",
+      "groups": [
+        [
+          { "label": "À propos", "href": "#", "active": true },
+          { "label": "Souveraineté et sécurité", "href": "#" },
+          { "label": "Actualités", "href": "#" }
+        ],
+        [
+          { "label": "CGV", "href": "#" },
+          { "label": "Politique de confidentialité", "href": "#" },
+          { "label": "Mentions légales", "href": "#" },
+          { "label": "Politique cookies", "href": "#" }
+        ]
+      ]
+    }
+  ]
+}

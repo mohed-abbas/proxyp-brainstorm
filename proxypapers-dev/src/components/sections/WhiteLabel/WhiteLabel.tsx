@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./WhiteLabel.module.css";
-import content from "@/data/en/white-label.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { PpMark } from "@/components/shared/PpMark";
 import { useWhiteLabel } from "@/lib/animations/useWhiteLabel";
@@ -15,6 +15,7 @@ import { useWhiteLabel } from "@/lib/animations/useWhiteLabel";
 // core. The reveal mechanic is the Trust section's (see useWhiteLabel). LIGHT surface.
 // Below 1024 / reduced motion it renders the settled open band (mobile reflows to a stack).
 export function WhiteLabel() {
+  const content = useContent("white-label");
   const root = useRef<HTMLElement>(null);
   useWhiteLabel(root, s);
 

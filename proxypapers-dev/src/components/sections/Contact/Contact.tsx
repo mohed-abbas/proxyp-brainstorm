@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import s from "./Contact.module.css";
-import data from "@/data/en/contact.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText, type SplitWord } from "@/components/shared/SplitText";
 import { useContactIntro } from "@/lib/animations/useContactIntro";
 
@@ -45,6 +45,7 @@ function Icon({ name, className }: { name: string; className?: string }) {
 // band — the three meeting assurances (01/02/03) on the left, the direct-contact details
 // on the right. Navbar + shared Footer wrap the page (see app/contact/page.tsx).
 export function Contact() {
+  const data = useContent("contact");
   const { header, form, assurances, alt } = data;
   const [audience, setAudience] = useState<"individual" | "advisor">("individual");
   const root = useRef<HTMLElement>(null);

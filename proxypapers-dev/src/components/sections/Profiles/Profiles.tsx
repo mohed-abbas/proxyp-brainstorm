@@ -2,7 +2,7 @@
 
 import { useRef, type CSSProperties } from "react";
 import s from "./Profiles.module.css";
-import profiles from "@/data/en/profiles.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { PpButton } from "@/components/shared/PpButton";
 import { useProfiles } from "@/lib/animations/useProfiles";
@@ -17,6 +17,7 @@ const FAN: Record<string, CSSProperties> = {
 };
 
 export function Profiles() {
+  const profiles = useContent("profiles");
   const root = useRef<HTMLElement>(null);
   useProfiles(root, s);
 

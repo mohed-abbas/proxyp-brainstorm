@@ -1,0 +1,18 @@
+{
+  "hero": {
+    "clients": { "lead": "Au service de vos ", "accent": "clients." },
+    "firm": "Au service de votre cabinet.",
+    "body": "Proxy Papers prend en charge la couche d'information privée que vos clients n'ont pas le temps de tenir, et qui ralentit régulièrement vos travaux. Nous nous adaptons à votre cadre déontologique.",
+    "cta": { "label": "Demander un échange", "href": "/contact" },
+    "spiral": {
+      "avatars": [
+        { "id": "1", "ring": "r1", "img": "/images/advisor-2.png" },
+        { "id": "2", "ring": "r1", "img": "/images/advisor-3.png" },
+        { "id": "3", "ring": "r2", "img": "/images/advisor-1.png" },
+        { "id": "4", "ring": "r2", "img": "/images/advisor-5.png" },
+        { "id": "5", "ring": "r3", "img": "/images/advisor-4.png" },
+        { "id": "6", "ring": "r3", "img": "/images/advisor-1.png" }
+      ]
+    }
+  }
+}

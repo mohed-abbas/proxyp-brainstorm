@@ -3,6 +3,8 @@
 import { type RefObject } from "react";
 import s from "./Menu.module.css";
 import { PpMark } from "@/components/shared/PpMark";
+import { useLocalizedHref } from "@/lib/i18n/LocaleProvider";
+import { LocaleSwitcher } from "@/lib/i18n/LocaleSwitcher";
 
 type NavContent = {
   home: { href: string; label: string };
@@ -19,6 +21,7 @@ type MenuProps = {
 };
 
 export function Menu({ open, onClose, panelRef, content }: MenuProps) {
+  const lh = useLocalizedHref();
   return (
     <div
       className={s.menu}
@@ -39,16 +42,20 @@ export function Menu({ open, onClose, panelRef, content }: MenuProps) {
         aria-modal="true"
         aria-label="Menu"
       >
-        <p className={s.lang}>
-          <span className={s.langCurrent}>{content.lang.current}{" | "}</span>
-          <a className={s.langAlt} href={content.lang.alt.href}>
-            {content.lang.alt.label}
-          </a>
-        </p>
+        <LocaleSwitcher
+          className={s.lang}
+          currentClassName={s.langCurrent}
+          altClassName={s.langAlt}
+        />
 
         <nav className={s.navLinks} aria-label="Menu principal">
           {content.links.map((l) => (
-            <a key={l.label} className={s.link} href={l.href} onClick={onClose}>
+            <a
+              key={l.label}
+              className={s.link}
+              href={lh(l.href)}
+              onClick={onClose}
+            >
               <span className={s.linkText}>
                 <span className={s.linkMain}>{l.label}</span>
                 <span className={s.linkClone} aria-hidden="true">
@@ -62,7 +69,7 @@ export function Menu({ open, onClose, panelRef, content }: MenuProps) {
         <div className={s.foot}>
           <a
             className={s.logo}
-            href={content.home.href}
+            href={lh(content.home.href)}
             aria-label={content.home.label}
             onClick={onClose}
           >

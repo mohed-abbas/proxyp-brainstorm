@@ -1,0 +1,13 @@
+{
+  "label": "Les profils avec lesquels nous travaillons.",
+  "profiles": [
+    { "text": "Notaires" },
+    { "text": "Experts-comptables" },
+    { "text": "Avocats fiscalistes et patrimoniaux" },
+    { "text": "Conseillers en gestion de patrimoine", "accent": true },
+    { "text": "Family offices" },
+    { "text": "Banques privées" },
+    { "text": "Assureurs et courtiers" },
+    { "text": "Cabinets de transmission d'entreprise" }
+  ]
+}

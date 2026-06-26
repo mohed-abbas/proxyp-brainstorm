@@ -1,0 +1,13 @@
+{
+  "ariaLabel": "Sécurité et certifications",
+  "eyebrow": "Sécurité et certifications",
+  "certs": [
+    "Conformité RGPD",
+    "Conformité AI Act",
+    "Coffre-fort NF 203 CCFN",
+    "Tiers de confiance fiscal",
+    "Gestionnaire de mots de passe"
+  ],
+  "title": { "lines": ["Un cadre de confiance, certifié."] },
+  "body": "Nos engagements ne reposent pas sur des déclarations mais sur des certifications opposables. Nous travaillons exclusivement avec des infrastructures hébergées en France et conformes aux référentiels européens en vigueur."
+}

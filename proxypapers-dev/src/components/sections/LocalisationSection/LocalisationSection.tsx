@@ -2,10 +2,8 @@
 
 import { useRef } from "react";
 import s from "./LocalisationSection.module.css";
-import content from "@/data/en/approach.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { useLocalisation } from "@/lib/animations/useLocalisation";
-
-const { pill, title, subtitle, body, features, cards } = content.localisation;
 
 // LocalisationSection — the Papers Box (Figma 142:574). On the Chinese-Black ground, a
 // centred column ("Hosted in France" pill → "The Papers Box" accent + "Your Secure
@@ -68,6 +66,8 @@ function FileIcon() {
 }
 
 export function LocalisationSection() {
+  const content = useContent("approach");
+  const { pill, title, subtitle, body, features, cards } = content.localisation;
   const scope = useRef<HTMLElement>(null);
   useLocalisation(scope, s);
 

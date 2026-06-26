@@ -1,0 +1,47 @@
+{
+  "header": {
+    "title": { "lead": "Prenons ", "accent": "rendez-vous." },
+    "lead": "Le rendez-vous découverte dure une heure. Il est offert et sans engagement. Il sert à comprendre votre situation et à vérifier ensemble qu'il y a un fit. Nous revenons vers vous sous 48 heures ouvrées."
+  },
+  "form": {
+    "eyebrow": "RENDEZ-VOUS DÉCOUVERTE",
+    "title": "Quelques mots, et nous revenons vers vous.",
+    "audience": {
+      "individual": "Je suis un particulier",
+      "advisor": "Je suis un conseil prescripteur"
+    },
+    "fields": {
+      "name": "Nom et prénom",
+      "email": "Adresse e-mail",
+      "phone": "Téléphone (facultatif)",
+      "situation": "Quelques mots sur votre situation (facultatif)",
+      "source": "Comment nous avez-vous connus ? (facultatif)"
+    },
+    "sources": [
+      "Un conseiller ou un notaire",
+      "Une recherche sur internet",
+      "La presse ou les médias",
+      "Le bouche-à-oreille",
+      "Autre"
+    ],
+    "consent": {
+      "lead": "J'ai lu et j'accepte la ",
+      "link": "politique de confidentialité",
+      "href": "#"
+    },
+    "submit": "Envoyer ma demande",
+    "note": "Nous revenons vers vous sous 48 heures ouvrées"
+  },
+  "assurances": [
+    { "n": "01", "text": "Une heure — centrée sur votre situation" },
+    { "n": "02", "text": "Offert — sans engagement, sans préparation" },
+    { "n": "03", "text": "Une réponse sous 48 heures ouvrées" }
+  ],
+  "alt": {
+    "title": "Pour aller plus vite.",
+    "body": "Vous pouvez aussi nous joindre directement par e-mail ou par téléphone. Nous restons disponibles aux horaires de bureau.",
+    "email": "contact@proxy-papers.fr",
+    "phone": "+33 (0)0 00 00 00 00",
+    "hours": "Lun–Ven · 9h00–18h00"
+  }
+}

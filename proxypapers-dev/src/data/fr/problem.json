@@ -1,0 +1,22 @@
+{
+  "eyebrow": "PROBLÈME",
+  "headline": "Votre patrimoine est structuré. Vos documents ne le sont pas toujours.",
+  "body": "Les conseils s'occupent de votre fiscalité, de vos placements, de vos sociétés. Personne ne s'occupe vraiment du reste : les actes, les contrats, les échéances, les pièces qui circulent entre vos conseillers et qu'il faut retrouver, à chaque rendez-vous, à chaque décision, à chaque transmission. C'est là que tout se complique.",
+  "cards": [
+    {
+      "id": "volume",
+      "label": "VOLUME",
+      "copy": "200 à 400 documents essentiels à gérer pour un patrimoine structuré."
+    },
+    {
+      "id": "friction",
+      "label": "FRICTION",
+      "copy": "Jusqu'à 30 % du temps avec vos conseils consacré à retrouver ou transmettre de l'information."
+    },
+    {
+      "id": "risk",
+      "label": "RISQUE",
+      "copy": "Une personne sur quatre a déjà perdu un document important."
+    }
+  ]
+}

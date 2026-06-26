@@ -2,15 +2,13 @@
 
 import { useRef } from "react";
 import s from "./ServicesHero.module.css";
-import content from "@/data/en/services.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText, type SplitWord } from "@/components/shared/SplitText";
 import { PpMark } from "@/components/shared/PpMark";
 import { useServicesHero } from "@/lib/animations/useServicesHero";
 import { useServicesOrbit } from "@/lib/animations/useServicesOrbit";
 
 type Styles = Record<string, string>;
-
-const profiles = content.hero.profiles;
 
 // The profiles orbit — Figma node 160:407. Three concentric rings (radii 137 · 241 ·
 // 361, centred on the 78px bone P-disc at field 384,371 in the 768×742 box) carry the
@@ -20,6 +18,7 @@ const profiles = content.hero.profiles;
 // lives in useServicesOrbit. The field is anchored to the hero's bottom-right and
 // bleeds off the corner (clipped by the hero's overflow + rounded corner).
 function ProfilesOrbit({ styles }: { styles: Styles }) {
+  const profiles = useContent("services").hero.profiles;
   const orbit = useRef<HTMLDivElement>(null);
   useServicesOrbit(orbit, styles);
 
@@ -56,6 +55,7 @@ function ProfilesOrbit({ styles }: { styles: Styles }) {
 // the blue-accent treatment elsewhere), a body line, and the white "no public pricing"
 // badge. The live ProfilesOrbit sits at the bottom-right, bleeding off the corner.
 export function ServicesHero() {
+  const content = useContent("services");
   const root = useRef<HTMLElement>(null);
   useServicesHero(root, s);
 

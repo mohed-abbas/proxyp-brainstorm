@@ -1,0 +1,12 @@
+{
+  "title": "Vous accompagnez des clients fortunés ?",
+  "body": "Notaires, experts-comptables, avocats, conseillers en gestion de patrimoine, family offices : Proxy Papers prend en charge la couche d'information privée de vos clients pour vous restituer du temps de conseil utile. Recommandation confraternelle ou apport d'affaires : nous nous adaptons à votre cadre déontologique.",
+  "cta": { "label": "Accéder à l'espace prescripteurs", "href": "/referrals" },
+  "advisors": [
+    { "id": "1", "ring": "inner", "img": "/images/advisor-1.png" },
+    { "id": "2", "ring": "inner", "img": "/images/advisor-2.png" },
+    { "id": "3", "ring": "middle", "img": "/images/advisor-3.png" },
+    { "id": "4", "ring": "middle", "img": "/images/advisor-4.png" },
+    { "id": "5", "ring": "middle", "img": "/images/advisor-5.png" }
+  ]
+}

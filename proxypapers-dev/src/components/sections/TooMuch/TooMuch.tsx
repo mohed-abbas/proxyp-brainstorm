@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./TooMuch.module.css";
-import toomuch from "@/data/en/toomuch.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useTooMuch } from "@/lib/animations/useTooMuch";
 
@@ -11,6 +11,7 @@ import { useTooMuch } from "@/lib/animations/useTooMuch";
 // headline ("the brand at full presence") over a muted-ink reality check. The
 // headline rises word-by-word and the copy settles in on scroll (see useTooMuch).
 export function TooMuch() {
+  const toomuch = useContent("toomuch");
   const root = useRef<HTMLElement>(null);
   useTooMuch(root, s);
 

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./Sliders.module.css";
-import sliders from "@/data/en/sliders.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useSliders } from "@/lib/animations/useSliders";
 
@@ -15,6 +15,7 @@ import { useSliders } from "@/lib/animations/useSliders";
 // reduced-motion / no-JS it degrades to a settled vertical gallery (title → card → body
 // per slide). See useSliders.
 export function Sliders() {
+  const sliders = useContent("sliders");
   const root = useRef<HTMLElement>(null);
 
   useSliders(root, s);

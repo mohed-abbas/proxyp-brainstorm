@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./ApproachHero.module.css";
-import content from "@/data/en/approach.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText, type SplitWord } from "@/components/shared/SplitText";
 import { useApproachHero } from "@/lib/animations/useApproachHero";
 
@@ -14,6 +14,7 @@ import { useApproachHero } from "@/lib/animations/useApproachHero";
 // lede anchors bottom-left. Band layers are live (not a baked crop) inside a cover-
 // cropped window, so the wide river fills the hero and crops like Figma — see the CSS.
 export function ApproachHero() {
+  const content = useContent("approach");
   const root = useRef<HTMLElement>(null);
   useApproachHero(root, s);
 

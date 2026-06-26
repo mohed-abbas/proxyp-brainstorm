@@ -5,6 +5,8 @@
 .DS_Store
 Thumbs.db
 *.log
+# Microsoft Office temp lock files (e.g. ~$DOCUMENT.docx)
+~$*
 
 # Playwright prototype-testing artifacts
 .playwright-mcp/

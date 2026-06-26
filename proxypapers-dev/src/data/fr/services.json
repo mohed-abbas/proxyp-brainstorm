@@ -1,0 +1,16 @@
+{
+  "hero": {
+    "headline": {
+      "lead": "Trois ",
+      "accent": "profils.",
+      "rest": " Un cadre commun. Aucune offre figée."
+    },
+    "body": "Chaque accompagnement est calibré au moment de l'audit d'embarquement, en fonction de la complexité de votre patrimoine, de votre rythme et de vos projets. Les trois profils ci-dessous décrivent les volumes types que nous rencontrons. Le devis, lui, est toujours sur mesure.",
+    "badge": "Aucun tarif n'est affiché publiquement — toutes nos prestations sont sur devis, après audit d'embarquement.",
+    "profiles": [
+      { "id": "essentiel", "label": "Essentiel", "ring": "r1" },
+      { "id": "signature", "label": "Signature", "ring": "r2" },
+      { "id": "exception", "label": "Exception", "ring": "r3" }
+    ]
+  }
+}

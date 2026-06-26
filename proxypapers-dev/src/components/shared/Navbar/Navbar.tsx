@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import s from "./Navbar.module.css";
-import navContent from "@/data/en/nav.json";
+import { useContent, useLocalizedHref } from "@/lib/i18n/LocaleProvider";
 import { PpMark } from "@/components/shared/PpMark";
 import { Menu } from "@/components/shared/Menu";
 import { useNavTheme } from "@/hooks/useNavTheme";
@@ -10,6 +10,8 @@ import { useMenu } from "@/hooks/useMenu";
 import { useNavHandoff } from "@/lib/animations/useNavHandoff";
 
 export function Navbar() {
+  const navContent = useContent("nav");
+  const lh = useLocalizedHref();
   const navRef = useRef<HTMLElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -38,7 +40,7 @@ export function Navbar() {
       >
         <a
           className={s.logo}
-          href={navContent.home.href}
+          href={lh(navContent.home.href)}
           aria-label={navContent.home.label}
           data-nav-logo
         >

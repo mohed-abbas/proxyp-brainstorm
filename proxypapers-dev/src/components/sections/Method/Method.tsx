@@ -2,11 +2,13 @@
 
 import { useRef } from "react";
 import s from "./Method.module.css";
-import method from "@/data/en/method.json";
+import { useContent, useLocalizedHref } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useMethod } from "@/lib/animations/useMethod";
 
 export function Method() {
+  const method = useContent("method");
+  const lh = useLocalizedHref();
   const root = useRef<HTMLElement>(null);
   useMethod(root, s);
 
@@ -47,7 +49,7 @@ export function Method() {
             ))}
           </ol>
 
-          <a className={s.link} href={method.link.href}>
+          <a className={s.link} href={lh(method.link.href)}>
             <span className={s.linkRoll}>
               <span className={s.linkMain}>{method.link.label}</span>
               <span className={s.linkClone} aria-hidden="true">

@@ -2,11 +2,13 @@
 
 import { useRef } from "react";
 import s from "./Footer.module.css";
-import footer from "@/data/en/footer.json";
+import { useContent, useLocalizedHref } from "@/lib/i18n/LocaleProvider";
 import { PpMark } from "@/components/shared/PpMark";
 import { useFooter } from "@/lib/animations/useFooter";
 
 export function Footer() {
+  const footer = useContent("footer");
+  const lh = useLocalizedHref();
   const root = useRef<HTMLElement>(null);
   useFooter(root, s);
 
@@ -39,7 +41,7 @@ export function Footer() {
                       <li key={item.label}>
                         <a
                           className={`${s.link}${"active" in item && item.active ? ` ${s.linkActive}` : ""}`}
-                          href={item.href}
+                          href={lh(item.href)}
                         >
                           {item.label}
                         </a>

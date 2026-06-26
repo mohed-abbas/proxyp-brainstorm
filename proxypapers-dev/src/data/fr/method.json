@@ -1,0 +1,32 @@
+{
+  "title": { "segs": ["Cinq étapes,", "un seul interlocuteur."] },
+  "lede": "Le même conseiller dédié vous accompagne du premier rendez-vous à la mise à jour annuelle. Aucune équipe rotative, aucune sous-traitance.",
+  "steps": [
+    {
+      "num": "01",
+      "name": "Lancement",
+      "desc": "Collecte, tri, classement, sauvegarde sur la Papers Box."
+    },
+    {
+      "num": "02",
+      "name": "Organisation",
+      "desc": "Constitution des dossiers, alertes pour vos échéances, partages avec vos conseillers."
+    },
+    {
+      "num": "03",
+      "name": "Suivi",
+      "desc": "Mises à jour régulières, interventions périodiques sur site."
+    },
+    {
+      "num": "04",
+      "name": "Support",
+      "desc": "Transmission sécurisée des éléments pour vos projets et démarches."
+    },
+    {
+      "num": "05",
+      "name": "Gestion",
+      "desc": "Visibilité en temps réel, rapport périodique, axes de réflexion."
+    }
+  ],
+  "link": { "label": "Voir notre approche en détail", "href": "/approach" }
+}

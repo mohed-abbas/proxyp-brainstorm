@@ -1,0 +1,27 @@
+{
+  "title": {
+    "lines": ["Trois profils d'accompagnement.", "Un cadre commun."]
+  },
+  "body": "Essentiel, Signature, Exception : chaque profil s'adapte à la complexité de votre patrimoine et à votre rythme de vie. La méthode reste la même.",
+  "cta": { "label": "Découvrir les offres", "href": "/services" },
+  "cards": [
+    {
+      "id": "01",
+      "num": "01",
+      "name": "Essentiel",
+      "desc": "Mettre en ordre. Tenir à jour."
+    },
+    {
+      "id": "02",
+      "num": "02",
+      "name": "Signature",
+      "desc": "Un cadre vivant. Pour un patrimoine actif."
+    },
+    {
+      "id": "03",
+      "num": "03",
+      "name": "Exception",
+      "desc": "Un cadre à sa mesure."
+    }
+  ]
+}

@@ -2,11 +2,13 @@
 
 import { useRef } from "react";
 import s from "./Closing.module.css";
-import closing from "@/data/en/closing.json";
+import { useContent, useLocalizedHref } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useClosing } from "@/lib/animations/useClosing";
 
 export function Closing() {
+  const closing = useContent("closing");
+  const lh = useLocalizedHref();
   const root = useRef<HTMLElement>(null);
   useClosing(root, s);
 
@@ -24,7 +26,7 @@ export function Closing() {
           words={closing.title.split(" ")}
         />
         <div className={s.action}>
-          <a className={s.link} href={closing.link.href}>
+          <a className={s.link} href={lh(closing.link.href)}>
             <span className={s.linkRoll}>
               <span className={s.linkMain}>{closing.link.label}</span>
               <span className={s.linkClone} aria-hidden="true">

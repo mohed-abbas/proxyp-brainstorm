@@ -1,0 +1,12 @@
+{
+  "eyebrow": "Souveraineté et confiance",
+  "certs": [
+    "Conformité RGPD",
+    "Conformité AI Act",
+    "Coffre-fort NF 203 CCFN",
+    "Tiers de confiance fiscal",
+    "Gestionnaire de mots de passe"
+  ],
+  "title": { "lines": ["Une infrastructure souveraine.", "Des données protégées."] },
+  "body": "Vos documents sont hébergés en France, sur une infrastructure indépendante. Nos outils sont conformes au RGPD et à l'AI Act, certifiés coffre-fort numérique NF 203 CCFN. Proxy Papers est reconnu tiers de confiance fiscalement."
+}

@@ -2,12 +2,10 @@
 
 import { useRef } from "react";
 import s from "./StepSection.module.css";
-import content from "@/data/en/approach.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useStepSlider } from "@/lib/animations/useStepSlider";
 import { useStepsHeader } from "@/lib/animations/useStepsHeader";
-
-const { heading, lede, engagement, connector, total, items } = content.steps;
 
 // StepSection — ported 1:1 from Figma (node 142:307, 1512×1012). The expanded method:
 // a full-width Proxy-Blue panel with the shared "Five steps, one single contact."
@@ -19,6 +17,8 @@ const { heading, lede, engagement, connector, total, items } = content.steps;
 // no-JS the five steps render as a stacked list. Lengths are literal artboard
 // px * var(--pp-scale).
 export function StepSection() {
+  const content = useContent("approach");
+  const { heading, lede, engagement, connector, total, items } = content.steps;
   const root = useRef<HTMLElement>(null);
   useStepSlider(root, s);
   useStepsHeader(root, s);

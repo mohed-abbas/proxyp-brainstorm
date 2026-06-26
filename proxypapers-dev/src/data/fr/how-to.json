@@ -1,0 +1,39 @@
+{
+  "heading": "Comment commencer.",
+  "stage": { "w": 1359, "h": 623 },
+  "steps": [
+    {
+      "id": "discovery",
+      "theme": "blue",
+      "eyebrow": "Étape 1",
+      "title": "Le rendez-vous découverte",
+      "body": "Une heure pour comprendre votre situation et vérifier qu'il y a un fit.",
+      "copyWidth": 411,
+      "pos": { "x": 0, "y": 1, "z": 2 },
+      "pill": { "label": "Offert — 1H", "variant": "outline", "x": 505, "y": 30 }
+    },
+    {
+      "id": "audit",
+      "theme": "light",
+      "eyebrow": "Étape 2",
+      "title": "L'audit d'embarquement",
+      "body": "Vous repartez avec un plan d'action chiffré et le devis correspondant.",
+      "copyWidth": 439,
+      "pos": { "x": 344, "y": 215, "z": 3 },
+      "pill": { "label": "Facturé", "variant": "fill", "x": 537, "y": 29 }
+    },
+    {
+      "id": "engagement",
+      "theme": "blue",
+      "eyebrow": "Étape 3",
+      "title": "L'accompagnement démarre",
+      "body": "Démarrage de l'accompagnement avec votre conseiller dédié.",
+      "copyWidth": 357,
+      "pos": { "x": 689, "y": 429, "z": 2 }
+    }
+  ],
+  "clouds": [
+    { "id": "tr", "x": 689, "y": 1, "w": 670, "h": 408 },
+    { "id": "bl", "x": 0, "y": 215, "w": 670, "h": 408 }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "label": "Ce que Proxy Papers vous apporte",
+  "cards": [
+    {
+      "id": "reclaimed-time",
+      "title": "Du temps de conseil restitué",
+      "body": "Quand votre client travaille avec Proxy Papers, les pièces arrivent prêtes, classées, à jour. Vous concentrez votre temps sur le conseil à valeur ajoutée.",
+      "img": "/images/referrals/sliders/reclaimed-time.webp",
+      "imgPos": "50% 70%"
+    },
+    {
+      "id": "better-prepared",
+      "title": "Des dossiers mieux préparés",
+      "body": "Les rendez-vous se passent autrement quand chacun a accès au même socle d'information à jour.",
+      "img": "/images/referrals/sliders/slide2.webp"
+    },
+    {
+      "id": "continuity",
+      "title": "Une continuité au-delà du cabinet",
+      "body": "Vos recommandations restent utiles à votre client même hors du périmètre de votre cabinet. Proxy Papers couvre tout le quotidien et toutes les sources, pas une mission.",
+      "img": "/images/referrals/sliders/slide3.webp"
+    },
+    {
+      "id": "compliant-framework",
+      "title": "Un cadre conforme",
+      "body": "Nous travaillons dans un cadre que vos clients fortunés exigent et que votre cabinet peut recommander sans réserve.",
+      "img": "/images/referrals/sliders/slide4.webp"
+    }
+  ]
+}

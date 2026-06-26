@@ -2,15 +2,16 @@
 
 import { useRef } from "react";
 import s from "./Referrers.module.css";
-import referrers from "@/data/en/referrers.json";
+import { useContent, useLocalizedHref } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { PpMark } from "@/components/shared/PpMark";
 import { useReferrers } from "@/lib/animations/useReferrers";
 
-const ringAvatars = (ring: string) =>
-  referrers.advisors.filter((a) => a.ring === ring);
-
 export function Referrers() {
+  const referrers = useContent("referrers");
+  const lh = useLocalizedHref();
+  const ringAvatars = (ring: string) =>
+    referrers.advisors.filter((a) => a.ring === ring);
   const root = useRef<HTMLElement>(null);
   useReferrers(root, s);
 
@@ -71,7 +72,7 @@ export function Referrers() {
             className={s.body}
             words={referrers.body.split(" ")}
           />
-          <a className={s.cta} href={referrers.cta.href}>
+          <a className={s.cta} href={lh(referrers.cta.href)}>
             <span className={s.ctaRoll}>
               <span className={s.ctaMain}>{referrers.cta.label}</span>
               <span className={s.ctaClone} aria-hidden="true">

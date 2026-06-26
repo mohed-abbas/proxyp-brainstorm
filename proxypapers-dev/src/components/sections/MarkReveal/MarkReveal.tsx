@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./MarkReveal.module.css";
-import content from "@/data/en/mark-reveal.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useMarkReveal } from "@/lib/animations/useMarkReveal";
 
@@ -133,6 +133,7 @@ function SnakeLine() {
 }
 
 export function MarkReveal() {
+  const content = useContent("mark-reveal");
   const scope = useRef<HTMLElement>(null);
   useMarkReveal(scope, s);
 

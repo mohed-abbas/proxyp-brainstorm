@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./Trust.module.css";
-import trustContent from "@/data/en/trust.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useTrust } from "@/lib/animations/useTrust";
 
@@ -14,8 +14,10 @@ export type TrustContent = {
 };
 
 // Reassurance band. Reusable across pages via the `content` prop; defaults to the
-// homepage copy in data/en/trust.json.
-export function Trust({ content = trustContent }: { content?: TrustContent }) {
+// active locale's homepage copy (data/<locale>/trust.json).
+export function Trust({ content: contentProp }: { content?: TrustContent }) {
+  const fallback = useContent("trust") as TrustContent;
+  const content = contentProp ?? fallback;
   const root = useRef<HTMLElement>(null);
   useTrust(root, s);
 

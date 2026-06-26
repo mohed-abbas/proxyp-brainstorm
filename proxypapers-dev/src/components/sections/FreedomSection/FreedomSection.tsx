@@ -2,11 +2,9 @@
 
 import { useRef } from "react";
 import s from "./FreedomSection.module.css";
-import content from "@/data/en/approach.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useFreedom } from "@/lib/animations/useFreedom";
-
-const { heading, body, cards } = content.freedom;
 
 // FreedomSection — ported 1:1 from Figma (node 142:270, 1512×645). A full-width Bone
 // panel (20px radius) on the dark page ground: a centred Proxy-Blue heading over a
@@ -17,6 +15,8 @@ const { heading, body, cards } = content.freedom;
 //
 // On enter, the heading + body reveal word-by-word and the cards lift in (useFreedom).
 export function FreedomSection() {
+  const content = useContent("approach");
+  const { heading, body, cards } = content.freedom;
   const root = useRef<HTMLElement>(null);
   useFreedom(root, s);
 

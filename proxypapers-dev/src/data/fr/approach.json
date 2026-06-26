@@ -1,0 +1,95 @@
+{
+  "hero": {
+    "headline": {
+      "lead": "Une",
+      "accent": "méthode,",
+      "tail": "pas une promesse"
+    },
+    "lede": "Nous accompagnons depuis 2016 des dirigeants, des héritiers et des familles dans la mise en ordre durable de leur information privée. Voici comment."
+  },
+  "freedom": {
+    "heading": "Le patrimoine de demain est aussi un patrimoine de données.",
+    "body": {
+      "lead": "L'accélération du numérique transforme la façon dont chacun reçoit, conserve et transmet son information privée. Les conseillers produisent des données qu'ils gardent sur leurs propres systèmes. Le client, lui, en reste rarement réellement propriétaire. ",
+      "rest": "Proxy Papers réinstalle cette propriété au bon endroit : chez vous, sous votre contrôle, dans un cadre fiable."
+    },
+    "cards": [
+      {
+        "variant": "blue",
+        "eyebrow": "Liberté",
+        "title": "Vos données restent les vôtres.",
+        "desc": "Lisibles, transférables, jamais captives."
+      },
+      {
+        "variant": "outline",
+        "eyebrow": "Indépendance",
+        "title": "Ne dépendez plus d'un conseiller.",
+        "desc": "Vous n'avez plus besoin de personne pour retrouver une pièce qui vous concerne."
+      }
+    ]
+  },
+  "steps": {
+    "heading": { "lead": "Cinq étapes, ", "muted": "un seul interlocuteur." },
+    "lede": "Le même conseiller dédié vous accompagne du premier rendez-vous à la mise à jour annuelle. Aucune équipe rotative, aucune sous-traitance.",
+    "engagement": [
+      {
+        "title": "Le rendez-vous découverte",
+        "pill": { "label": "Offert · 1h", "variant": "filled" },
+        "desc": "Nous comprenons votre situation, vous nous posez les questions que vous voulez, et nous décidons ensemble s'il y a matière à aller plus loin."
+      },
+      {
+        "title": "L'audit d'embarquement",
+        "pill": { "label": "Facturé", "variant": "outline" },
+        "desc": "Nous cartographions vos sources, vos conseils, vos échéances et le volume de pièces. Vous recevez un plan d'action chiffré et un devis."
+      }
+    ],
+    "connector": "puis l'accompagnement commence",
+    "total": 5,
+    "items": [
+      {
+        "num": "01",
+        "name": "Lancement",
+        "desc": "Nous collectons, trions et classons l'ensemble de vos documents existants, sauvegardés sur votre Papers Box, hébergée en France. À la fin, vous savez où est chaque chose."
+      },
+      {
+        "num": "02",
+        "name": "Organisation",
+        "desc": "Nous structurons vos dossiers par thématique, ouvrons les partages sécurisés avec vos conseillers et paramétrons les alertes d'échéances. Le cadre est posé."
+      },
+      {
+        "num": "03",
+        "name": "Suivi",
+        "desc": "Mises à jour régulières et interventions périodiques chez vous, mensuelles ou trimestrielles. Votre dossier reste vivant, jamais figé."
+      },
+      {
+        "num": "04",
+        "name": "Support",
+        "desc": "Pour vos projets — achat, vente, donation, succession, fiscalité — nous transmettons les bonnes pièces au bon conseiller, au bon moment."
+      },
+      {
+        "num": "05",
+        "name": "Gestion",
+        "desc": "Visibilité en temps réel sur votre Papers Box, rapport périodique avec axes de réflexion. Vous reprenez la main, en toute lucidité."
+      }
+    ]
+  },
+  "localisation": {
+    "pill": "Hébergé en France",
+    "title": "La Papers Box",
+    "subtitle": "Votre cadre numérique sécurisé.",
+    "body": "Une application sécurisée hébergée en France, sur votre téléphone et votre ordinateur. Dossiers par thématique, partages cryptés avec vos conseillers, alertes d'échéances. Rien ne sort jamais de l'infrastructure souveraine que nous opérons.",
+    "features": [
+      "Dossiers à jour en temps réel",
+      "Partages cryptés avec vos conseillers",
+      "Notifications d'échéances",
+      "Rapport périodique personnalisé",
+      "Application sécurisée hébergée en France"
+    ],
+    "cards": [
+      { "key": "tax", "label": "Fiscalité", "meta": "8 documents · à jour" },
+      { "key": "realEstate", "label": "Immobilier", "meta": "14 documents · à jour" },
+      { "key": "succession", "label": "Succession", "meta": "échéance · 12j" },
+      { "key": "insurance", "label": "Assurance", "meta": "partagé · courtier" }
+    ]
+  }
+}

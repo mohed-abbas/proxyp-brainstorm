@@ -2,13 +2,15 @@
 
 import { useRef } from "react";
 import s from "./Hero.module.css";
-import heroContent from "@/data/en/hero.json";
+import { useContent, useLocalizedHref } from "@/lib/i18n/LocaleProvider";
 import { SplitText, type SplitWord } from "@/components/shared/SplitText";
 import { PpButton } from "@/components/shared/PpButton";
 import { useHeroIntro } from "@/lib/animations/useHeroIntro";
 import { Conveyor } from "./Conveyor";
 
 export function Hero() {
+  const heroContent = useContent("hero");
+  const lh = useLocalizedHref();
   const root = useRef<HTMLElement>(null);
   useHeroIntro(root, s);
 
@@ -67,7 +69,7 @@ export function Hero() {
               href={heroContent.cta.primary.href}
               label={heroContent.cta.primary.label}
             />
-            <a className={s.link} href={heroContent.cta.secondary.href}>
+            <a className={s.link} href={lh(heroContent.cta.secondary.href)}>
               <span className={s.linkRoll}>
                 <span className={s.linkMain}>
                   {heroContent.cta.secondary.label}

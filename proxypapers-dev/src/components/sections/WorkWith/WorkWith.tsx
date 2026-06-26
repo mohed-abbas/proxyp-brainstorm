@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import s from "./WorkWith.module.css";
-import content from "@/data/en/work-with.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
 import { SplitText } from "@/components/shared/SplitText";
 import { useWorkWith } from "@/lib/animations/useWorkWith";
 
@@ -13,6 +13,7 @@ import { useWorkWith } from "@/lib/animations/useWorkWith";
 // line, level with the caption, lights Proxy Blue. Below 1024 it stacks and the highlight
 // tracks the viewport centre. DARK surface. See useWorkWith.
 export function WorkWith() {
+  const content = useContent("work-with");
   const root = useRef<HTMLElement>(null);
   useWorkWith(root, s);
 

@@ -2,13 +2,14 @@
 
 import { useRef, type CSSProperties } from "react";
 import s from "./ServiceCards.module.css";
-import data from "@/data/en/services-cards.json";
+import { useContent } from "@/lib/i18n/LocaleProvider";
+import type { Dictionary } from "@/data/locales";
 import { CardIcon } from "./CardIcon";
 import { useServiceCards } from "@/lib/animations/useServiceCards";
 
 type Styles = Record<string, string>;
 type Tile = { icon: string; label: string; x: number; y: number; w: number; h: number };
-type Card = (typeof data.cards)[number];
+type Card = Dictionary["services-cards"]["cards"][number];
 
 // Decorative sparkle bullet (Figma "Star 1", node 160:464) — a 12-point burst star marking
 // the profile description. Exact vector path exported from Figma (27×28); `currentColor`
@@ -84,6 +85,7 @@ function ProfileCard({ card, styles }: { card: Card; styles: Styles }) {
 // scroll the cards stack (the stacked-deck mechanic lands once all three cards are in —
 // see useServiceCards). Bone cards lift off the Chinese-Black ground with a soft shadow.
 export function ServiceCards() {
+  const data = useContent("services-cards");
   const root = useRef<HTMLElement>(null);
   useServiceCards(root, s);
 

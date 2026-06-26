@@ -1,0 +1,22 @@
+{
+  "title": {
+    "lead": ["La gestion", "privée", "de", "vos"],
+    "accent": "données."
+  },
+  "body": "Un cadre sur mesure pour structurer, sécuriser et tenir à jour les documents qui composent votre patrimoine personnel. Un conseiller dédié. Une technologie souveraine.",
+  "cta": {
+    "primary": { "label": "Demander un rendez-vous découverte", "href": "/contact" },
+    "secondary": { "label": "Vous êtes conseil prescripteur ?", "href": "/referrals" }
+  },
+  "statement": "Nous ne sommes ni votre banque, ni votre notaire, ni votre conseiller. Nous sommes le cadre qui les relie.",
+  "documents": [
+    { "cat": "Real Estate", "title": "Acte de vente", "sub": "Résidence principale", "chips": [{ "t": "À jour" }, { "t": "Partagé" }] },
+    { "cat": "Tax", "title": "Avis de taxe foncière", "sub": "Avis 2026", "chips": [{ "t": "Échéance", "due": true }, { "t": "30 jours", "due": true }] },
+    { "cat": "Real Estate", "title": "Bail locatif", "sub": "Bien d'investissement", "chips": [{ "t": "Renouvellement" }, { "t": "60 jours" }] },
+    { "cat": "Legal", "title": "Pacte d'associés", "sub": "Société holding", "chips": [{ "t": "À jour" }, { "t": "Privé" }] },
+    { "cat": "Estate", "title": "Testament", "sub": "Notarié", "chips": [{ "t": "À jour" }, { "t": "Scellé" }] },
+    { "cat": "Insurance", "title": "Contrat d'assurance-vie", "sub": "Clause bénéficiaire", "chips": [{ "t": "Renouvellement" }, { "t": "Annuel" }] },
+    { "cat": "Banking", "title": "Mandat de protection future", "sub": "Protection future", "chips": [{ "t": "À jour" }, { "t": "Partagé" }] },
+    { "cat": "Tax", "title": "Déclaration IFI", "sub": "IFI · 2025", "chips": [{ "t": "Déposée" }, { "t": "Archivée" }] }
+  ]
+}
