@@ -115,12 +115,26 @@ export function useSliders(scope: RefObject<HTMLElement | null>, s: Styles) {
         // away). Driven each frame by the scrubbed proxy below — absolute, no relative tweens,
         // so it stays correct through refreshes/resizes.
         const roll = { pos: 0 };
+        // Per-frame setters reused across frames (quickSetter) instead of allocating
+        // fresh gsap.set tweens each scroll tick. They write the exact same values —
+        // title/body translateY and the photo cross-fade opacity. (opacity instead of
+        // autoAlpha: at full fade the photo is opacity 0 either way; we just skip the
+        // visibility toggle, which is immaterial for a decorative cross-fade image.)
+        const noop: (v: number) => void = () => {};
+        const setters = ch.map((c) => ({
+          ty: c.title ? gsap.quickSetter(c.title, "y", "px") : noop,
+          by: c.bodyEl ? gsap.quickSetter(c.bodyEl, "y", "px") : noop,
+          io: c.img ? gsap.quickSetter(c.img, "opacity") : noop,
+          oo: c.overlay ? gsap.quickSetter(c.overlay, "opacity") : noop,
+        }));
         const applyRoll = () => {
           ch.forEach((c, j) => {
             const off = j - roll.pos;
-            gsap.set(c.title, { y: off * rowH });
-            gsap.set(c.bodyEl, { y: off * bodyRowH });
-            gsap.set([c.img, c.overlay], { autoAlpha: Math.max(0, 1 - Math.abs(off)) });
+            const a = Math.max(0, 1 - Math.abs(off));
+            setters[j].ty(off * rowH);
+            setters[j].by(off * bodyRowH);
+            setters[j].io(a);
+            setters[j].oo(a);
           });
         };
 

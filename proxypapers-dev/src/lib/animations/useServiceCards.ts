@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap, scheduleRefresh } from "@/lib/gsap";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
@@ -40,7 +40,7 @@ export function useServiceCards(scope: RefObject<HTMLElement | null>, s: Styles)
             ease: "power3.out",
             scrollTrigger: { trigger: section, start: "top 75%", once: true },
           });
-          ScrollTrigger.refresh();
+          scheduleRefresh();
           return;
         }
 
@@ -75,7 +75,7 @@ export function useServiceCards(scope: RefObject<HTMLElement | null>, s: Styles)
           tl.to(slot, { yPercent: 0, y: () => depth * PEEK * scaleNow() }, idx);
         });
 
-        ScrollTrigger.refresh();
+        scheduleRefresh();
       });
 
       // Tablet + mobile <1024: cards rest in flow; a light per-card rise-in.

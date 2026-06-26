@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap, scheduleRefresh } from "@/lib/gsap";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
@@ -105,7 +105,7 @@ export function useProblem(scope: RefObject<HTMLElement | null>, s: Styles) {
           0.95,
         );
 
-      ScrollTrigger.refresh();
+      scheduleRefresh();
     },
     { scope },
   );

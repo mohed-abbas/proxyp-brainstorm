@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
@@ -37,6 +37,14 @@ export function useReferrers(scope: RefObject<HTMLElement | null>, s: Styles) {
       });
       gsap.set(cta, { autoAlpha: 0, y: 16 });
 
+      // The perpetual orbit tweens. They are created later (in the timeline's
+      // onComplete), i.e. AFTER useGSAP's synchronous context-capture window, so they
+      // would otherwise escape cleanup and run forever after unmount/HMR. Track them
+      // here and (a) pause while the diagram is off-screen — invisible, so no visible
+      // change — and (b) kill them on cleanup.
+      const spins: gsap.core.Tween[] = [];
+      let visST: ScrollTrigger | undefined;
+
       const startOrbit = () => {
         const innerLayer = section.querySelector(`[data-ring="inner"]`);
         const middleLayer = section.querySelector(`[data-ring="middle"]`);
@@ -44,13 +52,25 @@ export function useReferrers(scope: RefObject<HTMLElement | null>, s: Styles) {
         if (!innerLayer || !middleLayer || !outerRing) return;
         const spin = { ease: "none", repeat: -1 };
 
-        gsap.to(innerLayer, { rotation: 360, duration: 42, transformOrigin: "50% 50%", ...spin });
-        gsap.to(innerLayer.querySelectorAll("img"), { rotation: -360, duration: 42, transformOrigin: "50% 50%", ...spin });
+        spins.push(
+          gsap.to(innerLayer, { rotation: 360, duration: 42, transformOrigin: "50% 50%", ...spin }),
+          gsap.to(innerLayer.querySelectorAll("img"), { rotation: -360, duration: 42, transformOrigin: "50% 50%", ...spin }),
+          gsap.to(middleLayer, { rotation: -360, duration: 52, transformOrigin: "50% 50%", ...spin }),
+          gsap.to(middleLayer.querySelectorAll("img"), { rotation: 360, duration: 52, transformOrigin: "50% 50%", ...spin }),
+          gsap.to(outerRing, { rotation: 360, duration: 68, svgOrigin: "247 247", ...spin }),
+        );
 
-        gsap.to(middleLayer, { rotation: -360, duration: 52, transformOrigin: "50% 50%", ...spin });
-        gsap.to(middleLayer.querySelectorAll("img"), { rotation: 360, duration: 52, transformOrigin: "50% 50%", ...spin });
-
-        gsap.to(outerRing, { rotation: 360, duration: 68, svgOrigin: "247 247", ...spin });
+        // Pause the orbit whenever the section is fully out of view; resume (keeping
+        // phase) when it returns — so on-screen motion is unchanged.
+        visST = ScrollTrigger.create({
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) =>
+            self.isActive
+              ? spins.forEach((t) => t.play())
+              : spins.forEach((t) => t.pause()),
+        });
       };
 
       gsap
@@ -65,6 +85,11 @@ export function useReferrers(scope: RefObject<HTMLElement | null>, s: Styles) {
         .to(avatars, { autoAlpha: 1, scale: 1, duration: 0.55, ease: "back.out(1.7)", stagger: 0.09 }, 0.5)
         .to(bodyWords, { yPercent: 0, duration: 0.7, stagger: 0.014 }, 0.7)
         .to(cta, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.0);
+
+      return () => {
+        spins.forEach((t) => t.kill());
+        visST?.kill();
+      };
     },
     { scope },
   );

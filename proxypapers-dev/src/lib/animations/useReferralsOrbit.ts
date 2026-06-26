@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
@@ -39,6 +39,12 @@ export function useReferralsOrbit(scope: RefObject<HTMLElement | null>, s: Style
 
       const spin = { ease: "none", repeat: -1 } as const;
 
+      // Perpetual orbit tweens — created in the reveal's onComplete (after useGSAP's
+      // synchronous capture window), so track them to pause off-screen (invisible →
+      // no visible change) and kill on cleanup instead of letting them run forever.
+      const spins: gsap.core.Tween[] = [];
+      let visST: ScrollTrigger | undefined;
+
       const startOrbit = () => {
         const ring = (id: string) => root.querySelector(`[data-ring="${id}"]`);
         const dashed = root.querySelectorAll(`.${s.ringDash}`);
@@ -50,16 +56,30 @@ export function useReferralsOrbit(scope: RefObject<HTMLElement | null>, s: Style
         for (const [id, dir, duration] of orbits) {
           const layer = ring(id);
           if (!layer) continue;
-          gsap.to(layer, { rotation: dir, duration, transformOrigin: "50% 50%", ...spin });
-          gsap.to(layer.querySelectorAll("img"), {
-            rotation: -dir,
-            duration,
-            transformOrigin: "50% 50%",
-            ...spin,
-          });
+          spins.push(
+            gsap.to(layer, { rotation: dir, duration, transformOrigin: "50% 50%", ...spin }),
+            gsap.to(layer.querySelectorAll("img"), {
+              rotation: -dir,
+              duration,
+              transformOrigin: "50% 50%",
+              ...spin,
+            }),
+          );
         }
         // Dashed rings sweep together around the field centre (440.5, 440.5).
-        gsap.to(dashed, { rotation: 360, duration: 90, svgOrigin: "440.5 440.5", ...spin });
+        spins.push(
+          gsap.to(dashed, { rotation: 360, duration: 90, svgOrigin: "440.5 440.5", ...spin }),
+        );
+
+        visST = ScrollTrigger.create({
+          trigger: root,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) =>
+            self.isActive
+              ? spins.forEach((t) => t.play())
+              : spins.forEach((t) => t.pause()),
+        });
       };
 
       gsap
@@ -75,6 +95,11 @@ export function useReferralsOrbit(scope: RefObject<HTMLElement | null>, s: Style
           { autoAlpha: 1, scale: 1, duration: 0.55, ease: "back.out(1.7)", stagger: 0.09 },
           0.25,
         );
+
+      return () => {
+        spins.forEach((t) => t.kill());
+        visST?.kill();
+      };
     },
     { scope },
   );

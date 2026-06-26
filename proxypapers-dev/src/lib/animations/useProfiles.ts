@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap, scheduleRefresh } from "@/lib/gsap";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
@@ -103,7 +103,7 @@ export function useProfiles(scope: RefObject<HTMLElement | null>, s: Styles) {
           .to(cta, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.6)
           .to({}, { duration: 0.9 });
 
-        ScrollTrigger.refresh();
+        scheduleRefresh();
       });
 
       // Tablet + mobile <1024: the deck is a vertical stack resting on its info

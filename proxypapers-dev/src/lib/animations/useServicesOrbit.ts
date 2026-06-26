@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
@@ -37,15 +37,33 @@ export function useServicesOrbit(scope: RefObject<HTMLElement | null>, s: Styles
       // Chips: opacity only — preserve the CSS translate(-50%,-50%) rotate() tilt.
       gsap.set(chips, { autoAlpha: 0 });
 
+      // Perpetual dashed-ring sweep — created in the reveal's onComplete (after
+      // useGSAP's synchronous capture window). Track it to pause off-screen (invisible
+      // → no visible change) and kill on cleanup rather than leaving it running.
+      const spins: gsap.core.Tween[] = [];
+      let visST: ScrollTrigger | undefined;
+
       const startOrbit = () => {
         // Dashed ring sweeps around the field centre (384, 371); the symmetric solid
         // rings stay put. Slow, so it reads as ambient, not busy.
-        gsap.to(dashed, {
-          rotation: 360,
-          duration: 120,
-          svgOrigin: "384 371",
-          ease: "none",
-          repeat: -1,
+        spins.push(
+          gsap.to(dashed, {
+            rotation: 360,
+            duration: 120,
+            svgOrigin: "384 371",
+            ease: "none",
+            repeat: -1,
+          }),
+        );
+
+        visST = ScrollTrigger.create({
+          trigger: root,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) =>
+            self.isActive
+              ? spins.forEach((t) => t.play())
+              : spins.forEach((t) => t.pause()),
         });
       };
 
@@ -58,6 +76,11 @@ export function useServicesOrbit(scope: RefObject<HTMLElement | null>, s: Styles
         .to(rings, { autoAlpha: 1, scale: 1, duration: 0.9, ease: "power2.out" }, 0)
         .to(mark, { autoAlpha: 1, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, 0.2)
         .to(chips, { autoAlpha: 1, duration: 0.6, stagger: 0.14 }, 0.35);
+
+      return () => {
+        spins.forEach((t) => t.kill());
+        visST?.kill();
+      };
     },
     { scope },
   );

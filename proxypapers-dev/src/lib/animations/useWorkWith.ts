@@ -40,20 +40,32 @@ export function useWorkWith(scope: RefObject<HTMLElement | null>, s: Styles) {
       };
 
       // Flag the profession whose centre is nearest the focus line (a viewport Y).
+      // The professions don't move relative to the document (no pin, no transform
+      // here), so their centres are measured ONCE (per refresh/resize) as
+      // document-relative Ys and cached. Per scroll frame we then only read the
+      // scroll offset (one value) and do arithmetic — no per-item layout reads.
       const trackHighlight = (focusY: () => number) => {
         let current = -1;
+        let centres: number[] = []; // document-relative centre Y of each item
+        const measure = () => {
+          const sy = window.scrollY;
+          centres = items.map((el) => {
+            const r = el.getBoundingClientRect();
+            return r.top + sy + r.height / 2;
+          });
+        };
         const update = () => {
-          const f = focusY();
+          const f = focusY(); // viewport Y of the focus line
+          const sy = window.scrollY;
           let best = 0;
           let bestDist = Infinity;
-          items.forEach((el, i) => {
-            const r = el.getBoundingClientRect();
-            const dist = Math.abs(r.top + r.height / 2 - f);
+          for (let i = 0; i < centres.length; i++) {
+            const dist = Math.abs(centres[i] - sy - f);
             if (dist < bestDist) {
               bestDist = dist;
               best = i;
             }
-          });
+          }
           if (best === current) return;
           current = best;
           setActive(best);
@@ -63,9 +75,14 @@ export function useWorkWith(scope: RefObject<HTMLElement | null>, s: Styles) {
           start: "top bottom",
           end: "bottom top",
           onUpdate: update,
-          onRefresh: update,
+          // Re-measure when layout may have changed, then re-evaluate.
+          onRefresh: () => {
+            measure();
+            update();
+          },
           onToggle: update,
         });
+        measure();
         update();
         return () => st.kill();
       };

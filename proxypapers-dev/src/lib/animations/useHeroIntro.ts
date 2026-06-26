@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useIntro } from "@/lib/intro/IntroProvider";
 import type { RefObject } from "react";
 
@@ -18,8 +18,17 @@ export function useHeroIntro(scope: RefObject<HTMLElement | null>, s: Styles) {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+      const section = scope.current;
       const q = gsap.utils.selector(scope);
       const words = q(".r-word__in");
+
+      // The endless drifts (conveyor + clouds) are started later — in the timeline's
+      // onComplete and in the curtain-invoked idle() — i.e. after useGSAP's synchronous
+      // capture window, so they would otherwise run forever after unmount/HMR. Track
+      // them to pause while the hero is off-screen (invisible → no visible change) and
+      // to kill on cleanup.
+      const loops: gsap.core.Tween[] = [];
+      let gateST: ScrollTrigger | undefined;
 
       gsap.set(q(`.${s.lens}`), {
         opacity: 0,
@@ -64,35 +73,63 @@ export function useHeroIntro(scope: RefObject<HTMLElement | null>, s: Styles) {
       // only reflows after a refresh.
       tl.set([q(`.${s.lens}`), q(`.${s.statement}`)], { clearProps: "transform" });
 
+      // Pause the perpetual drifts whenever the hero is fully out of view; resume
+      // (keeping phase) when it returns. Created lazily so the gate exists before the
+      // first drift is added; onToggle reads `loops` live, so clouds added later (by
+      // idle()) are covered too.
+      const armGate = () => {
+        if (gateST || !section) return;
+        gateST = ScrollTrigger.create({
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) =>
+            self.isActive
+              ? loops.forEach((t) => t.play())
+              : loops.forEach((t) => t.pause()),
+        });
+      };
+
       // Endless conveyor drift, started once the intro resolves.
       const tracks = q(`.${s.track}`);
       tl.eventCallback("onComplete", () => {
-        gsap.fromTo(
-          tracks,
-          { xPercent: -50 },
-          { xPercent: 0, duration: 64, ease: "none", repeat: -1 },
+        loops.push(
+          gsap.fromTo(
+            tracks,
+            { xPercent: -50 },
+            { xPercent: 0, duration: 64, ease: "none", repeat: -1 },
+          ),
         );
+        armGate();
       });
 
       // Continuous cloud drift inside the lens — started by the curtain (hero.idle).
       const idle = () => {
-        gsap.to(q(`.${s.cloudLeft}`), {
-          xPercent: 3,
-          duration: 18,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
-        gsap.to(q(`.${s.cloudRight}`), {
-          xPercent: -3,
-          duration: 20,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
+        loops.push(
+          gsap.to(q(`.${s.cloudLeft}`), {
+            xPercent: 3,
+            duration: 18,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+          }),
+          gsap.to(q(`.${s.cloudRight}`), {
+            xPercent: -3,
+            duration: 20,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+          }),
+        );
+        armGate();
       };
 
       intro?.registerHero(tl, idle);
+
+      return () => {
+        loops.forEach((t) => t.kill());
+        gateST?.kill();
+      };
     },
     { scope },
   );

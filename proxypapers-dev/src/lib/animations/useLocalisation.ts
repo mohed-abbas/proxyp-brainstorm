@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap, scheduleRefresh } from "@/lib/gsap";
 import type { RefObject } from "react";
 
 type Styles = Record<string, string>;
@@ -96,7 +96,7 @@ export function useLocalisation(scope: RefObject<HTMLElement | null>, s: Styles)
       });
 
       // Belt-and-braces for late layout (fonts/images shifting the trigger point).
-      ScrollTrigger.refresh();
+      scheduleRefresh();
     },
     { scope, revertOnUpdate: true },
   );
