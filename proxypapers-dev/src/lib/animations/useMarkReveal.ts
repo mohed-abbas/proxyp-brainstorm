@@ -103,7 +103,6 @@ export function useMarkReveal(scope: RefObject<HTMLElement | null>, s: Styles) {
         // section stays put while the reveal auto-plays. The vectors meet at progress 0.5.
         const MEET = 0.5;
         const assemble = gsap.timeline({
-          defaults: { force3D: true },
           scrollTrigger: {
             trigger: section,
             start: "top top",
@@ -123,10 +122,13 @@ export function useMarkReveal(scope: RefObject<HTMLElement | null>, s: Styles) {
           },
         });
         assemble
+          // force3D lives on the DOM transform tween itself, not the timeline defaults —
+          // the empty-object hold below must not inherit it (force3D on a plain-object
+          // target triggers GSAP's "Invalid property force3D" warning). No visual change.
           .fromTo(
             angle,
             { x: () => 731 * u(), y: () => 59 * u() },
-            { x: 0, y: 0, duration: 1, ease: "power2.inOut" },
+            { x: 0, y: 0, duration: 1, ease: "power2.inOut", force3D: true },
             0,
           )
           .to({}, { duration: 1 }); // hold — keeps the section pinned for the auto reveal
