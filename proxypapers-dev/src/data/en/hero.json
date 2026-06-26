@@ -5,8 +5,8 @@
   },
   "body": "A bespoke framework to structure, secure and maintain the documents that make up your personal estate. A dedicated advisor. Sovereign technology.",
   "cta": {
-    "primary": { "label": "Request a discovery meeting", "href": "#" },
-    "secondary": { "label": "Are you a referring advisor?", "href": "#" }
+    "primary": { "label": "Request a discovery meeting", "href": "/contact" },
+    "secondary": { "label": "Are you a referring advisor?", "href": "/referrals" }
   },
   "statement": "We are not your bank, your notary, or your advisor. We are the framework that connects them.",
   "documents": [

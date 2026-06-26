@@ -5,6 +5,7 @@ import s from "./Menu.module.css";
 import { PpMark } from "@/components/shared/PpMark";
 
 type NavContent = {
+  home: { href: string; label: string };
   lang: { current: string; alt: { label: string; href: string } };
   links: { label: string; href: string }[];
   social: { label: string; href: string; icon: string }[];
@@ -59,7 +60,12 @@ export function Menu({ open, onClose, panelRef, content }: MenuProps) {
         </nav>
 
         <div className={s.foot}>
-          <a className={s.logo} href="#" aria-label="Proxy Papers — home">
+          <a
+            className={s.logo}
+            href={content.home.href}
+            aria-label={content.home.label}
+            onClick={onClose}
+          >
             <PpMark />
           </a>
           <div className={s.social}>

@@ -1,5 +1,5 @@
 {
-  "home": { "href": "#", "label": "Proxy Papers — home" },
+  "home": { "href": "/", "label": "Proxy Papers — home" },
   "menu": {
     "open": "Menu",
     "close": "Close",

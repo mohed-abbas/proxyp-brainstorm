@@ -3,7 +3,7 @@
     "lines": ["Three support profiles.", "One shared framework."]
   },
   "body": "Essentiel, Signature, Exception — each profile adapts to the complexity of your estate and your pace of life. The method remains the same.",
-  "cta": { "label": "Explore the services", "href": "#services" },
+  "cta": { "label": "Explore the services", "href": "/services" },
   "cards": [
     {
       "id": "01",
