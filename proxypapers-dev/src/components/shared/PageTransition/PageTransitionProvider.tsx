@@ -4,6 +4,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 import { useLenis } from "@/lib/lenis/LenisProvider";
+import { markClientNavigated } from "@/lib/intro/navState";
 import { PpMark } from "@/components/shared/PpMark";
 import s from "./PageTransition.module.css";
 
@@ -147,6 +148,9 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
     revealRef.current = playReveal;
 
     const startCover = (to: string) => {
+      // Mark before navigating so the destination's mount effects see it — lets the
+      // home page suppress its welcome curtain on a client-side return.
+      markClientNavigated();
       if (reduced()) {
         router.push(to);
         return;
@@ -195,8 +199,16 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       startCover(url.pathname + url.search + url.hash);
     };
 
+    // Back/forward bypass the click interceptor; mark here too (fires before React
+    // commits the new tree) so a popstate return to home also skips the welcome.
+    const onPopState = () => markClientNavigated();
+
     document.addEventListener("click", onClick, true);
-    return () => document.removeEventListener("click", onClick, true);
+    window.addEventListener("popstate", onPopState);
+    return () => {
+      document.removeEventListener("click", onClick, true);
+      window.removeEventListener("popstate", onPopState);
+    };
   }, [router, lenis]);
 
   // When the route has actually swapped (under cover), reveal the new page.

@@ -2,6 +2,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useLenis } from "@/lib/lenis/LenisProvider";
 import { useIntro } from "@/lib/intro/IntroProvider";
+import { hasClientNavigated } from "@/lib/intro/navState";
 import type { RefObject } from "react";
 
 const SVGNS = "http://www.w3.org/2000/svg";
@@ -37,6 +38,27 @@ export function useOnboarding(stageRef: RefObject<HTMLDivElement | null>) {
     // `js` hides the overlay + unlocks scroll via CSS) and land on the hero.
     if (reduced || !obStage || !lockup) {
       root.classList.remove("js");
+      return;
+    }
+
+    // Client-side return to home (not a fresh load): the page transition already
+    // animates the swap, so the welcome curtain must NOT play — running both is the
+    // glitchy overlap. Hide the overlay now and settle the hero in place. (A real
+    // refresh resets hasClientNavigated, so the welcome still plays on a genuine
+    // reload of the home page.)
+    if (hasClientNavigated()) {
+      gsap.set(obStage, { autoAlpha: 0, pointerEvents: "none" });
+      // Hero's useGSAP runs after this sibling's, so its timeline isn't registered
+      // yet — wait one frame (all mount effects have committed by then) to settle.
+      requestAnimationFrame(() => {
+        const hero = intro?.getHero();
+        document.querySelector("[data-nav-logo]")?.classList.add("is-landed");
+        const card = document.querySelector("[data-axis-card]");
+        if (card) gsap.set(card, { opacity: 1 });
+        hero?.heroTl?.progress(1, false); // jump to settled; fire onComplete (conveyor)
+        hero?.heroIdle?.();
+        release();
+      });
       return;
     }
 
