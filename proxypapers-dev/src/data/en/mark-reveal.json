@@ -1,0 +1,15 @@
+{
+  "ariaLabel": "Pioneer since 2016, relevant today",
+  "years": { "start": "2016", "end": "2026" },
+  "headline": "Pioneer since 2016. Relevant today.",
+  "timeline": [
+    {
+      "label": "2016 · The beginning",
+      "body": "Founded by Sandrine Rieussec, from a family experience and a conviction: private data management deserves a service of its own — distinct from light admin and from wealth advisory."
+    },
+    {
+      "label": "Today · Indispensable",
+      "body": "A decade later, digital acceleration makes this service essential. We have the history, the framework and the tools."
+    }
+  ]
+}

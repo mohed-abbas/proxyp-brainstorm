@@ -1,22 +1,21 @@
-/* MarkReveal (Figma 634:343, artboard 1512×982) — the P-mark shown PULLED APART on
-   the Chinese-Black ground. A full-bleed dark band; the 1362×626 vector box is
-   flex-centred, which lands it at the Figma offsets (left 75, top 178). Inside it the
-   two halves are absolutely placed at their exact SeparatedVector coordinates and are
-   allowed to overflow that box (they stay within the 982-tall band).
+/* MarkReveal (Figma 634:209 "MapSection" + separated state 634:343, artboard 1512×982)
+   — the "Pioneer since 2016" history scene on the Chinese-Black ground. The P-mark
+   starts PULLED APART and assembles on scroll, then the years / headline / timeline
+   reveal. See useMarkReveal for the pinned choreography.
 
-   Every length rides --mark-u, a CONTAIN-fit unit: min(100vw/1512, 100svh/982). It
-   tracks whichever axis is the constraint, so the 1512×982 artboard always fits the
-   viewport in BOTH width and height (no overflow on short-wide screens, no wasted
-   space on tall-narrow ones) while keeping the mark's aspect ratio. The section is a
-   full viewport-height band so the mark stays centred and fully visible at any aspect
-   ratio. This is the INITIAL, resting state — the assemble animation is layered next. */
+   Coordinates are the 1512×982 artboard, absolutely placed inside .frame, so the bone
+   stem keeps ONE position across the separated and assembled states (only the blade
+   translates). Every length rides --mark-u, a CONTAIN-fit unit (min of the vw and vh
+   ratios) so the whole composition fits the viewport on both axes; the section is a
+   full viewport-height band and the scene is centred within it. Below 1024 it drops the
+   artboard scale and reflows to a readable stacked column (the pin animation is gated
+   off there — the settled scene renders). */
 
 .section {
   --mark-u: min(100vw / 1512, 100svh / 982);
   position: relative;
   width: 100%;
   height: 100svh;
-  min-height: calc(626 * var(--mark-u));
   background: var(--pp-ink);
   color: var(--pp-bone);
   display: flex;
@@ -25,35 +24,276 @@
   overflow: hidden;
 }
 
-/* The 1362×626 SeparatedVector box — positioning context for the two halves.
-   Centred in the band, so its origin matches Figma's left 75 / top 178. */
-.markFrame {
+/* The 1512×982 artboard envelope — positioning context for every placed element. */
+.frame {
   position: relative;
-  width: calc(1362 * var(--mark-u));
-  height: calc(626 * var(--mark-u));
+  width: calc(1512 * var(--mark-u));
+  height: calc(982 * var(--mark-u));
 }
 
-/* StemVector (node 634:346) — bone half, low-left. x 0 / y 125 in the box. */
+/* ── P-mark ─────────────────────────────────────────────────────────────────── */
+.mark {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* StemVector — bone half. FIXED at artboard (75, 303); rendered last so it sits on top
+   of the blade in the overlap (the assembled lockup). */
 .stem {
   position: absolute;
-  left: 0;
-  top: calc(125 * var(--mark-u));
+  left: calc(75 * var(--mark-u));
+  top: calc(303 * var(--mark-u));
   width: calc(315 * var(--mark-u));
   height: calc(626 * var(--mark-u));
+  z-index: 2;
 }
 
-/* AngleVector (node 634:347) — blue half, high-right. x 731 / y -126 in the box. */
+/* AngleVector — blue half. Resting (assembled) position is artboard (75, -7); the hook
+   sets the separated start (+731 / +59 design-px) and slides it home. */
 .angle {
   position: absolute;
-  left: calc(731 * var(--mark-u));
-  top: calc(-126 * var(--mark-u));
+  left: calc(75 * var(--mark-u));
+  top: calc(-7 * var(--mark-u));
   width: calc(631 * var(--mark-u));
   height: calc(625 * var(--mark-u));
+  z-index: 1;
 }
 
-.stemSvg,
-.angleSvg {
+.halfSvg {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* Per-word reveal masks (house style) — pad the clip so ascenders/descenders aren't
+   shaved while the inner span rises in. */
+.section :global(.r-word) {
+  padding: 0.08em 0 0.16em;
+  margin: -0.08em 0 -0.16em;
+}
+
+/* ── Years on the blade (Figma 634:214/215) + dashed arrow (634:216) ──────────── */
+.year {
+  position: absolute;
+  z-index: 3;
+  margin: 0;
+  font-weight: 500;
+  font-size: calc(95 * var(--mark-u));
+  line-height: 1.5;
+  letter-spacing: calc(-2.85 * var(--mark-u));
+  color: var(--pp-bone);
+  white-space: nowrap;
+}
+.yearStart {
+  left: calc(134 * var(--mark-u));
+  top: calc(71 * var(--mark-u));
+}
+.yearEnd {
+  left: calc(433 * var(--mark-u));
+  top: calc(409 * var(--mark-u));
+}
+
+.arrow {
+  position: absolute;
+  z-index: 3;
+  left: calc(359 * var(--mark-u));
+  top: calc(146 * var(--mark-u));
+  width: calc(187 * var(--mark-u));
+  height: calc(259 * var(--mark-u));
+}
+.arrowSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Draw-on mask target (rect grows top→bottom). Declared so the CSS-module class is
+   exported for the hook to select; geometry is driven via GSAP attr tweens. */
+.arrowMask {
+  fill: #fff;
+}
+
+/* ── Headline (Figma 634:217) ─────────────────────────────────────────────────── */
+.headline {
+  position: absolute;
+  z-index: 3;
+  left: calc(412 * var(--mark-u));
+  top: calc(709 * var(--mark-u));
+  width: calc(941 * var(--mark-u));
+  margin: 0;
+  font-weight: 500;
+  font-size: calc(105.287 * var(--mark-u));
+  line-height: 1.15;
+  letter-spacing: calc(-3.1586 * var(--mark-u));
+  color: var(--pp-bone);
+}
+
+/* ── Right-side timeline (Figma 634:218) ──────────────────────────────────────── */
+.timeline {
+  position: absolute;
+  z-index: 3;
+  left: calc(776 * var(--mark-u));
+  top: calc(82 * var(--mark-u));
+  width: calc(659 * var(--mark-u));
+  height: calc(484 * var(--mark-u));
+}
+
+/* Dashed snake connector (Vector 34) within the timeline box. */
+.snake {
+  position: absolute;
+  left: 0;
+  top: calc(7 * var(--mark-u));
+  width: calc(482 * var(--mark-u));
+  height: calc(387 * var(--mark-u));
+}
+.snakeSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Draw-on mask target (normalized stroke, dashoffset 1→0). Declared so the CSS-module
+   class is exported for the hook; the offset is driven via GSAP attr tweens. */
+.snakeMask {
+  stroke: #fff;
+}
+
+/* Proxy-Blue end dots (Ellipse 21/22). */
+.dot {
+  position: absolute;
+  width: calc(12 * var(--mark-u));
+  height: calc(12 * var(--mark-u));
+  border-radius: 50%;
+  background: var(--pp-blue);
+}
+.dotStart {
+  left: calc(68 * var(--mark-u));
+  top: calc(3 * var(--mark-u));
+}
+.dotEnd {
+  left: calc(335 * var(--mark-u));
+  top: calc(387 * var(--mark-u));
+}
+
+/* Two timeline steps — label + body, anchored left 104 inside the box. */
+.entry {
+  position: absolute;
+  left: calc(104 * var(--mark-u));
+  width: calc(555 * var(--mark-u));
+  display: flex;
+  flex-direction: column;
+  gap: calc(27 * var(--mark-u));
+}
+.entryTop {
+  top: 0;
+}
+.entryBottom {
+  top: calc(382 * var(--mark-u));
+}
+.entryLabel {
+  margin: 0;
+  font-weight: 500;
+  font-size: calc(25 * var(--mark-u));
+  line-height: 1;
+  letter-spacing: calc(-0.75 * var(--mark-u));
+  color: var(--pp-bone);
+}
+.entryBody {
+  margin: 0;
+  font-weight: 400;
+  font-size: calc(16 * var(--mark-u));
+  line-height: 1.45;
+  color: rgba(247, 244, 240, 0.7);
+}
+
+/* ── Tablet + mobile (<1024): drop the artboard scale and stack into a readable column;
+   the mark sits assembled at a fixed size and the pin animation is gated off. ──────── */
+@media (max-width: 1023px) {
+  .section {
+    height: auto;
+    min-height: 100svh;
+    padding-block: var(--pp-stack, 88px);
+    padding-inline: var(--pp-gutter, 24px);
+  }
+  .frame {
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(32px, 8vw, 56px);
+  }
+  /* Assembled mark, fixed size, top of the column. */
+  .mark {
+    position: relative;
+    inset: auto;
+    width: clamp(180px, 48vw, 260px);
+    height: clamp(267px, 71vw, 386px);
+    align-self: flex-start;
+  }
+  .stem {
+    left: 0;
+    top: clamp(74px, 19.7vw, 107px);
+    width: clamp(90px, 24vw, 130px);
+    height: clamp(178px, 47.6vw, 258px);
+  }
+  .angle {
+    left: 0;
+    top: 0;
+    width: clamp(180px, 48vw, 260px);
+    height: clamp(178px, 47.6vw, 258px);
+  }
+  /* Years overlay the mark proportionally. */
+  .year {
+    font-size: clamp(34px, 9vw, 48px);
+    letter-spacing: -0.03em;
+  }
+  .yearStart {
+    left: clamp(18px, 5vw, 26px);
+    top: clamp(10px, 3vw, 16px);
+  }
+  .yearEnd {
+    left: clamp(96px, 26vw, 140px);
+    top: clamp(150px, 40vw, 215px);
+  }
+  /* The dashed arrow + snake connectors are desktop-diagram decoration; drop them. */
+  .arrow,
+  .snake,
+  .dot {
+    display: none;
+  }
+  .headline {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    font-size: var(--pp-fs-h2, clamp(34px, 7vw, 56px));
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    order: 3;
+  }
+  .timeline {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(28px, 7vw, 44px);
+    order: 2;
+  }
+  .entry {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    gap: 12px;
+  }
+  .entryLabel {
+    font-size: clamp(19px, 4.5vw, 25px);
+    letter-spacing: -0.02em;
+  }
+  .entryBody {
+    font-size: var(--pp-fs-body, 16px);
+  }
 }
