@@ -87,11 +87,75 @@ export function useLocalisation(scope: RefObject<HTMLElement | null>, s: Styles)
           tl.to(card, { rotation: r1, duration: 0.9 }, at);
         });
 
+        // ── Interactive 3D tilt ───────────────────────────────────────────────────
+        // Each card tilts slightly toward the cursor — rotateX/rotateY layered on top of
+        // its resting rotateZ for a subtle 3D-perspective parallax (motion as seasoning).
+        // GSAP owns the card transform (the deal-out writes rotateZ), so the tilt is
+        // composed on the SAME element via quickTo (rotationX/rotationY) plus a self
+        // perspective; all fold into one matrix3d. Card centres are measured in document
+        // space — stable once the cards rest — so pointer-move stays free of per-frame
+        // layout reads; we only re-measure when the deal settles and on resize.
+        const AMP = 13; // peak tilt, degrees
+        const clamp = (v: number) => (v < -1 ? -1 : v > 1 ? 1 : v);
+        const tilters = items.map(({ card }) => {
+          gsap.set(card, { transformPerspective: 560, transformOrigin: "50% 50%" });
+          return {
+            card,
+            rx: gsap.quickTo(card, "rotationX", { duration: 0.6, ease: "power2.out" }),
+            ry: gsap.quickTo(card, "rotationY", { duration: 0.6, ease: "power2.out" }),
+            cx: 0,
+            cy: 0,
+          };
+        });
+        // Reach: cursor distance for full tilt — broad enough that all four corner cards
+        // respond as the pointer roams the section, sharpest on the nearest.
+        let reach = 1;
+        const measureTilt = () => {
+          const sx = window.scrollX;
+          const sy = window.scrollY;
+          reach = window.innerHeight * 0.42 || 1;
+          for (const t of tilters) {
+            const r = t.card.getBoundingClientRect();
+            t.cx = r.left + sx + r.width / 2;
+            t.cy = r.top + sy + r.height / 2;
+          }
+        };
+        const onMove = (e: PointerEvent) => {
+          const px = e.clientX + window.scrollX;
+          const py = e.clientY + window.scrollY;
+          for (const t of tilters) {
+            const nx = clamp((px - t.cx) / reach);
+            const ny = clamp((py - t.cy) / reach);
+            t.ry(nx * AMP); // cursor right → card's right edge tips back
+            t.rx(-ny * AMP); // cursor below → card's bottom edge tips back
+          }
+        };
+        const onLeave = () => {
+          for (const t of tilters) {
+            t.rx(0);
+            t.ry(0);
+          }
+        };
+        let raf = 0;
+        const onResize = () => {
+          cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(measureTilt);
+        };
+        measureTilt(); // initial (cluster centres); refreshed once the deal-out settles
+        tl.eventCallback("onComplete", measureTilt);
+        window.addEventListener("pointermove", onMove);
+        window.addEventListener("blur", onLeave);
+        window.addEventListener("resize", onResize);
+
         return () => {
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("blur", onLeave);
+          window.removeEventListener("resize", onResize);
+          cancelAnimationFrame(raf);
           tl.scrollTrigger?.kill();
           tl.kill();
-          // matchMedia reverts the inline transforms/opacity GSAP set; nothing else to
-          // restore (no classList state here).
+          // matchMedia reverts the inline transforms/opacity GSAP set (incl. the tilt
+          // perspective + rotationX/Y); nothing else to restore (no classList state here).
         };
       });
 
