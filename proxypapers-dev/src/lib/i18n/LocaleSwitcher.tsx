@@ -49,17 +49,26 @@ export function LocaleSwitcher({
         {LABELS[locale]}
         {" | "}
       </span>
-      {others.map((next) => (
-        <a
-          key={next}
-          className={altClassName}
-          href={swapLocale(pathname, locale, next)}
-          onClick={() => rememberLocale(next)}
-          hrefLang={next}
-        >
-          {LABELS[next]}
-        </a>
-      ))}
+      {others.map((next) => {
+        const target = swapLocale(pathname, locale, next);
+        return (
+          <a
+            key={next}
+            className={altClassName}
+            href={target}
+            onClick={(e) => {
+              // Force a full-document reload on language switch so every
+              // section re-mounts with the new locale's content (no soft nav).
+              e.preventDefault();
+              rememberLocale(next);
+              window.location.assign(target);
+            }}
+            hrefLang={next}
+          >
+            {LABELS[next]}
+          </a>
+        );
+      })}
     </p>
   );
 }
